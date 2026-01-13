@@ -3,37 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivity AI Master | المهندس إبراهيم عربي</title>
+    <title>Motivity AI Master | نظام المحاكاة الصوتي</title>
     <style>
         :root { --red: #e60012; --dark: #020617; --panel: #0f172a; --blue: #38bdf8; --green: #10b981; }
         body { margin: 0; display: flex; height: 100vh; background: var(--dark); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; }
-        
-        @media (max-width: 768px) { body { flex-direction: column; overflow-y: auto; } .sidebar { width: 100% !important; border-left: none !important; border-bottom: 3px solid var(--red); } canvas { height: 350px !important; } }
-
+        @media (max-width: 768px) { body { flex-direction: column; overflow-y: auto; } .sidebar { width: 100% !important; border-left: none !important; } canvas { height: 300px !important; } }
         .sidebar { width: 420px; background: var(--panel); padding: 20px; border-left: 3px solid var(--red); overflow-y: auto; display: flex; flex-direction: column; }
         .logo-container { text-align: center; margin-bottom: 20px; background: #000; padding: 15px; border-radius: 10px; border: 1px solid #1e293b; }
         .logo-text { font-size: 38px; font-weight: 900; color: #fff; letter-spacing: -1px; margin: 0; }
         .logo-text span { color: var(--red); }
-
         .box { background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 12px; border-right: 4px solid var(--red); }
         h3 { margin: 0 0 10px; font-size: 14px; color: var(--blue); border-bottom: 1px solid #334155; padding-bottom: 5px; }
         label { font-size: 12px; color: #94a3b8; display: block; margin-top: 8px; }
         select, input { width: 100%; padding: 10px; background: #020617; border: 1px solid #475569; color: #fff; border-radius: 5px; margin-top: 5px; font-size: 13px; outline: none; }
-        
         .viewport { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
         canvas { flex: 1; margin: 15px; background: #0f172a; border: 1px solid #334155; border-radius: 5px; }
-
         .dashboard { height: 90px; background: #000; border-top: 2px solid var(--red); display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; text-align: center; }
         .stat-v { font-size: 22px; font-weight: bold; color: var(--red); display: block; }
-        .stat-l { font-size: 10px; color: #94a3b8; text-transform: uppercase; }
-
+        .stat-l { font-size: 10px; color: #94a3b8; }
         .btn { border: none; color: #fff; width: 100%; padding: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; transition: 0.2s; }
         .btn-add { background: var(--red); }
         .btn-report { background: var(--green); margin-top: 20px; }
-
         .item-row { background: #020617; padding: 10px; border-radius: 5px; margin-top: 8px; border: 1px solid #1e293b; font-size: 12px; display: flex; justify-content: space-between; }
         .del { color: #ef4444; cursor: pointer; font-weight: bold; }
-
         #reportOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; color:#000; z-index:9999; padding:30px; overflow-y:auto; }
     </style>
 </head>
@@ -46,7 +38,7 @@
     </div>
 
     <div class="box">
-        <h3>1. إعدادات الموقع</h3>
+        <h3>1. أبعاد القاعة</h3>
         <div style="display:flex; gap:10px;">
             <div style="flex:1;"><label>العرض (م)</label><input type="number" id="vW" value="40" oninput="render()"></div>
             <div style="flex:1;"><label>الطول (م)</label><input type="number" id="vL" value="60" oninput="render()"></div>
@@ -54,7 +46,7 @@
     </div>
 
     <div class="box">
-        <h3>2. مهندس النظام (إضافة الموديلات)</h3>
+        <h3>2. اختيار موديلات Motivity</h3>
         <label>الموديل:</label>
         <select id="sel_model">
            <optgroup label="HD Series (Active)">
@@ -63,18 +55,18 @@
                <option value="HD312A">HD312A Active (1000W)</option>
            </optgroup>
            <optgroup label="3G Series">
-               <option value="DB25-3G">DB25-3G Full Range Passive (1000W)</option>
-               <option value="MTL-700 3G">MTL-700 3G Passive (700W)</option>
-               <option value="DB15M-3G">DB15M-3G Passive Stage Monitor (500W)</option>
-               <option value="DB218-3G">DB218-3G Passive Subwoofer (1600W)</option>
+               <option value="DB25-3G">DB25-3G Full Range (1000W)</option>
+               <option value="MTL-700 3G">MTL-700 3G (700W)</option>
+               <option value="DB15M-3G">DB15M-3G Monitor (500W)</option>
+               <option value="DB218-3G">DB218-3G Subwoofer (1600W)</option>
            </optgroup>
            <optgroup label="QX Series">
-               <option value="QX-218">QX-218 Passive Subwoofer (1400W)</option>
-               <option value="QX-118">QX-118 Passive Subwoofer (700W)</option>
+               <option value="QX-218">QX-218 Subwoofer (1400W)</option>
+               <option value="QX-118">QX-118 Subwoofer (700W)</option>
            </optgroup>
            <optgroup label="M Series-Line Array">
-               <option value="M-25BW">M-25BW Passive Line Array Subwoofer (1000W)</option>
-               <option value="M-10">M-10 Passive Line Array Top (700W)</option>
+               <option value="M-25BW">M-25BW Line Array Sub (1000W)</option>
+               <option value="M-10">M-10 Line Array Top (700W)</option>
            </optgroup>
            <optgroup label="Traditional DB">
                <option value="DB-25NW">DB-25NW Passive (1000W)</option>
@@ -83,9 +75,9 @@
                <option value="DB-25OW">DB-25OW Passive (1000W)</option>
            </optgroup>
            <optgroup label="MLA Series-Line Array">
-               <option value="MLA-25B">MLA-25B Passive Line Array Subwoofer (1000W)</option>
-               <option value="MLA-210">MLA-210 Passive Line Array Top (700W)</option>
-               <option value="MLA-212">MLA-212 Passive Line Array Top (900W)</option>
+               <option value="MLA-25B">MLA-25B Line Array Sub (1000W)</option>
+               <option value="MLA-210">MLA-210 Line Array Top (700W)</option>
+               <option value="MLA-212">MLA-212 Line Array Top (900W)</option>
            </optgroup>
         </select>
 
@@ -98,7 +90,7 @@
 
     <div style="margin-top:auto">
         <button class="btn btn-report" onclick="showReport()">إصدار تقرير العميل</button>
-        <p style="font-size: 10px; color: #475569; text-align: center; margin-top: 15px;">المصمم: السيد إبراهيم علي عربي © 2026</p>
+        <p style="font-size: 10px; color: #475569; text-align: center; margin-top: 15px;">Motivity AI Sound Engineering © 2026</p>
     </div>
 </div>
 
@@ -106,9 +98,9 @@
     <canvas id="cv"></canvas>
     <div class="dashboard">
         <div><span class="stat-v" id="d_watt">0 W</span><span class="stat-l">الطاقة الكلية</span></div>
-        <div><span class="stat-v" id="d_qty">0</span><span class="stat-l">عدد الوحدات</span></div>
+        <div><span class="stat-v" id="d_qty">0</span><span class="stat-l">الوحدات</span></div>
         <div><span class="stat-v" id="d_spl">0 dB</span><span class="stat-l">Peak SPL</span></div>
-        <div><span class="stat-v" id="d_status" style="color:#444">---</span><span class="stat-l">التغطية</span></div>
+        <div><span class="stat-v" id="d_status" style="color:#444">---</span><span class="stat-l">التقييم</span></div>
     </div>
 </div>
 
@@ -122,11 +114,11 @@
 
 <script>
     const catalog = {
-        "HD Sub18": 1200, "HD315A": 1000, "HD312A": 1000, "DB25-3G": 1000, 
-        "MTL-700 3G": 700, "DB15M-3G": 500, "DB218-3G": 1600, "QX-218": 1400,
-        "QX-118": 700, "M-25BW": 1000, "M-10": 700, "DB-25NW": 1000,
-        "MTL-152": 600, "DB-10": 200, "DB-25OW": 1000, "MLA-25B": 1000,
-        "MLA-210": 700, "MLA-212": 900
+        "HD Sub18": 1200, "HD315A": 1000, "HD312A": 1000, 
+        "DB25-3G": 1000, "MTL-700 3G": 700, "DB15M-3G": 500, "DB218-3G": 1600,
+        "QX-218": 1400, "QX-118": 700, "M-25BW": 1000, "M-10": 700,
+        "DB-25NW": 1000, "MTL-152": 600, "DB-10": 200, "DB-25OW": 1000,
+        "MLA-25B": 1000, "MLA-210": 700, "MLA-212": 900
     };
 
     let items = [];
@@ -160,15 +152,15 @@
             tW += (catalog[it.model] * it.qty); tQ += it.qty;
             x.fillStyle = "#38bdf8";
             x.shadowBlur = 15; x.shadowColor = "#38bdf8";
-            x.fillRect(ox + 20 + (idx*20), oy + 20 + (idx*10), 12, 12);
+            x.fillRect(ox + 20 + (idx*15), oy + 20 + (idx*10), 12, 12);
             x.shadowBlur = 0;
         });
 
         d_watt.innerText = tW.toLocaleString() + " W";
         d_qty.innerText = tQ;
         d_spl.innerText = tW > 0 ? (Math.floor(115 + 10 * Math.log10(tW/1000))) + " dB" : "0 dB";
-        d_status.innerText = tQ > 4 ? "ممتازة" : "تحتاج تدعيم";
-        d_status.style.color = tQ > 4 ? "#10b981" : "orange";
+        d_status.innerText = tQ >= 1 ? "نظام مفعل" : "قيد التصميم";
+        d_status.style.color = tQ > 0 ? "#10b981" : "#444";
     }
 
     function showReport() {
@@ -176,18 +168,15 @@
         content.innerHTML = `
             <div style="direction:rtl; font-family:sans-serif;">
                 <h1 style="text-align:center; font-size:40px; margin:0; color:#000;">MOTI<span style="color:red;">V</span>ITY AUDIO</h1>
-                <p style="text-align:center; border-bottom:2px solid red; padding-bottom:10px;">تقرير التصميم الهندسي للمشروع</p>
+                <p style="text-align:center; border-bottom:2px solid red; padding-bottom:10px;">تقرير الأنظمة الصوتية الاحترافي</p>
                 <div style="background:#f4f4f4; padding:15px; margin:20px 0;">
-                    <p><strong>اسم المشروع:</strong> محاكاة توزيع صوتي ذكي</p>
-                    <p><strong>إعداد المهندس:</strong> إبراهيم علي عربي</p>
-                    <p><strong>تاريخ التقرير:</strong> ${new Date().toLocaleDateString('ar-EG')}</p>
-                    <p><strong>القدرة الكلية للنظام:</strong> ${d_watt.innerText}</p>
+                    <p><strong>تاريخ المشروع:</strong> ${new Date().toLocaleDateString('ar-EG')}</p>
+                    <p><strong>إجمالي القدرة (RMS):</strong> ${d_watt.innerText}</p>
                 </div>
                 <table border="1" style="width:100%; border-collapse:collapse; text-align:center;">
-                    <tr style="background:#000; color:#fff;"><th>الموديل المختار</th><th>الكمية</th><th>القدرة (RMS)</th><th>الإجمالي</th></tr>
+                    <tr style="background:#000; color:#fff;"><th>الموديل</th><th>الكمية</th><th>القدرة الفردية</th><th>إجمالي القدرة</th></tr>
                     ${items.map(it => `<tr><td>${it.model}</td><td>${it.qty}</td><td>${catalog[it.model]}W</td><td>${catalog[it.model]*it.qty}W</td></tr>`).join('')}
                 </table>
-                <p style="margin-top:30px; font-style:italic;">* تم استخدام معايير Motivity 2026 تحت إشراف هندسي متكامل.</p>
             </div>`;
         document.getElementById('reportOverlay').style.display = 'block';
     }
