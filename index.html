@@ -2,269 +2,211 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivity AI Pro | نظام الهندسة المتطور</title>
+    <title>Motivity AI Pro | النظام الهندسي المتكامل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #e60012; --dark: #020617; --panel: #0f172a; --blue: #38bdf8; --green: #10b981; }
-        body { margin: 0; display: flex; height: 100vh; background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        @media (max-width: 768px) { body { flex-direction: column; overflow-y: auto; } .sidebar { width: 100% !important; border-left: none !important; } canvas { height: 350px !important; } }
-        .sidebar { width: 420px; background: var(--panel); padding: 15px; border-left: 3px solid var(--red); overflow-y: auto; display: flex; flex-direction: column; }
-        .logo-container { text-align: center; margin-bottom: 15px; background: #000; padding: 10px; border-radius: 8px; border: 1px solid #1e293b; }
-        .logo-text { font-size: 32px; font-weight: 900; color: #fff; letter-spacing: -1px; margin: 0; }
-        .logo-text span { color: var(--red); }
-        .box { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid var(--red); }
-        h3 { margin: 0 0 8px; font-size: 13px; color: var(--blue); border-bottom: 1px solid #334155; padding-bottom: 5px; }
-        label { font-size: 11px; color: #94a3b8; display: block; margin-top: 5px; }
-        select, input { width: 100%; padding: 8px; background: #020617; border: 1px solid #475569; color: #fff; border-radius: 4px; margin-top: 3px; font-size: 12px; }
+        :root { --red: #e60012; --blue: #38bdf8; --dark: #0a0c10; --panel: #161b22; }
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { margin: 0; display: flex; height: 100vh; background: var(--dark); color: #fff; overflow: hidden; }
+
+        .sidebar { width: 440px; min-width: 440px; background: var(--panel); border-left: 3px solid var(--red); overflow-y: auto; padding: 20px; }
         .viewport { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
-        canvas { flex: 1; margin: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 5px; }
-        .dashboard { height: 85px; background: #000; border-top: 2px solid var(--red); display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; text-align: center; }
-        .stat-v { font-size: 18px; font-weight: bold; color: var(--red); display: block; }
-        .stat-l { font-size: 9px; color: #94a3b8; }
-        .btn { border: none; color: #fff; width: 100%; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; }
-        .btn-add { background: var(--red); }
-        .btn-report { background: var(--green); margin-top: 15px; }
-        .ai-suggestion { background: #0c4a6e; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; border-right: 4px solid var(--blue); }
-        .item-row { background: #020617; padding: 8px; border-radius: 4px; margin-top: 5px; border: 1px solid #1e293b; font-size: 11px; display: flex; justify-content: space-between; }
-        .del { color: #ef4444; cursor: pointer; }
-        #reportOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; color:#000; z-index:9999; padding:40px; overflow-y:auto; }
-        @media print { .no-print { display: none; } }
+
+        .box { background: #1c2128; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #30363d; }
+        h3 { margin: 0 0 10px; font-size: 14px; color: var(--blue); border-bottom: 1px solid #333; padding-bottom: 5px; }
+        label { font-size: 11px; color: #8b949e; display: block; margin-top: 8px; }
+        select, input { width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d; color: #fff; border-radius: 6px; margin-top: 5px; font-size: 13px; }
+
+        #mainCanvas { flex: 1; background: radial-gradient(circle, #1a1f26 0%, #000 100%); width: 100%; height: 100%; }
+
+        .dashboard { height: 90px; background: #000; border-top: 2px solid var(--red); display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; text-align: center; }
+        .stat-v { font-size: 20px; font-weight: 900; color: var(--red); display: block; }
+        .stat-l { font-size: 10px; color: #8b949e; text-transform: uppercase; }
+
+        .btn { border: none; color: #fff; width: 100%; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-add { background: var(--red); box-shadow: 0 4px 15px rgba(230,0,18,0.2); }
+        .btn-report { background: #238636; }
+
+        #reportOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:9999; padding:20px; overflow-y:auto; }
+        .report-paper { background:#fff; width:100%; max-width:900px; margin: 0 auto; padding:40px; color: #000; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: right; font-size: 13px; }
+        th { background: #111; color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="logo-container">
-        <div class="logo-text">Moti<span>V</span>ity</div>
-        <div style="font-size: 9px; color: #94a3b8; letter-spacing: 2px;">AI SMART SIMULATOR</div>
+    <div style="text-align:center; padding-bottom:15px;">
+        <h2 style="margin:0; font-size:28px;">MOTIVITY <span style="color:var(--red)">AI</span></h2>
+        <small style="color:#666">Professional Audio Systems - 2026</small>
     </div>
 
     <div class="box">
-        <h3>1. تهيئة الموقع والفعالية</h3>
-        <label>نوع الفعالية</label>
-        <select id="event_type" onchange="render()">
-            <option value="speech">مؤتمر / ندوة (وضوح عالي)</option>
-            <option value="party">حفل زفاف / مناسبة (صوت حيوي)</option>
-            <option value="live">حفل موسيقي مباشر (قوة قصوى)</option>
-            <option value="background">صوت خلفية (مطعم / فندق)</option>
+        <h3>1. تهيئة الموقع والمسرح</h3>
+        <label>نوع المساحة:</label>
+        <select id="space_type" onchange="draw()">
+            <option value="closed">قاعة مغلقة (Indoor +3dB)</option>
+            <option value="open">مساحة مفتوحة (Outdoor)</option>
         </select>
-        <div style="display:flex; gap:8px;">
-            <div style="flex:1;"><label>العرض (م)</label><input type="number" id="vW" value="30" oninput="render()"></div>
-            <div style="flex:1;"><label>الطول (م)</label><input type="number" id="vL" value="50" oninput="render()"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div><label>عرض القاعة (m)</label><input type="number" id="hW" value="30" oninput="draw()"></div>
+            <div><label>طول القاعة (m)</label><input type="number" id="hL" value="50" oninput="draw()"></div>
+            <div><label>عرض المسرح (m)</label><input type="number" id="sW" value="14" oninput="draw()"></div>
+            <div><label>عمق المسرح (m)</label><input type="number" id="sL" value="7" oninput="draw()"></div>
         </div>
-        <div style="display:flex; gap:8px; margin-top:5px;">
-            <div style="flex:1;"><label>المسرح (عرض)</label><input type="number" id="sW" value="15" oninput="render()"></div>
-            <div style="flex:1;"><label>المسرح (عمق)</label><input type="number" id="sL" value="8" oninput="render()"></div>
-        </div>
-        <label>نوع الموقع</label>
-        <select id="env_type" onchange="render()">
-            <option value="indoor">قاعة مغلقة (Indoor)</option>
-            <option value="outdoor">مساحة مفتوحة (Outdoor)</option>
-        </select>
     </div>
 
     <div class="box">
-        <h3>2. الهندسة والمنتجات</h3>
-        <label>منطقة التوزيع</label>
-        <select id="sel_zone">
-            <option value="Stage">المسرح (Monitors)</option>
-            <option value="Front PA">الجمهور الأمامي (Main)</option>
-            <option value="Mid Fill">وسط القاعة (Fills)</option>
-            <option value="Delay 1">خط التأخير 1 (Delay)</option>
-            <option value="Delay 2">أقصى الخلف (Outer)</option>
+        <h3>2. الأقسام الستة والمنتجات</h3>
+        <label>القسم:</label>
+        <select id="zone">
+            <option value="Main PA">1. الأطراف الرئيسية (Main PA)</option>
+            <option value="Subs">2. مصفوفة القواعد (Subs Array)</option>
+            <option value="FrontFill">3. تغطية أمامية (Front Fill)</option>
+            <option value="Monitors">4. المسرح (Monitors)</option>
+            <option value="SideFill">5. الجوانب (Side Fill)</option>
+            <option value="Delay">6. خط التأخير (Delay Line)</option>
         </select>
-        
-        <label>موديل Motivity</label>
+
+        <label>الموديل المحدث:</label>
         <select id="sel_model">
-           <optgroup label="HD Series">
-               <option value="HD Sub18">HD Sub18 Active (1200W)</option>
-               <option value="HD315A">HD315A Active (1000W)</option>
-               <option value="HD312A">HD312A Active (1000W)</option>
-           </optgroup>
-           <optgroup label="3G Series">
-               <option value="DB25-3G">DB25-3G (1000W)</option>
-               <option value="DB218-3G">DB218-3G (1600W)</option>
-               <option value="MTL-700 3G">MTL-700 3G (700W)</option>
-               <option value="DB15M-3G">DB15M-3G Monitor (500W)</option>
-           </optgroup>
-           <optgroup label="QX Series">
-               <option value="QX-218">QX-218 (1400W)</option>
-               <option value="QX-118">QX-118 (700W)</option>
-           </optgroup>
-           <optgroup label="Line Array">
-               <option value="MLA-212">MLA-212 (900W)</option>
-               <option value="MLA-210">MLA-210 (700W)</option>
-               <option value="MLA-25B">MLA-25B Sub (1000W)</option>
-               <option value="M-10">M-10 (700W)</option>
-               <option value="M-25BW">M-25BW Sub (1000W)</option>
-           </optgroup>
-           <optgroup label="Traditional">
-               <option value="DB-25NW">DB-25NW (1000W)</option>
-               <option value="DB-25OW">DB-25OW (1000W)</option>
-               <option value="MTL-152">MTL-152 (600W)</option>
-               <option value="DB-10">DB-10 (200W)</option>
-           </optgroup>
+            <optgroup label="HD Series (Active)">
+                <option value="HD Sub18|1200">HD Sub18 Active (1200W)</option>
+                <option value="HD315A|1000">HD315A Active (1000W)</option>
+                <option value="HD312A|1000">HD312A Active (1000W)</option>
+            </optgroup>
+            <optgroup label="3G Series">
+                <option value="DB25-3G|1000">DB25-3G Full Range (1000W)</option>
+                <option value="MTL-700 3G|700">MTL-700 3G (700W)</option>
+                <option value="DB15M-3G|500">DB15M-3G Monitor (500W)</option>
+                <option value="DB218-3G|1600">DB218-3G Subwoofer (1600W)</option>
+            </optgroup>
+            <optgroup label="QX Series">
+                <option value="QX-218|1400">QX-218 Subwoofer (1400W)</option>
+                <option value="QX-118|700">QX-118 Subwoofer (700W)</option>
+            </optgroup>
+            <optgroup label="M Series-Line Array">
+                <option value="M-25BW|1000">M-25BW Array Sub (1000W)</option>
+                <option value="M-10|700">M-10 Array Top (700W)</option>
+            </optgroup>
+            <optgroup label="Traditional DB">
+                <option value="DB-25NW|1000">DB-25NW Passive (1000W)</option>
+                <option value="MTL-152|600">MTL-152 Passive (600W)</option>
+                <option value="DB-10|200">DB-10 Passive (200W)</option>
+                <option value="DB-25OW|1000">DB-25OW Passive (1000W)</option>
+            </optgroup>
+            <optgroup label="MLA Series-Line Array">
+                <option value="MLA-25B|1000">MLA-25B Array Sub (1000W)</option>
+                <option value="MLA-210|700">MLA-210 Array Top (700W)</option>
+                <option value="MLA-212|900">MLA-212 Array Top (900W)</option>
+            </optgroup>
         </select>
-        <label>الكمية</label>
-        <input type="number" id="sel_qty" value="2" min="1">
+
+        <label>الكمية (عدد النقاط):</label>
+        <input type="number" id="qty" value="4" min="1">
         <button class="btn btn-add" onclick="addItem()">إضافة للنظام</button>
     </div>
 
-    <div id="items_list"></div>
-    <div id="ai_box" class="ai-suggestion">نظام الاقتراح الذكي: جاهز للتحليل..</div>
-    <button class="btn btn-report" onclick="showReport()">إصدار التقرير الفني الشامل</button>
+    <div id="ui_list"></div>
+    <button class="btn btn-report" onclick="openReport()">إصدار التقرير الشامل</button>
 </div>
 
 <div class="viewport">
-    <canvas id="cv"></canvas>
+    <canvas id="mainCanvas"></canvas>
     <div class="dashboard">
-        <div><span class="stat-v" id="d_watt">0 W</span><span class="stat-l">RMS POWER</span></div>
-        <div><span class="stat-v" id="d_qty">0</span><span class="stat-l">UNITS</span></div>
-        <div><span class="stat-v" id="d_spl">0 dB</span><span class="stat-l">PEAK SPL</span></div>
-        <div><span class="stat-v" id="d_status" style="color:#444">---</span><span class="stat-l">ANALYSIS</span></div>
+        <div><span class="stat-v" id="d_w">0 W</span><span class="stat-l">TOTAL RMS</span></div>
+        <div><span class="stat-v" id="d_q">0</span><span class="stat-l">TOTAL UNITS</span></div>
+        <div><span class="stat-v" id="d_s">0 dB</span><span class="stat-l">EST. MAX SPL</span></div>
+        <div><span class="stat-v" id="d_e" style="color:var(--blue)">-</span><span class="stat-l">ENVIRONMENT</span></div>
     </div>
 </div>
 
 <div id="reportOverlay">
-    <div id="reportContent"></div>
-    <div class="no-print" style="text-align:center; margin-top:20px;">
-        <button class="btn" style="background:var(--green); width:150px;" onclick="window.print()">طباعة التقرير</button>
-        <button class="btn" style="background:#666; width:150px;" onclick="document.getElementById('reportOverlay').style.display='none'">إغلاق</button>
+    <div class="report-paper">
+        <h1 style="border-bottom:5px solid #000; padding-bottom:10px;">MOTIVITY ENGINEERING REPORT</h1>
+        <div id="repInfo" style="margin:20px 0; font-weight:bold; background:#f4f4f4; padding:15px; border-right:5px solid var(--red);"></div>
+        <div style="background:#000; padding:10px; text-align:center;"><img id="repImg" style="width:100%;"></div>
+        <table id="repTable"></table>
+        <button class="btn" style="background:#000; width:150px; margin-top:20px;" onclick="document.getElementById('reportOverlay').style.display='none'">رجوع</button>
     </div>
 </div>
 
 <script>
-    const catalog = { 
-        "HD Sub18": 1200, "HD315A": 1000, "HD312A": 1000, "DB25-3G": 1000, "DB218-3G": 1600, 
-        "MTL-700 3G": 700, "DB15M-3G": 500, "QX-218": 1400, "QX-118": 700, "MLA-212": 900, 
-        "MLA-210": 700, "MLA-25B": 1000, "M-10": 700, "M-25BW": 1000, "DB-25NW": 1000, 
-        "DB-25OW": 1000, "MTL-152": 600, "DB-10": 200 
-    };
-    let items = [];
+    let sys = [];
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
 
     function addItem() {
-        items.push({ zone: sel_zone.value, model: sel_model.value, qty: parseInt(sel_qty.value) });
-        updateUI(); render();
+        const [m, w] = document.getElementById('sel_model').value.split('|');
+        sys.push({ z: document.getElementById('zone').value, m: m, w: parseInt(w), q: parseInt(document.getElementById('qty').value) });
+        updateUI(); draw();
     }
 
     function updateUI() {
-        items_list.innerHTML = items.map((it, i) => `<div class="item-row"><span>${it.zone}: ${it.model} (x${it.qty})</span><span class="del" onclick="items.splice(${i},1);updateUI();render()">✕</span></div>`).join('');
+        document.getElementById('ui_list').innerHTML = sys.map((s, i) => `
+            <div style="background:#0d1117; padding:8px; border-radius:6px; margin:5px 15px; border:1px solid #333; font-size:11px; display:flex; justify-content:space-between;">
+                <span><b>${s.z}</b>: ${s.m} (x${s.q})</span>
+                <b style="color:red; cursor:pointer" onclick="sys.splice(${i},1);updateUI();draw()">×</b>
+            </div>`).join('');
     }
 
-    function render() {
-        const c = cv, x = c.getContext("2d");
-        c.width = c.parentElement.clientWidth - 20; c.height = c.parentElement.clientHeight - 100;
-        const W = +vW.value, L = +vL.value, sWv = +sW.value, sLv = +sL.value;
-        const scale = Math.min(c.width / W, c.height / L) * 0.8;
-        const ox = (c.width - W * scale) / 2, oy = (c.height - L * scale) / 2;
+    function draw() {
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        const hW = parseFloat(document.getElementById('hW').value), hL = parseFloat(document.getElementById('hL').value);
+        const sW = parseFloat(document.getElementById('sW').value), sL = parseFloat(document.getElementById('sL').value);
+        const scale = Math.min((canvas.width-80)/hW, (canvas.height-120)/hL);
+        const ox = (canvas.width - hW*scale)/2, oy = (canvas.height - hL*scale)/2;
 
-        x.clearRect(0, 0, c.width, c.height);
-        x.fillStyle = "#0f172a"; x.fillRect(ox, oy, W * scale, L * scale);
-        x.strokeStyle = "#475569"; x.strokeRect(ox, oy, W * scale, L * scale);
-        
-        // رسم المسرح
-        x.fillStyle = "rgba(56, 189, 248, 0.15)";
-        const stageX = ox + (W * scale - sWv * scale) / 2;
-        x.fillRect(stageX, oy, sWv * scale, sLv * scale);
-        x.strokeStyle = "#38bdf8"; x.strokeRect(stageX, oy, sWv * scale, sLv * scale);
+        ctx.fillStyle = "#05070a"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, hW*scale, hL*scale);
 
-        let tW = 0, tQ = 0;
-        const zones_y = {"Stage": 0.08, "Front PA": 0.25, "Mid Fill": 0.5, "Delay 1": 0.75, "Delay 2": 0.9};
-        
-        items.forEach(it => {
-            tW += (catalog[it.model] * it.qty); tQ += it.qty;
-            x.fillStyle = it.zone === "Stage" ? "#38bdf8" : "#e60012";
-            for(let i=0; i<it.qty; i++) {
-                let px = ox + (i * (W*scale/it.qty)) + (W*scale/(it.qty*2));
-                let py = oy + (L * scale * zones_y[it.zone]);
-                x.beginPath(); x.arc(px, py, 5, 0, 7); x.fill();
+        const sx = ox + (hW*scale - sW*scale)/2;
+        ctx.fillStyle = "rgba(56, 189, 248, 0.1)"; ctx.fillRect(sx, oy, sW*scale, sL*scale);
+        ctx.strokeStyle = "#38bdf8"; ctx.strokeRect(sx, oy, sW*scale, sL*scale);
+
+        sys.forEach(s => {
+            const col = { "Main PA":"#ff0000", "Subs":"#ffffff", "FrontFill":"#ffff00", "Monitors":"#00d4ff", "SideFill":"#00ff00", "Delay":"#ff8800" }[s.z];
+            for(let i=0; i<s.q; i++) {
+                let px, py; const half = Math.ceil(s.q/2);
+                if(s.z === "Main PA") {
+                    px = (i < half) ? sx - 15 : sx + sW*scale + 5;
+                    py = oy + (sL*scale) + (i % half) * 20;
+                } else if(s.z === "Subs" || s.z === "FrontFill") {
+                    px = sx + (sW*scale / (s.q + 1)) * (i + 1);
+                    py = (s.z === "Subs") ? oy + sL*scale + 12 : oy + sL*scale - 12;
+                } else if(s.z === "Monitors") {
+                    px = sx + (sW*scale / (s.q + 1)) * (i + 1);
+                    py = oy + sL*scale * 0.7;
+                } else if(s.z === "SideFill") {
+                    px = (i < half) ? ox + 15 : ox + hW*scale - 25;
+                    py = oy + (hL*scale * 0.45) + (i % half) * 20;
+                } else { // Delay
+                    px = (i < half) ? ox + 15 : ox + hW*scale - 25;
+                    py = oy + (hL*scale * 0.8) + (i % half) * 20;
+                }
+                ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI*2);
+                ctx.fillStyle = col; ctx.shadowBlur = 10; ctx.shadowColor = col; ctx.fill(); ctx.shadowBlur = 0;
             }
         });
 
-        d_watt.innerText = tW.toLocaleString() + " W";
-        d_qty.innerText = tQ;
-        let baseSPL = tW > 0 ? (110 + 10 * Math.log10(tW/1000)) : 0;
-        if(env_type.value === 'indoor') baseSPL += 3;
-        d_spl.innerText = Math.round(baseSPL) + " dB";
-
-        // تحليل الذكاء الصناعي بناءً على نوع الفعالية
-        const area = W * L;
-        let factor = 10; // افتراضي
-        if(event_type.value === 'live') factor = 25;
-        if(event_type.value === 'party') factor = 18;
-        if(event_type.value === 'speech') factor = 8;
-        if(event_type.value === 'background') factor = 4;
-
-        const reqW = area * factor;
-        if(tW === 0) {
-            ai_box.innerText = "اقتراح: يرجى البدء بإضافة سماعات Motivity للتحليل.";
-            d_status.innerText = "---";
-        } else if(tW < reqW) {
-            ai_box.innerText = `اقتراح: لفعالية من نوع (${event_type.options[event_type.selectedIndex].text})، تحتاج للمزيد من القدرة.`;
-            d_status.innerText = "غير كافٍ"; d_status.style.color = "orange";
-        } else {
-            ai_box.innerText = `اقتراح: النظام الحالي يغطي احتياجات الـ (${event_type.options[event_type.selectedIndex].text}) بكفاءة عالية.`;
-            d_status.innerText = "مثالي"; d_status.style.color = "#10b981";
-        }
+        let tw = sys.reduce((a,b) => a + (b.w*b.q), 0);
+        document.getElementById('d_w').innerText = tw.toLocaleString() + " W";
+        document.getElementById('d_q').innerText = sys.reduce((a,b) => a+b.q, 0);
+        document.getElementById('d_e').innerText = document.getElementById('space_type').value.toUpperCase();
+        let spl = tw > 0 ? Math.round(112 + 10*Math.log10(tw/1000)) : 0;
+        if(document.getElementById('space_type').value==='closed') spl += 3;
+        document.getElementById('d_s').innerText = spl + " dB";
     }
 
-    function showReport() {
-        const content = document.getElementById('reportContent');
-        content.innerHTML = `
-            <div style="direction:rtl; font-family:sans-serif; line-height:1.6;">
-                <div style="text-align:center; border-bottom:4px solid red; padding-bottom:10px;">
-                    <h1 style="font-size:45px; margin:0; letter-spacing:-2px;">MOTI<span style="color:red;">V</span>ITY AUDIO</h1>
-                    <p style="text-transform:uppercase; color:#666; font-weight:bold;">نظام المحاكاة الهندسي بالذكاء الاصطناعي</p>
-                </div>
-                
-                <div style="display:flex; justify-content:space-between; margin-top:30px; background:#f0f4f8; padding:20px; border-radius:10px; border:1px solid #d1d5db;">
-                    <div>
-                        <h4 style="color:red; border-bottom:2px solid red; width:fit-content;">تفاصيل الموقع</h4>
-                        <p><strong>نوع الفعالية:</strong> ${event_type.options[event_type.selectedIndex].text}</p>
-                        <p><strong>المساحة الكلية:</strong> ${vW.value}م × ${vL.value}م</p>
-                        <p><strong>المسرح:</strong> ${sW.value}م × ${sL.value}م</p>
-                    </div>
-                    <div>
-                        <h4 style="color:red; border-bottom:2px solid red; width:fit-content;">تحليل الأداء</h4>
-                        <p><strong>القدرة الإجمالية:</strong> ${d_watt.innerText}</p>
-                        <p><strong>شدة الصوت المتوقعة:</strong> ${d_spl.innerText}</p>
-                        <p><strong>حالة النظام:</strong> ${d_status.innerText}</p>
-                    </div>
-                </div>
-
-                <h4 style="margin-top:30px; background:#000; color:#fff; padding:10px;">قائمة المكونات والتوزيع الزوني</h4>
-                <table border="1" style="width:100%; border-collapse:collapse; text-align:center;">
-                    <tr style="background:#e5e7eb;">
-                        <th style="padding:10px;">المنطقة</th>
-                        <th>موديل Motivity</th>
-                        <th>العدد</th>
-                        <th>القدرة (RMS)</th>
-                        <th>الإجمالي</th>
-                    </tr>
-                    ${items.map(it => `
-                        <tr>
-                            <td style="padding:10px;">${it.zone}</td>
-                            <td>${it.model}</td>
-                            <td>${it.qty}</td>
-                            <td>${catalog[it.model]}W</td>
-                            <td>${catalog[it.model]*it.qty}W</td>
-                        </tr>
-                    `).join('')}
-                </table>
-
-                <div style="margin-top:40px; padding:20px; border:2px dashed #0369a1; border-radius:10px; background:#f0f9ff;">
-                    <h4 style="margin:0; color:#0369a1;">الخلاصة الفنية (AI Technical Summary):</h4>
-                    <p style="margin:10px 0;">بناءً على اختيار فعالية "${event_type.options[event_type.selectedIndex].text}" في مساحة ${vW.value*vL.value} متر مربع، ${ai_box.innerText.replace('اقتراح: ', '')}</p>
-                    <p style="font-size:12px; color:#555;">* تم حساب الفواقد الصوتية بناءً على نوع الموقع (${env_type.options[env_type.selectedIndex].text}).</p>
-                </div>
-                
-                <div style="margin-top:50px; text-align:center; font-size:11px; color:#999;">
-                    صدر هذا التقرير عن طريق برنامج Motivity AI Master - نظام المحاكاة الرقمي v2.0
-                </div>
-            </div>`;
-        document.getElementById('reportOverlay').style.display = 'block';
+    function openReport() {
+        document.getElementById('repImg').src = canvas.toDataURL();
+        document.getElementById('repInfo').innerText = `المساحة: ${document.getElementById('hW').value}x${document.getElementById('hL').value}م | المسرح: ${document.getElementById('sW').value}x${document.getElementById('sL').value}م | الحالة: ${document.getElementById('space_type').value}`;
+        document.getElementById('repTable').innerHTML = `<tr><th>القسم</th><th>الموديل</th><th>الكمية</th><th>RMS Total</th></tr>` +
+            sys.map(s => `<tr><td>${s.z}</td><td>${s.m}</td><td>${s.q}</td><td>${(s.w*s.q).toLocaleString()} W</td></tr>`).join('');
+        document.getElementById('reportOverlay').style.display='block';
     }
-    render();
+    window.onload = () => setTimeout(draw, 500);
 </script>
 </body>
 </html>
