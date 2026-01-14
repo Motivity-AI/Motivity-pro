@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Motivity AI – التقرير الصوتي الاحترافي</title>
+<title>Motivity AI – النظام الصوتي الاحترافي</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -20,93 +20,105 @@ button{width:100%;padding:10px;border:none;border-radius:7px;font-weight:700;mar
 .btn-add{background:var(--red)}
 .btn-auto{background:#ff9800}
 .btn-report{background:#238636}
-canvas{display:block;background:#000;border:1px solid #333;margin-bottom:10px;width:100%;height:auto;max-height:500px}
-#reportPage{display:none;flex-direction:column;align-items:center;justify-content:flex-start;overflow:auto}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border:1px solid #555;padding:6px;text-align:center;font-size:12px}
-th{background:#222}
-.actions{display:flex;gap:10px;margin-top:10px}
-.actions button{flex:1}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#238636;padding:10px 18px;border-radius:8px;font-weight:700;opacity:0;transition:.3s}
+canvas{display:block;background:#000;border:1px solid #333;margin-bottom:10px;width:100%;height:auto;max-height:450px}
+
+/* صفحة التقرير */
+#reportPage{display:none;flex-direction:column;align-items:center;width:100%;background:#fff;color:#000;overflow-y:auto;padding:20px}
+#reportPrintArea{width:100%;max-width:900px;background:#fff;padding:20px;color:#000}
+table{width:100%;border-collapse:collapse;margin-top:15px;color:#000}
+th,td{border:1px solid #000;padding:8px;text-align:center;font-size:12px}
+th{background:#f0f0f0}
+.actions{display:flex;gap:10px;margin-top:20px;width:100%;max-width:900px}
+.actions button{flex:1;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:700}
+.btn-save{background:#28a745}
+.btn-back{background:#6c757d}
+.btn-object{background:#ff5722}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#238636;padding:10px 18px;border-radius:8px;font-weight:700;z-index:10000;opacity:0;transition:.3s}
 #toast.show{opacity:1;bottom:35px}
+
 @media(max-width:900px){
   body{flex-direction:column}
-  .sidebar{width:100%;max-height:40vh;overflow:auto}
-  .main{flex:1}
+  .sidebar{width:100%;max-height:40vh}
 }
 </style>
 </head>
 <body>
 
 <div class="sidebar" id="mainPage">
-  <h2>MOTIVITY <span style="color:var(--red)">AI</span></h2>
+<h2>MOTIVITY <span style="color:var(--red)">AI</span></h2>
 
-  <div class="box">
-    <h3>معلومات القاعة</h3>
-    <label>نوع البيئة</label>
-    <select id="env"><option value="indoor">مغلقة</option><option value="outdoor">مفتوحة</option></select>
-    <label>عرض القاعة (م)</label>
-    <input id="hW" type="number" value="50">
-    <label>طول القاعة (م)</label>
-    <input id="hL" type="number" value="100">
-    <label>عرض المسرح (م)</label>
-    <input id="sW" type="number" value="14">
-    <label>عمق المسرح (م)</label>
-    <input id="sL" type="number" value="7">
-    <label>عدد الجمهور</label>
-    <input id="audience" type="number" value="7000">
-  </div>
-
-  <div class="box">
-    <h3>إضافة سماعات</h3>
-    <label>المنطقة</label>
-    <select id="zone">
-      <option>النظام الرئيسي</option>
-      <option>السوبس</option>
-      <option>المونيتورات</option>
-      <option>التغطية الجانبية 1</option>
-      <option>التغطية الجانبية 2</option>
-      <option>التأخير</option>
-    </select>
-
-    <label>الموديل</label>
-    <select id="model">
-      <option>DB-25 3G</option>
-      <option>DB-25NW</option>
-      <option>MTL-700 3G</option>
-      <option>MTL-152</option>
-      <option>DB15M-3G</option>
-      <option>QX-218D</option>
-      <option>DB218-3G</option>
-      <option>MLA210</option>
-      <option>MLA118</option>
-      <option>HD315A</option>
-      <option>HD312A</option>
-      <option>HDSUB18A</option>
-    </select>
-
-    <label>الكمية</label>
-    <input id="qty" type="number" value="2" min="1">
-
-    <button class="btn-add" onclick="addSpeaker()">إضافة السماعات</button>
-    <button class="btn-auto" onclick="autoSystem()">اقتراح نظام جاهز</button>
-    <button class="btn-report" onclick="openReport()">توليد التقرير</button>
-  </div>
+<div class="box">
+<h3>معلومات القاعة</h3>
+<label>نوع البيئة</label>
+<select id="env"><option value="indoor">مغلقة</option><option value="outdoor">مفتوحة</option></select>
+<label>عرض القاعة (م)</label>
+<input id="hW" type="number" value="50">
+<label>طول القاعة (م)</label>
+<input id="hL" type="number" value="100">
+<label>عرض المسرح (م)</label>
+<input id="sW" type="number" value="14">
+<label>عمق المسرح (م)</label>
+<input id="sL" type="number" value="7">
+<label>عدد الجمهور</label>
+<input id="audience" type="number" value="7000">
 </div>
 
-<div class="main">
-  <canvas id="mainCanvas"></canvas>
+<div class="box">
+<h3>إضافة سماعات</h3>
+<label>المنطقة</label>
+<select id="zone">
+<option>النظام الرئيسي</option>
+<option>السوبس</option>
+<option>المونيتورات</option>
+<option>التغطية الجانبية 1</option>
+<option>التغطية الجانبية 2</option>
+<option>التأخير</option>
+</select>
+
+<label>الموديل</label>
+<select id="model">
+<option>DB-25 3G</option>
+<option>DB-25NW</option>
+<option>MTL-700 3G</option>
+<option>MTL-152</option>
+<option>DB15M-3G</option>
+<option>QX-218D</option>
+<option>DB218-3G</option>
+<option>MLA210</option>
+<option>MLA118</option>
+<option>HD315A</option>
+<option>HD312A</option>
+<option>HDSUB18A</option>
+</select>
+
+<label>الكمية</label>
+<input id="qty" type="number" value="2" min="1">
+
+<button class="btn-add" onclick="addSpeaker()">إضافة السماعات</button>
+<button class="btn-auto" onclick="smartSystem()">اقتراح نظام ذكي</button>
+<button class="btn-report" onclick="openReport()">توليد التقرير</button>
+<button class="btn-object" onclick="objection()">اعتراض على الاقتراح</button>
+</div>
 </div>
 
-<div class="main" id="reportPage">
-  <h2>تقرير النظام الصوتي الاحترافي</h2>
-  <canvas id="reportCanvas"></canvas>
-  <div id="reportContent"></div>
-  <div class="actions">
-    <button onclick="window.print()">طباعة</button>
-    <button onclick="window.print()">حفظ PDF</button>
-    <button onclick="back()">رجوع</button>
-  </div>
+<div class="main" id="mainCanvasContainer">
+<canvas id="mainCanvas"></canvas>
+</div>
+
+<div id="reportPage">
+<div id="reportPrintArea">
+<h2 style="text-align:center;color:#e60012">تقرير النظام الصوتي الاحترافي</h2>
+<hr>
+<div style="text-align:center;margin-bottom:15px;">
+<img id="reportImage" style="max-width:100%;border:1px solid #ddd;border-radius:5px;">
+</div>
+<div id="reportContent"></div>
+</div>
+
+<div class="actions">
+<button class="btn-save" onclick="saveReport()">حفظ التقرير</button>
+<button class="btn-back" onclick="back()">رجوع</button>
 </div>
 
 <div id="toast"></div>
@@ -114,185 +126,150 @@ th{background:#222}
 <script>
 const canvas=document.getElementById("mainCanvas");
 const ctx=canvas.getContext("2d");
-const rcanvas=document.getElementById("reportCanvas");
-const rctx=rcanvas.getContext("2d");
 const toast=document.getElementById("toast");
 let sys=[];
+let lastSuggestion=null;
+let objections=[];
 
-const speakerRMS={
-  "DB-25 3G":50,
-  "DB-25NW":50,
-  "MTL-700 3G":40,
-  "MTL-152":35,
-  "DB15M-3G":20,
-  "QX-218D":50,
-  "DB218-3G":70,
-  "MLA210":60,
-  "MLA118":50,
-  "HD315A":45,
-  "HD312A":45,
-  "HDSUB18A":70
-};
+const speakerRMS={"DB-25 3G":50,"DB-25NW":50,"MTL-700 3G":40,"MTL-152":35,"DB15M-3G":20,"QX-218D":50,"DB218-3G":70,"MLA210":60,"MLA118":50,"HD315A":45,"HD312A":45,"HDSUB18A":70};
+const speakerColors={"النظام الرئيسي":"#e60012","السوبس":"#38bdf8","المونيتورات":"#238636","التغطية الجانبية 1":"#8b5cf6","التغطية الجانبية 2":"#a855f7","التأخير":"#facc15"};
 
-const speakerColors={
-  "النظام الرئيسي":"#e60012",
-  "السوبس":"#38bdf8",
-  "المونيتورات":"#238636",
-  "التغطية الجانبية 1":"#8b5cf6",
-  "التغطية الجانبية 2":"#a855f7",
-  "التأخير":"#facc15"
-};
+// استرجاع الاعتراضات السابقة
+if(localStorage.getItem("objectionHistory")){
+  objections=JSON.parse(localStorage.getItem("objectionHistory"));
+}
 
-// ------------------ إضافة / اقتراح ------------------
+// إضافة سماعات
 function addSpeaker(){
-  sys.push({z:zone.value,m:model.value,q:+qty.value});
+ const z=document.getElementById("zone").value;
+ const m=document.getElementById("model").value;
+ const q=+document.getElementById("qty").value;
+ sys.push({z,m,q});
+ draw();
+ showToast("تمت إضافة السماعات بنجاح");
+}
+
+// الاقتراح الذكي
+function smartSystem(){
+  const hallW=+document.getElementById("hW").value;
+  const hallL=+document.getElementById("hL").value;
+  const sArea=hallW*hallL;
+  sys=[];
+  if(sArea<50){
+    sys=[
+      {z:"النظام الرئيسي",m:"MTL-700 3G",q:1},
+      {z:"المونيتورات",m:"MTL-700 3G",q:4},
+      {z:"السوبس",m:"HD312A",q:2}
+    ];
+  }else{
+    sys=[
+      {z:"النظام الرئيسي",m:"DB-25 3G",q:3},
+      {z:"السوبس",m:"QX-218D",q:2},
+      {z:"المونيتورات",m:"DB15M-3G",q:4},
+      {z:"التغطية الجانبية 1",m:"MLA210",q:2},
+      {z:"التغطية الجانبية 2",m:"MLA210",q:2},
+      {z:"التأخير",m:"HD312A",q:2}
+    ];
+  }
+
+  // تعديل الاقتراح بناء على الاعتراضات السابقة
+  objections.forEach(obj=>{
+    if(obj.area <= sArea){
+      sys.forEach(s=>{
+        if(s.z===obj.zone) s.q=obj.newQty;
+      });
+    }
+  });
+
+  lastSuggestion=JSON.parse(JSON.stringify(sys));
   draw();
-  showToast("تمت إضافة السماعات");
+  showToast("تم اقتراح نظام ذكي مع التعلم من الاعتراضات");
 }
 
-function autoSystem(){
-  sys=[
-    {z:"النظام الرئيسي",m:"DB-25 3G",q:2},
-    {z:"السوبس",m:"QX-218D",q:2},
-    {z:"المونيتورات",m:"DB15M-3G",q:4},
-    {z:"التغطية الجانبية 1",m:"MLA210",q:2},
-    {z:"التغطية الجانبية 2",m:"MLA210",q:2},
-    {z:"التأخير",m:"HD312A",q:2}
-  ];
-  draw();
-  showToast("تم إنشاء نظام احترافي");
-}
-
-// ------------------ رسم القاعة ------------------
-function fixCanvas(canvas){
-  canvas.width=canvas.clientWidth;
-  canvas.height=450;
-}
-
+// الرسم
+function fixCanvas(c){ c.width=c.clientWidth; c.height=450; }
 function draw(){
-  fixCanvas(canvas);
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  fixCanvas(canvas); ctx.clearRect(0,0,canvas.width,canvas.height);
+  const hW=+document.getElementById("hW").value,hL=+document.getElementById("hL").value,sW=+document.getElementById("sW").value,sL=+document.getElementById("sL").value;
+  const scale=Math.min(canvas.width/hW,canvas.height/hL)*0.9, ox=(canvas.width-hW*scale)/2, oy=(canvas.height-hL*scale)/2;
+  ctx.strokeStyle="#555"; ctx.strokeRect(ox,oy,hW*scale,hL*scale);
+  ctx.fillStyle="rgba(56,189,248,.25)"; ctx.fillRect(ox+(hW-sW)/2*scale,oy,sW*scale,sL*scale);
+  const gx=ox+hW*scale/2, gy=oy+hL*scale/2;
+  sys.forEach((s,index)=>{ for(let i=0;i<s.q;i++){ let x=ox+hW*scale/2,y=oy+sL*scale+15,size=6;
+    if(s.z==="النظام الرئيسي"){ x=i%2?ox+10:ox+hW*scale-10; y=oy+sL*scale+10; }
+    if(s.z==="السوبس"){ x=ox+(hW-sW)/2*scale+(i+1)*(sW*scale/(s.q+1)); y=oy+sL*scale+5; }
+    if(s.z==="المونيتورات"){ x=ox+(hW-sW)/2*scale+(i+1)*(sW*scale/(s.q+1)); y=oy+sL*scale-5; }
+    if(s.z==="التغطية الجانبية 1"){ x=i%2?ox+6:ox+hW*scale-6; y=gy*0.8; }
+    if(s.z==="التغطية الجانبية 2"){ x=i%2?ox+6:ox+hW*scale-6; y=gy; }
+    if(s.z==="التأخير"){ x=i%2?ox+12:ox+hW*scale-12; y=oy+hL*scale-15; }
+    ctx.fillStyle=speakerColors[s.z]||"#fff"; ctx.fillRect(x-size/2,y-size/2,size,size);
+    ctx.font="10px Cairo"; ctx.textAlign="center"; ctx.fillText(s.m,x,y-8);
+  }});
+}
 
-  const hW=+document.getElementById("hW").value;
-  const hL=+document.getElementById("hL").value;
+// التقرير
+function openReport(){
+  if(sys.length===0){ showToast("يرجى إضافة السماعات أولاً"); return; }
+  document.getElementById("reportImage").src=canvas.toDataURL("image/png");
+  document.getElementById("mainPage").style.display="none";
+  document.getElementById("mainCanvasContainer").style.display="none";
+  document.getElementById("reportPage").style.display="flex";
+
+  const audience=+document.getElementById("audience").value;
   const sW=+document.getElementById("sW").value;
   const sL=+document.getElementById("sL").value;
 
-  const scale=Math.min(canvas.width/hW,canvas.height/hL)*0.9;
-  const ox=(canvas.width-hW*scale)/2;
-  const oy=(canvas.height-hL*scale)/2;
-
-  // القاعة
-  ctx.strokeStyle="#555";
-  ctx.strokeRect(ox,oy,hW*scale,hL*scale);
-
-  // المسرح
-  ctx.fillStyle="rgba(56,189,248,.25)";
-  ctx.fillRect(ox+(hW-sW)/2*scale,oy,sW*scale,sL*scale);
-
-  const gx=ox+hW*scale/2;
-  const gy=oy+hL*scale/2;
-
-  sys.forEach(s=>{
-    for(let i=0;i<s.q;i++){
-      let x=ox+hW*scale/2;
-      let y=oy+sL*scale+15;
-      let size=6;
-
-      if(s.z==="النظام الرئيسي"){ 
-        x=i%2?ox+10:ox+hW*scale-10; y=oy+sL*scale+10;
-      }
-      if(s.z==="السوبس"){
-        x=ox+(hW-sW)/2*scale+(i+1)*(sW*scale/(s.q+1)); y=oy+sL*scale+5;
-      }
-      if(s.z==="المونيتورات"){
-        x=ox+(hW-sW)/2*scale+(i+1)*(sW*scale/(s.q+1)); y=oy+sL*scale-5;
-      }
-      if(s.z==="التغطية الجانبية 1"){
-        x=i%2?ox+6:ox+hW*scale-6; y=gy*0.8;
-      }
-      if(s.z==="التغطية الجانبية 2"){
-        x=i%2?ox+6:ox+hW*scale-6; y=gy;
-      }
-      if(s.z==="التأخير"){
-        x=i%2?ox+12:ox+hW*scale-12; y=oy+hL*scale-15;
-      }
-
-      ctx.fillStyle=speakerColors[s.z]||"#fff";
-      ctx.fillRect(x-size/2,y-size/2,size,size);
-
-      ctx.font="10px Cairo";
-      ctx.textAlign="center";
-      ctx.fillText(s.m,x,y-8);
-    }
+  let html="<h3>تفاصيل النظام الصوتي:</h3><table><tr><th>المنطقة</th><th>الموديل</th><th>الكمية</th><th>تغطية</th><th>التأخير (م)</th><th>واط مطلوب</th><th>طول الكيبل (م)</th></tr>";
+  sys.forEach((s,index)=>{
+    const r=speakerRMS[s.m]||30;
+    let coverage=(Math.PI*r*r/2)*s.q;
+    let coveredPeople=(s.z==="المونيتورات")?Math.floor(Math.min(sW*sL,coverage)/0.7):Math.floor(coverage/0.7);
+    let status=(s.z==="المونيتورات")?"تغطية المسرح ✅":(coveredPeople>=audience?"كافي ✅":"غير كافي ⚠️");
+    let watt=0; if(!["HD312A","HD315A","HDSUB18A"].includes(s.m)) watt=s.q*speakerRMS[s.m]*10;
+    let delay=0; if(["التغطية الجانبية 1","التغطية الجانبية 2","التأخير"].includes(s.z)) delay=Math.round(index*0.5+1);
+    let cable=s.q*25;
+    html+=`<tr><td>${s.z}</td><td>${s.m}</td><td>${s.q}</td><td>${status}</td><td>${delay}</td><td>${watt}</td><td>${cable}</td></tr>`;
   });
-}
-
-// ------------------ التقرير التفصيلي ------------------
-function openReport(){
-  document.getElementById("mainPage").style.display="none";
-  document.querySelector(".main").style.display="none";
-  document.getElementById("reportPage").style.display="flex";
-
-  rcanvas.width=canvas.width;
-  rcanvas.height=canvas.height;
-  rctx.drawImage(canvas,0,0);
-
-  const hallL=+document.getElementById("hL").value;
-  const hallW=+document.getElementById("hW").value;
-  const audience=+document.getElementById("audience").value;
-  const totalArea=hallL*hallW;
-  const areaPerPerson=0.7; // م² للشخص
-
-  let html="<h3>التحليل التفصيلي لكل قسم:</h3><ul>";
-  sys.forEach(s=>{
-    const r=speakerRMS[s.m] || 30;
-    const coveragePerSpeaker=Math.PI*r*r/2; // نصف دائرة
-    const totalCoverage=Math.round(coveragePerSpeaker*s.q);
-    const maxPeople=Math.floor(totalCoverage/areaPerPerson);
-    const status=maxPeople>=audience?"كافي ✅":"غير كافي ⚠️";
-
-    html+=`<li><strong>${s.z} (${s.m}):</strong> كل سماعة تغطي تقريباً نصف قطر ${r}م، المساحة التقريبية لكل السماعات ${totalCoverage}م²، يمكنها تغطية حوالي ${maxPeople} شخص. <strong>التوصية:</strong> ${status}</li>`;
-  });
-  html+="</ul>";
-
-  html+="<table><tr><th>المنطقة</th><th>الموديل</th><th>الكمية</th><th>توصية</th><th>تغطية تقريبية (م²)</th><th>طول الكيبل (م)</th></tr>";
-  sys.forEach(s=>{
-    const r=speakerRMS[s.m] || 30;
-    const coveragePerSpeaker=Math.PI*r*r/2;
-    const totalCoverage=Math.round(coveragePerSpeaker*s.q);
-    const cable=s.q*25;
-    const maxPeople=Math.floor(totalCoverage/areaPerPerson);
-    const status=maxPeople>=audience?"كافي ✅":"غير كافي ⚠️";
-    html+=`<tr>
-      <td>${s.z}</td>
-      <td>${s.m}</td>
-      <td>${s.q}</td>
-      <td>${status}</td>
-      <td>${totalCoverage}</td>
-      <td>${cable}</td>
-    </tr>`;
-  });
-  html+="</table>";
-  html+=`<h3>تحليل النظام ككل:</h3>
-  <p>تم حساب التغطية لجميع الأقسام معًا للجمهور (${audience} شخص) وفق نصف قطر كل سماعة RMS. 
-  التوصية تأخذ بعين الاعتبار النظام ككل وليس السماعة الواحدة فقط، لضمان أفضل تغطية صوتية للجمهور والمسرح.</p>`;
-
+  html+="</table><div style='margin-top:15px;font-size:14px;'><strong>ملاحظة:</strong> تم احتساب التغطية بناءً على نصف قطر RMS، المونيترات تغطي المسرح فقط، الباسف يحتاج أمبليفاير، طول الكيبل تقريبي.</div>";
   document.getElementById("reportContent").innerHTML=html;
 }
 
-// ------------------ المساعد ------------------
+// حفظ التقرير
+function saveReport(){
+  const content=document.getElementById("reportPrintArea").outerHTML;
+  const blob=new Blob([content],{type:"text/html"});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download="Motivity_Report.html";
+  link.click();
+  showToast("تم حفظ التقرير بنجاح");
+}
+
+// اعتراض المهندس
+function objection(){
+  if(!lastSuggestion){ showToast("لا يوجد اقتراح لتقديم اعتراض"); return;}
+  const reason=prompt("ادخل سبب اعتراضك على الاقتراح:");
+  if(reason){
+    const zone=prompt("لأي منطقة تريد تعديل عدد السماعات؟");
+    const newQty=+prompt("كم عدد السماعات الجديد؟");
+    const hallW=+document.getElementById("hW").value;
+    const hallL=+document.getElementById("hL").value;
+    const sArea=hallW*hallL;
+    objections.push({reason, zone, newQty, area:sArea});
+    localStorage.setItem("objectionHistory",JSON.stringify(objections));
+    alert("تم تسجيل اعتراضك وتعلم النظام منه");
+  }
+}
+
+// رجوع
 function back(){
   document.getElementById("reportPage").style.display="none";
   document.getElementById("mainPage").style.display="block";
-  document.querySelector(".main").style.display="flex";
+  document.getElementById("mainCanvasContainer").style.display="flex";
+  setTimeout(draw,50);
 }
 
-function showToast(t){
-  toast.textContent=t;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"),2500);
-}
+function showToast(t){ toast.textContent=t; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),2500); }
 
 window.onload=draw;
 window.onresize=draw;
