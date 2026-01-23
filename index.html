@@ -25,7 +25,7 @@
 
 body{background:var(--bg); color:var(--text); line-height:1.7; overflow-x: hidden;}
 
-/* Nav */
+/* Navigation */
 nav {
     position: fixed; top: 0; width: 100%; padding: 15px 8%;
     background: rgba(13, 17, 23, 0.9); backdrop-filter: blur(10px);
@@ -33,13 +33,14 @@ nav {
     z-index: 1000; border-bottom: 1px solid #1f2937;
 }
 .logo { font-weight: 900; color: var(--primary); font-size: 1.5rem; letter-spacing: 1px; }
+
 .lang-btn { 
     background: transparent; color: var(--accent); border: 2px solid var(--accent);
     padding: 6px 18px; border-radius: 20px; cursor: pointer; font-weight: 700; transition: 0.3s;
 }
 .lang-btn:hover { background: var(--accent); color: var(--bg); }
 
-/* Layout */
+/* Layout & Animations */
 section{padding:120px 8% 80px; animation: fadeInUp 0.8s ease-out;}
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -47,37 +48,31 @@ h1{font-size:clamp(36px, 6vw, 54px); margin-bottom: 20px;}
 h1 span{color:var(--primary); font-weight:900}
 h2{font-size:32px; margin-bottom:30px; border-bottom: 3px solid var(--primary); width: max-content; padding-bottom: 5px;}
 
-/* CTA Button - Fixed Colors */
+/* CTA Button - Clear White Text */
 .cta {
-  display: inline-block; 
-  background-color: var(--primary); 
-  color: var(--white) !important; 
-  padding: 18px 45px; 
-  border-radius: 10px; 
-  text-decoration: none;
-  font-weight: 900; 
-  font-size: 1.1rem;
-  border: none; cursor: pointer; transition: 0.4s;
+  display: inline-block; background-color: var(--primary); color: var(--white) !important; 
+  padding: 18px 45px; border-radius: 10px; text-decoration: none; font-weight: 900; 
+  font-size: 1.1rem; border: none; cursor: pointer; transition: 0.4s;
   box-shadow: 0 4px 15px rgba(230, 0, 18, 0.3);
 }
 .cta:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(230, 0, 18, 0.5); filter: brightness(1.2); }
 
-/* Grid */
+/* Grid & Cards */
 .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:25px; margin-top:40px; }
 .card{ background:var(--card); padding:30px; border-radius:15px; border: 1px solid #1f2937; transition: 0.3s; }
 .card:hover { border-color: var(--primary); transform: translateY(-5px); }
 
-/* Lang Support */
-[lang="en"] .ar-text { display: none; }
-[lang="ar"] .en-text { display: none; }
+/* --- STRICT LANGUAGE CONTROL --- */
+[lang="en"] .ar-content { display: none !important; }
+[lang="ar"] .en-content { display: none !important; }
+
 [lang="en"] { direction: ltr; text-align: left; }
 [lang="ar"] { direction: rtl; text-align: right; }
 
-.lang-flex{ display:grid; grid-template-columns: 1fr 1fr; gap:40px; }
-
+/* Footer */
 footer { padding: 60px 8%; text-align: center; border-top: 1px solid #1f2937; color: var(--muted); font-size: 0.9rem; }
 
-/* Modal */
+/* Welcome Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
 </style>
 </head>
@@ -90,43 +85,88 @@ footer { padding: 60px 8%; text-align: center; border-top: 1px solid #1f2937; co
 </nav>
 
 <section class="hero">
-  <h1><span>Motivity AI</span><br><span class="en-text">Intelligent Audio Design</span><span class="ar-text">تصميم الأنظمة الصوتية الذكية</span></h1>
-  <p class="en-text">Smart platform for accurate, scalable audio engineering.</p>
-  <p class="ar-text">منصة ذكية للهندسة الصوتية الدقيقة والقابلة للتوسع.</p>
-  <button onclick="goToLogin()" class="cta">
-    <span class="en-text">🚀 Start Designing Now</span>
-    <span class="ar-text">🚀 ابدأ التصميم الآن</span>
+  <h1>
+    <span>Motivity AI</span><br>
+    <span class="en-content">Intelligent Audio System Design Platform</span>
+    <span class="ar-content">منصة تصميم الأنظمة الصوتية الذكية</span>
+  </h1>
+  <p class="en-content">A smart platform that helps governments, companies, and engineers design accurate, scalable, and executable sound systems.</p>
+  <p class="ar-content">منصة ذكية تساعد الجهات الحكومية، الشركات، والمهندسين على تصميم أنظمة صوتية دقيقة، قابلة للتنفيذ، وقابلة للتوسع.</p>
+  <button onclick="goToLogin()" class="cta" style="margin-top: 20px;">
+    <span class="en-content">🚀 Start Designing Now</span>
+    <span class="ar-content">🚀 ابدأ التصميم الآن</span>
   </button>
 </section>
 
 <section>
-  <h2 class="en-text">Why Motivity AI?</h2><h2 class="ar-text">لماذا Motivity AI؟</h2>
+  <h2 class="en-content">Why Motivity AI?</h2>
+  <h2 class="ar-content">لماذا Motivity AI؟</h2>
   <div class="grid">
-    <div class="card"><h3>🏛 <span class="en-text">Gov-Ready</span><span class="ar-text">للمشاريع الحكومية</span></h3><p class="en-text">Standardized planning for big projects.</p><p class="ar-text">تخطيط موحد للمشاريع الكبرى.</p></div>
-    <div class="card"><h3>👷 <span class="en-text">Engineering</span><span class="ar-text">أساس هندسي</span></h3><p class="en-text">Real physics, no guesswork.</p><p class="ar-text">فيزياء حقيقية، لا تخمين.</p></div>
+    <div class="card">
+        <h3>🏛 <span class="en-content">Gov-Ready</span><span class="ar-content">للمشاريع الحكومية</span></h3>
+        <p class="en-content">Standardized planning for large-scale, mission-critical projects.</p>
+        <p class="ar-content">تخطيط موحد للمشاريع الكبيرة والحساسة لتقليل الأخطاء.</p>
+    </div>
+    <div class="card">
+        <h3>🏢 <span class="en-content">Companies</span><span class="ar-content">شركات الصوتيات</span></h3>
+        <p class="en-content">Design faster and deliver professional results ready for deployment.</p>
+        <p class="ar-content">تصميم أسرع وتقديم نتائج احترافية جاهزة للتنفيذ المباشر.</p>
+    </div>
+    <div class="card">
+        <h3>👷 <span class="en-content">Engineers</span><span class="ar-content">للمهندسين</span></h3>
+        <p class="en-content">Engineering-based calculations, real logic, no guesswork.</p>
+        <p class="ar-content">حسابات مبنية على أسس هندسية ومنطق حقيقي بعيداً عن التخمين.</p>
+    </div>
   </div>
 </section>
 
 <section style="background: rgba(22, 27, 34, 0.5);">
-  <h2 class="en-text">How It Works</h2><h2 class="ar-text">كيف يعمل النظام؟</h2>
-  <div class="lang-flex">
-    <div class="en-text"><ol><li>Select type</li><li>Enter dimensions</li><li>Get design</li></ol></div>
-    <div class="ar-text"><ol><li>اختر النوع</li><li>أدخل الأبعاد</li><li>احصل على التصميم</li></ol></div>
+  <h2 class="en-content">How It Works</h2>
+  <h2 class="ar-content">كيف يعمل النظام؟</h2>
+  <div class="en-content">
+      <ol style="margin-left:25px;">
+          <li>Select project type (Mosque, Hall, Outdoor)</li>
+          <li>Enter space dimensions</li>
+          <li>Define performance level</li>
+          <li>Get full design & equipment recommendations</li>
+      </ol>
+  </div>
+  <div class="ar-content">
+      <ol style="margin-right:25px;">
+          <li>اختر نوع المشروع (مسجد، قاعة، مساحة مفتوحة)</li>
+          <li>أدخل أبعاد المكان</li>
+          <li>حدّد مستوى الأداء المطلوب</li>
+          <li>احصل على تصميم كامل وتوصية بالمعدات</li>
+      </ol>
   </div>
 </section>
 
 <section>
-  <h2 class="en-text">Engineering Core</h2><h2 class="ar-text">القلب الهندسي</h2>
+  <h2 class="en-content">Engineering at the Core</h2>
+  <h2 class="ar-content">القلب الهندسي للنظام</h2>
   <div class="grid">
-    <div class="card"><h3>📊 SPL Mapping</h3></div>
-    <div class="card"><h3>🔌 Matching</h3></div>
-    <div class="card"><h3>📐 Angles</h3></div>
+    <div class="card"><span class="en-content">Coverage & SPL Calculations</span><span class="ar-content">حسابات التغطية وضغط الصوت</span></div>
+    <div class="card"><span class="en-content">Speaker & Amplifier Matching</span><span class="ar-content">مطابقة السماعات والمضخمات</span></div>
+    <div class="card"><span class="en-content">Indoor & Outdoor Modeling</span><span class="ar-content">نمذجة المساحات الداخلية والخارجية</span></div>
+    <div class="card"><span class="en-content">Line Array Planning</span><span class="ar-content">تخطيط أنظمة Line Array</span></div>
   </div>
 </section>
 
-<footer><p>© 2026 Motivity AI — Intelligent Audio Engineering Platform</p></footer>
+<section style="text-align: center;">
+  <h2 class="en-content" style="width:100%; border:none;">Ready to Design?</h2>
+  <h2 class="ar-content" style="width:100%; border:none;">جاهز للبدء بالتصميم؟</h2>
+  <button onclick="goToLogin()" class="cta" style="margin-top: 20px;">
+    <span class="en-content">🎧 Try Motivity AI Now</span>
+    <span class="ar-content">🎧 جرب Motivity AI الآن</span>
+  </button>
+</section>
+
+<footer>
+    <p>© 2026 Motivity AI — Intelligent Audio Engineering Platform</p>
+</footer>
 
 <script>
+    // التبديل بين اللغتين
     function toggleLang() {
         const html = document.getElementById('mainHtml');
         const btn = document.getElementById('langSwitcher');
@@ -139,24 +179,33 @@ footer { padding: 60px 8%; text-align: center; border-top: 1px solid #1f2937; co
         }
     }
 
+    // التوجيه لصفحات الدخول
     function goToLogin() {
         const lang = document.getElementById('mainHtml').getAttribute('lang');
         window.location.href = (lang === 'en') ? 'index_en.html' : 'index_ar.html';
     }
 
+    // رسالة الترحيب
     window.addEventListener('load', () => {
         if (!localStorage.getItem('motivity_visited')) {
             const welcome = document.createElement('div');
             welcome.className = 'modal-overlay';
-            welcome.innerHTML = `<div style="background:var(--card); padding:40px; border-radius:20px; border:1px solid var(--primary); text-align:center; max-width:400px;">
-                <h2 style="color:var(--primary)">Welcome / مرحباً</h2>
-                <p style="margin:20px 0;">Start your intelligent design journey.<br>ابدأ رحلة التصميم الذكي الآن.</p>
-                <button onclick="this.parentElement.parentElement.remove(); localStorage.setItem('motivity_visited', 'true');" class="cta" style="width:100%">Start / ابدأ</button>
-            </div>`;
+            welcome.innerHTML = `
+                <div style="background:var(--card); padding:40px; border-radius:20px; border:1px solid var(--primary); text-align:center; max-width:420px;">
+                    <h2 style="color:var(--primary)" class="en-content">Welcome to Motivity AI</h2>
+                    <h2 style="color:var(--primary)" class="ar-content">مرحباً بك في Motivity AI</h2>
+                    <p style="margin:20px 0;" class="en-content">Your intelligent journey in audio design starts here.</p>
+                    <p style="margin:20px 0;" class="ar-content">رحلتك الذكية في عالم التصميم الصوتي تبدأ من هنا.</p>
+                    <button onclick="this.parentElement.parentElement.remove(); localStorage.setItem('motivity_visited', 'true');" class="cta" style="width:100%">
+                        <span class="en-content">Get Started</span>
+                        <span class="ar-content">ابدأ الآن</span>
+                    </button>
+                </div>`;
             document.body.appendChild(welcome);
         }
     });
 
+    // تفعيل الـ Service Worker
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
 </script>
 </body>
