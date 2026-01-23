@@ -49,22 +49,50 @@
 
 <script>
     const SECRET = "1234";
+
+    // وظيفة للتحقق من كلمة السر
     function unlock() {
         if(document.getElementById('passCode').value === SECRET) {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainNav').style.display = 'block';
-            document.getElementById('contentArea').style.display = 'block';
-            switchTab('mosque');
-        } else { alert("⚠️ كلمة السر خاطئة!"); }
+            // حفظ حالة الدخول في المتصفح
+            localStorage.setItem('motivity_auth', 'true');
+            showApp();
+        } else { 
+            alert("⚠️ كلمة السر خاطئة!"); 
+        }
     }
+
+    // وظيفة لإظهار محتوى البرنامج
+    function showApp() {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainNav').style.display = 'block';
+        document.getElementById('contentArea').style.display = 'block';
+        // استعادة آخر تاب كان مفتوحاً أو فتح المسجد كافتراضي
+        const lastTab = localStorage.getItem('lastTab') || 'mosque';
+        switchTab(lastTab);
+    }
+
     function switchTab(tabId) {
-        const buttons = document.querySelectorAll('#mainNav button');
+        const buttons = document.querySelectorAll('#mainNav button:not(.lang-switch)');
         buttons.forEach(btn => btn.classList.remove('active'));
-        document.getElementById('btn-' + tabId).classList.add('active');
-        // يوجه لمجلد الأكواد العربية
+        
+        const targetBtn = document.getElementById('btn-' + tabId);
+        if(targetBtn) targetBtn.classList.add('active');
+        
+        // حفظ التاب الحالي وحفظه لفتحه تلقائياً عند العودة من اللغة الأخرى
+        localStorage.setItem('lastTab', tabId);
         document.getElementById('mainFrame').src = "ar_codes/" + tabId + ".html";
     }
-    document.getElementById('passCode').addEventListener("keyup", function(e) { if (e.key === "Enter") unlock(); });
+
+    // عند تحميل الصفحة: فحص هل المستخدم مسجل دخوله مسبقاً؟
+    window.onload = function() {
+        if(localStorage.getItem('motivity_auth') === 'true') {
+            showApp();
+        }
+    };
+
+    document.getElementById('passCode').addEventListener("keyup", function(e) { 
+        if (e.key === "Enter") unlock(); 
+    });
 </script>
 </body>
 </html>
