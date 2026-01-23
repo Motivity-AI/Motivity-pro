@@ -1,9 +1,12 @@
 const CACHE_NAME = 'motivity-v1';
 const assets = [
   './',
-  './index.html',
+  './index.html', 
+  './index_ar.html',
   './index_en.html', // أضفنا ملف الإنجليزية ليعمل التطبيق باللغتين بدون إنترنت
   './manifest.json'
+  './icon_192.png',
+  './icon_512.png',
 ];
 
 // تثبيت ملفات التطبيق في ذاكرة الهاتف
@@ -24,4 +27,5 @@ self.addEventListener('fetch', e => {
       return response || fetch(e.request);
     })
   );
+
 });
