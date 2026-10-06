@@ -1,212 +1,643 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>Motivity - نظام التصميم الهندسي للمساجد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root{ --motivity-red:#e60012; --tech-blue:#38bdf8; --bg:#0d1117; }
-        *{box-sizing:border-box; font-family:'Cairo', sans-serif; margin:0; padding:0}
-        body{background:var(--bg); color:#fff; height:100vh; overflow:hidden; display:flex; flex-direction:column}
-        .wrapper{display:flex; flex:1; overflow:hidden}
-        .sidebar{width:380px; background:#161b22; padding:20px; border-left:4px solid var(--motivity-red); overflow-y:auto}
-        .box{background:#21262d; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #30363d}
-        label{font-size:11px; color:var(--tech-blue); display:block; margin-top:10px; font-weight:bold}
-        input, select{width:100%; padding:10px; background:#0d1117; color:#fff; border:1px solid #30363d; border-radius:8px; margin-top:5px}
-        button{width:100%; padding:12px; border:none; border-radius:8px; font-weight:700; cursor:pointer; margin-top:10px; transition: 0.3s}
-        .btn-primary{background:var(--motivity-red); color:#fff}
-        .btn-secondary{background:var(--tech-blue); color:#000}
-        .btn-reset{background:#30363d; color:#ff4d4d; border:1px solid #444}
-        .btn-reset:hover{background:#ff4d4d; color:#fff}
-        .btn-outline{background:#333; color:#ccc; border:1px solid #444}
-        .active-mode{background:var(--tech-blue) !important; color:#000 !important}
-        .canvas-container{flex:1; background:#000; display:flex; align-items:center; justify-content:center; padding:20px}
-        canvas{background:#0a0a0a; border:2px solid #333; border-radius:10px; cursor: crosshair; width: 100%; height: 100%; max-width: 1000px; max-height: 800px;}
-
-        /* عرض التقرير */
-        #reportView{display:none; position:fixed; inset:0; background:#fff; z-index:9999; padding:20px; overflow-y:auto; color:#333}
-        .paper{max-width:900px; margin:auto; background:#fff; padding:30px; border:1px solid #eee; border-top:10px solid var(--motivity-red)}
-        .report-grid{display:grid; grid-template-columns: 1fr 1.5fr; gap:25px; margin-bottom:20px}
-        .mini-map-box{border:1px solid #ddd; padding:15px; background:#f9f9f9; text-align:center}
-        #reportImg{width:100%; border:1px solid #ccc; margin-top:10px}
-        .table-boq{width:100%; border-collapse:collapse; margin-bottom:15px; font-size:13px}
-        .table-boq th, .table-boq td{border:1px solid #ddd; padding:10px; text-align:right}
-        .table-boq th{background:#1a1a1a; color:#fff}
-
-        @media print { .no-print { display: none !important; } #reportView { position: absolute; inset:0; } }
-    </style>
+<meta charset="UTF-8">
+<title>Motivity PRO - نظام التصميم الهندسي للمساجد</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
+  --card:#21262d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
+  --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.wrapper{display:flex;flex:1;overflow:hidden}
+.sidebar{width:400px;background:var(--panel);padding:14px;border-left:4px solid var(--red);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:8px}
+.sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
+h2{text-align:center;margin-bottom:10px;font-weight:900;letter-spacing:1px}
+h2 span{color:var(--red)}
+.box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
+.box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
+label{font-size:10.5px;color:var(--muted);display:block;margin-top:8px;font-weight:600}
+input,select{width:100%;padding:8px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:12.5px}
+input:focus,select:focus{outline:none;border-color:var(--blue)}
+.row{display:flex;gap:6px}.row>*{flex:1}
+button{width:100%;padding:10px;border:none;border-radius:7px;font-weight:700;cursor:pointer;margin-top:6px;transition:.2s;font-family:inherit;font-size:12.5px}
+.btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:#c40010}
+.btn-secondary{background:var(--blue);color:#000}.btn-secondary:hover{background:#0ea5e9}
+.btn-reset{background:#30363d;color:#ff4d4d;border:1px solid #444}.btn-reset:hover{background:#ff4d4d;color:#fff}
+.btn-outline{background:#2a2f36;color:#ccc;border:1px solid #444}.btn-outline:hover{background:#3a4048}
+.active-mode{background:var(--blue)!important;color:#000!important}
+.canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.toolbar button{width:auto;padding:5px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d}
+.toolbar button:hover{background:#30363d}
+.toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
+.canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1000px;max-height:820px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
+.stat .v{font-size:15px;font-weight:900;color:var(--blue)}
+.stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
+.stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
+.hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
+#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222}
+.paper{max-width:920px;margin:auto;background:#fff;padding:32px;border-top:10px solid var(--red);box-shadow:0 0 30px rgba(0,0,0,.3)}
+.paper h1{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:16px;font-size:22px}
+.paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-right:4px solid var(--red);padding-right:8px}
+.report-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;margin-bottom:18px}
+.mini-map-box{border:1px solid #ddd;padding:12px;background:#f9f9f9;text-align:center;border-radius:6px}
+.mini-map-box strong{display:block;margin-bottom:8px;font-size:13px}
+#reportImg{width:100%;border:1px solid #ccc;border-radius:4px}
+.table-boq{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.table-boq th,.table-boq td{border:1px solid #ddd;padding:8px;text-align:right}
+.table-boq th{background:#1a1a1a;color:#fff}
+.table-boq tr:nth-child(even) td{background:#fafafa}
+.sig{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px dashed #ccc;font-size:12px}
+#toast{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:320px}
+.toast.ok{border-right-color:var(--ok)}.toast.err{border-right-color:var(--bad)}.toast.warn{border-right-color:var(--warn)}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+@media print{.no-print{display:none!important}#reportView{position:absolute;inset:0}}
+</style>
 </head>
 <body>
 
 <div class="wrapper no-print">
-    <div class="sidebar">
-        <h2 style="text-align:center">MOTIVITY <span style="color:var(--motivity-red)">PRO</span></h2>
-        <div class="box">
-            <h3>📐 قياسات القاعة (متر)</h3>
-            <div style="display:flex; gap:5px">
-                <input type="number" id="m_len" value="30" oninput="draw()" placeholder="الطول">
-                <input type="number" id="m_wid" value="15" oninput="draw()" placeholder="العرض">
-                <input type="number" id="m_h" value="6" oninput="draw()" placeholder="الارتفاع">
-            </div>
-        </div>
-        <div class="box">
-            <h3>🔊 هندسة التوزيع الصوتي</h3>
-            <select id="m_model" onchange="draw()"></select>
-            <button class="btn-secondary" onclick="aiSmartDistribute()">✨ توزيع ذكي تلقائي</button>
-            <button id="manualBtn" class="btn-outline" style="width:100%" onclick="toggleManualMode()">📍 وضع التوزيع اليدوي</button>
-        </div>
-        <div class="box">
-            <h3>🔌 معالجة الإشارة والقدرة</h3>
-            <label>جهاز منع التصفير (Feedback)</label>
-            <select id="fs_model">
-                <option value="FB-PRO 4.0">MOTIVITY FB-PRO 4.0 (الرقمي)</option>
-                <option value="None">بدون جهاز تصفير</option>
-            </select>
-            <label>المكبرات (MA Series)</label>
-            <select id="amp_model"></select>
-            <div id="amp_count_info" style="color:var(--tech-blue); font-size:11px; margin-top:5px; font-weight:bold"></div>
-        </div>
-        <button class="btn-primary" onclick="generateReport()">📄 توليد التقرير الفني</button>
-        <button class="btn-reset" onclick="resetData()">🔄 تصفير كافة البيانات</button>
+  <aside class="sidebar">
+    <h2>MOTIVITY <span>PRO</span></h2>
+
+    <!-- بيانات المشروع -->
+    <div class="box">
+      <h3>📋 بيانات المشروع</h3>
+      <input id="p_name" placeholder="اسم المشروع" value="مسجد جديد">
+      <input id="p_client" placeholder="اسم العميل">
+      <input id="p_engineer" placeholder="اسم المهندس" value="م. أحمد">
+      <select id="p_purpose">
+        <option value="85">صلاة عادية (SPL مستهدف 85dB)</option>
+        <option value="90" selected>خطبة جمعة (SPL مستهدف 90dB)</option>
+        <option value="95">طوارئ/أذان (SPL مستهدف 95dB)</option>
+      </select>
     </div>
-    <div class="canvas-container" id="cDiv">
-        <canvas id="mosqueCanvas"></canvas>
+
+    <!-- القياسات -->
+    <div class="box">
+      <h3>📐 قياسات القاعة (متر)</h3>
+      <div class="row">
+        <input type="number" id="m_len" value="30" oninput="draw()" placeholder="الطول">
+        <input type="number" id="m_wid" value="15" oninput="draw()" placeholder="العرض">
+        <input type="number" id="m_h"   value="6"  oninput="draw()" placeholder="الارتفاع">
+      </div>
+      <label>معامل الامتصاص (0.05 قاسي – 0.30 معالج)</label>
+      <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="draw()">
     </div>
+
+    <!-- التوزيع -->
+    <div class="box">
+      <h3>🔊 التوزيع الصوتي</h3>
+      <select id="m_model" onchange="updateAmpLogic()"></select>
+      <button class="btn-secondary" onclick="aiSmartDistribute()">✨ توزيع ذكي تلقائي</button>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 وضع التوزيع اليدوي</button>
+      <div class="hint">💡 انقر على المساحة الفارغة لإضافة – اسحب للتحريك – زر أيمن للحذف</div>
+    </div>
+
+    <!-- النتائج الأكوستيكية -->
+    <div class="box">
+      <h3>📊 التحليل الأكوستيكي</h3>
+      <div class="stat-grid">
+        <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">SPL متوسط (dB)</div></div>
+        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">RT60 (ثانية)</div></div>
+        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">إجمالي Watt</div></div>
+        <div class="stat" id="st_cnt"><div class="v" id="cnt_v">0</div><div class="l">عدد السماعات</div></div>
+      </div>
+    </div>
+
+    <!-- المعالجة والمكبرات -->
+    <div class="box">
+      <h3>🔌 المعالجة والقدرة</h3>
+      <label>مانع التصفير</label>
+      <select id="fs_model">
+        <option value="FB-PRO 4.0">MOTIVITY FB-PRO 4.0 (رقمي)</option>
+        <option value="None">بدون جهاز تصفير</option>
+      </select>
+      <label>المكبر (MA Series)</label>
+      <select id="amp_model" onchange="updateAmpLogic()"></select>
+      <div id="amp_count_info" style="color:var(--blue);font-size:11px;margin-top:6px;font-weight:700;line-height:1.6"></div>
+    </div>
+
+    <button class="btn-primary" onclick="generateReport()">📄 توليد التقرير الفني</button>
+    <button class="btn-outline" onclick="saveProject()">💾 حفظ المشروع</button>
+    <button class="btn-outline" onclick="loadProject()">📂 استرجاع المشروع</button>
+    <button class="btn-reset" onclick="resetData()">🔄 تصفير كافة البيانات</button>
+  </aside>
+
+  <div class="canvas-container">
+    <div class="toolbar no-print">
+      <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 التغطية</button>
+      <button id="tgGrid" class="on" onclick="toggleGrid()">▦ الشبكة</button>
+      <button onclick="clearSpeakers()">🗑️ مسح السماعات</button>
+    </div>
+    <div class="canvas-wrap" id="cDiv">
+      <canvas id="mosqueCanvas"></canvas>
+    </div>
+  </div>
 </div>
 
 <div id="reportView">
-    <div class="paper">
-        <div style="text-align:left">
-            <button class="no-print" onclick="window.print()">حفظ PDF</button>
-            <button class="no-print" onclick="document.getElementById('reportView').style.display='none'">إغلاق</button>
-        </div>
-        <h1 style="color:var(--motivity-red); border-bottom:3px solid var(--motivity-red)">التقرير التصميمي الفني لشركة MOTIVITY</h1>
-        <div class="report-grid">
-            <div class="mini-map-box"><strong>كروكي التوزيع الهندسي</strong><img id="reportImg"></div>
-            <div id="eng_summary"></div>
-        </div>
-        <table class="table-boq">
-            <thead><tr><th>اسم البند</th><th>المواصفات الفنية</th><th>الكمية</th><th>تقدير الكيبلات</th></tr></thead>
-            <tbody id="boq-body"></tbody>
-        </table>
+  <div class="paper">
+    <div style="text-align:left" class="no-print">
+      <button class="btn-primary" style="width:auto;padding:8px 16px;display:inline-block;margin-left:6px" onclick="window.print()">🖨️ حفظ PDF</button>
+      <button class="btn-outline" style="width:auto;padding:8px 16px;display:inline-block" onclick="document.getElementById('reportView').style.display='none'">إغلاق</button>
     </div>
+    <h1>التقرير التصميمي الفني لشركة MOTIVITY</h1>
+    <div id="project_header"></div>
+    <div class="report-grid">
+      <div class="mini-map-box"><strong>كروكي التوزيع الهندسي</strong><img id="reportImg"></div>
+      <div id="eng_summary"></div>
+    </div>
+    <h3>جدول الكميات (BOQ)</h3>
+    <table class="table-boq">
+      <thead><tr><th>البند</th><th>المواصفات</th><th>الكمية</th><th>تقدير الكيبل</th></tr></thead>
+      <tbody id="boq-body"></tbody>
+    </table>
+    <h3>التعليل الهندسي</h3>
+    <p id="eng_notes" style="font-size:12.5px;line-height:1.7;background:#f0f7ff;padding:12px;border-radius:6px"></p>
+    <div class="sig">
+      <div>توقيع المهندس: ______________</div>
+      <div>توقيع العميل: ______________</div>
+      <div id="report_date"></div>
+    </div>
+  </div>
 </div>
 
+<div id="toast"></div>
+
 <script>
-    const DB_SPK = {"AT-08": 250, "AT-06": 150, "AT-265": 250, "CS-08": 150, "CS-06": 100, "UT-08": 200};
-    const DB_AMP = [{id: "MA-450C", pwr: 900}, {id: "MA-600C", pwr: 1200}, {id: "MA-800C", pwr: 1600}, {id: "MA-1000C", pwr: 2000}, {id: "MA-1200C", pwr: 2400}, {id: "MA-1500C", pwr: 3000}];
+/* ============ قواعد البيانات ============ */
+const DB_SPK = {
+  "AT-08":  {pwr:250, sens:97, covH:90,  covV:60,  imp:8, type:"عمودي"},
+  "AT-06":  {pwr:150, sens:95, covH:90,  covV:60,  imp:8, type:"عمودي"},
+  "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"عمودي"},
+  "CS-08":  {pwr:150, sens:92, covH:120, covV:120, imp:8, type:"سقفي"},
+  "CS-06":  {pwr:100, sens:90, covH:120, covV:120, imp:8, type:"سقفي"},
+  "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"بوق"}
+};
+const DB_AMP = [
+  {id:"MA-450C", pwr:900,  ch:2, minImp:4},
+  {id:"MA-600C", pwr:1200, ch:2, minImp:4},
+  {id:"MA-800C", pwr:1600, ch:2, minImp:4},
+  {id:"MA-1000C",pwr:2000, ch:2, minImp:4},
+  {id:"MA-1200C",pwr:2400, ch:2, minImp:4},
+  {id:"MA-1500C",pwr:3000, ch:2, minImp:4}
+];
 
-    const canvas = document.getElementById('mosqueCanvas');
-    const ctx = canvas.getContext('2d');
-    let speakers = []; let manualMode = false; let autoAmpCount = 1;
+/* ============ الحالة ============ */
+const canvas = document.getElementById('mosqueCanvas');
+const ctx = canvas.getContext('2d');
+let speakers = [];
+let selectedId = null;
+let dragging = null;
+let manualMode = false;
+let showCoverage = true;
+let showGrid = true;
+let uid = 0;
+let layout = {x0:0,y0:0,W:0,L:0};
+let ampResult = {amps:0};
 
-    function populate() {
-        const s1 = document.getElementById('m_model'), s2 = document.getElementById('amp_model');
-        s1.innerHTML = ""; s2.innerHTML = "";
-        for (let id in DB_SPK) s1.innerHTML += `<option value="${id}">${id}</option>`;
-        DB_AMP.forEach(amp => s2.innerHTML += `<option value="${amp.id}">${amp.id}</option>`);
+/* ============ أدوات مساعدة ============ */
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+function toast(msg, type='') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type; t.textContent = msg;
+  $('toast').appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='.3s'; setTimeout(()=>t.remove(),300); }, 2400);
+}
+function getDims(){
+  return {
+    L: parseFloat($('m_len').value)||0,
+    W: parseFloat($('m_wid').value)||0,
+    H: parseFloat($('m_h').value)||0,
+    alpha: parseFloat($('m_alpha').value)||0.12
+  };
+}
+
+/* ============ تهيئة القوائم ============ */
+function populate(){
+  const s1 = $('m_model'), s2 = $('amp_model');
+  s1.innerHTML = ''; s2.innerHTML = '';
+  for (const id in DB_SPK) {
+    const o = DB_SPK[id];
+    s1.innerHTML += `<option value="${id}">${id} — ${o.type} ${o.pwr}W</option>`;
+  }
+  DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
+  s2.value = "MA-800C";
+}
+
+/* ============ الرسم ============ */
+function draw(){
+  const div = $('cDiv');
+  canvas.width = div.clientWidth;
+  canvas.height = div.clientHeight;
+  const d = getDims();
+  if (!d.L || !d.W) return;
+
+  const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.85;
+  const W = d.W * scale, L = d.L * scale;
+  const x0 = (canvas.width - W)/2, y0 = (canvas.height - L)/2;
+  layout = {x0, y0, W, L, scale};
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // شبكة خلفية
+  if (showGrid) {
+    ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
+    const stepM = 2;
+    for (let x=0; x<=d.W; x+=stepM) {
+      const px = x0 + x*scale;
+      ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke();
     }
-
-    function toggleManualMode() { manualMode = !manualMode; document.getElementById('manualBtn').classList.toggle('active-mode', manualMode); }
-
-    function resetData() {
-        if(confirm("هل أنت متأكد من مسح كافة السماعات والبيانات المدخلة؟")) {
-            speakers = [];
-            document.getElementById('m_len').value = 30;
-            document.getElementById('m_wid').value = 15;
-            document.getElementById('m_h').value = 6;
-            manualMode = false;
-            document.getElementById('manualBtn').classList.remove('active-mode');
-            draw();
-            updateAmpLogic();
-        }
+    for (let y=0; y<=d.L; y+=stepM) {
+      const py = y0 + y*scale;
+      ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke();
     }
+  }
 
-    function draw() {
-        const div = document.getElementById('cDiv');
-        canvas.width = div.clientWidth; canvas.height = div.clientHeight;
-        const L_v = parseFloat(document.getElementById('m_len').value), W_v = parseFloat(document.getElementById('m_wid').value);
-        const scale = Math.min(canvas.width/W_v, canvas.height/L_v) * 0.85;
-        const W = W_v * scale, L = L_v * scale;
-        const x0 = (canvas.width-W)/2, y0 = (canvas.height-L)/2;
+  // إطار القاعة
+  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 4;
+  ctx.strokeRect(x0, y0, W, L);
 
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 4; ctx.strokeRect(x0,y0,W,L);
+  // المحراب (في الأعلى)
+  ctx.fillStyle = "#38bdf8";
+  ctx.beginPath();
+  ctx.arc(x0 + W/2, y0, Math.max(10, scale*1.2), Math.PI, 0);
+  ctx.fill();
+  ctx.fillStyle = "#fff"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
+  ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
 
-        ctx.fillStyle = "#38bdf8";
-        ctx.beginPath(); ctx.arc(x0 + W/2, y0, scale * 1.5, Math.PI, 0); ctx.fill();
+  // الأبعاد
+  ctx.fillStyle = "#fff"; ctx.font = "bold 13px Cairo";
+  ctx.fillText(`${d.W} م (العرض)`, x0 + W/2, y0 - 25);
+  ctx.save();
+  ctx.translate(x0 - 28, y0 + L/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(`${d.L} م (الطول)`, 0, 0);
+  ctx.restore();
 
-        ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo";
-        ctx.fillText(`${W_v} م (العرض)`, x0 + W/2 - 30, y0 - 20);
-        ctx.save(); ctx.translate(x0 - 25, y0 + L/2); ctx.rotate(-Math.PI/2);
-        ctx.fillText(`${L_v} م (الطول)`, -30, 0); ctx.restore();
+  // مخروط التغطية
+  if (showCoverage) {
+    ctx.save();
+    speakers.forEach(s => {
+      const cx = x0 + s.rx*W, cy = y0 + s.ry*L;
+      const db = DB_SPK[s.model];
+      const half = (db.covH/2) * Math.PI/180;
+      let dir;
+      if (s.rx < 0.3) dir = 0;
+      else if (s.rx > 0.7) dir = Math.PI;
+      else dir = null;
 
-        speakers.forEach(s => {
-            ctx.fillStyle = "#e60012"; ctx.beginPath(); ctx.arc(x0+(s.rx*W), y0+(s.ry*L), 8, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = "#fff"; ctx.font = "bold 11px Cairo"; ctx.fillText(s.model, x0+(s.rx*W)+12, y0+(s.ry*L)+5);
-        });
-        window.layout = {x0, y0, W, L};
+      ctx.fillStyle = s.id === selectedId ? 'rgba(56,189,248,.25)' : 'rgba(56,189,248,.12)';
+      if (dir !== null) {
+        const R = W * 1.0;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, R, dir - half, dir + half);
+        ctx.closePath(); ctx.fill();
+      } else {
+        const R = scale * (db.covH/2);
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.fill();
+      }
+    });
+    ctx.restore();
+  }
+
+  // السماعات
+  speakers.forEach(s => {
+    const cx = x0 + s.rx*W, cy = y0 + s.ry*L;
+    const isSel = s.id === selectedId;
+    ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
+    ctx.beginPath(); ctx.arc(cx, cy, isSel ? 10 : 8, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
+    if (isSel) {
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, 15, 0, Math.PI*2); ctx.stroke();
     }
+    ctx.fillStyle = "#fff"; ctx.font = "bold 10px Cairo"; ctx.textAlign = "left";
+    ctx.fillText(s.model, cx + 12, cy + 4);
+  });
+}
 
-    canvas.onclick = (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const {x0, y0, W, L} = window.layout;
-        const rx = (e.clientX - rect.left - x0) / W, ry = (e.clientY - rect.top - y0) / L;
-        if(rx >= 0 && rx <= 1 && ry >= 0 && ry <= 1) {
-            const model = document.getElementById('m_model').value;
-            if(manualMode) speakers.push({rx, ry, model});
-            else speakers.push({rx:0, ry, model}, {rx:1, ry, model});
-            draw(); updateAmpLogic();
-        }
-    };
+/* ============ التفاعل بالماوس ============ */
+function toLocal(e){
+  const r = canvas.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  const {x0, y0, W, L} = layout;
+  const rx = (mx - x0) / W, ry = (my - y0) / L;
+  if (rx < -0.02 || rx > 1.02 || ry < -0.02 || ry > 1.02) return null;
+  return {rx: clamp(rx,0,1), ry: clamp(ry,0,1), mx, my};
+}
+function hitTest(p){
+  const {x0, y0, W, L} = layout;
+  for (let i = speakers.length - 1; i >= 0; i--) {
+    const s = speakers[i];
+    const cx = x0 + s.rx*W, cy = y0 + s.ry*L;
+    if (Math.hypot(p.mx - cx, p.my - cy) < 14) return s;
+  }
+  return null;
+}
+function addSpeaker(rx, ry, model){
+  speakers.push({id: ++uid, rx, ry, model});
+}
 
-    function updateAmpLogic() {
-        let totalWatts = 0; speakers.forEach(s => totalWatts += DB_SPK[s.model]);
-        const targetAmp = DB_AMP.find(a => a.id === "MA-800C");
-        autoAmpCount = Math.ceil((totalWatts * 1.25) / targetAmp.pwr) || 0;
-        document.getElementById('amp_model').value = targetAmp.id;
-        document.getElementById('amp_count_info').innerText = `العدد المقترح: (${autoAmpCount}) من ${targetAmp.id}`;
+canvas.addEventListener('mousedown', e => {
+  if (e.button !== 0) return;
+  const p = toLocal(e); if (!p) return;
+  const hit = hitTest(p);
+  if (hit) {
+    selectedId = hit.id;
+    dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
+  } else {
+    const model = $('m_model').value;
+    if (manualMode) {
+      addSpeaker(p.rx, p.ry, model);
+    } else {
+      addSpeaker(0, p.ry, model);
+      addSpeaker(1, p.ry, model);
     }
+    selectedId = null;
+    updateAmpLogic();
+  }
+  draw();
+});
 
-    function aiSmartDistribute() {
-        const L = parseFloat(document.getElementById('m_len').value), model = document.getElementById('m_model').value;
-        const count = Math.max(2, Math.floor(L/6.5));
-        speakers = [];
-        for(let i=1; i<=count; i++) { let r = i/(count+1); speakers.push({rx:0, ry:r, model}, {rx:1, ry:r, model}); }
-        updateAmpLogic(); draw();
-    }
+canvas.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const p = toLocal(e); if (!p) return;
+  const s = speakers.find(x => x.id === dragging.id);
+  if (!s) return;
+  s.rx = clamp(p.rx + dragging.offX, 0, 1);
+  s.ry = clamp(p.ry + dragging.offY, 0, 1);
+  draw();
+});
 
-    function generateReport() {
-        const L = parseFloat(document.getElementById('m_len').value), W = parseFloat(document.getElementById('m_wid').value), H = parseFloat(document.getElementById('m_h').value);
-        const fs = document.getElementById('fs_model').value;
-        let totalWatts = 0, totalCable = 0, counts = {};
-        speakers.forEach(s => {
-            counts[s.model] = (counts[s.model] || 0) + 1;
-            totalWatts += DB_SPK[s.model];
-            totalCable += (s.ry * L) + (s.rx * W) + H;
-        });
-        totalCable = Math.ceil(totalCable * 1.15);
+window.addEventListener('mouseup', () => { dragging = null; });
 
-        document.getElementById('eng_summary').innerHTML = `
-            <table class="table-boq">
-                <tr><td>المساحة الإجمالية</td><td>${L*W} م²</td></tr>
-                <tr><td>إجمالي الحمل الصوتي</td><td>${totalWatts} واط</td></tr>
-                <tr><td>الكيبلات التقديرية</td><td>~${totalCable} متر</td></tr>
-                <tr><td>المعالج المستخدم</td><td>${fs}</td></tr>
-            </table>
-            <p style="font-size:12px; background:#f0f7ff; padding:10px"><b>التعليل الهندسي:</b> تم حساب توزيع الضغط الصوتي (SPL) لضمان انتظام الصوت وتجنب الصدى بناءً على ارتفاع السقف (${H}م)، مع تأمين وضوح مخارج الحروف.</p>`;
+canvas.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const p = toLocal(e); if (!p) return;
+  const hit = hitTest(p);
+  if (hit) {
+    speakers = speakers.filter(s => s.id !== hit.id);
+    if (selectedId === hit.id) selectedId = null;
+    updateAmpLogic(); draw();
+    toast('تم حذف السماعة', 'warn');
+  }
+});
 
-        let boq = ""; for(let m in counts) boq += `<tr><td>سماعة Motivity ${m}</td><td>Pro 8Ω Series</td><td>${counts[m]}</td><td>~${Math.ceil(totalCable/speakers.length*counts[m])}م</td></tr>`;
-        boq += `<tr><td>مكبر قدرة ${document.getElementById('amp_model').value}</td><td>MA Professional</td><td>${autoAmpCount}</td><td>-</td></tr>`;
-        if(fs !== "None") boq += `<tr><td>مانع تصفير رقمي</td><td>${fs} Processor</td><td>1</td><td>-</td></tr>`;
+/* ============ التحكم ============ */
+function toggleManualMode(){
+  manualMode = !manualMode;
+  $('manualBtn').classList.toggle('active-mode', manualMode);
+  toast(manualMode ? 'الوضع اليدوي مُفعّل' : 'الوضع التلقائي (زوجي)');
+}
+function toggleCoverage(){
+  showCoverage = !showCoverage;
+  $('tgCoverage').classList.toggle('on', showCoverage);
+  draw();
+}
+function toggleGrid(){
+  showGrid = !showGrid;
+  $('tgGrid').classList.toggle('on', showGrid);
+  draw();
+}
+function clearSpeakers(){
+  if (speakers.length === 0) return toast('لا توجد سماعات', 'warn');
+  if (confirm(`مسح جميع السماعات (${speakers.length})؟`)) {
+    speakers = []; selectedId = null;
+    updateAmpLogic(); draw();
+    toast('تم مسح السماعات', 'ok');
+  }
+}
+function resetData(){
+  if (!confirm('مسح كافة البيانات والسماعات؟')) return;
+  speakers = []; selectedId = null; manualMode = false;
+  $('manualBtn').classList.remove('active-mode');
+  $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
+  $('p_name').value = 'مسجد جديد'; $('p_client').value = ''; $('p_engineer').value = 'م. أحمد';
+  localStorage.removeItem('motivity_project');
+  updateAmpLogic(); draw();
+  toast('تم تصفير البيانات', 'ok');
+}
+function aiSmartDistribute(){
+  const d = getDims();
+  const model = $('m_model').value;
+  const spk = DB_SPK[model];
+  // عدد الصفوف على أساس تغطية 90° مع ارتفاع السقف
+  const coverDist = Math.max(4, (d.H - 1.2) * Math.tan((spk.covV/2)*Math.PI/180) * 1.5);
+  const rows = Math.max(2, Math.round(d.L / Math.max(5, coverDist)));
+  speakers = [];
+  for (let i = 1; i <= rows; i++) {
+    const r = i/(rows+1);
+    speakers.push({id: ++uid, rx:0, ry:r, model});
+    speakers.push({id: ++uid, rx:1, ry:r, model});
+  }
+  updateAmpLogic(); draw();
+  toast(`تم توزيع ${rows} صفوف (${rows*2} سماعة)`, 'ok');
+}
 
-        document.getElementById('boq-body').innerHTML = boq;
-        document.getElementById('reportImg').src = canvas.toDataURL();
-        document.getElementById('reportView').style.display = 'block';
-    }
+/* ============ الحسابات الهندسية ============ */
+function computeAcoustics(){
+  const d = getDims();
+  const V = d.L * d.W * d.H;
+  const S = 2 * (d.L*d.W + d.L*d.H + d.W*d.H);
+  const A = S * d.alpha;
+  const rt60 = A > 0 ? 0.161 * V / A : 0;
 
-    window.onload = () => { populate(); draw(); };
-    window.onresize = draw;
+  // SPL متوسط عند 6 نقاط استماع على ارتفاع 1.2م
+  const pts = [
+    {x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}
+  ];
+  const listH = 1.2;
+  let splSum = 0;
+  pts.forEach(p => {
+    let pTotal = 0;
+    speakers.forEach(s => {
+      const dx = (p.x - s.rx) * d.W;
+      const dy = (p.y - s.ry) * d.L;
+      const dz = d.H - listH;
+      const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+      const sp = DB_SPK[s.model];
+      const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist);
+      pTotal += Math.pow(10, spl/10);
+    });
+    splSum += 10*Math.log10(pTotal || 1e-9);
+  });
+  const avgSPL = speakers.length ? splSum / pts.length : 0;
+  return {V, S, rt60, avgSPL};
+}
+
+function updateAmpLogic(){
+  const totalPwr = speakers.reduce((a,s)=>a + DB_SPK[s.model].pwr, 0);
+  const N = speakers.length;
+  const ampId = $('amp_model').value;
+  const amp = DB_AMP.find(a => a.id === ampId);
+
+  let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
+  if (N > 0) {
+    const imp = 8; // جميع السماعات 8Ω
+    perCh = Math.max(1, Math.floor(imp / amp.minImp)); // = 2 عند 4Ω min
+    chNeeded = Math.ceil(N / perCh);
+    const ampsByCh  = Math.ceil(chNeeded / amp.ch);
+    const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
+    ampCount = Math.max(ampsByCh, ampsByPwr, 1);
+    reason = ampsByCh >= ampsByPwr
+      ? `القيود: المعاوقة (${perCh} سماعة/قناة كحد أقصى)`
+      : `القيود: القدرة (هامش 30%)`;
+  }
+  ampResult = {amps: ampCount, chNeeded, perCh, totalPwr, amp};
+
+  // تحديث واجهة النتائج
+  const ac = computeAcoustics();
+  const target = parseFloat($('p_purpose').value);
+  const splEl = $('spl_v'), splStat = $('st_spl');
+  splEl.textContent = speakers.length ? ac.avgSPL.toFixed(1) : '—';
+  splStat.className = 'stat ' + (!speakers.length ? '' :
+    ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target - 4 ? 'warn' : 'bad');
+
+  const rtEl = $('rt_v'), rtStat = $('st_rt');
+  rtEl.textContent = ac.rt60.toFixed(2);
+  rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
+
+  $('pwr_v').textContent = totalPwr;
+  $('cnt_v').textContent = N;
+
+  $('amp_count_info').innerHTML = N === 0
+    ? 'لا توجد سماعات بعد'
+    : `⚡ العدد المقترح: <b>${ampCount}</b> × ${amp.id}<br>
+       (${chNeeded} قناة – ${perCh} سماعة/قناة)<br>
+       <span style="color:#8b949e">${reason}</span>`;
+
+  draw();
+}
+
+/* ============ التقرير ============ */
+function generateReport(){
+  if (speakers.length === 0) return toast('أضف سماعات أولاً', 'err');
+  const d = getDims();
+  const fs = $('fs_model').value;
+  const ac = computeAcoustics();
+
+  // رأس التقرير
+  const today = new Date().toLocaleDateString('ar-EG');
+  $('project_header').innerHTML = `
+    <table class="table-boq" style="margin-bottom:14px">
+      <tr><td><b>المشروع:</b></td><td>${$('p_name').value}</td>
+          <td><b>العميل:</b></td><td>${$('p_client').value || '—'}</td></tr>
+      <tr><td><b>المهندس:</b></td><td>${$('p_engineer').value}</td>
+          <td><b>التاريخ:</b></td><td>${today}</td></tr>
+    </table>`;
+  $('report_date').textContent = today;
+
+  // الملخص
+  let counts = {}, totalCable = 0;
+  speakers.forEach(s => {
+    counts[s.model] = (counts[s.model]||0) + 1;
+    const dx = (s.rx - 0.5) * d.W;
+    const dy = s.ry * d.L;
+    totalCable += Math.sqrt(dx*dx + dy*dy) + d.H;
+  });
+  totalCable = Math.ceil(totalCable * 1.15);
+  const target = parseFloat($('p_purpose').value);
+
+  $('eng_summary').innerHTML = `
+    <table class="table-boq">
+      <tr><td>المساحة الإجمالية</td><td>${(d.L*d.W).toFixed(1)} م²</td></tr>
+      <tr><td>الحجم الكلي</td><td>${ac.V.toFixed(1)} م³</td></tr>
+      <tr><td>إجمالي الحمل الصوتي</td><td>${ampResult.totalPwr} واط</td></tr>
+      <tr><td>SPL المتوسط</td><td>${ac.avgSPL.toFixed(1)} dB (المستهدف: ${target} dB)</td></tr>
+      <tr><td>زمن الرنين RT60</td><td>${ac.rt60.toFixed(2)} ثانية</td></tr>
+      <tr><td>عدد المكبرات</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
+      <tr><td>المعالج</td><td>${fs}</td></tr>
+      <tr><td>الكيبلات التقديرية</td><td>~${totalCable} متر</td></tr>
+    </table>`;
+
+  // BOQ
+  let boq = '';
+  for (const m in counts) {
+    const sp = DB_SPK[m];
+    boq += `<tr>
+      <td>سماعة Motivity ${m}</td>
+      <td>${sp.type} – ${sp.pwr}W – 8Ω – ${sp.sens}dB</td>
+      <td>${counts[m]}</td>
+      <td>~${Math.ceil(totalCable * counts[m] / speakers.length)}م (2×1.5mm²)</td>
+    </tr>`;
+  }
+  boq += `<tr><td>مكبر قدرة ${ampResult.amp.id}</td><td>MA Professional – ${ampResult.amp.pwr}W</td><td>${ampResult.amps}</td><td>—</td></tr>`;
+  if (fs !== 'None') boq += `<tr><td>مانع تصفير رقمي</td><td>${fs}</td><td>1</td><td>—</td></tr>`;
+  boq += `<tr><td>كيبل سماعات</td><td>نحاس مجدول 2×1.5mm²</td><td>~${totalCable}م</td><td>—</td></tr>`;
+  boq += `<tr><td>موصلات وكونيكتورات</td><td>Speakon / Terminal</td><td>${speakers.length*2}</td><td>—</td></tr>`;
+  $('boq-body').innerHTML = boq;
+
+  // التعليل الهندسي
+  const rtEval = ac.rt60 <= 1.2 ? 'ممتاز للكلام' : ac.rt60 <= 1.8 ? 'مقبول' : 'يُنصح بإضافة مواد ماصة';
+  const splEval = ac.avgSPL >= target ? '✅ يحقق المستهدف' : `⚠️ أقل من المستهدف بـ ${(target - ac.avgSPL).toFixed(1)} dB`;
+  $('eng_notes').innerHTML = `
+    • تم حساب <b>زمن الرنين RT60 = ${ac.rt60.toFixed(2)} ث</b> بطريقة سابين بناءً على
+    حجم ${ac.V.toFixed(0)} م³ ومعامل امتصاص ${d.alpha} → تقييم: <b>${rtEval}</b>.<br>
+    • متوسط ضغط الصوت (SPL) عند نقاط الاستماع = <b>${ac.avgSPL.toFixed(1)} dB</b> → ${splEval}.<br>
+    • تم اعتماد <b>${ampResult.amps} مكبر ${ampResult.amp.id}</b> بهامش قدرة 30% وضمان تحميل ≥${ampResult.amp.minImp}Ω لكل قناة
+    (${ampResult.perCh} سماعة/قناة كحد أقصى).<br>
+    • توزيع السماعات يضمن تغطية متساوية ومنع التصفير (Feedback) بفضل ${fs === 'None' ? 'المعالج المدمج' : fs + ' الرقمي'}.<br>
+    • ارتفاع التركيب المقترح للسماعات: ${(d.H - 0.5).toFixed(1)}م موجّهة نحو الأسفل بزاوية 15°-30°.
+  `;
+
+  $('reportImg').src = canvas.toDataURL();
+  $('reportView').style.display = 'block';
+}
+
+/* ============ حفظ واسترجاع ============ */
+function saveProject(){
+  const data = {
+    speakers, manualMode,
+    dims: {len: $('m_len').value, wid: $('m_wid').value, h: $('m_h').value, alpha: $('m_alpha').value},
+    amp: $('amp_model').value, fs: $('fs_model').value, model: $('m_model').value,
+    info: {name: $('p_name').value, client: $('p_client').value, engineer: $('p_engineer').value, purpose: $('p_purpose').value},
+    uid
+  };
+  localStorage.setItem('motivity_project', JSON.stringify(data));
+  toast('💾 تم حفظ المشروع', 'ok');
+}
+function loadProject(){
+  const raw = localStorage.getItem('motivity_project');
+  if (!raw) return toast('لا يوجد مشروع محفوظ', 'warn');
+  try {
+    const d = JSON.parse(raw);
+    speakers = d.speakers || [];
+    manualMode = !!d.manualMode;
+    $('manualBtn').classList.toggle('active-mode', manualMode);
+    $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
+    $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
+    $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
+    Object.assign($('p_name'), {value:d.info.name});
+    $('p_client').value = d.info.client; $('p_engineer').value = d.info.engineer;
+    $('p_purpose').value = d.info.purpose;
+    uid = d.uid || speakers.length;
+    updateAmpLogic(); draw();
+    toast('📂 تم استرجاع المشروع', 'ok');
+  } catch(e){ toast('ملف محفوظ تالف', 'err'); }
+}
+
+/* ============ التهيئة ============ */
+window.addEventListener('load', () => {
+  populate();
+  ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
+    $(id).addEventListener('input', () => updateAmpLogic()));
+  updateAmpLogic();
+  draw();
+  toast('مرحباً بك في Motivity PRO', 'ok');
+});
+window.addEventListener('resize', draw);
 </script>
 </body>
 </html>
