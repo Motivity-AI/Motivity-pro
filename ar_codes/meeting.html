@@ -1,192 +1,921 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>Motivity AI - Elite Engineering</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --motivity-red: #e60012; --tech-blue: #38bdf8; --bg: #0d1117; }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #fff; height: 100vh; display: flex; overflow: hidden; }
+<meta charset="UTF-8">
+<title>Motivity AI - Elite Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --gold:#f59e0b; }
+* { box-sizing:border-box; font-family:'Cairo',sans-serif; margin:0; padding:0; }
+body { background:var(--bg); color:#fff; height:100vh; display:flex; overflow:hidden; }
 
-        .sidebar { width: 380px; background: #161b22; padding: 20px; border-left: 3px solid var(--motivity-red); overflow-y: auto; z-index: 100; }
-        .box { background: #21262d; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #30363d; }
-        h3 { font-size: 14px; color: var(--tech-blue); margin-bottom: 10px; border-bottom: 1px solid #333; }
-        label { font-size: 11px; color: #8b949e; display: block; margin-top: 8px; }
-        input, select { width: 100%; padding: 10px; background: #0d1117; color: #fff; border: 1px solid #444; border-radius: 6px; margin-top: 5px; }
-        
-        .viewport { flex: 1; position: relative; background: #000; cursor: grab; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        canvas { background: #050505; border: 1px solid #222; }
-        
-        .btn-smart { background: var(--motivity-red); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .btn-report { background: var(--tech-blue); color: black; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: 900; margin-top: 10px; cursor: pointer; }
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width:390px; background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
+  padding:20px; border-left:3px solid var(--red); overflow-y:auto; z-index:100;
+  box-shadow: -8px 0 32px rgba(0,0,0,.5);
+}
+.sidebar::-webkit-scrollbar { width:8px; }
+.sidebar::-webkit-scrollbar-thumb { background:#30363d; border-radius:4px; }
 
-        #reportModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 30px; overflow-y: auto; }
-        .report-paper { background: #fff; color: #333; max-width: 950px; margin: auto; padding: 40px; border-radius: 5px; box-shadow: 0 0 50px rgba(0,0,0,0.3); line-height: 1.6; }
-        .report-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .report-table th, .report-table td { border: 1px solid #ddd; padding: 12px; text-align: right; font-size: 13px; }
-        .eng-note { background: #f0f7ff; border-right: 5px solid var(--tech-blue); padding: 15px; margin-top: 20px; font-size: 13px; }
-        @media print { .no-print { display: none; } }
-    </style>
+.brand { text-align:center; margin-bottom:20px; }
+.brand h1 { font-size:22px; font-weight:900; letter-spacing:2px; }
+.brand h1 span { color:var(--red); }
+.brand p { font-size:10px; color:#8b949e; letter-spacing:3px; margin-top:2px; }
+
+.box {
+  background:rgba(33,38,45,.7); backdrop-filter:blur(8px);
+  padding:16px; border-radius:12px; margin-bottom:14px;
+  border:1px solid rgba(56,189,248,.15); transition:.3s;
+}
+.box:hover { border-color:rgba(56,189,248,.35); }
+h3 { font-size:13px; color:var(--blue); margin-bottom:12px; font-weight:700; display:flex; align-items:center; gap:6px; }
+h3::before { content:''; width:3px; height:14px; background:var(--red); border-radius:2px; }
+label { font-size:11px; color:#8b949e; display:block; margin-top:10px; font-weight:600; }
+input, select {
+  width:100%; padding:10px 12px; background:#0a0e13; color:#fff;
+  border:1px solid #30363d; border-radius:8px; margin-top:5px;
+  font-family:inherit; font-size:13px; transition:.2s;
+}
+input:focus, select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(56,189,248,.15); }
+
+/* ═══ KPI CARDS ═══ */
+.kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+.kpi {
+  background:linear-gradient(135deg,#0a0e13,#161b22);
+  border:1px solid #30363d; border-radius:8px; padding:10px; text-align:center;
+}
+.kpi .v { font-size:18px; font-weight:900; color:var(--blue); }
+.kpi .l { font-size:9.5px; color:#8b949e; margin-top:2px; }
+.kpi.ok .v { color:#22c55e; }
+.kpi.warn .v { color:var(--gold); }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  border:none; padding:14px; width:100%; border-radius:10px;
+  font-weight:900; cursor:pointer; transition:.3s; font-family:inherit;
+  font-size:13px; letter-spacing:.3px; margin-top:8px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-smart {
+  background:linear-gradient(135deg,#e60012,#ff2e40);
+  color:#fff; box-shadow:0 4px 15px rgba(230,0,18,.35);
+}
+.btn-smart:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(230,0,18,.5); }
+.btn-report {
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:#000; box-shadow:0 4px 15px rgba(56,189,248,.3);
+}
+.btn-report:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(56,189,248,.5); }
+
+/* ═══ VIEWPORT ═══ */
+.viewport {
+  flex:1; position:relative; background:radial-gradient(circle at 50% 50%,#111820 0%,#050a0f 100%);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+canvas { display:block; border-radius:8px; }
+
+/* ═══ VIEW CONTROLS ═══ */
+.v-ctrl {
+  position:absolute; background:rgba(22,27,34,.85); backdrop-filter:blur(12px);
+  border:1px solid #30363d; border-radius:10px; padding:6px;
+  display:flex; gap:4px; z-index:10;
+}
+.v-ctrl.top-left { top:16px; left:16px; }
+.v-ctrl.top-right { top:16px; right:16px; }
+.v-ctrl button {
+  background:transparent; color:#ccc; border:none; width:34px; height:34px;
+  border-radius:6px; cursor:pointer; font-size:15px; font-weight:700;
+  transition:.2s; font-family:inherit;
+}
+.v-ctrl button:hover { background:#30363d; color:#fff; }
+.v-ctrl button.on { background:var(--blue); color:#000; }
+
+/* ═══ HINT / CURSOR INFO ═══ */
+.hint-bar {
+  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  background:rgba(22,27,34,.85); backdrop-filter:blur(12px);
+  border:1px solid #30363d; border-radius:10px; padding:8px 16px;
+  font-size:11.5px; color:#8b949e; z-index:10;
+}
+.hint-bar b { color:var(--blue); }
+
+.cursor-info {
+  position:absolute; bottom:16px; right:16px;
+  background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
+  border:1px solid #30363d; border-radius:10px; padding:8px 16px;
+  font-size:11.5px; color:#fff; z-index:10;
+  display:flex; gap:14px;
+}
+.cursor-info b { color:var(--blue); }
+
+/* ═══ REPORT ═══ */
+#reportModal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.97);
+  z-index:2000; padding:30px; overflow-y:auto;
+}
+.report-paper {
+  background:#fff; color:#333; max-width:1000px; margin:auto;
+  padding:50px; border-radius:6px; box-shadow:0 0 60px rgba(230,0,18,.15);
+  line-height:1.7; position:relative;
+}
+.report-paper::before {
+  content:''; position:absolute; top:0; right:0; left:0; height:8px;
+  background:linear-gradient(90deg,var(--red),var(--blue));
+  border-radius:6px 6px 0 0;
+}
+.rep-header {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding-bottom:20px; border-bottom:3px solid var(--red); margin-bottom:24px;
+}
+.rep-header h1 { color:var(--red); font-size:26px; }
+.rep-header p { font-size:12px; color:#888; margin-top:4px; }
+.rep-header .meta { text-align:left; font-size:12px; color:#555; line-height:1.8; }
+.rep-header .meta b { color:var(--red); }
+
+.report-paper h3 {
+  color:#111; border-right:5px solid var(--red); padding-right:12px;
+  margin:26px 0 14px; font-size:16px;
+}
+.report-table { width:100%; border-collapse:collapse; margin-top:14px; }
+.report-table th { background:#1a1a1a; color:#fff; }
+.report-table th, .report-table td {
+  border:1px solid #ddd; padding:12px; text-align:right; font-size:13px;
+}
+.report-table tr:nth-child(even) td { background:#fafafa; }
+
+.eng-note {
+  background:#f0f7ff; border-right:5px solid var(--blue);
+  padding:18px; margin-top:16px; font-size:13px; line-height:2;
+  border-radius:0 6px 6px 0;
+}
+
+@media print { .no-print { display:none !important; } #reportModal { position:static; padding:0; background:#fff; } .report-paper { box-shadow:none; padding:0; } }
+</style>
 </head>
 <body>
 
 <div class="sidebar">
-    <h2 style="color:var(--motivity-red); text-align:center; margin-bottom:20px;">MOTIVITY AI ENGINE</h2>
-    
-    <div class="box">
-        <h3>🏢 النمط الوظيفي</h3>
-        <select id="roomMode" onchange="initDraw()">
-            <option value="meeting">غرفة اجتماعات (طاولة بيضاوية)</option>
-            <option value="conference">قاعة مؤتمرات (توزيع مسرحي)</option>
-        </select>
-    </div>
+  <div class="brand">
+    <h1>MOTIVITY <span>AI</span></h1>
+    <p>ELITE ENGINEERING</p>
+  </div>
 
-    <div class="box">
-        <h3>📐 القياسات الهندسية</h3>
-        <label>طول القاعة (م)</label><input type="number" id="dim_l" value="25" oninput="initDraw()">
-        <label>عرض القاعة (م)</label><input type="number" id="dim_w" value="15" oninput="initDraw()">
-    </div>
+  <div class="box">
+    <h3>معلومات المشروع</h3>
+    <label>اسم المشروع</label>
+    <input type="text" id="projName" value="قاعة المؤتمرات الرئيسية">
+    <label>اسم المهندس</label>
+    <input type="text" id="engName" value="م. أحمد">
+  </div>
 
-    <div class="box">
-        <h3>🔊 مجموعة سماعات Motivity</h3>
-        <select id="spkModel" onchange="initDraw()">
-            <option value="At-08">At-08 (250W) Premium High Power</option>
-            <option value="At-06">At-06 (150W) Professional Series</option>
-            <option value="Cs-08">Cs-08 (150W) Column Type</option>
-            <option value="Cs-06">Cs-06 (100W) Compact Column</option>
-            <option value="At-265">At-265 (250W) Dual Driver</option>
-        </select>
-        <label>عدد السماعات</label><input type="number" id="spkQty" value="8" oninput="initDraw()">
-    </div>
+  <div class="box">
+    <h3>النمط الوظيفي</h3>
+    <select id="roomMode" onchange="initDraw()">
+      <option value="meeting">غرفة اجتماعات (طاولة بيضاوية)</option>
+      <option value="conference">قاعة مؤتمرات (توزيع مسرحي)</option>
+    </select>
+  </div>
 
-    <div class="box">
-        <h3>🎙️ وحدات التحكم الرقمية</h3>
-        <label>وحدة رئيس (Chairman)</label><input type="number" id="cQty" value="1" oninput="initDraw()">
-        <label>وحدة عضو (Delegate)</label><input type="number" id="dQty" value="20" oninput="initDraw()">
-    </div>
+  <div class="box">
+    <h3>القياسات الهندسية</h3>
+    <label>الطول (م)</label>
+    <input type="number" id="dim_l" value="25" oninput="initDraw()">
+    <label>العرض (م)</label>
+    <input type="number" id="dim_w" value="15" oninput="initDraw()">
+    <label>ارتفاع السقف (م)</label>
+    <input type="number" id="dim_h" value="4" step="0.1" oninput="initDraw()">
+  </div>
 
-    <button class="btn-smart" onclick="autoOptimize()">⚡ التحسين الهندسي الذكي</button>
-    <button class="btn-report" onclick="generateReport()">📄 إصدار التقرير والتعليل الهندسي</button>
+  <div class="box">
+    <h3>مجموعة سماعات Motivity</h3>
+    <select id="spkModel" onchange="onModelChange()">
+      <option value="At-08" data-pwr="250" data-angle="90" data-sens="97">At-08 · 250W · 90°</option>
+      <option value="At-06" data-pwr="150" data-angle="90" data-sens="95">At-06 · 150W · 90°</option>
+      <option value="Cs-08" data-pwr="150" data-angle="120" data-sens="92">Cs-08 · 150W · 120°</option>
+      <option value="Cs-06" data-pwr="100" data-angle="120" data-sens="90">Cs-06 · 100W · 120°</option>
+      <option value="At-265" data-pwr="250" data-angle="100" data-sens="98">At-265 · 250W · 100°</option>
+    </select>
+    <label>عدد السماعات (لكل جدار)</label>
+    <input type="number" id="spkPerSide" value="4" min="1" max="20" oninput="initDraw()">
+
+    <div class="kpi-row" style="margin-top:14px">
+      <div class="kpi" id="kpiTotal"><div class="v" id="kpiTotalV">0</div><div class="l">إجمالي السماعات</div></div>
+      <div class="kpi" id="kpiWatt"><div class="v" id="kpiWattV">0</div><div class="l">إجمالي الواط</div></div>
+      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">نسبة التغطية</div></div>
+      <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">أقصى SPL</div></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>وحدات التحكم الرقمية</h3>
+    <label>وحدة رئيس (Chairman)</label>
+    <input type="number" id="cQty" value="1" oninput="initDraw()">
+    <label>وحدة عضو (Delegate)</label>
+    <input type="number" id="dQty" value="20" oninput="initDraw()">
+  </div>
+
+  <button class="btn btn-smart" onclick="autoOptimize()">⚡ التحسين الهندسي الذكي</button>
+  <button class="btn btn-report" onclick="generateReport()">📄 إصدار التقرير الفني</button>
 </div>
 
 <div class="viewport" id="vArea">
-    <canvas id="mainCanvas"></canvas>
+  <canvas id="mainCanvas"></canvas>
+
+  <div class="v-ctrl top-left">
+    <button onclick="zoomIn()">+</button>
+    <button onclick="zoomOut()">−</button>
+    <button onclick="resetView()">⌂</button>
+  </div>
+
+  <div class="v-ctrl top-right">
+    <button id="tgTile" class="on" onclick="toggle('tile')" title="بلاط السقف">▦</button>
+    <button id="tgCover" class="on" onclick="toggle('cover')" title="التغطية">🌐</button>
+    <button id="tgHeat" onclick="toggle('heat')" title="خريطة الصوت">🌡️</button>
+    <button id="tgRays" class="on" onclick="toggle('rays')" title="أشعة الصوت">🔊</button>
+  </div>
+
+  <div class="hint-bar">🖱️ <b>عجلة</b> للتقريب · <b>اسحب</b> للتحريك · <b>⌂</b> إعادة الضبط</div>
+  <div class="cursor-info"><span>SPL عند المؤشر: <b id="cursorSPL">—</b></span></div>
 </div>
 
 <div id="reportModal">
-    <div class="report-paper">
-        <h1 style="color:var(--motivity-red); border-bottom: 4px solid #333;">التقرير الفني والتعليل الهندسي للمشروع</h1>
-        <div id="reportHeader" style="margin-top:20px;"></div>
-        
-        <div style="background:#000; padding:15px; margin:20px 0; text-align:center;">
-            <img id="reportImg" style="max-width:100%; border:1px solid #444;">
-        </div>
-
-        <h3>1. جدول الكميات (BOQ)</h3>
-        <table class="report-table">
-            <thead>
-                <tr><th>البند</th><th>الموديل</th><th>الكمية</th><th>المواصفات</th></tr>
-            </thead>
-            <tbody id="boqBody"></tbody>
-        </table>
-
-        <h3>2. التعليل الهندسي (Engineering Justification)</h3>
-        <div class="eng-note" id="justificationBody"></div>
-
-        <div class="no-print" style="margin-top:30px; display:flex; gap:10px;">
-            <button onclick="window.print()" class="btn-smart">حفظ PDF</button>
-            <button onclick="document.getElementById('reportModal').style.display='none'" style="background:#eee; padding:15px; border:none; cursor:pointer;">إغلاق</button>
-        </div>
+  <div class="report-paper">
+    <div class="no-print" style="text-align:left; margin-bottom:20px">
+      <button onclick="window.print()" class="btn btn-smart" style="width:auto; padding:10px 24px; display:inline-flex">🖨️ حفظ PDF</button>
+      <button onclick="document.getElementById('reportModal').style.display='none'" style="background:#eee; padding:10px 24px; border:none; cursor:pointer; border-radius:10px; font-weight:700; font-family:inherit; margin-right:8px">إغلاق</button>
     </div>
+
+    <div class="rep-header">
+      <div>
+        <h1>التقرير الفني للمشروع</h1>
+        <p>MOTIVITY ELITE ENGINEERING · REF MOT-ENG-2026</p>
+      </div>
+      <div class="meta">
+        <b>المشروع:</b> <span id="repProjName">—</span><br>
+        <b>المهندس:</b> <span id="repEngName">—</span><br>
+        <b>التاريخ:</b> <span id="repDate">—</span>
+      </div>
+    </div>
+
+    <h3>المخطط الهندسي للتوزيع</h3>
+    <div style="background:#0a0e13; padding:15px; text-align:center; border-radius:8px">
+      <img id="reportImg" style="max-width:100%; border-radius:6px">
+    </div>
+
+    <h3>جدول الكميات (BOQ)</h3>
+    <table class="report-table">
+      <thead>
+        <tr><th>البند</th><th>الموديل</th><th>الكمية</th><th>المواصفات</th></tr>
+      </thead>
+      <tbody id="boqBody"></tbody>
+    </table>
+
+    <h3>التعليل الهندسي</h3>
+    <div class="eng-note" id="justificationBody"></div>
+  </div>
 </div>
 
 <script>
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
-    const vArea = document.getElementById('vArea');
-    let zoom = 0.8, offsetX = 0, offsetY = 0;
+/* ═══════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const vArea = document.getElementById('vArea');
 
-    function initDraw() {
-        canvas.width = 1000; canvas.height = 700;
-        render();
-    }
+let zoom = 1, offsetX = 0, offsetY = 0;
+let isPanning = false, startX = 0, startY = 0;
+let opts = { tile:true, cover:true, heat:false, rays:true };
+let animationFrame = null, animTime = 0;
 
-    function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save();
-        ctx.translate(canvas.width/2 + offsetX, canvas.height/2 + offsetY);
-        ctx.scale(zoom, zoom);
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+function initDraw() {
+  canvas.width  = 1000;
+  canvas.height = 700;
+  updateKPI();
+  startAnimation();
+}
 
-        const L_m = parseFloat(document.getElementById('dim_l').value);
-        const W_m = parseFloat(document.getElementById('dim_w').value);
-        const sq = parseInt(document.getElementById('spkQty').value);
-        const mode = document.getElementById('roomMode').value;
-        const scale = 25; 
-        const L = L_m * scale, W = W_m * scale;
+function onModelChange() { initDraw(); }
 
-        // القاعة
-        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 4;
-        ctx.strokeRect(-L/2, -W/2, L, W);
-        ctx.fillStyle = "#050505"; ctx.fillRect(-L/2, -W/2, L, W);
+function updateKPI() {
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const pwr = parseFloat(opt.dataset.pwr);
+  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
+  const total = perSide * 2;
+  const totalW = pwr * total;
 
-        // السماعات
-        const perSide = Math.ceil(sq/2);
-        for(let s=0; s<2; s++) {
-            for(let i=0; i<perSide; i++) {
-                let px = -L/2 + (L * (i+0.5)/perSide), py = (s===0?-W/2:W/2);
-                ctx.fillStyle = "#fff"; ctx.fillRect(px-12, py-(s===0?0:12), 24, 12);
-                ctx.fillStyle = "#e60012"; ctx.fillRect(px-8, py-(s===0?-2:10), 16, 2);
-            }
+  document.getElementById('kpiTotalV').textContent = total;
+  document.getElementById('kpiWattV').textContent = totalW;
+
+  // Coverage & SPL calc
+  const L = parseFloat(document.getElementById('dim_l').value);
+  const W = parseFloat(document.getElementById('dim_w').value);
+  const H = parseFloat(document.getElementById('dim_h').value);
+  const angle = parseFloat(opt.dataset.angle);
+  const sens = parseFloat(opt.dataset.sens);
+
+  const throwH = Math.max(0.5, H - 1.2);
+  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
+  const spacing = L / perSide;
+  const cov = Math.min(100, (coverR / spacing) * 100 * 2);
+
+  document.getElementById('kpiCovV').textContent = cov.toFixed(0) + '%';
+  document.getElementById('kpiCov').className = 'kpi ' + (cov >= 80 ? 'ok' : 'warn');
+
+  const maxDist = Math.sqrt((L/2)**2 + (W/2)**2 + throwH**2);
+  const splFar = sens + 10 * Math.log10(pwr) - 20 * Math.log10(maxDist);
+  document.getElementById('kpiSplV').textContent = splFar.toFixed(1) + ' dB';
+  document.getElementById('kpiSpl').className = 'kpi ' + (splFar >= 85 ? 'ok' : 'warn');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER LOOP (with animation)
+   ═══════════════════════════════════════════════════════════ */
+function startAnimation() {
+  if (animationFrame) cancelAnimationFrame(animationFrame);
+  const loop = () => {
+    animTime += 0.016;
+    render();
+    animationFrame = requestAnimationFrame(loop);
+  };
+  loop();
+}
+
+function render() {
+  ctx.fillStyle = "#050a0f";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.save();
+  ctx.translate(canvas.width/2 + offsetX, canvas.height/2 + offsetY);
+  ctx.scale(zoom, zoom);
+
+  const L_m = parseFloat(document.getElementById('dim_l').value) || 25;
+  const W_m = parseFloat(document.getElementById('dim_w').value) || 15;
+  const H_m = parseFloat(document.getElementById('dim_h').value) || 4;
+  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
+  const mode = document.getElementById('roomMode').value;
+
+  const scale = 25;
+  const L = L_m * scale, W = W_m * scale;
+
+  // ── CEILING TILE PATTERN (60cm) ──
+  if (opts.tile) {
+    drawTilePattern(L, W, scale);
+  }
+
+  // ── HEATMAP ──
+  if (opts.heat) {
+    drawHeatmap(L, W, L_m, W_m, H_m, perSide, scale);
+  }
+
+  // ── ROOM OUTLINE ──
+  ctx.strokeStyle = "#38bdf8";
+  ctx.lineWidth = 4;
+  ctx.shadowColor = "rgba(56,189,248,0.5)";
+  ctx.shadowBlur = 20;
+  ctx.strokeRect(-L/2, -W/2, L, W);
+  ctx.shadowBlur = 0;
+
+  // ── SPEAKERS + COVERAGE ──
+  drawSpeakers(L, W, L_m, W_m, H_m, perSide, scale);
+
+  // ── MICROPHONES ──
+  drawMicrophones(L, W, mode);
+
+  // ── DIMENSION LABELS ──
+  drawDimensions(L, W, L_m, W_m);
+
+  // ── SCALE BAR ──
+  drawScaleBar(L, W);
+
+  ctx.restore();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TILE PATTERN
+   ═══════════════════════════════════════════════════════════ */
+function drawTilePattern(L, W, scale) {
+  const tilePx = 0.6 * scale;
+  ctx.strokeStyle = "rgba(56,189,248,0.06)";
+  ctx.lineWidth = 1;
+
+  for (let x = -L/2; x <= L/2; x += tilePx) {
+    ctx.beginPath();
+    ctx.moveTo(x, -W/2);
+    ctx.lineTo(x, W/2);
+    ctx.stroke();
+  }
+  for (let y = -W/2; y <= W/2; y += tilePx) {
+    ctx.beginPath();
+    ctx.moveTo(-L/2, y);
+    ctx.lineTo(L/2, y);
+    ctx.stroke();
+  }
+
+  // 1m brighter grid
+  ctx.strokeStyle = "rgba(56,189,248,0.12)";
+  for (let x = -L/2; x <= L/2; x += scale) {
+    ctx.beginPath();
+    ctx.moveTo(x, -W/2);
+    ctx.lineTo(x, W/2);
+    ctx.stroke();
+  }
+  for (let y = -W/2; y <= W/2; y += scale) {
+    ctx.beginPath();
+    ctx.moveTo(-L/2, y);
+    ctx.lineTo(L/2, y);
+    ctx.stroke();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEATMAP
+   ═══════════════════════════════════════════════════════════ */
+function drawHeatmap(L, W, L_m, W_m, H_m, perSide, scale) {
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const pwr = parseFloat(opt.dataset.pwr);
+  const sens = parseFloat(opt.dataset.sens);
+  const listH = 1.2;
+  const throwH = Math.max(0.5, H_m - listH);
+  const spl1m = sens + 10 * Math.log10(pwr);
+
+  const step = 8;
+  for (let py = -W/2; py < W/2; py += step) {
+    for (let px = -L/2; px < L/2; px += step) {
+      let pTotal = 0;
+
+      for (let s = 0; s < 2; s++) {
+        const isTop = s === 0;
+        const wallY = isTop ? -W/2 : W/2;
+        for (let i = 0; i < perSide; i++) {
+          const sx = -L/2 + (L * (i + 0.5) / perSide);
+          const sy = wallY;
+          const dx = px - sx;
+          const dy = py - sy;
+          const dz = throwH;
+          const d = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+          const spl = spl1m - 20 * Math.log10(d);
+          pTotal += Math.pow(10, spl/10);
         }
+      }
+      const spl = 10 * Math.log10(pTotal);
+      ctx.fillStyle = splColor(spl);
+      ctx.fillRect(px, py, step, step);
+    }
+  }
+}
 
-        // الميكروفونات
-        const total = parseInt(document.getElementById('cQty').value) + parseInt(document.getElementById('dQty').value);
-        if(mode === 'meeting') {
-            ctx.strokeStyle="#222"; ctx.beginPath(); ctx.ellipse(0,0, L*0.35, W*0.3, 0, 0, Math.PI*2); ctx.stroke();
-            for(let i=0; i<total; i++){
-                let ang = (i*2*Math.PI)/total;
-                drawMic(Math.cos(ang)*L*0.35, Math.sin(ang)*W*0.3, i<document.getElementById('cQty').value);
-            }
-        } else {
-            for(let i=0; i<total; i++) drawMic(-L*0.4+(i%10)*L*0.09, -W*0.2+Math.floor(i/10)*W*0.15, i<document.getElementById('cQty').value);
+function splColor(spl) {
+  if (spl < 65) return "rgba(20,30,50,0.55)";
+  if (spl < 75) return "rgba(34,100,180,0.45)";
+  if (spl < 85) return "rgba(34,197,94,0.35)";
+  if (spl < 92) return "rgba(132,204,22,0.35)";
+  if (spl < 98) return "rgba(245,158,11,0.40)";
+  return "rgba(239,68,68,0.45)";
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPEAKERS (realistic ceiling view)
+   ═══════════════════════════════════════════════════════════ */
+function drawSpeakers(L, W, L_m, W_m, H_m, perSide, scale) {
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const angle = parseFloat(opt.dataset.angle);
+
+  const throwH = Math.max(0.5, H_m - 1.2);
+  const coverR = throwH * Math.tan((angle/2) * Math.PI/180) * scale;
+
+  for (let s = 0; s < 2; s++) {
+    const isTop = s === 0;
+    const wallY = isTop ? -W/2 : W/2;
+    const centerAng = isTop ? Math.PI/2 : -Math.PI/2;
+
+    for (let i = 0; i < perSide; i++) {
+      const px = -L/2 + (L * (i + 0.5) / perSide);
+      const py = wallY;
+
+      // ── COVERAGE (gradient radial) ──
+      if (opts.cover) {
+        const half = (angle / 2) * Math.PI / 180;
+
+        const grad = ctx.createRadialGradient(px, py, 0, px, py, coverR);
+        grad.addColorStop(0, "rgba(56,189,248,0.22)");
+        grad.addColorStop(0.5, "rgba(56,189,248,0.10)");
+        grad.addColorStop(1, "rgba(56,189,248,0)");
+
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // ── SOUND RAYS (animated) ──
+      if (opts.rays) {
+        const half = (angle / 2) * Math.PI / 180;
+        const numRays = 5;
+        for (let r = 0; r < numRays; r++) {
+          const t = r / (numRays - 1);
+          const rayAng = centerAng - half + t * (half * 2);
+          const pulse = (Math.sin(animTime * 2 + i * 0.5) + 1) / 2;
+          const len = coverR * (0.4 + pulse * 0.6);
+
+          const grad2 = ctx.createLinearGradient(px, py,
+            px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
+          grad2.addColorStop(0, "rgba(56,189,248,0.5)");
+          grad2.addColorStop(1, "rgba(56,189,248,0)");
+
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
+          ctx.strokeStyle = grad2;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
         }
-        ctx.restore();
+      }
+
+      // ── SPEAKER ICON (realistic ceiling speaker) ──
+      drawSpeakerIcon(px, py, isTop);
+    }
+  }
+}
+
+function drawSpeakerIcon(x, y, isTop) {
+  const cy = y + (isTop ? 0 : 0);
+
+  // shadow
+  ctx.beginPath();
+  ctx.arc(x, cy, 13, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fill();
+
+  // outer ring
+  ctx.beginPath();
+  ctx.arc(x, cy, 12, 0, Math.PI*2);
+  ctx.fillStyle = "#1a1f26";
+  ctx.fill();
+  ctx.strokeStyle = "#444";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // inner grille (concentric rings)
+  ctx.beginPath();
+  ctx.arc(x, cy, 9, 0, Math.PI*2);
+  ctx.strokeStyle = "#555";
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x, cy, 6, 0, Math.PI*2);
+  ctx.strokeStyle = "#555";
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+
+  // center red dot
+  ctx.beginPath();
+  ctx.arc(x, cy, 3.5, 0, Math.PI*2);
+  ctx.fillStyle = "#e60012";
+  ctx.fill();
+  ctx.shadowColor = "rgba(230,0,18,0.8)";
+  ctx.shadowBlur = 8;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // highlight
+  ctx.beginPath();
+  ctx.arc(x - 1.5, cy - 1.5, 1, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.fill();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MICROPHONES
+   ═══════════════════════════════════════════════════════════ */
+function drawMicrophones(L, W, mode) {
+  const cQty = parseInt(document.getElementById('cQty').value) || 0;
+  const dQty = parseInt(document.getElementById('dQty').value) || 0;
+  const total = cQty + dQty;
+  if (total === 0) return;
+
+  if (mode === 'meeting') {
+    // Table
+    ctx.strokeStyle = "rgba(56,189,248,0.3)";
+    ctx.lineWidth = 2;
+    ctx.fillStyle = "rgba(30,40,55,0.6)";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, L*0.35, W*0.3, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.stroke();
+
+    for (let i = 0; i < total; i++) {
+      const ang = (i * 2 * Math.PI) / total - Math.PI / 2;
+      const mx = Math.cos(ang) * L * 0.35;
+      const my = Math.sin(ang) * W * 0.3;
+      drawMic(mx, my, i < cQty, i + 1);
+    }
+  } else {
+    const cols = Math.min(10, Math.ceil(Math.sqrt(total * 2)));
+    const rows = Math.ceil(total / cols);
+
+    for (let i = 0; i < total; i++) {
+      const r = Math.floor(i / cols);
+      const c = i % cols;
+      const rowCount = Math.min(cols, total - r * cols);
+      const xSpan = L * 0.75;
+      const xStep = xSpan / Math.max(1, rowCount - 1);
+      const x = -xSpan/2 + c * xStep;
+      const y = -W * 0.15 + r * (W * 0.55 / Math.max(1, rows));
+      drawMic(x, y, i < cQty, i + 1);
     }
 
-    function drawMic(x,y,isC) {
-        ctx.fillStyle = isC ? "#e60012" : "#38bdf8";
-        ctx.beginPath(); ctx.arc(x,y,6,0,7); ctx.fill();
-        ctx.strokeStyle="#fff"; ctx.stroke();
+    // Podium line
+    ctx.strokeStyle = "rgba(230,0,18,0.5)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-L*0.35, -W*0.35);
+    ctx.lineTo(L*0.35, -W*0.35);
+    ctx.stroke();
+
+    ctx.fillStyle = "#8b949e";
+    ctx.font = "bold 11px Cairo";
+    ctx.textAlign = "center";
+    ctx.fillText("منصة العرض", 0, -W*0.35 - 12);
+  }
+}
+
+function drawMic(x, y, isC, num) {
+  // glow
+  if (isC) {
+    ctx.beginPath();
+    ctx.arc(x, y, 14, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(230,0,18,0.2)";
+    ctx.fill();
+  }
+
+  ctx.beginPath();
+  ctx.arc(x, y, 7, 0, Math.PI*2);
+  ctx.fillStyle = isC ? "#e60012" : "#38bdf8";
+  ctx.fill();
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 9px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(num), x, y + 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DIMENSIONS & SCALE BAR
+   ═══════════════════════════════════════════════════════════ */
+function drawDimensions(L, W, L_m, W_m) {
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 14px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillText(L_m + " م", 0, -W/2 - 16);
+
+  ctx.save();
+  ctx.translate(-L/2 - 22, 0);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText(W_m + " م", 0, 0);
+  ctx.restore();
+}
+
+function drawScaleBar(L, W) {
+  const scale = 25;
+  const barM = 5;
+  const barPx = barM * scale;
+  const bx = L/2 - barPx;
+  const by = W/2 + 30;
+
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(bx, by);
+  ctx.lineTo(bx + barPx, by);
+  ctx.stroke();
+
+  ctx.beginPath(); ctx.moveTo(bx, by-5); ctx.lineTo(bx, by+5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(bx+barPx, by-5); ctx.lineTo(bx+barPx, by+5); ctx.stroke();
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "11px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText(barM + " م", bx + barPx/2, by + 16);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AUTO OPTIMIZE
+   ═══════════════════════════════════════════════════════════ */
+function autoOptimize() {
+  const L = parseFloat(document.getElementById('dim_l').value) || 25;
+  const W = parseFloat(document.getElementById('dim_w').value) || 15;
+  const H = parseFloat(document.getElementById('dim_h').value) || 4;
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const angle = parseFloat(opt.dataset.angle);
+
+  const throwH = Math.max(0.5, H - 1.2);
+  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
+  const spacing = Math.max(2.5, coverR * 1.5);
+  const perSide = Math.max(2, Math.round(L / spacing));
+
+  document.getElementById('spkPerSide').value = perSide;
+  resetView();
+  initDraw();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ZOOM / PAN / TOGGLE
+   ═══════════════════════════════════════════════════════════ */
+function zoomIn()  { zoom = Math.min(3, zoom * 1.2); }
+function zoomOut() { zoom = Math.max(0.3, zoom / 1.2); }
+function resetView() { zoom = 1; offsetX = 0; offsetY = 0; }
+
+function toggle(key) {
+  opts[key] = !opts[key];
+  const btn = document.getElementById('tg' + key.charAt(0).toUpperCase() + key.slice(1));
+  if (btn) btn.classList.toggle('on', opts[key]);
+}
+
+vArea.addEventListener('mousedown', e => {
+  if (e.button === 0 || e.button === 1) {
+    isPanning = true;
+    startX = e.clientX - offsetX;
+    startY = e.clientY - offsetY;
+    vArea.style.cursor = 'grabbing';
+  }
+});
+
+vArea.addEventListener('mousemove', e => {
+  if (isPanning) {
+    offsetX = e.clientX - startX;
+    offsetY = e.clientY - startY;
+  }
+  updateCursorInfo(e);
+});
+
+vArea.addEventListener('mouseup', () => {
+  isPanning = false;
+  vArea.style.cursor = '';
+});
+
+vArea.addEventListener('mouseleave', () => {
+  isPanning = false;
+  vArea.style.cursor = '';
+  document.getElementById('cursorSPL').textContent = '—';
+});
+
+vArea.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoom = Math.max(0.3, Math.min(3, zoom * (e.deltaY < 0 ? 1.1 : 1/1.1)));
+}, { passive: false });
+
+function updateCursorInfo(e) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+  // Convert to world (room) coords
+  const worldX = (mx - canvas.width/2 - offsetX) / zoom;
+  const worldY = (my - canvas.height/2 - offsetY) / zoom;
+
+  const L_m = parseFloat(document.getElementById('dim_l').value);
+  const W_m = parseFloat(document.getElementById('dim_w').value);
+  const scale = 25;
+  const L = L_m * scale, W = W_m * scale;
+
+  // Only compute inside room
+  if (Math.abs(worldX) > L/2 || Math.abs(worldY) > W/2) {
+    document.getElementById('cursorSPL').textContent = '—';
+    return;
+  }
+
+  // Compute SPL at this point
+  const H_m = parseFloat(document.getElementById('dim_h').value);
+  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const pwr = parseFloat(opt.dataset.pwr);
+  const sens = parseFloat(opt.dataset.sens);
+  const listH = 1.2;
+  const throwH = Math.max(0.5, H_m - listH);
+  const spl1m = sens + 10 * Math.log10(pwr);
+
+  let pTotal = 0;
+  for (let s = 0; s < 2; s++) {
+    const isTop = s === 0;
+    const wallY = isTop ? -W/2 : W/2;
+    for (let i = 0; i < perSide; i++) {
+      const sx = -L/2 + (L * (i + 0.5) / perSide);
+      const sy = wallY;
+      const dx = worldX - sx;
+      const dy = worldY - sy;
+      const dz = throwH;
+      const d = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+      const spl = spl1m - 20 * Math.log10(d);
+      pTotal += Math.pow(10, spl/10);
     }
+  }
+  const spl = 10 * Math.log10(pTotal);
+  document.getElementById('cursorSPL').textContent = spl.toFixed(1) + ' dB';
+}
 
-    function autoOptimize() {
-        const L = parseFloat(document.getElementById('dim_l').value);
-        document.getElementById('spkQty').value = Math.ceil(L / 3) * 2;
-        initDraw();
-    }
+/* ═══════════════════════════════════════════════════════════
+   REPORT
+   ═══════════════════════════════════════════════════════════ */
+function generateReport() {
+  const opt = document.getElementById('spkModel').selectedOptions[0];
+  const model = document.getElementById('spkModel').value;
+  const pwr = parseFloat(opt.dataset.pwr);
+  const angle = parseFloat(opt.dataset.angle);
+  const sens = parseFloat(opt.dataset.sens);
 
-    function generateReport() {
-        const model = document.getElementById('spkModel').value;
-        const watts = { "At-08": 250, "At-06": 150, "Cs-08": 150, "Cs-06": 100, "At-265": 250 };
-        const sq = parseInt(document.getElementById('spkQty').value);
-        
-        document.getElementById('reportImg').src = canvas.toDataURL();
-        document.getElementById('boqBody').innerHTML = `
-            <tr><td>النظام الصوتي</td><td>Motivity ${model}</td><td>${sq}</td><td>استجابة ترددية 60Hz-18kHz</td></tr>
-            <tr><td>وحدات المؤتمر</td><td>Motivity Digital Series</td><td>${parseInt(document.getElementById('cQty').value)+parseInt(document.getElementById('dQty').value)}</td><td>توصيل Daisy-Chain CAT6</td></tr>
-            <tr><td>مضخم القدرة</td><td>Motivity Digital Amp</td><td>1</td><td>Class-D High Efficiency</td></tr>
-        `;
+  const perSide = parseInt(document.getElementById('spkPerSide').value);
+  const total = perSide * 2;
+  const totalW = pwr * total;
 
-        document.getElementById('justificationBody').innerHTML = `
-            <strong>أولاً: توزيع ضغط الصوت (SPL):</strong> تم اختيار موديل ${model} بقدرة ${watts[model]}W لضمان مستوى ضغط صوتي ثابت لا يقل عن 95dB في أبعد نقطة، مع مراعاة ارتفاع القاعة لتجنب الانعكاسات الضارة.<br><br>
-            <strong>ثانياً: معامل الوضوح (STI):</strong> تم توزيع عدد ${sq} سماعة بمسافات بينية متساوية لتقليل "تداخل الموجات" (Comb Filtering) ورفع معامل وضوح الكلام.<br><br>
-            <strong>ثالثاً: نمط التغطية:</strong> يعتمد النظام على زاوية انتشار 90 درجة أفقياً لضمان تغطية عرضية كاملة في وضعية ${document.getElementById('roomMode').value === 'meeting' ? 'الاجتماع الدائري' : 'المؤتمر الطولي'}.
-        `;
-        document.getElementById('reportModal').style.display = 'block';
-    }
+  const cQty = parseInt(document.getElementById('cQty').value);
+  const dQty = parseInt(document.getElementById('dQty').value);
+  const totalMic = cQty + dQty;
 
-    window.onload = initDraw;
+  const L = parseFloat(document.getElementById('dim_l').value);
+  const W = parseFloat(document.getElementById('dim_w').value);
+  const H = parseFloat(document.getElementById('dim_h').value);
+  const modeText = document.getElementById('roomMode').selectedOptions[0].text;
+
+  const throwH = Math.max(0.5, H - 1.2);
+  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
+  const maxDist = Math.sqrt((L/2)**2 + (W/2)**2 + throwH**2);
+  const splFar = sens + 10 * Math.log10(pwr) - 20 * Math.log10(maxDist);
+
+  let ampModel = "MA-650-MP5P", ampQty = 1;
+  if (totalW <= 120) ampModel = "MA-120-MP5P";
+  else if (totalW <= 240) ampModel = "MA-240-MP5P";
+  else if (totalW <= 360) ampModel = "MA-360-MP5P";
+  else if (totalW <= 500) ampModel = "MA-500-MP5P";
+  else ampQty = Math.ceil(totalW / 650);
+
+  const today = new Date().toLocaleDateString('ar-EG');
+
+  document.getElementById('repProjName').textContent = document.getElementById('projName').value;
+  document.getElementById('repEngName').textContent = document.getElementById('engName').value;
+  document.getElementById('repDate').textContent = today;
+  document.getElementById('reportImg').src = canvas.toDataURL();
+
+  document.getElementById('boqBody').innerHTML = `
+    <tr><td>النظام الصوتي</td><td>Motivity ${model}</td><td>${total}</td>
+        <td>${pwr}W · ${angle}° · ${sens}dB</td></tr>
+    <tr><td>وحدات المؤتمر</td><td>Motivity Digital</td><td>${totalMic}</td>
+        <td>${cQty} رئيس + ${dQty} عضو · Daisy-Chain CAT6</td></tr>
+    <tr><td>مضخم القدرة</td><td>Motivity ${ampModel}</td><td>${ampQty}</td>
+        <td>Class-D · حمل ${totalW}W</td></tr>
+    <tr><td>كيبل الصوت</td><td>Twin Core 2×1.5mm</td><td>~${Math.round(total*(L+W)*0.4)} م</td>
+        <td>Fire Rated</td></tr>
+  `;
+
+  document.getElementById('justificationBody').innerHTML = `
+    <strong>أولاً: توزيع ضغط الصوت (SPL)</strong><br>
+    تم اختيار <b>Motivity ${model}</b> بقدرة <b>${pwr}W</b> وحساسية <b>${sens}dB</b>.
+    عند أبعد نقطة (مسافة <b>${maxDist.toFixed(1)}م</b>) يبلغ SPL المتوقع
+    <b>${splFar.toFixed(1)} dB</b> — مناسب لوضوح الكلام في قاعة <b>${(L*W).toFixed(0)}م²</b>.<br><br>
+
+    <strong>ثانياً: معامل التغطية</strong><br>
+    زاوية انتشار <b>${angle}°</b> على ارتفاع <b>${H}م</b> تعطي نصف قطر تغطية
+    <b>${coverR.toFixed(2)}م</b> عند مستوى الأذن.
+    <b>${total}</b> سماعة موزّعة على الجدارين بمسافات متساوية تضمن تقليل
+    Comb Filtering ورفع وضوح الكلام.<br><br>
+
+    <strong>ثالثاً: النمط الوظيفي</strong><br>
+    النمط: <b>${modeText}</b>. التغطية <b>${angle}°</b> تضمن وصولاً متساوياً لكل مقعد
+    مع توجيه كل سماعة نحو منطقة الاستماع.<br><br>
+
+    <strong>رابعاً: نظام المؤتمرات الرقمي</strong><br>
+    إجمالي <b>${totalMic}</b> وحدة (<b>${cQty}</b> رئيس + <b>${dQty}</b> عضو)
+    بنظام Daisy-Chain عبر CAT6 لسهولة التركيب والصيانة.<br><br>
+
+    <strong>خامساً: القدرة والمضخم</strong><br>
+    إجمالي الحمل <b>${totalW}W</b>، تم اختيار <b>${ampQty} × ${ampModel}</b>
+    بهامش أمان كافٍ لمنع القطع وحماية المضخم.
+  `;
+
+  document.getElementById('reportModal').style.display = 'block';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    initDraw();
+    autoOptimize();
+  }, 30);
+});
 </script>
 </body>
 </html>
