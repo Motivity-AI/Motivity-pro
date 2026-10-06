@@ -3,305 +3,1096 @@
 <head>
 <meta charset="UTF-8">
 <title>Motivity Master AI - Outdoor Spaces 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
-  --motivity-red:#e60012;
-  --tech-blue:#38bdf8;
-  --sub-yellow:#e5c07b;
-  --monitor-green:#22c55e;
+  --red:#e60012;
+  --blue:#38bdf8;
+  --yellow:#e5c07b;
+  --green:#22c55e;
+  --purple:#a855f7;
   --bg:#0d1117;
+  --panel:#161b22;
+  --card:#21262d;
+  --bd:#30363d;
+  --mu:#8b949e;
 }
-*{box-sizing:border-box; font-family:'Cairo', sans-serif; margin:0; padding:0}
-body{background:var(--bg); color:#fff; display:flex; height:100vh; overflow:hidden}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:#fff;display:flex;height:100vh;overflow:hidden}
 
-.sidebar{width:450px; background:#161b22; padding:20px; overflow-y:auto; border-right:4px solid var(--motivity-red); flex-shrink:0}
-.box{background:#21262d; padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid #30363d}
-h3{font-size:14px; color:var(--tech-blue); margin-bottom:8px; border-bottom:1px solid #444; padding-bottom:5px; text-transform:uppercase}
-label{font-size:12px; color:#8b949e; display:block; margin-top:8px}
-input, select{width:100%; padding:8px; background:#0d1117; color:#fff; border:1px solid #30363d; border-radius:6px; margin-top:4px; font-size:12px}
+/* ═══ SIDEBAR ═══ */
+.sidebar{width:440px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);padding:18px;overflow-y:auto;border-right:3px solid var(--red);flex-shrink:0;box-shadow:8px 0 32px rgba(0,0,0,.5)}
+.sidebar::-webkit-scrollbar{width:8px}
+.sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
-.btn-smart { background: linear-gradient(135deg, var(--motivity-red), #99000d); color:#fff; font-weight:900; padding:15px; border:none; border-radius:8px; cursor:pointer; width:100%; margin-bottom:10px; transition:0.3s}
-.btn-reset { background: #30363d; color: #f85149; border: 1px solid #f85149; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-bottom: 10px;}
-.btn-save { background: #22c55e; color:#000; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; margin-bottom:10px;}
-.btn-pdf { background: #38bdf8; color:#000; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; margin-bottom:10px;}
-.tool-btn { background:#0d1117; color:#fff; border:1px solid #444; padding:8px; font-size:11px; cursor:pointer; border-radius:6px; width:48%; margin-top:5px}
-.tool-btn.active { background:var(--tech-blue); color:#000; font-weight:bold}
+.brand{text-align:center;padding-bottom:14px;border-bottom:1px solid #222;margin-bottom:16px}
+.brand h1{font-size:20px;font-weight:900;letter-spacing:1.5px;color:var(--red)}
+.brand p{font-size:10px;color:#666;letter-spacing:3px;margin-top:3px}
 
-.main-view { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; position:relative}
-canvas { background:#050505; border:2px solid #333; border-radius:12px; width:95%; max-height:75vh; cursor:crosshair}
+.box{background:rgba(33,38,45,.75);backdrop-filter:blur(8px);padding:14px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(56,189,248,.1)}
+.box h3{font-size:12px;color:var(--blue);margin-bottom:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.box h3::before{content:'';width:3px;height:12px;background:var(--red);border-radius:2px}
+label{font-size:11px;color:var(--mu);display:block;margin-top:8px;font-weight:600}
+input,select{width:100%;padding:8px 10px;background:#0a0e13;color:#fff;border:1px solid var(--bd);border-radius:6px;margin-top:4px;font-family:inherit;font-size:12.5px;transition:.2s}
+input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
 
-.beam-controls { position:absolute; bottom:20px; background:rgba(22, 27, 34, 0.95); padding:15px; border-radius:15px; border:1px solid var(--tech-blue); width:85%; display:flex; gap:20px; align-items:center}
+.btn{width:100%;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer;transition:.25s;font-family:inherit;font-size:12.5px;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.3px}
+.btn-smart{background:linear-gradient(135deg,#e60012,#99000d);color:#fff;box-shadow:0 4px 12px rgba(230,0,18,.3)}
+.btn-smart:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(230,0,18,.5)}
+.btn-blue{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 12px rgba(56,189,248,.3)}
+.btn-blue:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(56,189,248,.5)}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-green:hover{transform:translateY(-2px)}
+.btn-reset{background:#2a2f36;color:#ff4d4d;border:1px solid #444}
+.btn-reset:hover{background:#ff4d4d;color:#fff}
 
-#reportPage { display:none; position:fixed; inset:0; background:#fff; z-index:9999; color:#333; overflow-y:auto; padding:40px}
-.report-content { max-width:1200px; margin:auto; border:2px solid #ddd; padding:30px; border-top: 20px solid var(--motivity-red); background:#fff;}
-.analysis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-.analysis-card { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; text-align: center; }
-.analysis-card h4 { color: var(--motivity-red); font-size: 14px; margin-bottom: 5px; }
-table { width:100%; border-collapse:collapse; margin:20px 0}
-th, td { border:1px solid #ddd; padding:12px; text-align:left}
-th { background: #f4f4f4; color: #333; font-weight: 900; }
-@media print { .no-print { display: none !important; } }
+.tool-btn{background:#0a0e13;color:#8b949e;border:1px solid var(--bd);padding:9px;font-size:11px;font-weight:700;cursor:pointer;border-radius:6px;width:49%;transition:.2s}
+.tool-btn.active{background:var(--blue);color:#000;border-color:var(--blue);box-shadow:0 0 15px rgba(56,189,248,.4)}
+
+.tool-grid{display:flex;gap:2%;flex-wrap:wrap}
+.tool-grid .full{width:100%}
+
+/* ═══ KPI ROW ═══ */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--bd);border-radius:8px;padding:9px;text-align:center}
+.kpi .v{font-size:15px;font-weight:900;color:var(--blue)}
+.kpi .l{font-size:9px;color:var(--mu);margin-top:2px;text-transform:uppercase}
+.kpi.ok .v{color:var(--green)}
+.kpi.warn .v{color:#f59e0b}
+
+/* ═══ MAIN VIEW ═══ */
+.main-view{flex:1;display:flex;flex-direction:column;background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);position:relative;overflow:hidden}
+.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:15px;overflow:hidden}
+canvas{background:#050505;border-radius:14px;border:1px solid #222;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.04);max-width:100%;max-height:100%;display:block;cursor:crosshair}
+
+.toolbar{position:absolute;top:15px;right:15px;display:flex;gap:5px;background:rgba(22,27,34,.9);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:10px;padding:5px;z-index:10}
+.toolbar button{background:transparent;color:#ccc;border:none;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;transition:.2s;font-family:inherit;position:relative}
+.toolbar button:hover{background:#30363d;color:#fff}
+.toolbar button.on{background:var(--blue);color:#000}
+
+.hint-bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.9);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:10px;padding:6px 14px;font-size:11px;color:var(--mu);z-index:10;display:flex;gap:14px;align-items:center}
+.hint-bar b{color:var(--blue)}
+
+.cursor-info{position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.9);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:10px;padding:8px 14px;font-size:12px;color:#fff;z-index:10}
+.cursor-info b{color:var(--blue);font-weight:900}
+.cursor-info .ok{color:var(--green)}
+.cursor-info .warn{color:#f59e0b}
+.cursor-info .bad{color:var(--red)}
+
+.beam-controls{position:absolute;bottom:14px;left:14px;background:rgba(22,27,34,.9);backdrop-filter:blur(12px);padding:10px;border-radius:10px;border:1px solid var(--bd);display:none;gap:14px;align-items:center;z-index:10}
+.beam-controls.on{display:flex}
+.beam-controls label{margin:0;font-size:10px}
+.beam-controls input[type=range]{width:120px;padding:0;height:4px;background:#30363d;border-radius:2px;margin:0}
+.beam-controls .name{font-weight:900;font-size:11px;color:var(--red);min-width:110px;text-align:center}
+
+/* ═══ REPORT ═══ */
+#reportPage{display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;color:#222;overflow-y:auto;padding:30px}
+.report-content{max-width:1200px;margin:auto;padding:40px;background:#fff;border-radius:10px;box-shadow:0 0 50px rgba(0,0,0,.1);position:relative;border-top:10px solid var(--red)}
+
+.rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:3px solid var(--red);margin-bottom:22px}
+.rep-header h1{color:var(--red);font-size:26px;font-weight:900}
+.rep-header p{font-size:12px;color:#888;margin-top:4px}
+.rep-header .meta{text-align:right;font-size:12px;color:#555;line-height:1.9}
+.rep-header .meta b{color:var(--red)}
+
+.kpi-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi-card{background:#fff;padding:18px;border-radius:10px;text-align:center;border-top:4px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.kpi-card h4{font-size:11px;color:#888;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi-card span{font-size:22px;font-weight:900;color:#111}
+.kpi-card.ok span{color:var(--green)}
+.kpi-card.blue span{color:var(--blue)}
+
+.decision-box{background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);border-left:5px solid var(--blue);padding:20px;border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9}
+.decision-box strong{color:#0c4a6e}
+.decision-box p{margin-bottom:6px}
+
+.rep-table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.rep-table th{background:#1a1a1a;color:#fff;padding:12px;text-align:left;font-size:12.5px;font-weight:800}
+.rep-table td{padding:12px;border-bottom:1px solid #eee;font-size:13px}
+.rep-table tr:last-child td{border-bottom:none}
+.rep-table tr:nth-child(even) td{background:#fafbfc}
+
+.rep-img{width:100%;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.15);border:1px solid #e5e7eb;margin-top:10px}
+
+.rep-controls{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.rep-controls button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:12.5px;transition:.2s}
+.rep-controls .close{background:#e5e7eb;color:#333}
+.rep-controls .close:hover{background:#d1d5db}
+.rep-controls .print{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.rep-controls .print:hover{transform:translateY(-2px)}
+
+@media print{.no-print{display:none!important}#reportPage{position:static;padding:0;background:#fff}.report-content{box-shadow:none;padding:0;border-radius:0}body{background:#fff}}
 </style>
 </head>
 <body>
 
 <div class="sidebar no-print">
-<h2 style="color:var(--motivity-red); text-align:center; font-weight:900">MOTIVITY MASTER AI - Outdoor</h2>
+  <div class="brand">
+    <h1>MOTIVITY MASTER AI</h1>
+    <p>OUTDOOR SPACES 2026</p>
+  </div>
 
-<div class="box">
-<h3>📏 Outdoor Area Settings</h3>
-<div style="display:flex; gap:10px">
-<div><label>Length (m)</label><input type="number" id="out_l" value="120" oninput="draw()"></div>
-<div><label>Width (m)</label><input type="number" id="out_w" value="70" oninput="draw()"></div>
-</div>
-<div style="display:flex; gap:10px">
-<div><label>Stage Width (m)</label><input type="number" id="stage_w" value="25" oninput="draw()"></div>
-<div><label>Stage Depth (m)</label><input type="number" id="stage_d" value="12" oninput="draw()"></div>
-</div>
-<div><label>Floor Type</label>
-<select id="floor_type" onchange="draw()">
-<option value="grass">Natural Grass</option>
-<option value="concrete">Concrete</option>
-<option value="asphalt">Asphalt</option>
-</select>
-</div>
-<div><label>Expected Audience</label><input type="number" id="crowd" value="5000" oninput="draw()"></div>
+  <!-- AREA SETTINGS -->
+  <div class="box">
+    <h3>📏 Outdoor Area Settings</h3>
+    <div style="display:flex;gap:8px">
+      <div style="flex:1"><label>Length (m)</label><input type="number" id="out_l" value="120" oninput="draw()"></div>
+      <div style="flex:1"><label>Width (m)</label><input type="number" id="out_w" value="70" oninput="draw()"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div style="flex:1"><label>Stage Width (m)</label><input type="number" id="stage_w" value="25" oninput="draw()"></div>
+      <div style="flex:1"><label>Stage Depth (m)</label><input type="number" id="stage_d" value="12" oninput="draw()"></div>
+    </div>
+    <div><label>Floor Type</label>
+      <select id="floor_type" onchange="draw()">
+        <option value="grass">Natural Grass</option>
+        <option value="concrete">Concrete</option>
+        <option value="asphalt">Asphalt</option>
+      </select>
+    </div>
+    <div><label>Expected Audience</label><input type="number" id="crowd" value="5000" oninput="draw()"></div>
+
+    <div class="kpi-row">
+      <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">Speakers</div></div>
+      <div class="kpi" id="kpiPwr"><div class="v" id="kpiPwrV">0</div><div class="l">Total Watts</div></div>
+      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">Coverage %</div></div>
+      <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">Max SPL</div></div>
+    </div>
+  </div>
+
+  <!-- CATALOG -->
+  <div class="box">
+    <h3>🔊 Official 2026 Catalog</h3>
+    <label>1. Main Systems & Side Fills</label>
+    <select id="sel_main">
+      <optgroup label="Point Source">
+        <option value="DB-25 NW" data-spl="133" data-h="100" data-v="70" data-watt="1000">DB-25 NW (1000W / 133dB)</option>
+        <option value="DB-25 3G" data-spl="130" data-h="100" data-v="60" data-watt="1000">DB-25 3G (1000W / 130dB)</option>
+        <option value="MTL-700 3G" data-spl="126" data-h="90" data-v="60" data-watt="500">MTL-700 3G (500W)</option>
+      </optgroup>
+      <optgroup label="Line Array Series">
+        <option value="MLA212" data-spl="138" data-h="90" data-v="10" data-watt="900">MLA212 (Dual 12" - 900W)</option>
+        <option value="MLA210" data-spl="135" data-h="90" data-v="10" data-watt="700">MLA210 (Dual 10" - 700W)</option>
+        <option value="M10-LA" data-spl="132" data-h="100" data-v="10" data-watt="700">M10-LA (Compact 700W)</option>
+        <option value="MLA208" data-spl="130" data-h="100" data-v="10" data-watt="500">MLA208 (Dual 8")</option>
+      </optgroup>
+      <optgroup label="Active Series">
+        <option value="HD315A" data-spl="131" data-h="90" data-v="60" data-watt="1000">HD315A (1000W Active)</option>
+        <option value="HD312A" data-spl="128" data-h="90" data-v="60" data-watt="1000">HD312A (1000W Active)</option>
+      </optgroup>
+    </select>
+
+    <label>2. Subs & Monitors</label>
+    <select id="sel_extra">
+      <option value="DB-218 3G" data-spl="138" data-h="180" data-v="60" data-watt="1400">DB-218 3G (Dual 18" - 1400W)</option>
+      <option value="QX-218" data-spl="140" data-h="180" data-v="60" data-watt="2000">QX-218 (Dual 18" Touring)</option>
+      <option value="HD-SUB-18A" data-spl="136" data-h="180" data-v="60" data-watt="1200">HD-SUB-18A (Active Sub)</option>
+      <option value="DB-15M 3G" data-spl="128" data-h="90" data-v="60" data-watt="500">DB-15M 3G (Stage Monitor)</option>
+      <option value="MTL-152" data-spl="125" data-h="90" data-v="60" data-watt="400">MTL-152 (KTV/Monitor)</option>
+    </select>
+
+    <div class="tool-grid" style="margin-top:10px">
+      <button class="tool-btn active" id="btn_main" onclick="setMode('main')">➕ Add Main</button>
+      <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ Add Sub/Monitor</button>
+    </div>
+    <div class="tool-grid" style="margin-top:6px">
+      <button class="tool-btn" id="btn_preset_concert" onclick="loadPreset('concert')">🎤 Concert</button>
+      <button class="tool-btn" id="btn_preset_speech" onclick="loadPreset('speech')">🎙️ Speech</button>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <button class="btn btn-smart" onclick="applySmartLayout()">🚀 AI SMART LAYOUT</button>
+  <button class="btn btn-blue" onclick="generateReport()">📄 GENERATE ENGINEERING REPORT</button>
+  <button class="btn btn-green" onclick="savePDFReport()">📥 SAVE AS PDF</button>
+  <button class="btn btn-blue" onclick="saveMapPNG()">🖼️ SAVE MAP AS PNG</button>
+  <button class="btn btn-reset" onclick="resetCanvas()">🔄 RESET CANVAS</button>
 </div>
 
-<div class="box">
-<h3>🔊 Official 2026 Catalog</h3>
-<label>1. Main Systems & Side Fills</label>
-<select id="sel_main">
-<optgroup label="Point Source">
-<option value="DB-25 NW" data-spl="133" data-h="100" data-v="70">DB-25 NW (1000W / 133dB)</option>
-<option value="DB-25 3G" data-spl="130" data-h="100" data-v="60">DB-25 3G (1000W / 130dB)</option>
-<option value="MTL-700 3G" data-spl="126" data-h="90" data-v="60">MTL-700 3G (500W)</option>
-</optgroup>
-<optgroup label="Line Array Series">
-<option value="MLA212" data-spl="138" data-h="90" data-v="10">MLA212 (Dual 12" - 900W)</option>
-<option value="MLA210" data-spl="135" data-h="90" data-v="10">MLA210 (Dual 10" - 700W)</option>
-<option value="M10-LA" data-spl="132" data-h="100" data-v="10">M10-LA (Compact 700W)</option>
-<option value="MLA208" data-spl="130" data-h="100" data-v="10">MLA208 (Dual 8")</option>
-</optgroup>
-<optgroup label="Active Series">
-<option value="HD315A" data-spl="131" data-h="90" data-v="60">HD315A (1000W Active)</option>
-<option value="HD312A" data-spl="128" data-h="90" data-v="60">HD312A (1000W Active)</option>
-</optgroup>
-</select>
-
-<label>2. Subs & Monitors</label>
-<select id="sel_extra">
-<option value="DB-218 3G">DB-218 3G (Dual 18" - 1400W)</option>
-<option value="QX-218">QX-218 (Dual 18" Touring)</option>
-<option value="HD-SUB-18A">HD-SUB-18A (Active Sub)</option>
-<option value="DB-15M 3G">DB-15M 3G (Stage Monitor)</option>
-<option value="MTL-152">MTL-152 (KTV/Monitor)</option>
-</select>
-
-<div style="display:flex; justify-content:space-between; margin-top:10px">
-<button class="tool-btn active" id="btn_main" onclick="setMode('main')">Add Main</button>
-<button class="tool-btn" id="btn_sub" onclick="setMode('sub')">Add Sub/Monitor</button>
-</div>
-</div>
-
-<button class="btn-smart" onclick="applySmartLayout()">🚀 AI SMART LAYOUT</button>
-<button class="btn-smart" style="background:var(--tech-blue); color:#000" onclick="generateReport()">📄 GENERATE ENGINEERING REPORT</button>
-<button class="btn-pdf" onclick="savePDFReport()">📥 SAVE AS PDF</button>
-<button class="btn-save" onclick="saveReport()">🖼️ SAVE MAP AS PNG</button>
-<button class="btn-reset" onclick="resetCanvas()">🔄 RESET CANVAS</button>
-
-</div>
-
+<!-- MAIN VIEW -->
 <div class="main-view no-print">
-<canvas id="mainCanvas"></canvas>
-<div class="beam-controls">
-<div style="flex:1">
-<label style="color:var(--tech-blue); margin:0">Coverage Orientation</label>
-<input type="range" id="beam_angle" min="0" max="360" value="90" oninput="updateSelected()">
-</div>
-<div style="flex:1">
-<label style="color:var(--tech-blue); margin:0">Effective Range</label>
-<input type="range" id="beam_range" min="50" max="850" value="400" oninput="updateSelected()">
-</div>
-<div id="sel_name" style="font-weight:bold; font-size:12px; width:130px; color:var(--motivity-red)">-- Select Product --</div>
-</div>
+  <div class="canvas-wrap">
+    <canvas id="mainCanvas" width="1200" height="700"></canvas>
+  </div>
+
+  <div class="toolbar">
+    <button id="tgWaves" class="on" onclick="toggle('waves')" title="Sound Waves">🔊</button>
+    <button id="tgHeat" onclick="toggle('heat')" title="SPL Heatmap">🌡️</button>
+    <button id="tgCrowd" class="on" onclick="toggle('crowd')" title="Crowd">👥</button>
+    <button id="tgGrid" class="on" onclick="toggle('grid')" title="Grid">▦</button>
+    <button id="tgLabels" class="on" onclick="toggle('labels')" title="Labels">🏷️</button>
+    <button onclick="undo()" title="Undo">↶</button>
+  </div>
+
+  <div class="beam-controls" id="beamControls">
+    <div>
+      <label style="color:var(--blue)">Orientation</label>
+      <input type="range" id="beam_angle" min="0" max="360" value="90" oninput="updateSelected()">
+    </div>
+    <div>
+      <label style="color:var(--blue)">Range (m)</label>
+      <input type="range" id="beam_range" min="50" max="800" value="400" oninput="updateSelected()">
+    </div>
+    <div class="name" id="sel_name">-- Select --</div>
+    <button style="background:#e60012;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:800" onclick="deleteSelected()">🗑️ Delete</button>
+  </div>
+
+  <div class="hint-bar">
+    <span>🖱️ <b>Click</b> to add · <b>Drag</b> to move · <b>Right-click</b> to delete</span>
+    <span>🎡 <b>Wheel</b> zoom · <b>Ctrl+Z</b> undo</span>
+  </div>
+
+  <div class="cursor-info" id="cursorInfo">
+    <span>SPL at cursor: <b id="cursorSPL">—</b></span>
+  </div>
 </div>
 
+<!-- REPORT -->
 <div id="reportPage">
-<div class="report-content" id="report-to-pdf">
-<button onclick="document.getElementById('reportPage').style.display='none'" class="no-print" style="padding:5px 15px; cursor:pointer; margin-bottom:10px">❌ Close Preview</button>
-<h1 style="color:var(--motivity-red); text-align:center; font-weight:900">Acoustic Engineering Analysis Report - 2026</h1>
-<div class="analysis-grid">
-<div class="analysis-card"><h4>🔊 Max Pressure (SPL)</h4><p id="rep_spl_val">-- dB</p></div>
-<div class="analysis-card"><h4>⏳ Latency (Delay)</h4><p id="rep_delay_val">-- ms</p></div>
-<div class="analysis-card"><h4>📐 Dispersion (H/V)</h4><p id="rep_angle_val">-- / --</p></div>
-</div>
-<div id="boqSection"></div>
-<h3 style="border-bottom: 2px solid #eee; margin-top: 20px;">🗺️ Acoustic Simulation Map</h3>
-<img id="reportImg" style="width:100%; background:#050505; border-radius:15px; margin-top:15px">
-</div>
+  <div class="report-content" id="report-to-pdf">
+    <div class="rep-controls no-print">
+      <button class="close" onclick="closeReport()">← Back to Design</button>
+      <button class="print" onclick="window.print()">🖨️ Print Report</button>
+    </div>
+
+    <div class="rep-header">
+      <div>
+        <h1>Acoustic Engineering Report 2026</h1>
+        <p>MOTIVITY MASTER AI · OUTDOOR SOUND SYSTEM</p>
+      </div>
+      <div class="meta">
+        <b>Project ID:</b> MOT-OUT-2026<br>
+        <b>Date:</b> <span id="repDate">—</span><br>
+        <b>Standard:</b> IEC 60268-5
+      </div>
+    </div>
+
+    <div class="kpi-cards" id="repKPI"></div>
+    <div id="boqSection"></div>
+
+    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">Acoustic Simulation Map</h3>
+    <img id="reportImg" class="rep-img">
+  </div>
 </div>
 
 <script>
-const canvas=document.getElementById('mainCanvas');
-const ctx=canvas.getContext('2d');
-let points=[],currentMode='main',selectedPoint=null;
+/* ═══════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const $ = id => document.getElementById(id);
 
-function setMode(m){currentMode=m;document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));document.getElementById('btn_'+m).classList.add('active');}
-function resetCanvas(){points=[]; selectedPoint=null; document.getElementById('sel_name').innerText="-- Select Product --"; draw();}
-function updateSelected(){if(selectedPoint){selectedPoint.angle=parseInt(document.getElementById('beam_angle').value);selectedPoint.range=parseInt(document.getElementById('beam_range').value); draw();}}
+let points = [];
+let currentMode = 'main';
+let selectedPoint = null;
+let dragTarget = null;
+let dragOffset = { x: 0, y: 0 };
+let history = [];
+let animT = 0;
+let cursorSPL = null;
+let cursorX = null, cursorY = null;
 
-function applySmartLayout(){
-points=[];
-const L=+out_l.value, W=+out_w.value, sW=+stage_w.value, sD=+stage_d.value;
-const scale=Math.min(1100/L,600/W)*0.8;
-const oX=(1100-L*scale)/2,oY=(600-W*scale)/2;
-const stX=oX+(L*scale-sW*scale)/2;
-const profile={type:"concert", load:L>60?"heavy":"medium"};
+let layers = { waves: true, heat: false, crowd: true, grid: true, labels: true };
 
-const elementsPerSide=Math.max(4, Math.ceil(L/10)); const finalElements=elementsPerSide%2===0?elementsPerSide:elementsPerSide+1;
-points.push({x:stX-30,y:oY+(sD*scale/2),type:'main',name:'Line Array L',angle:90+10,range:L*scale*0.9,spl:138,hAngle:90,vAngle:10,isLineArray:true,elements:finalElements/2});
-points.push({x:stX+(sW*scale)+30,y:oY+(sD*scale/2),type:'main',name:'Line Array R',angle:90-10,range:L*scale*0.9,spl:138,hAngle:90,vAngle:10,isLineArray:true,elements:finalElements/2});
+let worldBox = { x0: 0, y0: 0, W: 0, H: 0, scale: 1 };
 
-const subCount=profile.load==="heavy"?6:4;
-for(let i=0;i<subCount;i++){points.push({x:stX+(sW*scale/(subCount-1))*i,y:oY+(sD*scale)+25,type:'sub',name:'Subwoofer',angle:90,range:200});}
-
-const sideCountPerSide = profile.load === "heavy" ? 3 : 2; 
-for (let i = 0; i < sideCountPerSide; i++) {
-    const yPos = oY + (W * scale / (sideCountPerSide + 1)) * (i + 1);
-    points.push({x: oX + 15, y: yPos, type: 'side', name: 'Side Fill (L)', angle: 0, range: (W * scale) * 0.4, hAngle: 90});
-    points.push({x: oX + (L * scale) - 15, y: yPos, type: 'side', name: 'Side Fill (R)', angle: 180, range: (W * scale) * 0.4, hAngle: 90});
+/* ═══════════════════════════════════════════════════════════
+   MODE / RESET / TOGGLES
+   ═══════════════════════════════════════════════════════════ */
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  $('btn_' + m).classList.add('active');
 }
 
-let monitorCount=sW>16?8:(sW>10?6:4);
-for(let i=0;i<monitorCount;i++){points.push({x:stX+(sW*scale/(monitorCount-1))*i,y:oY+(sD*scale)-10,type:'sub',name:'Stage Monitor',angle:270,range:120});}
-draw();
+function toggle(key) {
+  layers[key] = !layers[key];
+  const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
+  if (btn) btn.classList.toggle('on', layers[key]);
+  draw();
 }
 
-function draw(){
-const L=+out_l.value, W=+out_w.value, sW=+stage_w.value, sD=+stage_d.value;
-canvas.width=1100; canvas.height=600;
-const scale=Math.min(canvas.width/L,canvas.height/W)*0.8;
-const oX=(canvas.width-L*scale)/2,oY=(canvas.height-W*scale)/2;
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-const floor=document.getElementById('floor_type').value;
-ctx.fillStyle=floor==="grass"?"#145214":floor==="concrete"?"#555":"#333";
-ctx.fillRect(oX,oY,L*scale,W*scale);
-ctx.strokeStyle="#333"; ctx.lineWidth=4; ctx.strokeRect(oX,oY,L*scale,W*scale);
-
-const stX=oX+(L*scale-sW*scale)/2;
-ctx.fillStyle="rgba(230,0,18,0.1)"; ctx.fillRect(stX,oY,sW*scale,sD*scale);
-ctx.strokeStyle="#e60012"; ctx.strokeRect(stX,oY,sW*scale,sD*scale);
-
-points.forEach(p=>{
-const angleRad=p.angle*(Math.PI/180);
-const spread=(p.hAngle||100)*(Math.PI/180);
-const grad=ctx.createRadialGradient(p.x,p.y,5,p.x,p.y,p.range);
-if(p.type==='main'){grad.addColorStop(0,'rgba(56,189,248,0.6)');grad.addColorStop(1,'rgba(56,189,248,0.05)');}
-else if(p.name.includes("Sub")){grad.addColorStop(0,'rgba(229,192,123,0.6)');grad.addColorStop(1,'transparent');}
-else{grad.addColorStop(0,'rgba(34,197,94,0.6)');grad.addColorStop(1,'transparent');}
-ctx.fillStyle=grad;
-ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.arc(p.x,p.y,p.range,angleRad-spread/2,angleRad+spread/2); ctx.closePath(); ctx.fill();
-if(p.isLineArray) drawLineArrayStack(p); else drawRegularSpeaker(p);
-});
+function resetCanvas() {
+  if (!confirm('Reset entire canvas? All speakers will be removed.')) return;
+  pushHistory();
+  points = [];
+  selectedPoint = null;
+  $('sel_name').innerText = '-- Select --';
+  $('beamControls').classList.remove('on');
+  draw();
 }
 
-function drawRegularSpeaker(p){
-ctx.beginPath(); ctx.arc(p.x,p.y,8,0,Math.PI*2);
-ctx.fillStyle=(p===selectedPoint)?"#fff":(p.type==='main'?'#38bdf8':p.name.includes("Sub")?'#e5c07b':'#22c55e');
-ctx.fill(); ctx.strokeStyle="#fff"; ctx.stroke();
-ctx.fillStyle="#fff"; ctx.font="bold 10px Cairo"; ctx.fillText(p.name,p.x+12,p.y+3);
+function pushHistory() {
+  history.push(JSON.stringify(points));
+  if (history.length > 50) history.shift();
 }
 
-function drawLineArrayStack(p){
-const unitWidth=10, unitHeight=6, spacing=2;
-const angleRad=p.angle*Math.PI/180;
-ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(angleRad-Math.PI/2);
-for(let i=0;i<p.elements;i++){ctx.fillStyle="rgba(56,189,248,0.9)";ctx.fillRect(-unitWidth/2,-(i*(unitHeight+spacing)),unitWidth,unitHeight);ctx.strokeStyle="#fff";ctx.strokeRect(-unitWidth/2,-(i*(unitHeight+spacing)),unitWidth,unitHeight);}
-ctx.restore(); ctx.fillStyle="#38bdf8"; ctx.font="bold 11px Cairo"; ctx.fillText(`Line Array (${p.elements} units)`,p.x+14,p.y-(p.elements*4));
+function undo() {
+  if (history.length === 0) return;
+  points = JSON.parse(history.pop());
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  draw();
 }
 
-canvas.addEventListener('mousedown',e=>{
-const rect=canvas.getBoundingClientRect();
-const x=(e.clientX-rect.left)*(canvas.width/rect.width);
-const y=(e.clientY-rect.top)*(canvas.height/rect.height);
-const clicked=points.find(p=>Math.hypot(p.x-x,p.y-y)<15);
-if(clicked){selectedPoint=clicked; document.getElementById('sel_name').innerText=selectedPoint.name; document.getElementById('beam_angle').value=selectedPoint.angle; document.getElementById('beam_range').value=selectedPoint.range;}
-else{
-const sel=document.getElementById(currentMode==='main'?'sel_main':'sel_extra');
-const opt=sel.options[sel.selectedIndex];
-points.push({x,y,type:currentMode,name:sel.value,angle:90,range:400,spl:opt.dataset.spl||120,hAngle:opt.dataset.h||100,vAngle:opt.dataset.v||70});
-selectedPoint=points[points.length-1];
-document.getElementById('beam_angle').value=90;
-document.getElementById('beam_range').value=400;
-}
-draw();
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+  if (e.key === 'Delete' && selectedPoint) { deleteSelected(); }
 });
 
-function buildEngineeringDecision(){
-const L=+out_l.value,W=+out_w.value,sW=+stage_w.value,crowd=+document.getElementById('crowd').value;
-const hasLineArray=points.some(p=>p.isLineArray);
-const mainCount=points.filter(p=>p.type==='main').length;
-const subCount=points.filter(p=>p.type==='sub'&&p.name.includes("Sub")).length;
-const monitorCount=points.filter(p=>p.name.includes("Monitor")||p.name.includes("Stage")).length;
-return{
-eventText:`System designed for an outdoor area of ${L}m × ${W}m accommodating ~${crowd} pax.`,
-systemText:hasLineArray?"Line Array architecture selected for balanced coverage over large distances.":"Point Source architecture selected for distributed open-air sound reinforcement.",
-quantityText:hasLineArray?`Deployed ${mainCount} Line Array clusters for long-throw efficiency.`:`Deployed ${mainCount} full-range cabinets for localized coverage.`,
-subText:`${subCount} high-power Subwoofers integrated for low-frequency extension.`,
-monitorText:`${monitorCount} Stage Monitors allocated for performers' foldback.`,
-alternativeText:hasLineArray?"Point Source could be used as a secondary option with delay zones.":"Line Array could be an alternative to reduce cabinet count while increasing SPL overhead."
-};
+function deleteSelected() {
+  if (!selectedPoint) return;
+  pushHistory();
+  points = points.filter(p => p !== selectedPoint);
+  selectedPoint = null;
+  $('sel_name').innerText = '-- Select --';
+  $('beamControls').classList.remove('on');
+  draw();
 }
 
-function generateReport(){
-const decision=buildEngineeringDecision();
-const counts={}; points.forEach(p=>counts[p.name]=(counts[p.name]||0)+1);
-document.getElementById('boqSection').innerHTML=`
-<div style="background:#f0f7ff; padding:15px; border-radius:10px; margin-bottom:20px; border-left:5px solid var(--tech-blue)">
-<h3>📘 Engineering Decision Summary</h3>
-<p>${decision.eventText}</p>
-<p><b>System Architecture:</b> ${decision.systemText}</p>
-<p><b>Quantity Justification:</b> ${decision.quantityText}</p>
-<p><b>LF Design:</b> ${decision.subText}</p>
-<p><b>Stage Monitoring:</b> ${decision.monitorText}</p>
-<p><b>Alternative Scenario:</b> ${decision.alternativeText}</p>
-</div>
-<h3>📦 Bill of Quantities (BOQ)</h3>
-<table><tr><th>Product Name</th><th>Quantity</th></tr>`+
-Object.entries(counts).map(([n,c])=>`<tr><td><b>${n}</b></td><td>${c} Unit(s)</td></tr>`).join('')+
-`</table>`;
-document.getElementById('reportImg').src=canvas.toDataURL();
-document.getElementById('reportPage').style.display='block';
+/* ═══════════════════════════════════════════════════════════
+   UPDATE SELECTED
+   ═══════════════════════════════════════════════════════════ */
+function updateSelected() {
+  if (!selectedPoint) return;
+  selectedPoint.angle = parseInt($('beam_angle').value);
+  selectedPoint.range = parseInt($('beam_range').value);
+  draw();
 }
 
-function saveReport(){
-    const link = document.createElement('a');
-    link.href = document.getElementById('reportImg').src;
-    link.download = 'Motivity_Report_Outdoor_Map.png';
-    link.click();
+/* ═══════════════════════════════════════════════════════════
+   PRESETS
+   ═══════════════════════════════════════════════════════════ */
+function loadPreset(type) {
+  pushHistory();
+  points = [];
+  const L = +$('out_l').value, W = +$('out_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const b = getWorldBox();
+  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
+
+  if (type === 'concert') {
+    // Two line arrays + subs + monitors
+    for (let side = 0; side < 2; side++) {
+      const x = side === 0 ? stX - 25 : stX + sW * b.scale + 25;
+      points.push({
+        x, y: b.y0 + sD * b.scale / 2,
+        type: 'main', name: 'MLA212 L' + (side === 0 ? 'L' : 'R'),
+        angle: side === 0 ? 80 : 100, range: L * b.scale * 0.75,
+        spl: 138, hAngle: 90, vAngle: 10, watt: 900,
+        isLineArray: true, elements: 8
+      });
+    }
+    // Subs
+    for (let i = 0; i < 6; i++) {
+      points.push({
+        x: stX + (sW * b.scale / 5) * i,
+        y: b.y0 + sD * b.scale + 25,
+        type: 'sub', name: 'DB-218 3G',
+        angle: 90, range: 200, spl: 138, hAngle: 180, vAngle: 60, watt: 1400
+      });
+    }
+    // Monitors
+    for (let i = 0; i < 6; i++) {
+      points.push({
+        x: stX + (sW * b.scale / 5) * i,
+        y: b.y0 + sD * b.scale - 10,
+        type: 'sub', name: 'DB-15M 3G',
+        angle: 270, range: 120, spl: 128, hAngle: 90, vAngle: 60, watt: 500
+      });
+    }
+  } else {
+    // Speech: distributed point source
+    const rows = 3, cols = 5;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        points.push({
+          x: b.x0 + (L * b.scale / (cols + 1)) * (c + 1),
+          y: b.y0 + 100 + (W * b.scale - 150) / (rows - 1) * r,
+          type: 'main', name: 'MTL-700 3G',
+          angle: 90, range: 220, spl: 126, hAngle: 90, vAngle: 60, watt: 500
+        });
+      }
+    }
+  }
+  draw();
 }
 
-function savePDFReport(){
-    generateReport();
-    const element = document.getElementById('report-to-pdf');
-    const opt = {
-        margin: 10,
-        filename: 'Motivity_Engineering_Report_2026.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    const closeBtn = element.querySelector('.no-print');
-    if(closeBtn) closeBtn.style.display = 'none';
-    html2pdf().set(opt).from(element).save().then(() => {
-        if(closeBtn) closeBtn.style.display = 'block';
+/* ═══════════════════════════════════════════════════════════
+   SMART AI
+   ═══════════════════════════════════════════════════════════ */
+function applySmartLayout() {
+  pushHistory();
+  points = [];
+  const L = +$('out_l').value, W = +$('out_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const crowd = +$('crowd').value;
+  const b = getWorldBox();
+  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
+
+  const profile = { type: 'concert', load: L > 60 ? 'heavy' : 'medium' };
+
+  // Line arrays L + R
+  const elementsPerSide = Math.max(6, Math.ceil(L / 15) * 2);
+  const finalElements = elementsPerSide % 2 === 0 ? elementsPerSide : elementsPerSide + 1;
+
+  points.push({
+    x: stX - 30, y: b.y0 + sD * b.scale / 2,
+    type: 'main', name: 'MLA212 L',
+    angle: 82, range: L * b.scale * 0.85,
+    spl: 138, hAngle: 90, vAngle: 10, watt: 900,
+    isLineArray: true, elements: finalElements / 2
+  });
+  points.push({
+    x: stX + sW * b.scale + 30, y: b.y0 + sD * b.scale / 2,
+    type: 'main', name: 'MLA212 R',
+    angle: 98, range: L * b.scale * 0.85,
+    spl: 138, hAngle: 90, vAngle: 10, watt: 900,
+    isLineArray: true, elements: finalElements / 2
+  });
+
+  // Subs
+  const subCount = profile.load === 'heavy' ? 6 : 4;
+  for (let i = 0; i < subCount; i++) {
+    points.push({
+      x: stX + (sW * b.scale / (subCount - 1)) * i,
+      y: b.y0 + sD * b.scale + 25,
+      type: 'sub', name: 'DB-218 3G',
+      angle: 90, range: 220, spl: 138, hAngle: 180, vAngle: 60, watt: 1400
     });
+  }
+
+  // Side fills
+  const sideCount = profile.load === 'heavy' ? 3 : 2;
+  for (let i = 0; i < sideCount; i++) {
+    const yPos = b.y0 + (W * b.scale / (sideCount + 1)) * (i + 1);
+    points.push({
+      x: b.x0 + 15, y: yPos, type: 'side', name: 'HD315A L',
+      angle: 0, range: W * b.scale * 0.4, spl: 131, hAngle: 90, vAngle: 60, watt: 1000
+    });
+    points.push({
+      x: b.x0 + L * b.scale - 15, y: yPos, type: 'side', name: 'HD315A R',
+      angle: 180, range: W * b.scale * 0.4, spl: 131, hAngle: 90, vAngle: 60, watt: 1000
+    });
+  }
+
+  // Monitors
+  const monitorCount = sW > 16 ? 8 : sW > 10 ? 6 : 4;
+  for (let i = 0; i < monitorCount; i++) {
+    points.push({
+      x: stX + (sW * b.scale / (monitorCount - 1)) * i,
+      y: b.y0 + sD * b.scale - 10,
+      type: 'sub', name: 'DB-15M 3G',
+      angle: 270, range: 120, spl: 128, hAngle: 90, vAngle: 60, watt: 500
+    });
+  }
+
+  draw();
 }
-window.onload=draw;
+
+/* ═══════════════════════════════════════════════════════════
+   WORLD BOX
+   ═══════════════════════════════════════════════════════════ */
+function getWorldBox() {
+  const L = +$('out_l').value, W = +$('out_w').value;
+  const pad = 70;
+  const scale = Math.min((canvas.width - pad * 2) / L, (canvas.height - pad * 2) / W);
+  const roomW = L * scale, roomH = W * scale;
+  return {
+    x0: (canvas.width - roomW) / 2,
+    y0: (canvas.height - roomH) / 2,
+    W: roomW, H: roomH, scale
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER LOOP
+   ═══════════════════════════════════════════════════════════ */
+function loop() {
+  animT += 0.02;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function draw() {
+  const L = +$('out_l').value, W = +$('out_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const crowd = +$('crowd').value;
+
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const b = getWorldBox();
+  worldBox = b;
+
+  // Ground
+  const floor = $('floor_type').value;
+  ctx.fillStyle = floor === 'grass' ? '#0e2d14' : floor === 'concrete' ? '#2a2a2a' : '#1a1a1a';
+  ctx.fillRect(b.x0, b.y0, b.W, b.H);
+
+  // Texture
+  if (floor === 'grass') {
+    for (let i = 0; i < 500; i++) {
+      const x = b.x0 + Math.random() * b.W;
+      const y = b.y0 + Math.random() * b.H;
+      ctx.strokeStyle = 'rgba(34,197,94,0.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + (Math.random() - 0.5) * 3, y - 3);
+      ctx.stroke();
+    }
+  } else {
+    for (let i = 0; i < 400; i++) {
+      ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.03})`;
+      ctx.fillRect(b.x0 + Math.random() * b.W, b.y0 + Math.random() * b.H, 1, 1);
+    }
+  }
+
+  // Grid
+  if (layers.grid) {
+    ctx.strokeStyle = 'rgba(56,189,248,0.08)';
+    ctx.lineWidth = 1;
+    const gridSize = 10 * b.scale;
+    for (let x = b.x0; x <= b.x0 + b.W; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, b.y0); ctx.lineTo(x, b.y0 + b.H); ctx.stroke();
+    }
+    for (let y = b.y0; y <= b.y0 + b.H; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(b.x0, y); ctx.lineTo(b.x0 + b.W, y); ctx.stroke();
+    }
+  }
+
+  // Crowd
+  if (layers.crowd) drawCrowd(b, crowd, sD);
+
+  // Stage
+  drawStage(b, sW, sD);
+
+  // Heatmap
+  if (layers.heat && points.length) drawHeatmap(b);
+
+  // Waves
+  if (layers.waves) drawWaves(b);
+
+  // Speaker beams (beneath speakers)
+  points.forEach(p => drawBeam(p, b));
+
+  // Speakers
+  points.forEach(p => drawSpeaker(p, b));
+
+  // Stage / area outline
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(b.x0, b.y0, b.W, b.H);
+
+  // Dimension labels
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText(L + ' m', b.x0 + b.W / 2, b.y0 - 12);
+
+  ctx.save();
+  ctx.translate(b.x0 - 20, b.y0 + b.H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(W + ' m', 0, 0);
+  ctx.restore();
+
+  // Cursor info
+  if (cursorSPL !== null) drawCursorOverlay();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CROWD
+   ═══════════════════════════════════════════════════════════ */
+function drawCrowd(b, crowd, sD) {
+  const zoneY = b.y0 + sD * b.scale + 30;
+  const zoneH = b.H - sD * b.scale - 60;
+  const zoneW = b.W - 60;
+
+  const dots = Math.min(280, Math.floor(crowd / 22));
+  ctx.fillStyle = 'rgba(56,189,248,0.12)';
+
+  // Seeded-ish randomness per frame (looks like static crowd)
+  const seed = 1;
+  let s = seed;
+  const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+
+  for (let i = 0; i < dots; i++) {
+    const px = b.x0 + 30 + rand() * zoneW;
+    const py = zoneY + rand() * zoneH;
+    const r = 1.5 + rand() * 1.5;
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STAGE
+   ═══════════════════════════════════════════════════════════ */
+function drawStage(b, sW, sD) {
+  const stX = b.x0 + (b.W - sW * b.scale) / 2;
+  const stY = b.y0;
+
+  // Stage fill
+  const stGrad = ctx.createLinearGradient(0, stY, 0, stY + sD * b.scale);
+  stGrad.addColorStop(0, 'rgba(230,0,18,0.18)');
+  stGrad.addColorStop(1, 'rgba(230,0,18,0.05)');
+  ctx.fillStyle = stGrad;
+  ctx.fillRect(stX, stY, sW * b.scale, sD * b.scale);
+
+  // Stage border
+  ctx.strokeStyle = '#e60012';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(stX, stY, sW * b.scale, sD * b.scale);
+
+  // "STAGE" label
+  ctx.fillStyle = 'rgba(230,0,18,0.6)';
+  ctx.font = 'bold 14px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('STAGE', stX + sW * b.scale / 2, stY + sD * b.scale / 2 + 5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BEAM
+   ═══════════════════════════════════════════════════════════ */
+function drawBeam(p, b) {
+  if (!p.range) return;
+
+  const angleRad = p.angle * Math.PI / 180;
+  const spread = (p.hAngle || 100) * Math.PI / 180;
+  const range = p.range;
+
+  // Determine color
+  let color0, color1;
+  if (p.type === 'main') {
+    color0 = 'rgba(56,189,248,0.5)';
+    color1 = 'rgba(56,189,248,0)';
+  } else if (p.type === 'sub') {
+    color0 = 'rgba(229,192,123,0.5)';
+    color1 = 'rgba(229,192,123,0)';
+  } else {
+    color0 = 'rgba(34,197,94,0.5)';
+    color1 = 'rgba(34,197,94,0)';
+  }
+
+  const grad = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, range);
+  grad.addColorStop(0, color0);
+  grad.addColorStop(1, color1);
+
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.arc(p.x, p.y, range, angleRad - spread / 2, angleRad + spread / 2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Selected: dashed outline
+  if (p === selectedPoint) {
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WAVES (animated)
+   ═══════════════════════════════════════════════════════════ */
+function drawWaves(b) {
+  points.forEach((p, i) => {
+    const numRings = 3;
+    const maxR = p.type === 'main' ? 90 : p.type === 'sub' ? 60 : 70;
+    const color = p.type === 'main' ? '56,189,248' : p.type === 'sub' ? '229,192,123' : '34,197,94';
+
+    for (let r = 0; r < numRings; r++) {
+      const offset = (animT + r * 0.33 + i * 0.07) % 1;
+      const radius = offset * maxR;
+      const alpha = (1 - offset) * 0.5;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${color},${alpha})`;
+      ctx.lineWidth = 1.6;
+      ctx.shadowColor = `rgba(${color},${alpha * 0.7})`;
+      ctx.shadowBlur = 10;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEATMAP
+   ═══════════════════════════════════════════════════════════ */
+function drawHeatmap(b) {
+  const step = 12;
+  for (let py = 0; py < b.H; py += step) {
+    for (let px = 0; px < b.W; px += step) {
+      const spl = computeSPLAt(b.x0 + px, b.y0 + py);
+      ctx.fillStyle = splColor(spl);
+      ctx.fillRect(b.x0 + px, b.y0 + py, step, step);
+    }
+  }
+}
+
+function computeSPLAt(px, py) {
+  if (!points.length) return 0;
+  let pTotal = 0;
+  points.forEach(p => {
+    const distPx = Math.hypot(px - p.x, py - p.y);
+    const distM = distPx / (worldBox.scale || 1);
+    const spl = (p.spl || 120) - 20 * Math.log10(Math.max(1, distM));
+    pTotal += Math.pow(10, spl / 10);
+  });
+  return 10 * Math.log10(pTotal);
+}
+
+function splColor(spl) {
+  if (spl < 60) return 'rgba(15,25,45,0.55)';
+  if (spl < 70) return 'rgba(30,80,140,0.5)';
+  if (spl < 80) return 'rgba(34,197,94,0.4)';
+  if (spl < 90) return 'rgba(132,204,22,0.4)';
+  if (spl < 100) return 'rgba(245,158,11,0.42)';
+  return 'rgba(239,68,68,0.5)';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPEAKER ICONS
+   ═══════════════════════════════════════════════════════════ */
+function drawSpeaker(p, b) {
+  if (p.isLineArray) drawLineArrayIcon(p);
+  else drawRegularSpeakerIcon(p);
+}
+
+function drawRegularSpeakerIcon(p) {
+  const sel = p === selectedPoint;
+  const color = p.type === 'main' ? '#38bdf8' : p.type === 'sub' ? '#e5c07b' : '#22c55e';
+
+  if (sel) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 16, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fill();
+  }
+
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+  ctx.fillStyle = sel ? '#fff' : color;
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Inner dot
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#000';
+  ctx.fill();
+
+  // Label
+  if (layers.labels && p.name) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(p.name, p.x + 13, p.y + 3);
+  }
+}
+
+function drawLineArrayIcon(p) {
+  const sel = p === selectedPoint;
+  const unitW = 12, unitH = 7, spacing = 2;
+  const angleRad = p.angle * Math.PI / 180;
+  const totalH = p.elements * (unitH + spacing);
+
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(angleRad - Math.PI / 2);
+
+  for (let i = 0; i < p.elements; i++) {
+    ctx.fillStyle = sel ? '#fff' : 'rgba(56,189,248,0.9)';
+    ctx.fillRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
+    ctx.strokeStyle = '#0d1117';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
+  }
+  ctx.restore();
+
+  if (layers.labels && p.name) {
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 10px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(p.name + ' (' + p.elements + ')', p.x + 14, p.y - totalH / 2 + 4);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOUSE
+   ═══════════════════════════════════════════════════════════ */
+function getCanvasPos(e) {
+  const r = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (canvas.width / r.width),
+    y: (e.clientY - r.top) * (canvas.height / r.height)
+  };
+}
+
+canvas.addEventListener('mousedown', e => {
+  if (e.button === 2) return;
+  const pos = getCanvasPos(e);
+  const hit = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
+
+  if (hit) {
+    selectedPoint = hit;
+    dragTarget = hit;
+    dragOffset = { x: pos.x - hit.x, y: pos.y - hit.y };
+    $('sel_name').innerText = hit.name || '--';
+    $('beam_angle').value = hit.angle;
+    $('beam_range').value = hit.range;
+    $('beamControls').classList.add('on');
+    draw();
+  } else {
+    pushHistory();
+    const sel = $(currentMode === 'main' ? 'sel_main' : 'sel_extra');
+    const opt = sel.options[sel.selectedIndex];
+    const newP = {
+      x: pos.x, y: pos.y,
+      type: currentMode,
+      name: sel.value,
+      angle: 90,
+      range: 400,
+      spl: +opt.dataset.spl || 120,
+      hAngle: +opt.dataset.h || 100,
+      vAngle: +opt.dataset.v || 70,
+      watt: +opt.dataset.watt || 500,
+      isLineArray: sel.value.startsWith('MLA') || sel.value.startsWith('M10')
+    };
+    if (newP.isLineArray) newP.elements = 6;
+    points.push(newP);
+    selectedPoint = newP;
+    $('sel_name').innerText = newP.name;
+    $('beam_angle').value = 90;
+    $('beam_range').value = 400;
+    $('beamControls').classList.add('on');
+    draw();
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const pos = getCanvasPos(e);
+  if (dragTarget) {
+    dragTarget.x = pos.x - dragOffset.x;
+    dragTarget.y = pos.y - dragOffset.y;
+    draw();
+  } else {
+    // Cursor SPL
+    const b = worldBox;
+    if (pos.x >= b.x0 && pos.x <= b.x0 + b.W && pos.y >= b.y0 && pos.y <= b.y0 + b.H) {
+      cursorSPL = computeSPLAt(pos.x, pos.y);
+      cursorX = pos.x;
+      cursorY = pos.y;
+      $('cursorSPL').textContent = cursorSPL.toFixed(1) + ' dB';
+    } else {
+      cursorSPL = null;
+      $('cursorSPL').textContent = '—';
+    }
+  }
+});
+
+canvas.addEventListener('mouseup', () => { dragTarget = null; });
+
+canvas.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const pos = getCanvasPos(e);
+  const idx = points.findIndex(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
+  if (idx >= 0) {
+    pushHistory();
+    points.splice(idx, 1);
+    selectedPoint = null;
+    $('beamControls').classList.remove('on');
+    draw();
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  cursorSPL = null;
+  $('cursorSPL').textContent = '—';
+});
+
+function drawCursorOverlay() {
+  ctx.strokeStyle = 'rgba(56,189,248,0.3)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, canvas.height);
+  ctx.moveTo(0, cursorY); ctx.lineTo(canvas.width, cursorY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UPDATE KPI
+   ═══════════════════════════════════════════════════════════ */
+function updateKPI() {
+  let totalW = 0;
+  let maxSpl = 0;
+  points.forEach(p => {
+    totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
+    maxSpl = Math.max(maxSpl, p.spl || 0);
+  });
+
+  // Coverage via grid sampling
+  let coverage = 0;
+  if (points.length) {
+    const b = worldBox;
+    const target = 90;
+    let good = 0, total = 0;
+    for (let py = 30; py < b.H - 30; py += 40) {
+      for (let px = 30; px < b.W - 30; px += 40) {
+        const spl = computeSPLAt(b.x0 + px, b.y0 + py);
+        total++;
+        if (spl >= target - 10 && spl <= target + 15) good++;
+      }
+    }
+    coverage = (good / total) * 100;
+  }
+
+  $('kpiSpkV').textContent = points.length;
+  $('kpiPwrV').textContent = totalW.toLocaleString();
+  $('kpiCovV').textContent = points.length ? coverage.toFixed(0) + '%' : '—';
+  $('kpiSplV').textContent = points.length ? maxSpl : '—';
+
+  $('kpiCov').className = 'kpi ' + (!points.length ? '' : coverage >= 75 ? 'ok' : 'warn');
+  $('kpiSpl').className = 'kpi ' + (!points.length ? '' : maxSpl >= 130 ? 'ok' : 'warn');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REPORT
+   ═══════════════════════════════════════════════════════════ */
+function buildEngineeringDecision() {
+  const L = +$('out_l').value, W = +$('out_w').value;
+  const sW = +$('stage_w').value;
+  const crowd = +$('crowd').value;
+  const hasLineArray = points.some(p => p.isLineArray);
+  const mainCount = points.filter(p => p.type === 'main').length;
+  const subCount = points.filter(p => p.type === 'sub' && p.name.includes('218')).length;
+  const monitorCount = points.filter(p => p.name.includes('15M') || p.name.includes('152')).length;
+  const sideCount = points.filter(p => p.type === 'side').length;
+
+  let totalW = 0;
+  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
+  const ampRec = Math.ceil(totalW * 1.3);
+
+  return {
+    eventText: `System designed for an outdoor area of <b>${L}m × ${W}m</b> accommodating approximately <b>${crowd.toLocaleString()} pax</b>.`,
+    systemText: hasLineArray
+      ? `<b>Line Array</b> architecture selected for balanced coverage over large distances with controlled vertical dispersion.`
+      : `<b>Point Source</b> architecture selected for distributed open-air sound reinforcement.`,
+    quantityText: hasLineArray
+      ? `Deployed <b>${mainCount} Line Array clusters</b> for long-throw efficiency.`
+      : `Deployed <b>${mainCount} full-range cabinets</b> for localized coverage.`,
+    subText: `<b>${subCount} high-power Subwoofers</b> integrated for low-frequency extension.`,
+    sideText: sideCount > 0 ? `<b>${sideCount} Side Fills</b> deployed for lateral audience coverage.` : '',
+    monitorText: `<b>${monitorCount} Stage Monitors</b> allocated for performers' foldback.`,
+    powerText: `Total system power: <b>${totalW.toLocaleString()} W</b>. Minimum amplifier rating: <b>${ampRec.toLocaleString()} W</b> (Class-D, 30% headroom).`,
+    alternativeText: hasLineArray
+      ? `Point Source could serve as a secondary option with delay zones.`
+      : `Line Array could be an alternative to reduce cabinet count while increasing SPL overhead.`
+  };
+}
+
+function generateReport() {
+  if (!points.length) { alert('Add speakers first'); return; }
+
+  const decision = buildEngineeringDecision();
+  const counts = {};
+  points.forEach(p => {
+    const key = p.isLineArray ? p.name + ' (' + p.elements + ' units each)' : p.name;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  let totalW = 0;
+  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
+
+  // KPI cards
+  const L = +$('out_l').value, W = +$('out_w').value;
+  $('repKPI').innerHTML = `
+    <div class="kpi-card"><h4>Area</h4><span>${(L * W).toLocaleString()} m²</span></div>
+    <div class="kpi-card blue"><h4>Total Speakers</h4><span>${points.length}</span></div>
+    <div class="kpi-card"><h4>Total Power</h4><span>${totalW.toLocaleString()} W</span></div>
+    <div class="kpi-card ok"><h4>Max SPL</h4><span>${Math.max(...points.map(p => p.spl || 0))} dB</span></div>
+  `;
+
+  // BOQ + decision
+  $('boqSection').innerHTML = `
+    <div class="decision-box">
+      <h3 style="border:none;padding:0;color:#0c4a6e;font-size:15px;margin-bottom:10px">📘 Engineering Decision Summary</h3>
+      <p>${decision.eventText}</p>
+      <p><strong>System Architecture:</strong> ${decision.systemText}</p>
+      <p><strong>Quantity Justification:</strong> ${decision.quantityText}</p>
+      <p><strong>LF Design:</strong> ${decision.subText}</p>
+      ${decision.sideText ? `<p><strong>Side Coverage:</strong> ${decision.sideText}</p>` : ''}
+      <p><strong>Stage Monitoring:</strong> ${decision.monitorText}</p>
+      <p><strong>Power:</strong> ${decision.powerText}</p>
+      <p><strong>Alternative Scenario:</strong> ${decision.alternativeText}</p>
+    </div>
+
+    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">📦 Bill of Quantities (BOQ)</h3>
+    <table class="rep-table">
+      <thead><tr><th>Product</th><th>Quantity</th><th>Category</th></tr></thead>
+      <tbody>
+        ${Object.entries(counts).map(([name, qty]) => {
+          const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' units each)' : p.name) === name);
+          const cat = sample.type === 'main' ? 'Main System' : sample.type === 'sub' ? (sample.name.includes('218') ? 'Subwoofer' : 'Monitor') : 'Side Fill';
+          return `<tr><td><b>${name}</b></td><td>${qty}</td><td>${cat}</td></tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  $('repDate').textContent = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  $('reportImg').src = canvas.toDataURL();
+  $('reportPage').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function closeReport() { $('reportPage').style.display = 'none'; }
+
+function saveMapPNG() {
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = 'Motivity_Outdoor_Design.png';
+  link.click();
+}
+
+function savePDFReport() {
+  generateReport();
+  const element = $('report-to-pdf');
+  const closeBtn = element.querySelector('.no-print');
+  if (closeBtn) closeBtn.style.display = 'none';
+  const opt = {
+    margin: 10,
+    filename: 'Motivity_Engineering_Report_2026.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save().then(() => {
+    if (closeBtn) closeBtn.style.display = 'block';
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  applySmartLayout();
+  loop();
+  setInterval(updateKPI, 500);
+});
 </script>
 </body>
 </html>
