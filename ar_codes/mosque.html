@@ -39,7 +39,7 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .toolbar button:hover{background:#30363d}
 .toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1000px;max-height:820px}
+canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
 .stat .v{font-size:15px;font-weight:900;color:var(--blue)}
@@ -103,11 +103,11 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span>🕌 إضافة أبواق UT-08 على المئذنة تلقائياً</span>
       </label>
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ توزيع ذكي تلقائي</button>
-      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 وضع التوزيع اليدوي</button>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 وضع التوزيع اليدوي (حر)</button>
       <div class="hint">
-        💡 <b>كل السماعات الداخلية على الجدران</b> موجهة نحو الداخل<br>
-        💡 انقر على المئذنة لإضافة بوق خارجي<br>
-        💡 <b>تدوير الاتجاه:</b> حدّد سماعة ثم اسحب المقبض الأبيض
+        💡 <b>يدوي:</b> انقر في أي مكان داخل المسجد لوضع السماعة بحرية<br>
+        💡 انقر على المئذنة لإضافة بوق<br>
+        💡 <b>تدوير:</b> حدّد سماعة ثم اسحب المقبض الأبيض
       </div>
     </div>
 
@@ -211,7 +211,7 @@ const DB_AMP = [
 ];
 const MINARET_M = 2.5;
 const MOUNT_H_WALL = 2.8;
-const WALL_THRESHOLD = 0.03;   // إذا rx أصغر من هذا = على الحائط
+const WALL_THRESHOLD = 0.04;
 const isWallType = t => t.includes('حائطي');
 const isHornType = t => t.includes('خارجي');
 const isColumnType = t => t.includes('عمودي');
@@ -251,7 +251,9 @@ function getDims(){
 }
 function getMouse(e){
   const r = canvas.getBoundingClientRect();
-  return {mx: e.clientX - r.left, my: e.clientY - r.top};
+  const sx = canvas.width / r.width;
+  const sy = canvas.height / r.height;
+  return {mx: (e.clientX - r.left) * sx, my: (e.clientY - r.top) * sy};
 }
 function toLocal(p){
   const {x0, y0, W, L} = layout;
@@ -300,97 +302,167 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ رسم السماعة الحائطية (مشترك للعمودي والحائطي) ============ */
+/* ============ رسم السماعة الحائطية (صندوق واضح) ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const wall = whichWall(s);
   const isLeft = wall === 'left';
   const isCol = isColumnType(db.type);
 
-  // أبعاد الصندوق حسب النوع
-  const boxW = isCol ? 9 : 11;
-  const boxH = isCol ? 22 : 16;
+  // حجم صندوق أكبر وأوضح
+  const boxW = isCol ? 16 : 20;
+  const boxH = isCol ? 40 : 30;
 
-  // موضع الجدار
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
   const py = pos.y;
-  const bx = isLeft ? wallX : wallX - boxW;  // الصندوق داخل الغرفة ملتصقاً بالحائط
+  const bx = isLeft ? wallX : wallX - boxW;
 
-  // 1) قوس تثبيت على الحائط (خط سميك)
-  ctx.strokeStyle = isSel ? "#fff" : "#000";
-  ctx.lineWidth = isSel ? 4 : 3;
+  // 1) قوس تثبيت على الحائط (خط سميك بارز)
+  ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
+  ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(wallX, py - boxH/2 - 4);
-  ctx.lineTo(wallX, py + boxH/2 + 4);
+  ctx.moveTo(wallX, py - boxH/2 - 6);
+  ctx.lineTo(wallX, py + boxH/2 + 6);
   ctx.stroke();
 
-  // 2) صندوق السماعة
+  // 2) صندوق السماعة (ممتلئ بلون بارز)
   const col = isCol ? "#e60012" : "#ff8c1a";
   ctx.fillStyle = isSel ? "#38bdf8" : col;
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
 
-  // 3) إطار
-  ctx.strokeStyle = isSel ? "#fff" : "#000";
-  ctx.lineWidth = 2;
+  // 3) إطار أسود سميك
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 3;
   ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
+  if (isSel) {
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(bx - 2, py - boxH/2 - 2, boxW + 4, boxH + 4);
+  }
 
-  // 4) خطوط الشبك
-  ctx.strokeStyle = "rgba(0,0,0,.4)";
-  ctx.lineWidth = 1;
-  const lines = isCol ? 5 : 3;
+  // 4) خطوط الشبك الأفقية
+  ctx.strokeStyle = "rgba(0,0,0,.55)";
+  ctx.lineWidth = 1.5;
+  const lines = isCol ? 7 : 5;
   for (let i = 1; i < lines; i++) {
     const ly = py - boxH/2 + i * (boxH/lines);
     ctx.beginPath();
-    ctx.moveTo(bx + 1.5, ly);
-    ctx.lineTo(bx + boxW - 1.5, ly);
+    ctx.moveTo(bx + 3, ly);
+    ctx.lineTo(bx + boxW - 3, ly);
     ctx.stroke();
   }
 
-  // 5) لمعة (وهج) لتوضيح أن الوجه للداخل
-  const faceX = isLeft ? bx + boxW : bx;
-  ctx.fillStyle = isSel ? "rgba(255,255,255,.6)" : "rgba(255,255,255,.35)";
-  ctx.fillRect(isLeft ? bx + boxW - 3 : bx, py - boxH/2 + 2, 3, boxH - 4);
+  // 5) وهج أبيض على الوجه الداخلي (يشير إلى أن الوجه للداخل)
+  ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
+  ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
 
-  // 6) سهم اتجاه التغطية (نحو الداخل)
+  // 6) سهم الاتجاه (بارز)
   const facing = getFacing(s);
-  const arrowStartX = isLeft ? wallX + boxW + 4 : wallX - boxW - 4;
+  const arrowStartX = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
   ctx.save();
   ctx.translate(arrowStartX, py);
   ctx.rotate(facing);
-  ctx.strokeStyle = isSel ? "#fff" : "var(--orange)";
-  ctx.strokeStyle = isSel ? "#fff" : "#ff8c1a";
-  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
+  ctx.lineWidth = 3.5;
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(20, 0);
-  ctx.lineTo(14, -6);
-  ctx.moveTo(20, 0);
-  ctx.lineTo(14, 6);
+  ctx.lineTo(32, 0);
+  ctx.lineTo(24, -9);
+  ctx.moveTo(32, 0);
+  ctx.lineTo(24, 9);
   ctx.stroke();
   ctx.restore();
 
-  // 7) اسم الموديل
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 10px Cairo";
+  // 7) اسم الموديل (خلفية داكنة ليكون واضحاً)
+  const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
+  ctx.font = "bold 12px Cairo";
   ctx.textAlign = isLeft ? "left" : "right";
-  const lx = isLeft ? wallX + boxW + 26 : wallX - boxW - 26;
+  ctx.fillStyle = "rgba(0,0,0,.7)";
+  const textW = ctx.measureText(s.model).width + 10;
+  const tx = isLeft ? lx - 5 : lx - textW + 5;
+  ctx.fillRect(tx, py - 8, textW, 16);
+  ctx.fillStyle = "#fff";
   ctx.fillText(s.model, lx, py + 4);
 
-  // 8) تصنيف صغير (حائطي/عمودي)
-  ctx.fillStyle = "rgba(139,148,158,.9)";
-  ctx.font = "bold 8px Cairo";
+  // 8) التصنيف أسفل الاسم
+  ctx.font = "bold 9px Cairo";
+  ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
   ctx.textAlign = isLeft ? "left" : "right";
-  ctx.fillText(isCol ? "عمودي" : "حائطي", lx, py + 15);
+  ctx.fillText(isCol ? "عمودي" : "حائطي", lx, py + 18);
+}
+
+/* ============ رسم السماعة الحرة (وسط المسجد) ============ */
+function drawFreeSpeaker(pos, s, isSel, db){
+  const isCol = isColumnType(db.type);
+  const facing = getFacing(s);
+  const r = isSel ? 15 : 13;
+
+  // 1) هالة خارجية
+  ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 6, 0, Math.PI*2); ctx.fill();
+
+  // 2) دائرة السماعة الرئيسية
+  ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
+
+  // 3) إطار أسود
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
+
+  // 4) إطار أبيض إضافي عند التحديد
+  if (isSel) {
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 4, 0, Math.PI*2); ctx.stroke();
+  }
+
+  // 5) نقطة بيضاء داخلية (مركز السماعة)
+  ctx.fillStyle = "#fff";
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
+
+  // 6) سهم الاتجاه بارز
+  ctx.save();
+  ctx.translate(pos.x, pos.y);
+  ctx.rotate(facing);
+  ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
+  ctx.lineWidth = 3.5;
+  ctx.beginPath();
+  ctx.moveTo(r + 3, 0);
+  ctx.lineTo(r + 26, 0);
+  ctx.lineTo(r + 20, -8);
+  ctx.moveTo(r + 26, 0);
+  ctx.lineTo(r + 20, 8);
+  ctx.stroke();
+  ctx.restore();
+
+  // 7) اسم الموديل بخلفية
+  const rightSide = pos.x > layout.x0 + layout.W/2;
+  const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
+  ctx.font = "bold 12px Cairo";
+  ctx.textAlign = rightSide ? "right" : "left";
+  const textW = ctx.measureText(s.model).width + 10;
+  const tx = rightSide ? lx - textW + 5 : lx - 5;
+  ctx.fillStyle = "rgba(0,0,0,.75)";
+  ctx.fillRect(tx, pos.y - 8, textW, 16);
+  ctx.fillStyle = "#fff";
+  ctx.fillText(s.model, lx, pos.y + 4);
+
+  ctx.font = "bold 9px Cairo";
+  ctx.fillStyle = "#a0aec0";
+  ctx.fillText("موضع حر", lx, pos.y + 18);
 }
 
 /* ============ الرسم ============ */
 function draw(){
   const div = $('cDiv');
-  canvas.width = div.clientWidth;
-  canvas.height = div.clientHeight;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = div.clientWidth * dpr;
+  canvas.height = div.clientHeight * dpr;
+  canvas.style.width = div.clientWidth + 'px';
+  canvas.style.height = div.clientHeight + 'px';
+
   const d = getDims();
   if (!d.L || !d.W) return;
 
-  const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.82;
+  const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.80;
   const W = d.W * scale, L = d.L * scale;
   const mS = MINARET_M * scale;
   const x0 = (canvas.width - W)/2 + mS/2;
@@ -415,19 +487,19 @@ function draw(){
   }
 
   // إطار القاعة
-  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 4;
+  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
   // المحراب
   ctx.fillStyle = "#38bdf8";
-  ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(10, scale*1.2), Math.PI, 0); ctx.fill();
-  ctx.fillStyle = "#fff"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
+  ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo"; ctx.textAlign = "center";
   ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
 
   // الأبعاد
-  ctx.fillStyle = "#fff"; ctx.font = "bold 13px Cairo";
-  ctx.fillText(`${d.W} م (العرض)`, x0 + W/2, y0 - 25);
-  ctx.save(); ctx.translate(x0 - 28, y0 + L/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo";
+  ctx.fillText(`${d.W} م (العرض)`, x0 + W/2, y0 - 28);
+  ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`${d.L} م (الطول)`, 0, 0); ctx.restore();
 
   // المئذنة
@@ -438,23 +510,22 @@ function draw(){
   ctx.fillStyle = "rgba(230,0,18,0.22)"; ctx.fill();
   ctx.strokeStyle = "#ff4d4d"; ctx.lineWidth = 2; ctx.stroke();
   drawCrescent(mcx, mcy - mS*0.62, mS*0.14);
-  ctx.fillStyle = "#e60012"; ctx.font = "bold 11px Cairo"; ctx.textAlign = "center";
+  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
   /* ============ مخروطات التغطية ============ */
   if (showCoverage) {
-    // 1) داخلي: قص على مستطيل القاعة
+    // داخلي: مقصوص على مستطيل القاعة
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2) * RAD;
       const isSel = s.id === selectedId;
-      // لون: عمودي أزرق، حائطي برتقالي
       if (isColumnType(db.type)) {
-        ctx.fillStyle = isSel ? 'rgba(56,189,248,.30)' : 'rgba(56,189,248,.13)';
+        ctx.fillStyle = isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)';
       } else {
-        ctx.fillStyle = isSel ? 'rgba(255,140,26,.42)' : 'rgba(255,140,26,.20)';
+        ctx.fillStyle = isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)';
       }
       const pos = getSpeakerPos(s);
       const facing = getFacing(s);
@@ -466,13 +537,12 @@ function draw(){
     });
     ctx.restore();
 
-    // 2) أبواق المئذنة: بدون قص (تُغطي الخارج)
-    ctx.save();
+    // خارجي: بدون قص
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2) * RAD;
       const isSel = s.id === selectedId;
-      ctx.fillStyle = isSel ? 'rgba(230,0,18,.35)' : 'rgba(230,0,18,.16)';
+      ctx.fillStyle = isSel ? 'rgba(230,0,18,.30)' : 'rgba(230,0,18,.14)';
       const pos = getSpeakerPos(s);
       const R = Math.max(W, L) * 2;
       ctx.beginPath();
@@ -480,7 +550,6 @@ function draw(){
       ctx.arc(pos.x, pos.y, R, s.ang - half, s.ang + half);
       ctx.closePath(); ctx.fill();
     });
-    ctx.restore();
   }
 
   /* ============ رسم السماعات ============ */
@@ -491,57 +560,46 @@ function draw(){
     const db = DB_SPK[s.model];
 
     if (s.zone === 'minaret') {
-      // بوق المئذنة
-      const r = Math.max(6, layout.mS*0.16);
+      const r = Math.max(8, layout.mS*0.18);
       ctx.save();
       ctx.translate(pos.x, pos.y);
       ctx.rotate(s.ang);
       ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
       ctx.beginPath();
-      ctx.moveTo(r*1.3, 0);
-      ctx.lineTo(-r*0.85, -r*0.85);
-      ctx.lineTo(-r*0.85,  r*0.85);
+      ctx.moveTo(r*1.4, 0);
+      ctx.lineTo(-r*0.9, -r*0.9);
+      ctx.lineTo(-r*0.9,  r*0.9);
       ctx.closePath(); ctx.fill();
       ctx.strokeStyle = isSel ? "#fff" : "#000";
-      ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.lineWidth = 2; ctx.stroke();
+      if (isSel) {
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(r*1.8, 0);
+        ctx.lineTo(-r*1.3, -r*1.3);
+        ctx.lineTo(-r*1.3,  r*1.3);
+        ctx.closePath(); ctx.stroke();
+      }
       ctx.restore();
     } else if (isOnWall(s)) {
-      /* ===== على الحائط: صندوق مثبت ===== */
       drawWallSpeaker(pos, s, isSel, db);
     } else {
-      /* ===== حر (نادراً) ===== */
-      ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, isSel ? 10 : 8, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
-      // سهم
-      ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.rotate(facing);
-      ctx.strokeStyle = isSel ? "#fff" : "#ff8c1a";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(10, 0); ctx.lineTo(24, 0);
-      ctx.lineTo(20, -4); ctx.moveTo(24, 0); ctx.lineTo(20, 4);
-      ctx.stroke();
-      ctx.restore();
-      const rightSide = pos.x > layout.x0 + layout.W/2;
-      ctx.fillStyle = "#fff"; ctx.font = "bold 10px Cairo";
-      ctx.textAlign = rightSide ? "right" : "left";
-      ctx.fillText(s.model, pos.x + (rightSide ? -12 : 12), pos.y + 4);
+      drawFreeSpeaker(pos, s, isSel, db);
     }
 
     // مقبض التدوير
     if (isSel) {
-      const hx = pos.x + Math.cos(facing) * 42;
-      const hy = pos.y + Math.sin(facing) * 42;
-      ctx.strokeStyle = "rgba(56,189,248,.7)";
-      ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+      const hx = pos.x + Math.cos(facing) * 52;
+      const hy = pos.y + Math.sin(facing) * 52;
+      ctx.strokeStyle = "rgba(56,189,248,.8)";
+      ctx.lineWidth = 2; ctx.setLineDash([5,4]);
       ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(hx, hy); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = "#fff";
-      ctx.beginPath(); ctx.arc(hx, hy, 9, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = "#0d1117"; ctx.font = "bold 12px Cairo";
+      ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = "#0d1117"; ctx.font = "bold 14px Cairo";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
@@ -554,10 +612,8 @@ function hitTest(p){
   for (let i = speakers.length - 1; i >= 0; i--) {
     const s = speakers[i];
     const pos = getSpeakerPos(s);
-    const db = DB_SPK[s.model];
-    let hitR = 14;
-    if (s.zone === 'minaret') hitR = 12;
-    else if (isOnWall(s)) hitR = 18;
+    let hitR = 20;
+    if (s.zone === 'minaret') hitR = 16;
     if (Math.hypot(p.mx - pos.x, p.my - pos.y) < hitR) return s;
   }
   return null;
@@ -565,9 +621,9 @@ function hitTest(p){
 function hitRotateHandle(s, mx, my){
   const pos = getSpeakerPos(s);
   const facing = getFacing(s);
-  const hx = pos.x + Math.cos(facing) * 42;
-  const hy = pos.y + Math.sin(facing) * 42;
-  return Math.hypot(mx - hx, my - hy) < 14;
+  const hx = pos.x + Math.cos(facing) * 52;
+  const hy = pos.y + Math.sin(facing) * 52;
+  return Math.hypot(mx - hx, my - hy) < 16;
 }
 function addSpeaker(rx, ry, model, facing){
   const s = {id: ++uid, rx, ry, model, zone:'mosque', facing: (facing !== undefined ? facing : Math.PI/2)};
@@ -594,14 +650,13 @@ canvas.addEventListener('mousedown', e => {
     }
   }
 
-  // 2) سماعة موجودة
+  // 2) سماعة موجودة → تحديد + سحب حر
   const hit = hitTest(p);
   if (hit) {
     selectedId = hit.id;
     updateRotationPanel();
     if (hit.zone !== 'minaret') {
-      // كل السماعات الداخلية على الحائط → تحريك عمودي فقط
-      dragging = {id: hit.id, offX: 0, offY: hit.ry - p.ry, wallLock: true};
+      dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
@@ -612,25 +667,28 @@ canvas.addEventListener('mousedown', e => {
   const model = $('m_model').value;
   const spk = DB_SPK[model];
 
-  // الوضع اليدوي
+  // ========== الوضع اليدوي ==========
   if (manualMode) {
     if (isMinaretArea(m)) {
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
       toast('تم إضافة بوق على المئذنة', 'ok');
     } else if (isHornType(spk.type)) {
-      toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn'); return;
+      toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn');
+      return;
     } else {
-      // كل السماعات الداخلية تُلتصق بأقرب حائط
-      const distL = p.rawRx, distR = 1 - p.rawRx;
-      if (distL < distR) addSpeaker(0, p.ry, model, 0);         // حائط أيسر → يمين
-      else                addSpeaker(1, p.ry, model, Math.PI);  // حائط أيمن → يسار
+      // وضع حر في أي مكان داخل المسجد — الاتجاه نحو مركز المسجد
+      const cx = layout.x0 + layout.W * 0.5;
+      const cy = layout.y0 + layout.L * 0.5;
+      const facing = Math.atan2(cy - m.my, cx - m.mx);
+      addSpeaker(p.rx, p.ry, model, facing);
+      toast('تم وضع السماعة بحرية', 'ok');
     }
     selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  // الوضع التلقائي – إضافة زوجية على الجدارين
+  // ========== الوضع التلقائي ==========
   if (isHornType(spk.type)) {
     if (isMinaretArea(m)) {
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
@@ -639,7 +697,6 @@ canvas.addEventListener('mousedown', e => {
       toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn'); return;
     }
   } else {
-    // زوج على الجدارين
     addSpeaker(0, p.ry, model, 0);
     addSpeaker(1, p.ry, model, Math.PI);
   }
@@ -659,7 +716,7 @@ canvas.addEventListener('mousemove', e => {
     const p = toLocal(m);
     const s = speakers.find(x => x.id === dragging.id);
     if (s) {
-      // السماعات الحائطية: تحريك عمودي فقط، x يبقى ملتصقاً بالحائط
+      s.rx = clamp(p.rx + dragging.offX, 0, 1);
       s.ry = clamp(p.ry + dragging.offY, 0, 1);
       draw();
     }
@@ -694,7 +751,7 @@ canvas.addEventListener('contextmenu', e => {
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
-  toast(manualMode ? 'الوضع اليدوي مُفعّل (التصاق بالحائط)' : 'الوضع التلقائي (زوجي على الجدارين)', 'ok');
+  toast(manualMode ? '🖐 الوضع اليدوي: وضع حر في أي مكان' : 'الوضع التلقائي: زوجي على الجدارين', 'ok');
 }
 function toggleCoverage(){
   showCoverage = !showCoverage;
@@ -732,9 +789,11 @@ function updateRotationPanel(){
   const box = $('rotationBox');
   if (!s) { box.style.display = 'none'; return; }
   box.style.display = 'block';
-  const wallLabel = s.zone === 'minaret' ? ' (بوق المئذنة)' :
-                    isOnWall(s) ? ` (${whichWall(s)==='left'?'حائط أيسر':'حائط أيمن'})` : '';
-  $('rotModel').textContent = `— ${s.model}${wallLabel}`;
+  let posLabel = '';
+  if (s.zone === 'minaret') posLabel = ' (بوق المئذنة)';
+  else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'حائط أيسر':'حائط أيمن'})`;
+  else posLabel = ' (موضع حر)';
+  $('rotModel').textContent = `— ${s.model}${posLabel}`;
   let deg = getFacing(s) * DEG;
   while (deg > 180) deg -= 360;
   while (deg < -180) deg += 360;
@@ -763,7 +822,6 @@ function aiSmartDistribute(){
   speakers = [];
   let hornCount = 0;
 
-  // 1) أبواق المئذنة
   if (addHorns) {
     const angles = [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI];
     angles.forEach(ang => addMinaretHorn('UT-08', ang));
@@ -775,7 +833,6 @@ function aiSmartDistribute(){
     updateAmpLogic(); draw(); return;
   }
 
-  // 2) كل السماعات الداخلية على الجدارين
   const mountH = isWallType(spk.type) ? MOUNT_H_WALL : (d.H - 0.5);
   const spacing = Math.max(3.5, mountH * 1.6);
   const rows = Math.max(2, Math.ceil(d.L / spacing));
@@ -784,16 +841,14 @@ function aiSmartDistribute(){
   for (let i = 0; i < rows; i++) {
     const yMeters = (i + 0.5) * gap;
     const r = yMeters / d.L;
-    // حائط أيسر → يوجه يمين (0°)
     addSpeaker(0, r, model, 0);
-    // حائط أيمن → يوجه يسار (180°)
     addSpeaker(1, r, model, Math.PI);
   }
 
   const indoorCount = rows * 2;
   const typeName = isColumnType(spk.type) ? 'عمودية' : 'حائطية';
   const spacingM = gap.toFixed(1);
-  toast(`تم توزيع ${indoorCount} سماعة ${typeName} على الجدارين (${rows} صفوف، تباعد ${spacingM}م، اتجاه للداخل)${hornCount ? ` + ${hornCount} أبواق على المئذنة` : ''}`, 'ok');
+  toast(`✅ ${indoorCount} سماعة ${typeName} على الجدارين (${rows} صفوف، تباعد ${spacingM}م)${hornCount ? ` + ${hornCount} أبواق على المئذنة` : ''}`, 'ok');
 
   updateAmpLogic(); draw();
 }
@@ -822,7 +877,6 @@ function computeAcoustics(){
       const dz = d.H - listH;
       const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
       const sp = DB_SPK[s.model];
-      // مراعاة الاتجاه: تخفيف 6dB خارج المخروط
       const facing = getFacing(s);
       const angleToP = Math.atan2(dy, dx);
       let diff = Math.abs(((angleToP - facing + Math.PI) % (2*Math.PI)) - Math.PI);
@@ -948,7 +1002,6 @@ function generateReport(){
     حجم ${ac.V.toFixed(0)} م³ ومعامل امتصاص ${d.alpha} → تقييم: <b>${rtEval}</b>.<br>
     • متوسط ضغط الصوت (SPL) عند نقاط الاستماع = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}.<br>
     • تم اعتماد <b>${ampResult.amps} مكبر ${ampResult.amp.id}</b> بهامش قدرة 30% وضمان تحميل ≥${ampResult.amp.minImp}Ω لكل قناة.<br>
-    • <b>التوزيع:</b> جميع السماعات الداخلية مثبتة على الجدارين الجانبيين بارتفاع ${isWallType('حائطي')?MOUNT_H_WALL:'2.5-3'}م، موجهة نحو الداخل بشكل متعامد لضمان تغطية متساوية عبر عرض المسجد.<br>
     • توزيع السماعات يمنع التصفير (Feedback) بفضل ${fs === 'None' ? 'المعالج المدمج' : fs + ' الرقمي'}.<br>`;
 
   if (ac.outdoorCount) {
@@ -982,7 +1035,6 @@ function loadProject(){
     speakers = (d.speakers || []).map(s => {
       const ns = {...s, zone: s.zone || 'mosque'};
       if (ns.zone !== 'minaret' && ns.facing === undefined) {
-        // مشاريع قديمة: تخمين الاتجاه من الموضع
         ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
       }
       return ns;
@@ -1037,7 +1089,7 @@ window.addEventListener('load', () => {
   updateRotationPanel(); updateAmpLogic(); draw();
   toast('مرحباً بك في Motivity PRO', 'ok');
 });
-window.addEventListener('resize', draw);
+window.addEventListener('resize', () => { draw(); });
 </script>
 </body>
 </html>
