@@ -2,15 +2,15 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<title>Motivity PRO - Mosque Sound System Design</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<title>Motivity PRO - Mosque Acoustic Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
   --card:#21262d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
   --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --orange:#ff8c1a;
 }
-*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
 .wrapper{display:flex;flex:1;overflow:hidden}
 .sidebar{width:400px;background:var(--panel);padding:14px;border-right:4px solid var(--red);overflow-y:auto}
@@ -36,13 +36,16 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .toolbar button{width:auto;padding:5px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d}
-.toolbar button:hover{background:#30363d}
+.toolbar button:hover:not(:disabled){background:#30363d}
 .toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
+.toolbar button:disabled{opacity:.35;cursor:not-allowed}
+.toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
+.toolbar button.hist:hover:not(:disabled){background:#3d3016}
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
 canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
-.stat .v{font-size:15px;font-weight:900;color:var(--blue)}
+.stat .v{font-size:15px;font-weight:900;color:var(--blue);font-family:'JetBrains Mono',monospace}
 .stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
 .stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
 .hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
@@ -60,8 +63,8 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 .table-boq tr:nth-child(even) td{background:#fafafa}
 .sig{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px dashed #ccc;font-size:12px}
 #toast{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
-.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px}
-.toast.ok{border-right-color:var(--ok)}.toast.err{border-right-color:var(--bad)}.toast.warn{border-right-color:var(--warn)}
+.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px}
+.toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--bad)}.toast.warn{border-left-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
 @media print{.no-print{display:none!important}#reportView{position:absolute;inset:0}}
 </style>
@@ -78,9 +81,9 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <input id="p_client" placeholder="Client Name">
       <input id="p_engineer" placeholder="Engineer Name" value="Eng. Ahmed">
       <select id="p_purpose">
-        <option value="85">Regular Prayer (Target SPL 85dB)</option>
-        <option value="90" selected>Friday Sermon (Target SPL 90dB)</option>
-        <option value="95">Emergency / Adhan (Target SPL 95dB)</option>
+        <option value="85">Regular Prayer (SPL target 85 dB)</option>
+        <option value="90" selected>Friday Sermon (SPL target 90 dB)</option>
+        <option value="95">Emergency / Adhan (SPL target 95 dB)</option>
       </select>
     </div>
 
@@ -96,18 +99,18 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     </div>
 
     <div class="box">
-      <h3>🔊 Speaker Distribution</h3>
+      <h3>🔊 Sound Distribution</h3>
       <select id="m_model" onchange="updateAmpLogic()"></select>
       <label class="checkbox-row">
         <input type="checkbox" id="addHornsChk" checked>
-        <span>🕌 Auto-add UT-08 horns on the minaret</span>
+        <span>🕌 Auto-add UT-08 horns on minaret</span>
       </label>
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ Smart Auto Distribution</button>
-      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Placement Mode (Free)</button>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode (Free Placement)</button>
       <div class="hint">
-        💡 <b>Manual:</b> click anywhere inside the mosque to place a speaker freely<br>
-        💡 Click on the minaret to add an outdoor horn<br>
-        💡 <b>Rotate:</b> select a speaker, then drag the white handle
+        💡 <b>Manual:</b> Click anywhere inside to place a speaker freely<br>
+        💡 Click on the minaret to add a horn<br>
+        💡 <b>Rotate:</b> Select a speaker then drag the white handle
       </div>
     </div>
 
@@ -117,17 +120,18 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
       </label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
+             onmousedown="pushUndo()"
              oninput="setSelectedAngle(this.value)">
-      <div class="hint">↔️ Drag the slider or the white handle on the drawing to rotate</div>
-      <button class="btn-outline" onclick="deselectSpeaker()">✖ Deselect</button>
+      <div class="hint">↔️ Drag the slider or the white handle to rotate</div>
+      <button class="btn-outline" onclick="deselectSpeaker()">✖ Clear Selection</button>
     </div>
 
     <div class="box">
       <h3>📊 Acoustic Analysis</h3>
       <div class="stat-grid">
         <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">Avg SPL (dB)</div></div>
-        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">RT60 (s)</div></div>
-        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">Total Power (W)</div></div>
+        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">RT60 (sec)</div></div>
+        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">Total Watts</div></div>
         <div class="stat" id="st_cnt"><div class="v" id="cnt_v">0</div><div class="l">Speaker Count</div></div>
       </div>
     </div>
@@ -137,7 +141,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <label>Feedback Suppressor</label>
       <select id="fs_model">
         <option value="FB-PRO 4.0">MOTIVITY FB-PRO 4.0 (Digital)</option>
-        <option value="None">No Feedback Suppressor</option>
+        <option value="None">None</option>
       </select>
       <label>Amplifier (MA Series)</label>
       <select id="amp_model" onchange="updateAmpLogic()"></select>
@@ -152,6 +156,8 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 
   <div class="canvas-container">
     <div class="toolbar no-print">
+      <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ Undo</button>
+      <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ Redo</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 Coverage</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ Grid</button>
       <button onclick="clearSpeakers()">🗑️ Clear Speakers</button>
@@ -171,7 +177,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     <h1>MOTIVITY Technical Design Report</h1>
     <div id="project_header"></div>
     <div class="report-grid">
-      <div class="mini-map-box"><strong>Layout Diagram</strong><img id="reportImg"></div>
+      <div class="mini-map-box"><strong>Engineering Layout</strong><img id="reportImg"></div>
       <div id="eng_summary"></div>
     </div>
     <h3>Bill of Quantities (BOQ)</h3>
@@ -192,13 +198,13 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 <div id="toast"></div>
 
 <script>
-/* ============ Databases ============ */
+/* ============ DATABASES ============ */
 const DB_SPK = {
   "AT-08":  {pwr:250, sens:97, covH:90,  covV:60,  imp:8, type:"Column"},
   "AT-06":  {pwr:150, sens:95, covH:90,  covV:60,  imp:8, type:"Column"},
   "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"Column"},
-  "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall-Mount"},
-  "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall-Mount"},
+  "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall"},
+  "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall"},
   "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
 };
 const DB_AMP = [
@@ -212,11 +218,11 @@ const DB_AMP = [
 const MINARET_M = 2.5;
 const MOUNT_H_WALL = 2.8;
 const WALL_THRESHOLD = 0.04;
-const isWallType = t => t.includes('Wall');
-const isHornType = t => t.includes('Outdoor');
-const isColumnType = t => t.includes('Column');
+const isWallType = t => t === 'Wall';
+const isHornType = t => t === 'Outdoor Horn';
+const isColumnType = t => t === 'Column';
 
-/* ============ State ============ */
+/* ============ STATE ============ */
 const canvas = document.getElementById('mosqueCanvas');
 const ctx = canvas.getContext('2d');
 let speakers = [];
@@ -230,7 +236,55 @@ let uid = 0;
 let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
 let ampResult = {amps:0};
 
-/* ============ Helpers ============ */
+/* ============ UNDO / REDO SYSTEM ============ */
+const MAX_UNDO = 40;
+let undoStack = [];
+let redoStack = [];
+let dragSnapshot = null;
+
+function snapshot(){
+  return JSON.stringify(speakers.map(s => ({...s})));
+}
+function pushUndo(){
+  const snap = snapshot();
+  if (undoStack.length && undoStack[undoStack.length-1] === snap) return;
+  undoStack.push(snap);
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+  redoStack = [];
+  updateUndoButtons();
+}
+function undo(){
+  if (undoStack.length === 0) return;
+  redoStack.push(snapshot());
+  const prev = JSON.parse(undoStack.pop());
+  speakers = prev;
+  selectedId = null;
+  updateRotationPanel();
+  updateAmpLogic();
+  draw();
+  updateUndoButtons();
+  toast('↶ Undo', 'ok');
+}
+function redo(){
+  if (redoStack.length === 0) return;
+  undoStack.push(snapshot());
+  const next = JSON.parse(redoStack.pop());
+  speakers = next;
+  selectedId = null;
+  updateRotationPanel();
+  updateAmpLogic();
+  draw();
+  updateUndoButtons();
+  toast('↷ Redo', 'ok');
+}
+function updateUndoButtons(){
+  const u = document.getElementById('undoBtn');
+  const r = document.getElementById('redoBtn');
+  if (u) u.disabled = (undoStack.length === 0);
+  if (r) r.disabled = (redoStack.length === 0);
+}
+
+/* ============ UTILITIES ============ */
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
@@ -282,7 +336,7 @@ function whichWall(s){
   return 'right';
 }
 
-/* ============ Init ============ */
+/* ============ INIT ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
@@ -294,7 +348,7 @@ function populate(){
   s2.value = "MA-800C";
 }
 
-/* ============ Crescent ============ */
+/* ============ CRESCENT ============ */
 function drawCrescent(cx, cy, r){
   ctx.fillStyle = "#e60012";
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
@@ -302,21 +356,17 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ Draw Wall-Mounted Speaker (clear box) ============ */
+/* ============ DRAW WALL SPEAKER ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const wall = whichWall(s);
   const isLeft = wall === 'left';
   const isCol = isColumnType(db.type);
-
-  // Larger, clearer box
   const boxW = isCol ? 16 : 20;
   const boxH = isCol ? 40 : 30;
-
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
   const py = pos.y;
   const bx = isLeft ? wallX : wallX - boxW;
 
-  // 1) Wall bracket (thick line)
   ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
   ctx.lineWidth = 5;
   ctx.beginPath();
@@ -324,38 +374,25 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.lineTo(wallX, py + boxH/2 + 6);
   ctx.stroke();
 
-  // 2) Speaker box (bold fill)
   const col = isCol ? "#e60012" : "#ff8c1a";
   ctx.fillStyle = isSel ? "#38bdf8" : col;
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
 
-  // 3) Thick black border
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 3;
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
   if (isSel) {
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.strokeRect(bx - 2, py - boxH/2 - 2, boxW + 4, boxH + 4);
   }
-
-  // 4) Horizontal grille lines
-  ctx.strokeStyle = "rgba(0,0,0,.55)";
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.lineWidth = 1.5;
   const lines = isCol ? 7 : 5;
   for (let i = 1; i < lines; i++) {
     const ly = py - boxH/2 + i * (boxH/lines);
-    ctx.beginPath();
-    ctx.moveTo(bx + 3, ly);
-    ctx.lineTo(bx + boxW - 3, ly);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx + 3, ly); ctx.lineTo(bx + boxW - 3, ly); ctx.stroke();
   }
-
-  // 5) White face highlight (facing inward)
   ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
   ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
 
-  // 6) Bold direction arrow
   const facing = getFacing(s);
   const arrowStartX = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
   ctx.save();
@@ -364,17 +401,13 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(32, 0);
-  ctx.lineTo(24, -9);
-  ctx.moveTo(32, 0);
-  ctx.lineTo(24, 9);
+  ctx.moveTo(0, 0); ctx.lineTo(32, 0);
+  ctx.lineTo(24, -9); ctx.moveTo(32, 0); ctx.lineTo(24, 9);
   ctx.stroke();
   ctx.restore();
 
-  // 7) Model name with dark background
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
-  ctx.font = "bold 12px Cairo";
+  ctx.font = "bold 12px Inter";
   ctx.textAlign = isLeft ? "left" : "right";
   ctx.fillStyle = "rgba(0,0,0,.7)";
   const textW = ctx.measureText(s.model).width + 10;
@@ -383,60 +416,48 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "#fff";
   ctx.fillText(s.model, lx, py + 4);
 
-  // 8) Type label under the name
-  ctx.font = "bold 9px Cairo";
+  ctx.font = "bold 9px Inter";
   ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
   ctx.textAlign = isLeft ? "left" : "right";
   ctx.fillText(isCol ? "Column" : "Wall", lx, py + 18);
 }
 
-/* ============ Draw Free Speaker (mid-hall) ============ */
+/* ============ DRAW FREE SPEAKER ============ */
 function drawFreeSpeaker(pos, s, isSel, db){
   const isCol = isColumnType(db.type);
   const facing = getFacing(s);
   const r = isSel ? 15 : 13;
 
-  // 1) Outer halo
   ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 6, 0, Math.PI*2); ctx.fill();
 
-  // 2) Main speaker circle
   ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
 
-  // 3) Black outline
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
 
-  // 4) Extra white ring when selected
   if (isSel) {
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 4, 0, Math.PI*2); ctx.stroke();
   }
-
-  // 5) Inner white dot (speaker center)
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
 
-  // 6) Bold direction arrow
   ctx.save();
   ctx.translate(pos.x, pos.y);
   ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(r + 3, 0);
-  ctx.lineTo(r + 26, 0);
-  ctx.lineTo(r + 20, -8);
-  ctx.moveTo(r + 26, 0);
-  ctx.lineTo(r + 20, 8);
+  ctx.moveTo(r + 3, 0); ctx.lineTo(r + 26, 0);
+  ctx.lineTo(r + 20, -8); ctx.moveTo(r + 26, 0); ctx.lineTo(r + 20, 8);
   ctx.stroke();
   ctx.restore();
 
-  // 7) Model name with background
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
-  ctx.font = "bold 12px Cairo";
+  ctx.font = "bold 12px Inter";
   ctx.textAlign = rightSide ? "right" : "left";
   const textW = ctx.measureText(s.model).width + 10;
   const tx = rightSide ? lx - textW + 5 : lx - 5;
@@ -445,12 +466,12 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "#fff";
   ctx.fillText(s.model, lx, pos.y + 4);
 
-  ctx.font = "bold 9px Cairo";
+  ctx.font = "bold 9px Inter";
   ctx.fillStyle = "#a0aec0";
-  ctx.fillText("Free", lx, pos.y + 18);
+  ctx.fillText("Free Position", lx, pos.y + 18);
 }
 
-/* ============ Draw ============ */
+/* ============ MAIN DRAW ============ */
 function draw(){
   const div = $('cDiv');
   const dpr = window.devicePixelRatio || 1;
@@ -473,7 +494,6 @@ function draw(){
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Grid
   if (showGrid) {
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
     for (let x=0; x<=d.W; x+=2) {
@@ -486,23 +506,19 @@ function draw(){
     }
   }
 
-  // Hall outline
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
-  // Mihrab
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo"; ctx.textAlign = "center";
-  ctx.fillText("Mihrab", x0 + W/2, y0 - scale*1.8);
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter"; ctx.textAlign = "center";
+  ctx.fillText("MIHRAB", x0 + W/2, y0 - scale*1.8);
 
-  // Dimensions
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo";
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter";
   ctx.fillText(`${d.W} m (Width)`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`${d.L} m (Length)`, 0, 0); ctx.restore();
 
-  // Minaret
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -510,12 +526,10 @@ function draw(){
   ctx.fillStyle = "rgba(230,0,18,0.22)"; ctx.fill();
   ctx.strokeStyle = "#ff4d4d"; ctx.lineWidth = 2; ctx.stroke();
   drawCrescent(mcx, mcy - mS*0.62, mS*0.14);
-  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
-  ctx.fillText("Minaret", mcx, mcy + mS*0.62);
+  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Inter"; ctx.textAlign = "center";
+  ctx.fillText("MINARET", mcx, mcy + mS*0.62);
 
-  /* ============ Coverage Cones ============ */
   if (showCoverage) {
-    // Indoor: clipped to hall rectangle
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
@@ -537,7 +551,6 @@ function draw(){
     });
     ctx.restore();
 
-    // Outdoor: no clip
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2) * RAD;
@@ -552,7 +565,6 @@ function draw(){
     });
   }
 
-  /* ============ Draw Speakers ============ */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -573,8 +585,7 @@ function draw(){
       ctx.strokeStyle = isSel ? "#fff" : "#000";
       ctx.lineWidth = 2; ctx.stroke();
       if (isSel) {
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(r*1.8, 0);
         ctx.lineTo(-r*1.3, -r*1.3);
@@ -588,7 +599,6 @@ function draw(){
       drawFreeSpeaker(pos, s, isSel, db);
     }
 
-    // Rotation handle
     if (isSel) {
       const hx = pos.x + Math.cos(facing) * 52;
       const hy = pos.y + Math.sin(facing) * 52;
@@ -599,7 +609,7 @@ function draw(){
       ctx.fillStyle = "#fff";
       ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI*2); ctx.fill();
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = "#0d1117"; ctx.font = "bold 14px Cairo";
+      ctx.fillStyle = "#0d1117"; ctx.font = "bold 14px Inter";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
@@ -607,7 +617,7 @@ function draw(){
   });
 }
 
-/* ============ Mouse Interaction ============ */
+/* ============ INTERACTION ============ */
 function hitTest(p){
   for (let i = speakers.length - 1; i >= 0; i--) {
     const s = speakers[i];
@@ -642,42 +652,47 @@ canvas.addEventListener('mousedown', e => {
   const m = getMouse(e);
   const p = toLocal(m);
 
-  // 1) Rotation handle
+  /* 1) rotation handle */
   if (selectedId) {
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)) {
-      rotating = s; canvas.style.cursor = 'grabbing'; return;
+      dragSnapshot = snapshot();
+      rotating = s;
+      canvas.style.cursor = 'grabbing';
+      return;
     }
   }
 
-  // 2) Existing speaker → select + free drag
+  /* 2) drag existing speaker */
   const hit = hitTest(p);
   if (hit) {
     selectedId = hit.id;
     updateRotationPanel();
     if (hit.zone !== 'minaret') {
+      dragSnapshot = snapshot();
       dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
 
-  // 3) Click on empty space
+  /* 3) click on empty space */
   if (!p.inside && !isMinaretArea(m)) { deselectSpeaker(); return; }
 
   const model = $('m_model').value;
   const spk = DB_SPK[model];
 
-  // ========== MANUAL MODE ==========
+  /* ========== MANUAL MODE ========== */
   if (manualMode) {
+    pushUndo();
     if (isMinaretArea(m)) {
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
-      toast('Horn added to minaret', 'ok');
+      toast('Horn added on minaret', 'ok');
     } else if (isHornType(spk.type)) {
+      undoStack.pop(); updateUndoButtons();
       toast('Outdoor horns can only be placed on the minaret', 'warn');
       return;
     } else {
-      // Free placement — default facing toward center
       const cx = layout.x0 + layout.W * 0.5;
       const cy = layout.y0 + layout.L * 0.5;
       const facing = Math.atan2(cy - m.my, cx - m.mx);
@@ -688,15 +703,17 @@ canvas.addEventListener('mousedown', e => {
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  // ========== AUTO MODE ==========
+  /* ========== AUTO MODE ========== */
   if (isHornType(spk.type)) {
     if (isMinaretArea(m)) {
+      pushUndo();
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
     } else {
       toast('Outdoor horns can only be placed on the minaret', 'warn'); return;
     }
   } else {
+    pushUndo();
     addSpeaker(0, p.ry, model, 0);
     addSpeaker(1, p.ry, model, Math.PI);
   }
@@ -732,7 +749,19 @@ canvas.addEventListener('mousemove', e => {
 });
 
 window.addEventListener('mouseup', () => {
-  dragging = null; rotating = null; canvas.style.cursor = 'crosshair';
+  /* If drag/rotate ended with actual change, save previous state to undo */
+  if ((dragging || rotating) && dragSnapshot) {
+    const after = snapshot();
+    if (dragSnapshot !== after) {
+      undoStack.push(dragSnapshot);
+      if (undoStack.length > MAX_UNDO) undoStack.shift();
+      redoStack = [];
+      updateUndoButtons();
+    }
+  }
+  dragSnapshot = null;
+  dragging = null; rotating = null;
+  canvas.style.cursor = 'crosshair';
 });
 
 canvas.addEventListener('contextmenu', e => {
@@ -740,6 +769,7 @@ canvas.addEventListener('contextmenu', e => {
   const p = toLocal(getMouse(e));
   const hit = hitTest(p);
   if (hit) {
+    pushUndo();
     speakers = speakers.filter(s => s.id !== hit.id);
     if (selectedId === hit.id) { selectedId = null; updateRotationPanel(); }
     updateAmpLogic(); draw();
@@ -747,7 +777,7 @@ canvas.addEventListener('contextmenu', e => {
   }
 });
 
-/* ============ Controls ============ */
+/* ============ CONTROLS ============ */
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
@@ -764,26 +794,27 @@ function toggleGrid(){
   draw();
 }
 function clearSpeakers(){
-  if (speakers.length === 0) return toast('No speakers to clear', 'warn');
-  if (confirm(`Clear all speakers (${speakers.length})?`)) {
+  if (speakers.length === 0) return toast('No speakers', 'warn');
+  if (confirm(`Clear all ${speakers.length} speakers?`)) {
+    pushUndo();
     speakers = []; selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
-    toast('All speakers cleared', 'ok');
+    toast('Speakers cleared', 'ok');
   }
 }
 function resetData(){
   if (!confirm('Reset all data and speakers?')) return;
+  pushUndo();
   speakers = []; selectedId = null; manualMode = false;
   $('manualBtn').classList.remove('active-mode');
   $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
   $('p_name').value = 'New Mosque'; $('p_client').value = ''; $('p_engineer').value = 'Eng. Ahmed';
-  localStorage.removeItem('motivity_project');
   updateRotationPanel(); updateAmpLogic(); draw();
   toast('Data reset', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
 
-/* ============ Rotation Panel ============ */
+/* ============ ROTATION PANEL ============ */
 function updateRotationPanel(){
   const s = speakers.find(x => x.id === selectedId);
   const box = $('rotationBox');
@@ -792,7 +823,7 @@ function updateRotationPanel(){
   let posLabel = '';
   if (s.zone === 'minaret') posLabel = ' (Minaret Horn)';
   else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'Left Wall':'Right Wall'})`;
-  else posLabel = ' (Free position)';
+  else posLabel = ' (Free Position)';
   $('rotModel').textContent = `— ${s.model}${posLabel}`;
   let deg = getFacing(s) * DEG;
   while (deg > 180) deg -= 360;
@@ -811,7 +842,7 @@ function setSelectedAngle(val){
   draw();
 }
 
-/* ============ Smart Distribution ============ */
+/* ============ SMART DISTRIBUTION ============ */
 function aiSmartDistribute(){
   const d = getDims();
   const model = $('m_model').value;
@@ -819,6 +850,7 @@ function aiSmartDistribute(){
   const addHorns = $('addHornsChk').checked;
   const isHorn = isHornType(spk.type);
 
+  pushUndo();
   speakers = [];
   let hornCount = 0;
 
@@ -846,14 +878,14 @@ function aiSmartDistribute(){
   }
 
   const indoorCount = rows * 2;
-  const typeName = isColumnType(spk.type) ? 'column' : 'wall-mount';
+  const typeName = isColumnType(spk.type) ? 'Column' : 'Wall';
   const spacingM = gap.toFixed(1);
   toast(`✅ ${indoorCount} ${typeName} speakers on both walls (${rows} rows, ${spacingM}m spacing)${hornCount ? ` + ${hornCount} horns on minaret` : ''}`, 'ok');
 
   updateAmpLogic(); draw();
 }
 
-/* ============ Acoustic Calculations ============ */
+/* ============ CALCULATIONS ============ */
 function computeAcoustics(){
   const d = getDims();
   const V = d.L * d.W * d.H;
@@ -906,8 +938,8 @@ function updateAmpLogic(){
     const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
     ampCount = Math.max(ampsByCh, ampsByPwr, 1);
     reason = ampsByCh >= ampsByPwr
-      ? `Limit: Impedance (${perCh} spk/ch max)`
-      : `Limit: Power (30% headroom)`;
+      ? `Constraint: Impedance (max ${perCh} speakers/channel)`
+      : `Constraint: Power (30% headroom)`;
   }
   ampResult = {amps: ampCount, chNeeded, perCh, totalPwr, amp};
 
@@ -915,7 +947,7 @@ function updateAmpLogic(){
   const target = parseFloat($('p_purpose').value);
   const splEl = $('spl_v'), splStat = $('st_spl');
   if (ac.indoorCount === 0) {
-    splEl.textContent = speakers.length ? 'Outdoor' : '—';
+    splEl.textContent = speakers.length ? 'Ext' : '—';
     splStat.className = 'stat';
   } else {
     splEl.textContent = ac.avgSPL.toFixed(1);
@@ -935,7 +967,7 @@ function updateAmpLogic(){
   draw();
 }
 
-/* ============ Report ============ */
+/* ============ REPORT ============ */
 function generateReport(){
   if (speakers.length === 0) return toast('Add speakers first', 'err');
   const d = getDims();
@@ -968,12 +1000,12 @@ function generateReport(){
     <table class="table-boq">
       <tr><td>Total Area</td><td>${(d.L*d.W).toFixed(1)} m²</td></tr>
       <tr><td>Total Volume</td><td>${ac.V.toFixed(1)} m³</td></tr>
-      <tr><td>Total Acoustic Load</td><td>${ampResult.totalPwr} W</td></tr>
-      <tr><td>Avg SPL (Indoor)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB (Target: ${target} dB)</td></tr>
-      <tr><td>RT60 Reverberation</td><td>${ac.rt60.toFixed(2)} s</td></tr>
-      <tr><td>Amplifier Count</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
-      <tr><td>Processor</td><td>${fs}</td></tr>
-      <tr><td>Outdoor Horns (Minaret)</td><td>${ac.outdoorCount}</td></tr>
+      <tr><td>Total Audio Load</td><td>${ampResult.totalPwr} W</td></tr>
+      <tr><td>Avg SPL (indoor)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB (Target: ${target} dB)</td></tr>
+      <tr><td>RT60</td><td>${ac.rt60.toFixed(2)} s</td></tr>
+      <tr><td>Amplifiers</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
+      <tr><td>Processing</td><td>${fs}</td></tr>
+      <tr><td>Outdoor Horns (minaret)</td><td>${ac.outdoorCount}</td></tr>
       <tr><td>Estimated Cable</td><td>~${totalCable} m</td></tr>
     </table>`;
 
@@ -987,34 +1019,33 @@ function generateReport(){
       <td>~${Math.ceil(totalCable * counts[m] / speakers.length)}m (2×1.5mm²)</td>
     </tr>`;
   }
-  boq += `<tr><td>Power Amplifier ${ampResult.amp.id}</td><td>MA Professional – ${ampResult.amp.pwr}W</td><td>${ampResult.amps}</td><td>—</td></tr>`;
+  boq += `<tr><td>Amplifier ${ampResult.amp.id}</td><td>MA Professional – ${ampResult.amp.pwr}W</td><td>${ampResult.amps}</td><td>—</td></tr>`;
   if (fs !== 'None') boq += `<tr><td>Digital Feedback Suppressor</td><td>${fs}</td><td>1</td><td>—</td></tr>`;
   boq += `<tr><td>Speaker Cable</td><td>Stranded Copper 2×1.5mm²</td><td>~${totalCable}m</td><td>—</td></tr>`;
   boq += `<tr><td>Connectors</td><td>Speakon / Terminal</td><td>${speakers.length*2}</td><td>—</td></tr>`;
   $('boq-body').innerHTML = boq;
 
-  const rtEval = ac.rt60 <= 1.2 ? 'Excellent for speech' : ac.rt60 <= 1.8 ? 'Acceptable' : 'Add absorptive materials recommended';
+  const rtEval = ac.rt60 <= 1.2 ? 'Excellent for speech' : ac.rt60 <= 1.8 ? 'Acceptable' : 'Recommend adding absorptive material';
   const splEval = !ac.indoorCount ? '— no indoor speakers' :
-    (ac.avgSPL >= target ? '✅ Meets target' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target`);
+    (ac.avgSPL >= target ? '✅ meets target' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target`);
 
   let notes = `
-    • <b>RT60 reverberation = ${ac.rt60.toFixed(2)} s</b> calculated using Sabine's formula based on
-    volume ${ac.V.toFixed(0)} m³ and absorption coefficient ${d.alpha} → Assessment: <b>${rtEval}</b>.<br>
+    • <b>RT60 = ${ac.rt60.toFixed(2)} s</b> calculated via Sabine using volume ${ac.V.toFixed(0)} m³ and absorption coefficient ${d.alpha} → <b>${rtEval}</b>.<br>
     • Average SPL at listening points = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}.<br>
-    • Selected <b>${ampResult.amps} × ${ampResult.amp.id}</b> with 30% power headroom and load ≥${ampResult.amp.minImp}Ω per channel.<br>
-    • Speaker layout prevents feedback thanks to ${fs === 'None' ? 'the built-in processor' : fs + ' digital processor'}.<br>`;
+    • Selected <b>${ampResult.amps} × ${ampResult.amp.id}</b> with 30% power margin and ≥${ampResult.amp.minImp}Ω load per channel.<br>
+    • Distribution prevents feedback thanks to ${fs === 'None' ? 'built-in processor' : fs + ' digital processor'}.<br>`;
 
   if (ac.outdoorCount) {
-    notes += `• Installed <b>${ac.outdoorCount} UT-08 outdoor horns</b> on the minaret facing outward (${ac.outdoorCount} directions) for Adhan and perimeter coverage.<br>`;
+    notes += `• <b>${ac.outdoorCount} UT-08 outdoor horns</b> installed on the minaret facing outward for Adhan and perimeter coverage.<br>`;
   }
-  notes += `• <b>Coverage direction</b> of each speaker is individually adjustable (slider or handle drag) for optimum coverage and interference avoidance.`;
+  notes += `• <b>Coverage direction</b> of each speaker is individually adjustable (slider or handle drag) for optimal coverage and minimized overlap.`;
 
   $('eng_notes').innerHTML = notes;
   $('reportImg').src = canvas.toDataURL();
   $('reportView').style.display = 'block';
 }
 
-/* ============ Save / Load ============ */
+/* ============ SAVE / LOAD ============ */
 function saveProject(){
   const data = {
     speakers, manualMode,
@@ -1024,14 +1055,15 @@ function saveProject(){
     info: {name: $('p_name').value, client: $('p_client').value, engineer: $('p_engineer').value, purpose: $('p_purpose').value},
     uid
   };
-  localStorage.setItem('motivity_project', JSON.stringify(data));
+  localStorage.setItem('motivity_project_en', JSON.stringify(data));
   toast('💾 Project saved', 'ok');
 }
 function loadProject(){
-  const raw = localStorage.getItem('motivity_project');
+  const raw = localStorage.getItem('motivity_project_en') || localStorage.getItem('motivity_project');
   if (!raw) return toast('No saved project', 'warn');
   try {
     const d = JSON.parse(raw);
+    pushUndo();
     speakers = (d.speakers || []).map(s => {
       const ns = {...s, zone: s.zone || 'mosque'};
       if (ns.zone !== 'minaret' && ns.facing === undefined) {
@@ -1055,11 +1087,29 @@ function loadProject(){
   } catch(e){ toast('Corrupted save file', 'err'); }
 }
 
-/* ============ Keyboard Shortcuts ============ */
+/* ============ KEYBOARD SHORTCUTS ============ */
 document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
+
+  /* Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y */
+  if (e.ctrlKey || e.metaKey) {
+    const k = e.key.toLowerCase();
+    if (k === 'z' && !inField) {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+      return;
+    }
+    if (k === 'y' && !inField) {
+      e.preventDefault(); redo(); return;
+    }
+  }
+
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
   if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (inField) return;
+    pushUndo();
     speakers = speakers.filter(x => x.id !== selectedId);
     selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
@@ -1073,6 +1123,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === ',') delta = -1;
   else if (e.key === '.') delta = 1;
   if (delta) {
+    pushUndo();
     const rad = delta * RAD;
     if (s.zone === 'minaret') s.ang += rad;
     else s.facing = (s.facing ?? Math.PI/2) + rad;
@@ -1081,12 +1132,12 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ============ Init ============ */
+/* ============ BOOT ============ */
 window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
     $(id).addEventListener('input', () => updateAmpLogic()));
-  updateRotationPanel(); updateAmpLogic(); draw();
+  updateRotationPanel(); updateAmpLogic(); updateUndoButtons(); draw();
   toast('Welcome to Motivity PRO', 'ok');
 });
 window.addEventListener('resize', () => { draw(); });
