@@ -2,749 +2,1892 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Motivity AI - Elite Engineering</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivity AI — Elite Engineering v4.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root { --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --gold:#f59e0b; }
-* { box-sizing:border-box; font-family:'Cairo',sans-serif; margin:0; padding:0; }
-body { background:var(--bg); color:#fff; height:100vh; display:flex; overflow:hidden; }
-
-/* ═══ SIDEBAR ═══ */
-.sidebar {
-  width:390px; background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
-  padding:20px; border-left:3px solid var(--red); overflow-y:auto; z-index:100;
-  box-shadow: -8px 0 32px rgba(0,0,0,.5);
+:root {
+  --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --gold:#f59e0b;
+  --green:#22c55e; --surface:#161b22; --border:#30363d; --purple:#a855f7;
 }
-.sidebar::-webkit-scrollbar { width:8px; }
-.sidebar::-webkit-scrollbar-thumb { background:#30363d; border-radius:4px; }
+* { box-sizing:border-box; font-family:'Cairo',sans-serif; margin:0; padding:0; }
+html, body { height:100%; overflow:hidden; }
+body { background:var(--bg); color:#fff; display:flex; }
 
-.brand { text-align:center; margin-bottom:20px; }
+.sidebar {
+  width:420px; background:linear-gradient(180deg,#161b22,#0f141a);
+  padding:20px; border-left:3px solid var(--red); overflow-y:auto;
+  z-index:100; box-shadow:-8px 0 32px rgba(0,0,0,.5);
+  transition:width .3s ease; position:relative; flex-shrink:0;
+}
+.sidebar.collapsed { width:52px; padding:20px 10px; overflow:hidden; }
+.sidebar.collapsed > *:not(.sidebar-toggle) { display:none; }
+.sidebar::-webkit-scrollbar { width:8px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.sidebar-toggle {
+  position:absolute; top:16px; left:16px; background:var(--surface);
+  border:1px solid var(--border); color:var(--blue); width:32px; height:32px;
+  border-radius:8px; cursor:pointer; font-size:16px; font-weight:900;
+  display:flex; align-items:center; justify-content:center; z-index:10;
+}
+.sidebar-toggle:hover { background:var(--blue); color:#000; }
+.sidebar.collapsed .sidebar-toggle { left:10px; }
+
+.brand { text-align:center; margin-bottom:22px; margin-top:24px; }
 .brand h1 { font-size:22px; font-weight:900; letter-spacing:2px; }
 .brand h1 span { color:var(--red); }
 .brand p { font-size:10px; color:#8b949e; letter-spacing:3px; margin-top:2px; }
+.brand .ver { font-size:9px; color:var(--blue); margin-top:4px; letter-spacing:1px; }
 
-.box {
-  background:rgba(33,38,45,.7); backdrop-filter:blur(8px);
+.box { background:rgba(33,38,45,.7); backdrop-filter:blur(8px);
   padding:16px; border-radius:12px; margin-bottom:14px;
-  border:1px solid rgba(56,189,248,.15); transition:.3s;
-}
+  border:1px solid rgba(56,189,248,.15); transition:.3s; }
 .box:hover { border-color:rgba(56,189,248,.35); }
-h3 { font-size:13px; color:var(--blue); margin-bottom:12px; font-weight:700; display:flex; align-items:center; gap:6px; }
+h3 { font-size:13px; color:var(--blue); margin-bottom:12px; font-weight:700;
+  display:flex; align-items:center; gap:8px; }
 h3::before { content:''; width:3px; height:14px; background:var(--red); border-radius:2px; }
+h3 .badge { margin-right:auto; background:var(--red); color:#fff; font-size:9px;
+  padding:2px 7px; border-radius:10px; font-weight:700; }
+h3 .badge.blue { background:var(--blue); color:#000; }
+h3 .badge.green { background:var(--green); color:#000; }
+h3 .badge.gold { background:var(--gold); color:#000; }
+h3 .badge.purple { background:var(--purple); color:#fff; }
+
 label { font-size:11px; color:#8b949e; display:block; margin-top:10px; font-weight:600; }
-input, select {
-  width:100%; padding:10px 12px; background:#0a0e13; color:#fff;
-  border:1px solid #30363d; border-radius:8px; margin-top:5px;
-  font-family:inherit; font-size:13px; transition:.2s;
-}
-input:focus, select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(56,189,248,.15); }
+input, select { width:100%; padding:10px 12px; background:#0a0e13; color:#fff;
+  border:1px solid var(--border); border-radius:8px; margin-top:5px;
+  font-family:inherit; font-size:13px; transition:.2s; }
+input:focus, select:focus { outline:none; border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(56,189,248,.15); }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
-/* ═══ KPI CARDS ═══ */
-.kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
-.kpi {
-  background:linear-gradient(135deg,#0a0e13,#161b22);
-  border:1px solid #30363d; border-radius:8px; padding:10px; text-align:center;
-}
-.kpi .v { font-size:18px; font-weight:900; color:var(--blue); }
-.kpi .l { font-size:9.5px; color:#8b949e; margin-top:2px; }
-.kpi.ok .v { color:#22c55e; }
+.kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+.kpi { background:linear-gradient(135deg,#0a0e13,#161b22);
+  border:1px solid var(--border); border-radius:8px;
+  padding:10px 6px; text-align:center; transition:.3s; }
+.kpi .v { font-size:17px; font-weight:900; color:var(--blue); line-height:1.1; }
+.kpi .l { font-size:9.5px; color:#8b949e; margin-top:3px; line-height:1.3; }
+.kpi.ok .v { color:var(--green); }
 .kpi.warn .v { color:var(--gold); }
+.kpi.bad .v { color:var(--red); }
 
-/* ═══ BUTTONS ═══ */
-.btn {
-  border:none; padding:14px; width:100%; border-radius:10px;
-  font-weight:900; cursor:pointer; transition:.3s; font-family:inherit;
+.btn { border:none; padding:13px; width:100%; border-radius:10px;
+  font-weight:900; cursor:pointer; transition:.25s; font-family:inherit;
   font-size:13px; letter-spacing:.3px; margin-top:8px;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-}
-.btn-smart {
-  background:linear-gradient(135deg,#e60012,#ff2e40);
-  color:#fff; box-shadow:0 4px 15px rgba(230,0,18,.35);
-}
+  display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-smart { background:linear-gradient(135deg,#e60012,#ff2e40); color:#fff;
+  box-shadow:0 4px 15px rgba(230,0,18,.35); }
 .btn-smart:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(230,0,18,.5); }
-.btn-report {
-  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
-  color:#000; box-shadow:0 4px 15px rgba(56,189,248,.3);
-}
+.btn-report { background:linear-gradient(135deg,#38bdf8,#0ea5e9); color:#000;
+  box-shadow:0 4px 15px rgba(56,189,248,.3); }
 .btn-report:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(56,189,248,.5); }
+.btn-ghost { background:transparent; color:#8b949e; border:1px solid var(--border);
+  font-size:11px; padding:9px; margin-top:0; }
+.btn-ghost:hover { background:var(--border); color:#fff; }
+.btn-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
 
-/* ═══ VIEWPORT ═══ */
-.viewport {
-  flex:1; position:relative; background:radial-gradient(circle at 50% 50%,#111820 0%,#050a0f 100%);
-  display:flex; align-items:center; justify-content:center; overflow:hidden;
-}
-canvas { display:block; border-radius:8px; }
+.tabs { display:flex; gap:4px; margin-bottom:12px; background:#0a0e13;
+  padding:4px; border-radius:10px; border:1px solid var(--border); }
+.tab { flex:1; padding:8px 6px; text-align:center; cursor:pointer;
+  border-radius:6px; font-size:11px; font-weight:700; color:#8b949e;
+  transition:.2s; user-select:none; }
+.tab:hover { color:#fff; }
+.tab.active { background:var(--red); color:#fff; box-shadow:0 2px 8px rgba(230,0,18,.4); }
 
-/* ═══ VIEW CONTROLS ═══ */
-.v-ctrl {
-  position:absolute; background:rgba(22,27,34,.85); backdrop-filter:blur(12px);
-  border:1px solid #30363d; border-radius:10px; padding:6px;
-  display:flex; gap:4px; z-index:10;
-}
+.viewport { flex:1; position:relative;
+  background:radial-gradient(circle at 50% 50%,#0f1a26,#040a12);
+  overflow:hidden; min-width:0; }
+canvas { display:block; width:100%; height:100%; }
+
+.v-ctrl { position:absolute; background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
+  border:1px solid var(--border); border-radius:10px; padding:6px;
+  display:flex; gap:4px; z-index:10; flex-wrap:wrap; max-width:calc(100% - 32px); }
 .v-ctrl.top-left { top:16px; left:16px; }
 .v-ctrl.top-right { top:16px; right:16px; }
-.v-ctrl button {
-  background:transparent; color:#ccc; border:none; width:34px; height:34px;
+.v-ctrl button { background:transparent; color:#ccc; border:none; width:34px; height:34px;
   border-radius:6px; cursor:pointer; font-size:15px; font-weight:700;
-  transition:.2s; font-family:inherit;
-}
-.v-ctrl button:hover { background:#30363d; color:#fff; }
+  transition:.2s; font-family:inherit; }
+.v-ctrl button:hover { background:var(--border); color:#fff; }
 .v-ctrl button.on { background:var(--blue); color:#000; }
 
-/* ═══ HINT / CURSOR INFO ═══ */
-.hint-bar {
-  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
-  background:rgba(22,27,34,.85); backdrop-filter:blur(12px);
-  border:1px solid #30363d; border-radius:10px; padding:8px 16px;
-  font-size:11.5px; color:#8b949e; z-index:10;
-}
+.hint-bar { position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
+  border:1px solid var(--border); border-radius:10px; padding:8px 16px;
+  font-size:11.5px; color:#8b949e; z-index:10; white-space:nowrap; }
 .hint-bar b { color:var(--blue); }
 
-.cursor-info {
-  position:absolute; bottom:16px; right:16px;
-  background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
-  border:1px solid #30363d; border-radius:10px; padding:8px 16px;
-  font-size:11.5px; color:#fff; z-index:10;
-  display:flex; gap:14px;
-}
-.cursor-info b { color:var(--blue); }
+.cursor-info { position:absolute; bottom:16px; right:16px;
+  background:rgba(22,27,34,.92); backdrop-filter:blur(12px);
+  border:1px solid var(--border); border-radius:10px; padding:10px 16px;
+  font-size:11.5px; color:#fff; z-index:10; display:flex; gap:16px; }
+.cursor-info b { color:var(--blue); font-weight:700; }
+.cursor-info .st { color:var(--gold); }
+.cursor-info .sti-good { color:var(--green); }
+.cursor-info .sti-bad { color:var(--red); }
 
-/* ═══ REPORT ═══ */
-#reportModal {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,.97);
-  z-index:2000; padding:30px; overflow-y:auto;
-}
-.report-paper {
-  background:#fff; color:#333; max-width:1000px; margin:auto;
+.warnings { position:absolute; top:70px; left:16px; max-width:340px;
+  display:flex; flex-direction:column; gap:6px; z-index:9;
+  max-height:calc(100vh - 180px); overflow-y:auto; }
+.warn-item { background:rgba(245,158,11,.15); border:1px solid var(--gold);
+  color:#ffd97a; padding:8px 12px; border-radius:8px; font-size:11.5px;
+  backdrop-filter:blur(8px); font-weight:600; }
+.warn-item.critical { background:rgba(230,0,18,.15); border-color:var(--red); color:#ff8a95; }
+.warn-item.info { background:rgba(56,189,248,.12); border-color:var(--blue); color:#8bd5ff; }
+.warn-item.ok { background:rgba(34,197,94,.12); border-color:var(--green); color:#7fe5a4; }
+
+#reportModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.97);
+  z-index:2000; padding:30px; overflow-y:auto; }
+.report-paper { background:#fff; color:#333; max-width:1100px; margin:auto;
   padding:50px; border-radius:6px; box-shadow:0 0 60px rgba(230,0,18,.15);
-  line-height:1.7; position:relative;
-}
-.report-paper::before {
-  content:''; position:absolute; top:0; right:0; left:0; height:8px;
-  background:linear-gradient(90deg,var(--red),var(--blue));
-  border-radius:6px 6px 0 0;
-}
-.rep-header {
-  display:flex; justify-content:space-between; align-items:flex-start;
+  line-height:1.7; position:relative; }
+.report-paper::before { content:''; position:absolute; top:0; right:0; left:0; height:8px;
+  background:linear-gradient(90deg,var(--red),var(--blue)); border-radius:6px 6px 0 0; }
+.rep-header { display:flex; justify-content:space-between; align-items:flex-start;
   padding-bottom:20px; border-bottom:3px solid var(--red); margin-bottom:24px;
-}
+  flex-wrap:wrap; gap:20px; }
 .rep-header h1 { color:var(--red); font-size:26px; }
 .rep-header p { font-size:12px; color:#888; margin-top:4px; }
 .rep-header .meta { text-align:left; font-size:12px; color:#555; line-height:1.8; }
 .rep-header .meta b { color:var(--red); }
-
-.report-paper h3 {
-  color:#111; border-right:5px solid var(--red); padding-right:12px;
-  margin:26px 0 14px; font-size:16px;
-}
-.report-table { width:100%; border-collapse:collapse; margin-top:14px; }
+.report-paper h3 { color:#111; border-right:5px solid var(--red); padding-right:12px;
+  margin:26px 0 14px; font-size:16px; }
+.report-paper h3::before { display:none; }
+.report-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:12px; }
 .report-table th { background:#1a1a1a; color:#fff; }
-.report-table th, .report-table td {
-  border:1px solid #ddd; padding:12px; text-align:right; font-size:13px;
-}
+.report-table th, .report-table td { border:1px solid #ddd; padding:10px;
+  text-align:right; }
 .report-table tr:nth-child(even) td { background:#fafafa; }
-
-.eng-note {
-  background:#f0f7ff; border-right:5px solid var(--blue);
+.report-table .cat-row td { background:#e8f0f7 !important; font-weight:900;
+  color:#0a5c8a; font-size:13px; border-top:2px solid #0a5c8a; }
+.report-table .total-row td { background:#1a1a1a !important; color:#fff;
+  font-weight:900; border:2px solid var(--red); }
+.eng-note { background:#f0f7ff; border-right:5px solid var(--blue);
   padding:18px; margin-top:16px; font-size:13px; line-height:2;
-  border-radius:0 6px 6px 0;
+  border-radius:0 6px 6px 0; }
+.eng-note strong { color:#0a5c8a; }
+.eng-note.warn { background:#fff8e6; border-color:var(--gold); }
+.eng-note.warn strong { color:#9a6700; }
+.eng-note.critical { background:#ffebed; border-color:var(--red); }
+.eng-note.critical strong { color:#a30010; }
+.eng-note.ok { background:#f0fff4; border-color:var(--green); }
+.eng-note.ok strong { color:#1a7a3a; }
+.acoustic-summary { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-top:14px; }
+.ac-box { background:#f5f7fa; border:1px solid #e0e4e8; border-radius:8px;
+  padding:12px; text-align:center; }
+.ac-box .v { font-size:20px; font-weight:900; color:#0a5c8a; }
+.ac-box .l { font-size:10px; color:#666; margin-top:4px; }
+.ac-box.good .v { color:#1a7a3a; }
+.ac-box.bad .v { color:#c40010; }
+.sys-overview { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px; }
+.sys-card { background:#f9fafb; border:1px solid #e5e7eb; border-right:4px solid var(--blue);
+  border-radius:8px; padding:14px; }
+.sys-card h4 { color:#0a5c8a; font-size:13px; margin-bottom:8px; }
+.sys-card .row-item { display:flex; justify-content:space-between; font-size:12px;
+  padding:4px 0; border-bottom:1px dashed #e5e7eb; }
+.sys-card .row-item:last-child { border:none; }
+.sys-card .row-item b { color:#c40010; }
+@media print {
+  .no-print { display:none !important; }
+  #reportModal { position:static; padding:0; background:#fff; }
+  .report-paper { box-shadow:none; padding:20px; }
+  body { overflow:visible; }
 }
-
-@media print { .no-print { display:none !important; } #reportModal { position:static; padding:0; background:#fff; } .report-paper { box-shadow:none; padding:0; } }
+@media (max-width:900px) {
+  .sidebar { width:340px; }
+  .acoustic-summary { grid-template-columns:1fr 1fr; }
+  .sys-overview { grid-template-columns:1fr; }
+  .cursor-info { display:none; }
+}
 </style>
 </head>
 <body>
 
-<div class="sidebar">
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-toggle" onclick="toggleSidebar()">◀</button>
   <div class="brand">
     <h1>MOTIVITY <span>AI</span></h1>
     <p>ELITE ENGINEERING</p>
+    <div class="ver">v4.1 · CAD RENDERING</div>
   </div>
 
-  <div class="box">
-    <h3>معلومات المشروع</h3>
-    <label>اسم المشروع</label>
-    <input type="text" id="projName" value="قاعة المؤتمرات الرئيسية">
-    <label>اسم المهندس</label>
-    <input type="text" id="engName" value="م. أحمد">
+  <div class="tabs">
+    <div class="tab active" data-tab="acoustic" onclick="switchTab('acoustic')">🔊 صوتيات</div>
+    <div class="tab" data-tab="conference" onclick="switchTab('conference')">🎤 اجتماعات</div>
+    <div class="tab" data-tab="project" onclick="switchTab('project')">📋 مشروع</div>
   </div>
 
-  <div class="box">
-    <h3>النمط الوظيفي</h3>
-    <select id="roomMode" onchange="initDraw()">
-      <option value="meeting">غرفة اجتماعات (طاولة بيضاوية)</option>
-      <option value="conference">قاعة مؤتمرات (توزيع مسرحي)</option>
-    </select>
-  </div>
-
-  <div class="box">
-    <h3>القياسات الهندسية</h3>
-    <label>الطول (م)</label>
-    <input type="number" id="dim_l" value="25" oninput="initDraw()">
-    <label>العرض (م)</label>
-    <input type="number" id="dim_w" value="15" oninput="initDraw()">
-    <label>ارتفاع السقف (م)</label>
-    <input type="number" id="dim_h" value="4" step="0.1" oninput="initDraw()">
-  </div>
-
-  <div class="box">
-    <h3>مجموعة سماعات Motivity</h3>
-    <select id="spkModel" onchange="onModelChange()">
-      <option value="At-08" data-pwr="250" data-angle="90" data-sens="97">At-08 · 250W · 90°</option>
-      <option value="At-06" data-pwr="150" data-angle="90" data-sens="95">At-06 · 150W · 90°</option>
-      <option value="Cs-08" data-pwr="150" data-angle="120" data-sens="92">Cs-08 · 150W · 120°</option>
-      <option value="Cs-06" data-pwr="100" data-angle="120" data-sens="90">Cs-06 · 100W · 120°</option>
-      <option value="At-265" data-pwr="250" data-angle="100" data-sens="98">At-265 · 250W · 100°</option>
-    </select>
-    <label>عدد السماعات (لكل جدار)</label>
-    <input type="number" id="spkPerSide" value="4" min="1" max="20" oninput="initDraw()">
-
-    <div class="kpi-row" style="margin-top:14px">
-      <div class="kpi" id="kpiTotal"><div class="v" id="kpiTotalV">0</div><div class="l">إجمالي السماعات</div></div>
-      <div class="kpi" id="kpiWatt"><div class="v" id="kpiWattV">0</div><div class="l">إجمالي الواط</div></div>
-      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">نسبة التغطية</div></div>
-      <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">أقصى SPL</div></div>
+  <div id="tab-project" style="display:none">
+    <div class="box">
+      <h3>معلومات المشروع</h3>
+      <label>اسم المشروع</label><input type="text" id="projName" value="قاعة المؤتمرات الرئيسية">
+      <label>اسم المهندس</label><input type="text" id="engName" value="م. أحمد">
+      <label>العميل</label><input type="text" id="clientName" value="—">
+      <label>الموقع</label><input type="text" id="siteLoc" value="—">
+      <label>المرجع (Ref)</label><input type="text" id="projRef" value="MOT-ENG-2026-001">
+    </div>
+    <div class="box">
+      <h3>النمط الوظيفي</h3>
+      <select id="roomMode">
+        <option value="meeting">غرفة اجتماعات (بيضاوية)</option>
+        <option value="conference">قاعة مؤتمرات (مسرحية)</option>
+        <option value="boardroom">مجلس إدارة (U-Shape)</option>
+      </select>
+      <label>نوع الغرفة (α)</label>
+      <select id="roomType">
+        <option value="0.10">غير معالجة (0.10)</option>
+        <option value="0.20" selected>مكتب قياسي (0.20)</option>
+        <option value="0.35">قاعة معالجة (0.35)</option>
+        <option value="0.50">استوديو (0.50)</option>
+      </select>
     </div>
   </div>
 
-  <div class="box">
-    <h3>وحدات التحكم الرقمية</h3>
-    <label>وحدة رئيس (Chairman)</label>
-    <input type="number" id="cQty" value="1" oninput="initDraw()">
-    <label>وحدة عضو (Delegate)</label>
-    <input type="number" id="dQty" value="20" oninput="initDraw()">
+  <div id="tab-acoustic">
+    <div class="box">
+      <h3>القياسات الهندسية</h3>
+      <div class="row">
+        <div><label>الطول (م)</label><input type="number" id="dim_l" value="25" step="0.5" min="3" max="80"></div>
+        <div><label>العرض (م)</label><input type="number" id="dim_w" value="15" step="0.5" min="3" max="60"></div>
+      </div>
+      <label>ارتفاع السقف (م)</label><input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12">
+      <label>المسافة للأذن (م)</label><input type="number" id="earH" value="1.2" step="0.1" min="1" max="2">
+    </div>
+
+    <div class="box">
+      <h3>مجموعة سماعات Motivity <span class="badge blue" id="modelBadge">At-08</span></h3>
+      <select id="spkModel">
+        <option value="At-08">At-08 · 250W · 90° · 97dB</option>
+        <option value="At-06">At-06 · 100W · 90° · 96dB</option>
+        <option value="At-265">At-265 · 250W · 100° · 98dB</option>
+        <option value="Cs-08">Cs-08 · 150W · 120° · 92dB</option>
+        <option value="Cs-06">Cs-06 · 100W · 120° · 90dB</option>
+      </select>
+      <label>عدد السماعات لكل جدار</label>
+      <input type="number" id="spkPerSide" value="4" min="1" max="20">
+      <div class="kpi-row">
+        <div class="kpi"><div class="v" id="kpiTotalV">0</div><div class="l">السماعات</div></div>
+        <div class="kpi"><div class="v" id="kpiWattV">0</div><div class="l">الواط</div></div>
+        <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">التغطية</div></div>
+        <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">أدنى SPL</div></div>
+        <div class="kpi" id="kpiSti"><div class="v" id="kpiStiV">—</div><div class="l">STI</div></div>
+        <div class="kpi" id="kpiRt"><div class="v" id="kpiRtV">—</div><div class="l">RT60</div></div>
+      </div>
+    </div>
   </div>
 
-  <button class="btn btn-smart" onclick="autoOptimize()">⚡ التحسين الهندسي الذكي</button>
-  <button class="btn btn-report" onclick="generateReport()">📄 إصدار التقرير الفني</button>
-</div>
+  <div id="tab-conference" style="display:none">
+    <div class="box">
+      <h3>نمط الاجتماع <span class="badge purple">SYS</span></h3>
+      <select id="confMode">
+        <option value="basic">مناقشة أساسي</option>
+        <option value="camera">تتبع كاميرا</option>
+        <option value="voting">تصويت</option>
+        <option value="premium">راقٍ 5"</option>
+        <option value="wireless">لاسلكي 5G</option>
+        <option value="interpretation">ترجمة فورية</option>
+      </select>
+      <button class="btn btn-smart" style="margin-top:10px; padding:10px" onclick="autoRecommendConference()">🤖 اختيار تلقائي</button>
+    </div>
+    <div class="box">
+      <h3>الوحدات <span class="badge gold">UNITS</span></h3>
+      <label>المضيف</label><select id="confHost" onchange="onHostChange()"></select>
+      <label>وحدة الرئيس</label><select id="confChair"></select>
+      <label>وحدة الأعضاء</label><select id="confDelegate"></select>
+      <div class="row">
+        <div><label>عدد الرئيس</label><input type="number" id="cQty" value="1" min="0" max="10"></div>
+        <div><label>عدد الأعضاء</label><input type="number" id="dQty" value="20" min="0" max="500"></div>
+      </div>
+      <label>ميكروفون إضافي</label>
+      <select id="confExtMic"><option value="">— بدون —</option><option value="G-T43">G-T43 (XLR)</option></select>
+    </div>
+    <div class="box">
+      <h3>الميكسر <span class="badge green">MIX</span></h3>
+      <select id="confMixer">
+        <option value="">— بدون —</option>
+        <option value="AMIX10 II" selected>AMIX10 II (8ch DSP)</option>
+      </select>
+      <label style="display:flex; align-items:center; gap:8px; margin-top:10px; cursor:pointer;">
+        <input type="checkbox" id="useCharger" style="width:auto; margin:0;" checked> شاحن GW5020
+      </label>
+      <label style="display:flex; align-items:center; gap:8px; margin-top:6px; cursor:pointer;">
+        <input type="checkbox" id="useFeedback" style="width:auto; margin:0;" checked> مانع صفير DF224
+      </label>
+      <label style="display:flex; align-items:center; gap:8px; margin-top:6px; cursor:pointer;">
+        <input type="checkbox" id="useSeq" style="width:auto; margin:0;" checked> منظم SC-802 II
+      </label>
+    </div>
+    <div class="box" id="interpBox" style="display:none">
+      <h3>الترجمة <span class="badge purple">INTERP</span></h3>
+      <label>عدد اللغات</label><input type="number" id="interpLang" value="2" min="1" max="5">
+      <label>عدد المترجمين</label><input type="number" id="interpUnits" value="2" min="1" max="10">
+      <label>مستقبلات IR</label><input type="number" id="irReceivers" value="20" min="0" max="500">
+      <label>لوحات IR</label><input type="number" id="irEmitters" value="1" min="1" max="10">
+    </div>
+    <div class="box">
+      <h3>ملخص <span class="badge blue">SUM</span></h3>
+      <div class="kpi-row">
+        <div class="kpi"><div class="v" id="kpiConfTotal">0</div><div class="l">الوحدات</div></div>
+        <div class="kpi"><div class="v" id="kpiConfPower">0</div><div class="l">الواط</div></div>
+        <div class="kpi" id="kpiConfCable"><div class="v" id="kpiConfCableV">—</div><div class="l">كابلات</div></div>
+        <div class="kpi" id="kpiConfLoad"><div class="v" id="kpiConfLoadV">—</div><div class="l">تحميل</div></div>
+      </div>
+    </div>
+  </div>
 
-<div class="viewport" id="vArea">
+  <button class="btn btn-report" onclick="generateReport()">📄 التقرير الفني</button>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="saveProject()">💾 حفظ</button>
+    <button class="btn btn-ghost" onclick="loadProject()">📂 تحميل</button>
+  </div>
+</aside>
+
+<main class="viewport" id="vArea">
   <canvas id="mainCanvas"></canvas>
-
   <div class="v-ctrl top-left">
     <button onclick="zoomIn()">+</button>
     <button onclick="zoomOut()">−</button>
     <button onclick="resetView()">⌂</button>
   </div>
-
   <div class="v-ctrl top-right">
-    <button id="tgTile" class="on" onclick="toggle('tile')" title="بلاط السقف">▦</button>
-    <button id="tgCover" class="on" onclick="toggle('cover')" title="التغطية">🌐</button>
-    <button id="tgHeat" onclick="toggle('heat')" title="خريطة الصوت">🌡️</button>
-    <button id="tgRays" class="on" onclick="toggle('rays')" title="أشعة الصوت">🔊</button>
+    <button id="tgTile"  class="on" onclick="toggle('tile')"  title="بلاط">▦</button>
+    <button id="tgCover" class="on" onclick="toggle('cover')" title="تغطية">🌐</button>
+    <button id="tgHeat"  onclick="toggle('heat')"  title="حرارة">🌡️</button>
+    <button id="tgRays"  class="on" onclick="toggle('rays')"  title="أشعة">🔊</button>
+    <button id="tgGrid"  onclick="toggle('grid')"  title="مترية">⊞</button>
+    <button id="tgConf"  class="on" onclick="toggle('conf')"  title="ميكروفونات">🎤</button>
+    <button id="tgFurn"  class="on" onclick="toggle('furn')"  title="أثاث">🪑</button>
+    <button id="tgTech"  class="on" onclick="toggle('tech')"  title="تقني">📐</button>
   </div>
-
-  <div class="hint-bar">🖱️ <b>عجلة</b> للتقريب · <b>اسحب</b> للتحريك · <b>⌂</b> إعادة الضبط</div>
-  <div class="cursor-info"><span>SPL عند المؤشر: <b id="cursorSPL">—</b></span></div>
-</div>
+  <div class="warnings" id="warningsPanel"></div>
+  <div class="hint-bar">🖱️ <b>عجلة</b> تقريب · <b>اسحب</b> تحريك · <b>Ctrl+Z</b> تراجع</div>
+  <div class="cursor-info">
+    <span>SPL: <b id="cursorSPL">—</b></span>
+    <span>STI: <b id="cursorSTI" class="st">—</b></span>
+    <span>d: <b id="cursorDist">—</b></span>
+  </div>
+</main>
 
 <div id="reportModal">
   <div class="report-paper">
     <div class="no-print" style="text-align:left; margin-bottom:20px">
-      <button onclick="window.print()" class="btn btn-smart" style="width:auto; padding:10px 24px; display:inline-flex">🖨️ حفظ PDF</button>
+      <button onclick="window.print()" class="btn btn-smart" style="width:auto; padding:10px 24px; display:inline-flex">🖨️ PDF</button>
       <button onclick="document.getElementById('reportModal').style.display='none'" style="background:#eee; padding:10px 24px; border:none; cursor:pointer; border-radius:10px; font-weight:700; font-family:inherit; margin-right:8px">إغلاق</button>
     </div>
-
     <div class="rep-header">
       <div>
         <h1>التقرير الفني للمشروع</h1>
-        <p>MOTIVITY ELITE ENGINEERING · REF MOT-ENG-2026</p>
+        <p>MOTIVITY ELITE ENGINEERING · REF <span id="repRef">—</span></p>
       </div>
       <div class="meta">
         <b>المشروع:</b> <span id="repProjName">—</span><br>
         <b>المهندس:</b> <span id="repEngName">—</span><br>
+        <b>العميل:</b> <span id="repClient">—</span><br>
+        <b>الموقع:</b> <span id="repLoc">—</span><br>
         <b>التاريخ:</b> <span id="repDate">—</span>
       </div>
     </div>
-
-    <h3>المخطط الهندسي للتوزيع</h3>
-    <div style="background:#0a0e13; padding:15px; text-align:center; border-radius:8px">
+    <h3>المخطط الهندسي</h3>
+    <div style="background:#0a1520; padding:15px; text-align:center; border-radius:8px">
       <img id="reportImg" style="max-width:100%; border-radius:6px">
     </div>
-
+    <h3>نظرة عامة</h3>
+    <div class="sys-overview" id="sysOverview"></div>
+    <h3>الملخص الصوتي</h3>
+    <div class="acoustic-summary" id="acousticSummary"></div>
     <h3>جدول الكميات (BOQ)</h3>
     <table class="report-table">
-      <thead>
-        <tr><th>البند</th><th>الموديل</th><th>الكمية</th><th>المواصفات</th></tr>
-      </thead>
+      <thead><tr><th>#</th><th>البند</th><th>الموديل</th><th>الكمية</th><th>المواصفات</th></tr></thead>
       <tbody id="boqBody"></tbody>
     </table>
-
     <h3>التعليل الهندسي</h3>
-    <div class="eng-note" id="justificationBody"></div>
+    <div id="justificationBody"></div>
+    <h3>التحذيرات</h3>
+    <div id="warningsReport"></div>
+    <div style="margin-top:40px; padding-top:20px; border-top:2px solid #ddd; text-align:center; font-size:11px; color:#888;">
+      MOTIVITY ELITE ENGINEERING · info@whiteirisksa.com · info@mustech.ae<br>
+      Saudi Arabia · UAE · Egypt · Sudan
+    </div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   STATE
-   ═══════════════════════════════════════════════════════════ */
-const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
-const vArea = document.getElementById('vArea');
-
-let zoom = 1, offsetX = 0, offsetY = 0;
-let isPanning = false, startX = 0, startY = 0;
-let opts = { tile:true, cover:true, heat:false, rays:true };
-let animationFrame = null, animTime = 0;
-
-/* ═══════════════════════════════════════════════════════════
-   INIT
-   ═══════════════════════════════════════════════════════════ */
-function initDraw() {
-  canvas.width  = 1000;
-  canvas.height = 700;
-  updateKPI();
-  startAnimation();
-}
-
-function onModelChange() { initDraw(); }
-
-function updateKPI() {
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const pwr = parseFloat(opt.dataset.pwr);
-  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
-  const total = perSide * 2;
-  const totalW = pwr * total;
-
-  document.getElementById('kpiTotalV').textContent = total;
-  document.getElementById('kpiWattV').textContent = totalW;
-
-  // Coverage & SPL calc
-  const L = parseFloat(document.getElementById('dim_l').value);
-  const W = parseFloat(document.getElementById('dim_w').value);
-  const H = parseFloat(document.getElementById('dim_h').value);
-  const angle = parseFloat(opt.dataset.angle);
-  const sens = parseFloat(opt.dataset.sens);
-
-  const throwH = Math.max(0.5, H - 1.2);
-  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
-  const spacing = L / perSide;
-  const cov = Math.min(100, (coverR / spacing) * 100 * 2);
-
-  document.getElementById('kpiCovV').textContent = cov.toFixed(0) + '%';
-  document.getElementById('kpiCov').className = 'kpi ' + (cov >= 80 ? 'ok' : 'warn');
-
-  const maxDist = Math.sqrt((L/2)**2 + (W/2)**2 + throwH**2);
-  const splFar = sens + 10 * Math.log10(pwr) - 20 * Math.log10(maxDist);
-  document.getElementById('kpiSplV').textContent = splFar.toFixed(1) + ' dB';
-  document.getElementById('kpiSpl').className = 'kpi ' + (splFar >= 85 ? 'ok' : 'warn');
-}
-
-/* ═══════════════════════════════════════════════════════════
-   RENDER LOOP (with animation)
-   ═══════════════════════════════════════════════════════════ */
-function startAnimation() {
-  if (animationFrame) cancelAnimationFrame(animationFrame);
-  const loop = () => {
-    animTime += 0.016;
-    render();
-    animationFrame = requestAnimationFrame(loop);
+/* ============================================================
+   POLYFILL: roundRect for older browsers
+   ============================================================ */
+if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (typeof r === 'number') r = [r, r, r, r];
+    else if (!Array.isArray(r) || r.length !== 4) r = [0, 0, 0, 0];
+    this.moveTo(x + r[0], y);
+    this.lineTo(x + w - r[1], y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r[1]);
+    this.lineTo(x + w, y + h - r[2]);
+    this.quadraticCurveTo(x + w, y + h, x + w - r[2], y + h);
+    this.lineTo(x + r[3], y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r[3]);
+    this.lineTo(x, y + r[0]);
+    this.quadraticCurveTo(x, y, x + r[0], y);
+    this.closePath();
+    return this;
   };
-  loop();
 }
 
-function render() {
-  ctx.fillStyle = "#050a0f";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+/* ============================================================
+   DATABASES
+   ============================================================ */
+var SPEAKERS = {
+  'At-08':  { name:'At-08',  pwr:250, angle:90,  sens:97, freq:'80Hz-20kHz',  q:6.83 },
+  'At-06':  { name:'At-06',  pwr:100, angle:90,  sens:96, freq:'80Hz-20kHz',  q:6.83 },
+  'At-265': { name:'At-265', pwr:250, angle:100, sens:98, freq:'65Hz-20kHz',  q:5.60 },
+  'Cs-08':  { name:'Cs-08',  pwr:150, angle:120, sens:92, freq:'90Hz-18kHz',  q:4.00 },
+  'Cs-06':  { name:'Cs-06',  pwr:100, angle:120, sens:90, freq:'100Hz-18kHz', q:4.00 }
+};
 
+var CONF_HOSTS = {
+  'MT1000S': { name:'MT1000S', fullName:'Motivity MT1000S', type:'basic', desc:'مناقشة أساسي',
+    maxUnits:60, maxSpeaking:6, parallelPorts:4, power:20,
+    hasCamera:false, hasVoting:false, hasDante:false, hasWireless:false,
+    display:'LCD', features:['7 أنماط كلام','ذاكرة انقطاع','مانع صفير','LCD'] },
+  'MT2000S': { name:'MT2000S', fullName:'Motivity MT2000S', type:'camera', desc:'تتبع كاميرا',
+    maxUnits:60, maxSpeaking:6, parallelPorts:4, power:25,
+    hasCamera:true, hasVoting:false, hasDante:false, hasWireless:false,
+    display:'4.3" LCD', features:['4 كاميرات','شاشة 4.3"','USB تسجيل','VISCA/Pelco'] },
+  'G-T40': { name:'G-T40', fullName:'Motivity G-T40', type:'hybrid', desc:'هجين',
+    maxUnits:200, maxSpeaking:6, parallelPorts:4, power:35,
+    hasCamera:true, hasVoting:false, hasDante:true, hasWireless:true,
+    display:'4.3" IPS', features:['سلكي+لاسلكي','Dante','HDMI 4x1','TCP/IP'] },
+  'G-W40': { name:'G-W40', fullName:'Motivity G-W40', type:'wireless', desc:'لاسلكي',
+    maxUnits:200, maxSpeaking:4, parallelPorts:0, power:15,
+    hasCamera:true, hasVoting:false, hasDante:false, hasWireless:true,
+    display:'2.69" IPS', features:['UHF 512-945','50م داخلي','RS-485 Extender','USB'] },
+  'G-S40': { name:'G-S40', fullName:'Motivity G-S40', type:'premium', desc:'راقٍ',
+    maxUnits:256, maxSpeaking:8, parallelPorts:4, power:45,
+    hasCamera:true, hasVoting:true, hasDante:true, hasWireless:false,
+    display:'5" IPS', features:['256 وحدة','Dante','HDMI 4x1','تصويت'] },
+  'G-T50': { name:'G-T50', fullName:'Motivity G-T50 (5G)', type:'premium', desc:'5G متكامل',
+    maxUnits:999, maxSpeaking:6, parallelPorts:8, power:60,
+    hasCamera:true, hasVoting:true, hasDante:true, hasWireless:true,
+    display:'5" IPS', features:['WiFi 5G','AES-128','8 RJ45','Dante'] }
+};
+
+var CONF_CHAIRS = {
+  'MT380VC': { name:'MT380VC', type:'basic', power:0, display:'—' },
+  'MT880VC': { name:'MT880VC', type:'basic', power:2, display:'2.4"' },
+  'G-T31':   { name:'G-T31',   type:'premium', power:2, display:'LED' },
+  'G-T45':   { name:'G-T45',   type:'voting', power:2, display:'4.0" IPS' },
+  'G-T40C':  { name:'G-T40C',  type:'wireless', power:2, display:'2.4" IPS' },
+  'G-T51':   { name:'G-T51',   type:'digital', power:2, display:'2.4" TFT' },
+  'G-T51W':  { name:'G-T51W',  type:'wireless5g', power:2, display:'2.4" TFT' },
+  'G-T53':   { name:'G-T53',   type:'premium', power:3, display:'5" Touch' },
+  'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5" Touch' }
+};
+
+var CONF_DELEGATES = {
+  'MT380VD': { name:'MT380VD', type:'basic', power:0 },
+  'MT880VD': { name:'MT880VD', type:'basic', power:2 },
+  'G-T32':   { name:'G-T32',   type:'premium', power:2 },
+  'G-T46':   { name:'G-T46',   type:'voting', power:2 },
+  'G-T40D':  { name:'G-T40D',  type:'wireless', power:2 },
+  'G-T52':   { name:'G-T52',   type:'digital', power:2 },
+  'G-T52W':  { name:'G-T52W',  type:'wireless5g', power:2 },
+  'G-T54':   { name:'G-T54',   type:'premium', power:3 },
+  'G-T54W':  { name:'G-T54W',  type:'wireless5g', power:3 }
+};
+
+var CONF_ACCESSORIES = {
+  'AMIX10 II': { name:'AMIX10 II', power:30, desc:'ميكسر رقمي 8 قنوات · DSP · AGC · FBX' },
+  'GW5020':    { name:'GW5020',    power:200, desc:'شاحن مركزي 20 منفذ USB' },
+  'DF224':     { name:'DF224',     power:10, desc:'مانع صفير DSP · 24-notch' },
+  'SC-802 II': { name:'SC-802 II', power:8000, desc:'منظم قدرة 8 قنوات · LCD · 40A' },
+  'G-T43':     { name:'G-T43',     power:0.5, desc:'ميكروفون مكثف XLR · 48V' }
+};
+
+var INTERP_DB = {
+  'MT606Z': { name:'MT606Z', power:50, desc:'5+1 لغات · PLL · 2U' },
+  'MTO6Y':  { name:'MTO6Y',  power:5,  desc:'وحدة مترجم · عزل صدى' },
+  'MT606J': { name:'MT606J', power:0.5, desc:'مستقبل IR 6 قنوات · 40h' },
+  'MT25F':  { name:'MT25F',  power:25, desc:'لوح إرسال IR · 15/25W' }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var canvas = document.getElementById('mainCanvas');
+var ctx = canvas.getContext('2d');
+var vArea = document.getElementById('vArea');
+var PX_PER_M = 25;
+
+var zoom = 1, offsetX = 0, offsetY = 0;
+var isPanning = false, startX = 0, startY = 0;
+var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true, furn:true, tech:true };
+var heatmapCache = null, heatmapKey = '';
+var needsRedraw = true;
+var animTime = 0, lastFrameTime = 0;
+
+var history = [];
+var historyIndex = -1;
+var suppressHistory = false;
+
+function debounce(fn, ms) { var t; return function() { var a = arguments; clearTimeout(t); t = setTimeout(function() { fn.apply(null, a); }, ms); }; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function $(id) { return document.getElementById(id); }
+function markDirty() { needsRedraw = true; }
+
+function switchTab(name) {
+  var tabs = document.querySelectorAll('.tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.tab === name);
+  $('tab-acoustic').style.display = name === 'acoustic' ? 'block' : 'none';
+  $('tab-conference').style.display = name === 'conference' ? 'block' : 'none';
+  $('tab-project').style.display = name === 'project' ? 'block' : 'none';
+}
+function toggleSidebar() {
+  var sb = $('sidebar');
+  sb.classList.toggle('collapsed');
+  sb.querySelector('.sidebar-toggle').textContent = sb.classList.contains('collapsed') ? '▶' : '◀';
+  setTimeout(resizeCanvas, 320);
+}
+
+/* ============================================================
+   ACOUSTIC ENGINE
+   ============================================================ */
+function calcRT60(L, W, H, alpha) {
+  var V = L * W * H;
+  var S = 2 * (L*W + L*H + W*H);
+  var A = S * alpha + 4 * 0.001 * V;
+  return 0.161 * V / Math.max(0.01, A);
+}
+function calcCriticalDistance(Q, L, W, H, RT60) {
+  return 0.057 * Math.sqrt(Q * L * W * H / Math.max(0.01, RT60));
+}
+function calcRoomConstant(L, W, H, alpha) {
+  var S = 2 * (L*W + L*H + W*H);
+  return S * alpha / Math.max(0.01, 1 - alpha);
+}
+function splFromSource(sens, pwr, Q, R, dx, dy, dz) {
+  var r = Math.max(0.5, Math.sqrt(dx*dx + dy*dy + dz*dz));
+  var spl1m = sens + 10 * Math.log10(pwr);
+  var direct = Math.pow(10, (spl1m + 10*Math.log10(Q) - 20*Math.log10(r)) / 10);
+  var reverb = Math.pow(10, (spl1m + 10*Math.log10(4/R)) / 10);
+  return direct + reverb;
+}
+function estimateSTI(RT60, spl, noiseFloor) {
+  noiseFloor = noiseFloor || 40;
+  var SNR = spl - noiseFloor;
+  var MTF = 1 / Math.sqrt(1 + Math.pow(2 * Math.PI * 4 * RT60, 2));
+  var effSNR = 10 * Math.log10(MTF / Math.max(0.001, 1 - MTF)) + SNR;
+  return clamp((effSNR + 15) / 30, 0, 1);
+}
+function splAtPoint(x_m, y_m, cfg) {
+  var L = cfg.L, W = cfg.W, H = cfg.H, earH = cfg.earH, perSide = cfg.perSide, spk = cfg.spk, alpha = cfg.alpha;
+  var throwH = Math.max(0.5, H - earH);
+  var RT60 = calcRT60(L, W, H, alpha);
+  var R = calcRoomConstant(L, W, H, alpha);
+  var pTotal = 0;
+  for (var s = 0; s < 2; s++) {
+    var wallY = s === 0 ? -W/2 : W/2;
+    for (var i = 0; i < perSide; i++) {
+      var sx = -L/2 + (L * (i + 0.5) / perSide);
+      pTotal += splFromSource(spk.sens, spk.pwr, spk.q, R, x_m - sx, y_m - wallY, throwH);
+    }
+  }
+  var spl = pTotal > 0 ? 10 * Math.log10(pTotal) : 0;
+  return { spl: spl, sti: estimateSTI(RT60, spl), rt60: RT60 };
+}
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+function readConfig() {
+  var mk = $('spkModel').value;
+  return {
+    projName: $('projName').value, engName: $('engName').value,
+    clientName: $('clientName').value, siteLoc: $('siteLoc').value,
+    projRef: $('projRef').value,
+    L: parseFloat($('dim_l').value) || 25,
+    W: parseFloat($('dim_w').value) || 15,
+    H: parseFloat($('dim_h').value) || 4,
+    earH: parseFloat($('earH').value) || 1.2,
+    mode: $('roomMode').value,
+    alpha: parseFloat($('roomType').value) || 0.2,
+    perSide: clamp(parseInt($('spkPerSide').value) || 4, 1, 20),
+    spk: SPEAKERS[mk], modelKey: mk,
+    confMode: $('confMode').value,
+    confHost: $('confHost').value,
+    confChair: $('confChair').value,
+    confDelegate: $('confDelegate').value,
+    confExtMic: $('confExtMic').value,
+    cQty: parseInt($('cQty').value) || 0,
+    dQty: parseInt($('dQty').value) || 0,
+    confMixer: $('confMixer').value,
+    useCharger: $('useCharger').checked,
+    useFeedback: $('useFeedback').checked,
+    useSeq: $('useSeq').checked,
+    interpLang: parseInt($('interpLang').value) || 2,
+    interpUnits: parseInt($('interpUnits').value) || 2,
+    irReceivers: parseInt($('irReceivers').value) || 0,
+    irEmitters: parseInt($('irEmitters').value) || 1
+  };
+}
+
+/* ============================================================
+   CONFERENCE LOGIC
+   ============================================================ */
+function populateHosts() {
+  var mode = $('confMode').value;
+  var sel = $('confHost');
+  var prev = sel.value;
+  sel.innerHTML = '';
+  var filter = {
+    'basic': ['basic', 'camera'],
+    'camera': ['camera', 'hybrid'],
+    'voting': ['premium'],
+    'premium': ['premium'],
+    'wireless': ['wireless', 'hybrid', 'premium'],
+    'interpretation': ['basic', 'camera', 'hybrid', 'premium']
+  };
+  var allowed = filter[mode] || Object.keys(CONF_HOSTS);
+  for (var k in CONF_HOSTS) {
+    var h = CONF_HOSTS[k];
+    if (allowed.indexOf(h.type) !== -1 || h.type === 'hybrid') {
+      var opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = h.name + ' — ' + h.desc + ' (' + h.maxUnits + ' وحدة)';
+      sel.appendChild(opt);
+    }
+  }
+  if (sel.options.length === 0) {
+    var opt2 = document.createElement('option');
+    opt2.value = 'MT1000S';
+    opt2.textContent = 'MT1000S — مناقشة أساسي';
+    sel.appendChild(opt2);
+  }
+  var found = false;
+  for (var i = 0; i < sel.options.length; i++) if (sel.options[i].value === prev) found = true;
+  if (found) sel.value = prev;
+  onHostChange();
+}
+
+function onHostChange() {
+  var host = CONF_HOSTS[$('confHost').value];
+  if (!host) return;
+
+  var chairSel = $('confChair');
+  var prevChair = chairSel.value;
+  chairSel.innerHTML = '';
+  var chairFilter = {
+    'wireless': ['wireless'],
+    'hybrid': ['digital', 'wireless5g', 'premium', 'voting', 'wireless'],
+    'premium': ['premium', 'digital', 'voting', 'wireless5g'],
+    'camera': ['voting', 'digital', 'premium'],
+    'basic': ['basic', 'premium']
+  };
+  var allowedChairs = chairFilter[host.type] || ['premium'];
+  for (var k in CONF_CHAIRS) {
+    var c = CONF_CHAIRS[k];
+    if (allowedChairs.indexOf(c.type) !== -1 || host.type === 'premium') {
+      var opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = c.name + (c.display !== '—' ? ' · ' + c.display : '');
+      chairSel.appendChild(opt);
+    }
+  }
+  if (chairSel.options.length === 0) {
+    var opt2 = document.createElement('option');
+    opt2.value = 'MT380VC';
+    opt2.textContent = 'MT380VC';
+    chairSel.appendChild(opt2);
+  }
+  var found = false;
+  for (var i = 0; i < chairSel.options.length; i++) if (chairSel.options[i].value === prevChair) found = true;
+  if (found) chairSel.value = prevChair;
+
+  var delSel = $('confDelegate');
+  var prevDel = delSel.value;
+  delSel.innerHTML = '';
+  var familyMap = {
+    'MT380VC': ['MT380VD'], 'MT880VC': ['MT880VD'], 'G-T31': ['G-T32'],
+    'G-T45': ['G-T46'], 'G-T40C': ['G-T40D'], 'G-T51': ['G-T52'],
+    'G-T51W': ['G-T52W'], 'G-T53': ['G-T54'], 'G-T53W': ['G-T54W']
+  };
+  var allowed = familyMap[chairSel.value] || Object.keys(CONF_DELEGATES);
+  for (var k2 in CONF_DELEGATES) {
+    if (allowed.indexOf(k2) !== -1) {
+      var opt3 = document.createElement('option');
+      opt3.value = k2;
+      opt3.textContent = CONF_DELEGATES[k2].name;
+      delSel.appendChild(opt3);
+    }
+  }
+  if (delSel.options.length === 0) {
+    var opt4 = document.createElement('option');
+    opt4.value = 'MT380VD';
+    opt4.textContent = 'MT380VD';
+    delSel.appendChild(opt4);
+  }
+  var found2 = false;
+  for (var j = 0; j < delSel.options.length; j++) if (delSel.options[j].value === prevDel) found2 = true;
+  if (found2) delSel.value = prevDel;
+
+  $('interpBox').style.display = (host.type === 'hybrid' || host.type === 'premium' || $('confMode').value === 'interpretation') ? 'block' : 'none';
+  updateKPI();
+}
+
+function autoRecommendConference() {
+  var cQty = parseInt($('cQty').value) || 0;
+  var dQty = parseInt($('dQty').value) || 0;
+  var total = cQty + dQty;
+  var mode = $('confMode').value;
+  var hostKey = 'MT1000S', chairKey = 'MT380VC', delegateKey = 'MT380VD';
+
+  if (total <= 20) { hostKey='MT1000S'; chairKey='MT380VC'; delegateKey='MT380VD'; }
+  else if (total <= 60) { hostKey = mode==='camera'?'MT2000S':'MT1000S'; chairKey='MT880VC'; delegateKey='MT880VD'; }
+  else if (total <= 120) { hostKey = mode==='wireless'?'G-W40':'G-T40'; chairKey='G-T51'; delegateKey='G-T52'; }
+  else if (total <= 256) { hostKey = mode==='voting'?'G-S40':(mode==='wireless'?'G-W40':'G-S40'); chairKey = mode==='voting'?'G-T45':'G-T53'; delegateKey = mode==='voting'?'G-T46':'G-T54'; }
+  else { hostKey='G-T50'; chairKey='G-T53W'; delegateKey='G-T54W'; }
+
+  $('confHost').value = hostKey;
+  onHostChange();
+  $('confChair').value = chairKey;
+  onHostChange();
+  $('confDelegate').value = delegateKey;
+  updateKPI();
+  markDirty();
+  pushWarning('ok', '✅ ' + CONF_HOSTS[hostKey].name + ' + ' + CONF_CHAIRS[chairKey].name + ' + ' + CONF_DELEGATES[delegateKey].name, 5000);
+}
+
+/* ============================================================
+   WARNINGS
+   ============================================================ */
+var tempWarnings = [];
+function pushWarning(level, text, ttl) {
+  ttl = ttl || 0;
+  var id = Date.now() + Math.random();
+  tempWarnings.push({ id: id, level: level, text: text });
+  renderWarnings();
+  if (ttl > 0) setTimeout(function() { tempWarnings = tempWarnings.filter(function(w) { return w.id !== id; }); renderWarnings(); }, ttl);
+}
+function renderWarnings() {
+  var all = calculateWarnings().concat(tempWarnings);
+  var html = '';
+  for (var i = 0; i < all.length; i++) {
+    var w = all[i];
+    var cls = w.level === 'critical' ? 'critical' : w.level === 'info' ? 'info' : w.level === 'ok' ? 'ok' : '';
+    var icon = w.level === 'critical' ? '⛔' : w.level === 'warn' ? '⚠️' : w.level === 'ok' ? '✅' : 'ℹ️';
+    html += '<div class="warn-item ' + cls + '">' + icon + ' ' + w.text + '</div>';
+  }
+  $('warningsPanel').innerHTML = html;
+}
+function calculateWarnings() {
+  var cfg = readConfig();
+  var warnings = [];
+  var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+  var minSpl = Infinity, minSti = 1;
+  var S = 10;
+  for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
+    var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
+    var r = splAtPoint(x, y, cfg);
+    if (r.spl < minSpl) minSpl = r.spl;
+    if (r.sti < minSti) minSti = r.sti;
+  }
+  if (minSpl < 78) warnings.push({ level:'critical', text:'أدنى SPL ' + minSpl.toFixed(1) + 'dB — أقل من الحد' });
+  else if (minSpl < 85) warnings.push({ level:'warn', text:'أدنى SPL ' + minSpl.toFixed(1) + 'dB' });
+  if (minSti < 0.45) warnings.push({ level:'critical', text:'STI ' + minSti.toFixed(2) + ' — ضعيف' });
+  if (RT60 > 1.8) warnings.push({ level:'warn', text:'RT60 ' + RT60.toFixed(2) + 'ث — مرتفع' });
+  var host = CONF_HOSTS[cfg.confHost];
+  if (host && (cfg.cQty + cfg.dQty) > host.maxUnits) {
+    warnings.push({ level:'critical', text:'الوحدات تتجاوز سعة المضيف (' + host.maxUnits + ')' });
+  }
+  return warnings;
+}
+
+/* ============================================================
+   RESIZE
+   ============================================================ */
+function resizeCanvas() {
+  var rect = vArea.getBoundingClientRect();
+  var w = Math.max(100, Math.floor(rect.width));
+  var h = Math.max(100, Math.floor(rect.height));
+  var dpr = window.devicePixelRatio || 1;
+
+  canvas.width = Math.floor(w * dpr);
+  canvas.height = Math.floor(h * dpr);
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  needsRedraw = true;
+}
+
+/* ============================================================
+   KPI
+   ============================================================ */
+function updateKPI() {
+  var cfg = readConfig();
+  var total = cfg.perSide * 2;
+  $('kpiTotalV').textContent = total;
+  $('kpiWattV').textContent = cfg.spk.pwr * total;
+  $('modelBadge').textContent = cfg.modelKey;
+
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan((cfg.spk.angle/2) * Math.PI/180);
+  var spacing = cfg.L / cfg.perSide;
+  var cov = Math.min(100, (coverR / spacing) * 200);
+  $('kpiCovV').textContent = cov.toFixed(0) + '%';
+  $('kpiCov').className = 'kpi ' + (cov >= 80 ? 'ok' : cov >= 60 ? 'warn' : 'bad');
+
+  var minSpl = Infinity, minSti = 1;
+  var S = 12;
+  for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
+    var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
+    var r = splAtPoint(x, y, cfg);
+    if (r.spl < minSpl) minSpl = r.spl;
+    if (r.sti < minSti) minSti = r.sti;
+  }
+  $('kpiSplV').textContent = minSpl.toFixed(1);
+  $('kpiSpl').className = 'kpi ' + (minSpl >= 85 ? 'ok' : minSpl >= 78 ? 'warn' : 'bad');
+  $('kpiStiV').textContent = minSti.toFixed(2);
+  $('kpiSti').className = 'kpi ' + (minSti >= 0.6 ? 'ok' : minSti >= 0.45 ? 'warn' : 'bad');
+
+  var rt = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+  $('kpiRtV').textContent = rt.toFixed(2);
+  $('kpiRt').className = 'kpi ' + (rt < 1.2 ? 'ok' : rt < 1.8 ? 'warn' : 'bad');
+
+  var host = CONF_HOSTS[cfg.confHost] || {};
+  var chair = CONF_CHAIRS[cfg.confChair] || {};
+  var delegate = CONF_DELEGATES[cfg.confDelegate] || {};
+  var totalUnits = cfg.cQty + cfg.dQty;
+  $('kpiConfTotal').textContent = totalUnits;
+  var power = (host.power || 0) + (chair.power || 0)*cfg.cQty + (delegate.power || 0)*cfg.dQty;
+  if (cfg.confMixer && CONF_ACCESSORIES[cfg.confMixer]) power += CONF_ACCESSORIES[cfg.confMixer].power;
+  if (cfg.useCharger && (cfg.confMode === 'wireless' || host.type === 'wireless')) power += 200;
+  if (cfg.useFeedback) power += 10;
+  $('kpiConfPower').textContent = Math.round(power);
+  $('kpiConfCableV').textContent = Math.round(totalUnits * 2.5 + 20) + 'م';
+  var loadPct = host.maxUnits ? Math.round((totalUnits / host.maxUnits) * 100) : 0;
+  $('kpiConfLoadV').textContent = loadPct + '%';
+  $('kpiConfLoad').className = 'kpi ' + (loadPct <= 70 ? 'ok' : loadPct <= 100 ? 'warn' : 'bad');
+
+  renderWarnings();
+}
+
+/* ============================================================
+   RENDER — MAIN
+   ============================================================ */
+function render() {
+  var cfg = readConfig();
+  var scale = PX_PER_M;
+  var Lpx = cfg.L * scale, Wpx = cfg.W * scale;
+
+  // Clear
   ctx.save();
-  ctx.translate(canvas.width/2 + offsetX, canvas.height/2 + offsetY);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#050e18";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawBlueprintBg();
+  ctx.restore();
+
+  // World transform
+  ctx.save();
+  var cw = canvas.clientWidth || canvas.width;
+  var ch = canvas.clientHeight || canvas.height;
+  var cx = cw / 2 + offsetX;
+  var cy = ch / 2 + offsetY;
+  ctx.translate(cx, cy);
   ctx.scale(zoom, zoom);
 
-  const L_m = parseFloat(document.getElementById('dim_l').value) || 25;
-  const W_m = parseFloat(document.getElementById('dim_w').value) || 15;
-  const H_m = parseFloat(document.getElementById('dim_h').value) || 4;
-  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
-  const mode = document.getElementById('roomMode').value;
+  if (opts.tile) drawCeilingTiles(Lpx, Wpx, scale);
+  if (opts.grid) drawMeterGrid(Lpx, Wpx, scale);
+  if (opts.heat) drawHeatmapCached(Lpx, Wpx, cfg, scale);
 
-  const scale = 25;
-  const L = L_m * scale, W = W_m * scale;
+  drawRoomWalls(Lpx, Wpx);
+  if (opts.furn) drawFurniture(Lpx, Wpx, cfg);
+  if (opts.cover) drawCoverageCones(Lpx, Wpx, cfg, scale);
+  if (opts.rays) drawSoundRays(Lpx, Wpx, cfg, scale);
+  drawSpeakers(Lpx, Wpx, cfg);
+  if (opts.conf) drawConferenceUnits(Lpx, Wpx, cfg);
+  if (opts.tech) drawTechnicalAnnotations(Lpx, Wpx, cfg, scale);
 
-  // ── CEILING TILE PATTERN (60cm) ──
-  if (opts.tile) {
-    drawTilePattern(L, W, scale);
+  ctx.restore();
+
+  if (opts.tech) drawScreenOverlays(cfg);
+}
+
+function drawBlueprintBg() {
+  var w = canvas.width, h = canvas.height;
+  ctx.strokeStyle = "rgba(56,189,248,0.035)";
+  ctx.lineWidth = 1;
+  var step = 40;
+  for (var x = 0; x < w; x += step) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
   }
-
-  // ── HEATMAP ──
-  if (opts.heat) {
-    drawHeatmap(L, W, L_m, W_m, H_m, perSide, scale);
+  for (var y = 0; y < h; y += step) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
   }
+  ctx.strokeStyle = "rgba(56,189,248,0.07)";
+  for (var x2 = 0; x2 < w; x2 += step*5) {
+    ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke();
+  }
+  for (var y2 = 0; y2 < h; y2 += step*5) {
+    ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();
+  }
+}
 
-  // ── ROOM OUTLINE ──
+function drawCeilingTiles(L, W, scale) {
+  var tile = 0.6 * scale;
+  var mainBar = 1.2 * scale;
+  ctx.fillStyle = "rgba(15, 30, 45, 0.5)";
+  ctx.fillRect(-L/2, -W/2, L, W);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.10)";
+  ctx.lineWidth = 1 / zoom;
+  for (var x = -L/2 + tile; x < L/2; x += tile) {
+    ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke();
+  }
+  for (var y = -W/2 + tile; y < W/2; y += tile) {
+    ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke();
+  }
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.22)";
+  ctx.lineWidth = 1.5 / zoom;
+  for (var x2 = -L/2 + mainBar; x2 < L/2; x2 += mainBar) {
+    ctx.beginPath(); ctx.moveTo(x2, -W/2); ctx.lineTo(x2, W/2); ctx.stroke();
+  }
+  for (var y2 = -W/2 + mainBar; y2 < W/2; y2 += mainBar) {
+    ctx.beginPath(); ctx.moveTo(-L/2, y2); ctx.lineTo(L/2, y2); ctx.stroke();
+  }
+}
+
+function drawMeterGrid(L, W, scale) {
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.18)";
+  ctx.lineWidth = 1 / zoom;
+  ctx.setLineDash([4, 4]);
+  for (var x = -L/2 + scale; x < L/2; x += scale) {
+    ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke();
+  }
+  for (var y = -W/2 + scale; y < W/2; y += scale) {
+    ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+}
+
+function drawRoomWalls(L, W) {
+  var wallThk = 0.2 * PX_PER_M;
+
+  // Wall fill
+  ctx.fillStyle = "rgba(127, 184, 216, 0.15)";
+  ctx.fillRect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, wallThk);
+  ctx.fillRect(-L/2 - wallThk, W/2, L + wallThk*2, wallThk);
+  ctx.fillRect(-L/2 - wallThk, -W/2, wallThk, W);
+  ctx.fillRect(L/2, -W/2, wallThk, W);
+
+  // Hatching
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, wallThk);
+  ctx.rect(-L/2 - wallThk, W/2, L + wallThk*2, wallThk);
+  ctx.rect(-L/2 - wallThk, -W/2, wallThk, W);
+  ctx.rect(L/2, -W/2, wallThk, W);
+  ctx.clip();
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.35)";
+  ctx.lineWidth = 0.5 / zoom;
+  var hatchStep = 5;
+  for (var i = -L - wallThk*2; i < L + wallThk*2; i += hatchStep) {
+    ctx.beginPath();
+    ctx.moveTo(-L/2 - wallThk + i, -W/2 - wallThk);
+    ctx.lineTo(-L/2 - wallThk + i - W - wallThk, W/2 + wallThk);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Inner/outer
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1.5 / zoom;
+  ctx.strokeRect(-L/2, -W/2, L, W);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.6)";
+  ctx.lineWidth = 1 / zoom;
+  ctx.strokeRect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, W + wallThk*2);
+
+  // Blue glow
   ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 4;
-  ctx.shadowColor = "rgba(56,189,248,0.5)";
-  ctx.shadowBlur = 20;
+  ctx.lineWidth = 2 / zoom;
+  ctx.shadowColor = "rgba(56,189,248,0.7)";
+  ctx.shadowBlur = 12 / zoom;
   ctx.strokeRect(-L/2, -W/2, L, W);
   ctx.shadowBlur = 0;
 
-  // ── SPEAKERS + COVERAGE ──
-  drawSpeakers(L, W, L_m, W_m, H_m, perSide, scale);
+  // Corner markers
+  var markers = [
+    { x: -L/2, y: -W/2, label: 'A' },
+    { x:  L/2, y: -W/2, label: 'B' },
+    { x:  L/2, y:  W/2, label: 'C' },
+    { x: -L/2, y:  W/2, label: 'D' }
+  ];
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "bold 12px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (var m = 0; m < markers.length; m++) {
+    var mk = markers[m];
+    ctx.beginPath();
+    ctx.arc(mk.x, mk.y, 3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillText(mk.label, mk.x + (mk.x < 0 ? -12 : 12), mk.y + (mk.y < 0 ? -12 : 12));
+  }
 
-  // ── MICROPHONES ──
-  drawMicrophones(L, W, mode);
+  // Door
+  var doorW = 1.0 * PX_PER_M;
+  var doorX = L/2 - 2 * PX_PER_M;
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1.5 / zoom;
+  ctx.beginPath();
+  ctx.moveTo(doorX - doorW/2, W/2);
+  ctx.lineTo(doorX + doorW/2, W/2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(doorX - doorW/2, W/2, doorW, 0, -Math.PI/2, true);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
+  ctx.setLineDash([3, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(doorX - doorW/2, W/2);
+  ctx.lineTo(doorX - doorW/2, W/2 + doorW * 0.9);
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.stroke();
+  ctx.fillStyle = "#7fb8d8";
+  ctx.font = "bold 9px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText("DOOR", doorX, W/2 + wallThk + 14);
 
-  // ── DIMENSION LABELS ──
-  drawDimensions(L, W, L_m, W_m);
-
-  // ── SCALE BAR ──
-  drawScaleBar(L, W);
-
-  ctx.restore();
+  // Windows
+  var winW = 2 * PX_PER_M;
+  var winY = -W/2;
+  for (var i2 = -1; i2 <= 1; i2++) {
+    var wx = i2 * L * 0.3;
+    ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
+    ctx.lineWidth = 3 / zoom;
+    ctx.beginPath();
+    ctx.moveTo(wx - winW/2, winY - wallThk/2);
+    ctx.lineTo(wx + winW/2, winY - wallThk/2);
+    ctx.stroke();
+    ctx.lineWidth = 1 / zoom;
+    ctx.strokeStyle = "rgba(127, 184, 216, 0.4)";
+    ctx.beginPath();
+    ctx.moveTo(wx - winW/2, winY - wallThk*0.8);
+    ctx.lineTo(wx + winW/2, winY - wallThk*0.8);
+    ctx.moveTo(wx - winW/2, winY - wallThk*0.2);
+    ctx.lineTo(wx + winW/2, winY - wallThk*0.2);
+    ctx.stroke();
+  }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   TILE PATTERN
-   ═══════════════════════════════════════════════════════════ */
-function drawTilePattern(L, W, scale) {
-  const tilePx = 0.6 * scale;
-  ctx.strokeStyle = "rgba(56,189,248,0.06)";
-  ctx.lineWidth = 1;
+function drawFurniture(L, W, cfg) {
+  if (cfg.mode === 'meeting') drawOvalTableFurniture(L, W, cfg.cQty + cfg.dQty);
+  else if (cfg.mode === 'boardroom') drawUShapeFurniture(L, W, cfg.cQty + cfg.dQty);
+  else drawTheaterFurniture(L, W, cfg.cQty + cfg.dQty);
+}
 
-  for (let x = -L/2; x <= L/2; x += tilePx) {
-    ctx.beginPath();
-    ctx.moveTo(x, -W/2);
-    ctx.lineTo(x, W/2);
-    ctx.stroke();
-  }
-  for (let y = -W/2; y <= W/2; y += tilePx) {
-    ctx.beginPath();
-    ctx.moveTo(-L/2, y);
-    ctx.lineTo(L/2, y);
-    ctx.stroke();
-  }
+function drawOvalTableFurniture(L, W, total) {
+  var tableRx = L * 0.36, tableRy = W * 0.30;
+  ctx.fillStyle = "rgba(0,0,0,0.4)";
+  ctx.beginPath();
+  ctx.ellipse(3, 3, tableRx, tableRy, 0, 0, Math.PI*2);
+  ctx.fill();
 
-  // 1m brighter grid
-  ctx.strokeStyle = "rgba(56,189,248,0.12)";
-  for (let x = -L/2; x <= L/2; x += scale) {
-    ctx.beginPath();
-    ctx.moveTo(x, -W/2);
-    ctx.lineTo(x, W/2);
-    ctx.stroke();
-  }
-  for (let y = -W/2; y <= W/2; y += scale) {
-    ctx.beginPath();
-    ctx.moveTo(-L/2, y);
-    ctx.lineTo(L/2, y);
-    ctx.stroke();
+  var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(tableRx, tableRy));
+  grad.addColorStop(0, "rgba(60, 75, 95, 0.85)");
+  grad.addColorStop(1, "rgba(35, 48, 65, 0.85)");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, tableRx, tableRy, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
+  ctx.lineWidth = 2 / zoom;
+  ctx.stroke();
+
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.3)";
+  ctx.lineWidth = 1 / zoom;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, tableRx - 8, tableRy - 6, 0, 0, Math.PI*2);
+  ctx.stroke();
+
+  var chairCount = Math.max(total, 8);
+  for (var i = 0; i < chairCount; i++) {
+    var ang = (i * 2 * Math.PI) / chairCount - Math.PI / 2;
+    var cx = Math.cos(ang) * (tableRx + 18);
+    var cy = Math.sin(ang) * (tableRy + 14);
+    drawChair(cx, cy, ang);
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   HEATMAP
-   ═══════════════════════════════════════════════════════════ */
-function drawHeatmap(L, W, L_m, W_m, H_m, perSide, scale) {
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const pwr = parseFloat(opt.dataset.pwr);
-  const sens = parseFloat(opt.dataset.sens);
-  const listH = 1.2;
-  const throwH = Math.max(0.5, H_m - listH);
-  const spl1m = sens + 10 * Math.log10(pwr);
+function drawUShapeFurniture(L, W, total) {
+  var w = L * 0.75, h = W * 0.55, t = 22;
+  ctx.fillStyle = "rgba(50, 65, 85, 0.85)";
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
+  ctx.lineWidth = 2 / zoom;
 
-  const step = 8;
-  for (let py = -W/2; py < W/2; py += step) {
-    for (let px = -L/2; px < L/2; px += step) {
-      let pTotal = 0;
+  ctx.beginPath();
+  ctx.rect(-w/2, -h/2, t, h);
+  ctx.fill(); ctx.stroke();
+  ctx.beginPath();
+  ctx.rect(w/2 - t, -h/2, t, h);
+  ctx.fill(); ctx.stroke();
+  ctx.beginPath();
+  ctx.rect(-w/2, h/2 - t, w, t);
+  ctx.fill(); ctx.stroke();
 
-      for (let s = 0; s < 2; s++) {
-        const isTop = s === 0;
-        const wallY = isTop ? -W/2 : W/2;
-        for (let i = 0; i < perSide; i++) {
-          const sx = -L/2 + (L * (i + 0.5) / perSide);
-          const sy = wallY;
-          const dx = px - sx;
-          const dy = py - sy;
-          const dz = throwH;
-          const d = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-          const spl = spl1m - 20 * Math.log10(d);
-          pTotal += Math.pow(10, spl/10);
-        }
-      }
-      const spl = 10 * Math.log10(pTotal);
-      ctx.fillStyle = splColor(spl);
-      ctx.fillRect(px, py, step, step);
+  var perSide = Math.ceil(total / 3);
+  for (var i = 0; i < perSide; i++) {
+    var y = -h/2 + 15 + (i * (h - 30) / Math.max(1, perSide - 1));
+    drawChair(-w/2 - 14, y, Math.PI);
+    drawChair(w/2 + 14, y, 0);
+  }
+  var bottomCount = Math.ceil(total / 3);
+  for (var j = 0; j < bottomCount; j++) {
+    var x = -w/2 + 15 + (j * (w - 30) / Math.max(1, bottomCount - 1));
+    drawChair(x, h/2 + 14, -Math.PI/2);
+  }
+}
+
+function drawTheaterFurniture(L, W, total) {
+  var pw = 0.8 * PX_PER_M, ph = 0.5 * PX_PER_M;
+  ctx.fillStyle = "rgba(230, 0, 18, 0.25)";
+  ctx.strokeStyle = "rgba(230, 0, 18, 0.8)";
+  ctx.lineWidth = 2 / zoom;
+  ctx.fillRect(-pw/2, -W/2 + 20, pw, ph);
+  ctx.strokeRect(-pw/2, -W/2 + 20, pw, ph);
+  ctx.fillStyle = "#ff8a95";
+  ctx.font = "bold 8px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText("منصة", 0, -W/2 + 20 + ph/2 + 3);
+
+  var cols = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(total))));
+  var rows = Math.ceil(total / cols);
+  var xSpan = L * 0.80;
+  var yStart = -W*0.18, yEnd = W * 0.40;
+  var yStep = (yEnd - yStart) / Math.max(1, rows);
+  var xStep = xSpan / cols;
+
+  for (var r = 0; r < rows; r++) {
+    for (var c = 0; c < cols; c++) {
+      if (r * cols + c >= total) break;
+      var x = -xSpan/2 + xStep * c + xStep/2;
+      var y = yStart + yStep * r;
+      drawChair(x, y, -Math.PI/2);
     }
   }
 }
 
-function splColor(spl) {
-  if (spl < 65) return "rgba(20,30,50,0.55)";
-  if (spl < 75) return "rgba(34,100,180,0.45)";
-  if (spl < 85) return "rgba(34,197,94,0.35)";
-  if (spl < 92) return "rgba(132,204,22,0.35)";
-  if (spl < 98) return "rgba(245,158,11,0.40)";
-  return "rgba(239,68,68,0.45)";
+function drawChair(cx, cy, rotation) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rotation);
+  ctx.fillStyle = "rgba(60, 80, 100, 0.6)";
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
+  ctx.lineWidth = 0.8 / zoom;
+  ctx.beginPath();
+  ctx.rect(-7, -7, 14, 14);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = "rgba(90, 110, 130, 0.7)";
+  ctx.beginPath();
+  ctx.rect(-7, -9, 14, 3);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SPEAKERS (realistic ceiling view)
-   ═══════════════════════════════════════════════════════════ */
-function drawSpeakers(L, W, L_m, W_m, H_m, perSide, scale) {
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const angle = parseFloat(opt.dataset.angle);
+function drawCoverageCones(L, W, cfg, scale) {
+  var half = (cfg.spk.angle / 2) * Math.PI / 180;
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan(half) * scale;
 
-  const throwH = Math.max(0.5, H_m - 1.2);
-  const coverR = throwH * Math.tan((angle/2) * Math.PI/180) * scale;
+  for (var s = 0; s < 2; s++) {
+    var isTop = s === 0;
+    var wallY = isTop ? -W/2 : W/2;
+    var centerAng = isTop ? Math.PI/2 : -Math.PI/2;
 
-  for (let s = 0; s < 2; s++) {
-    const isTop = s === 0;
-    const wallY = isTop ? -W/2 : W/2;
-    const centerAng = isTop ? Math.PI/2 : -Math.PI/2;
+    for (var i = 0; i < cfg.perSide; i++) {
+      var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
+      var py = wallY;
 
-    for (let i = 0; i < perSide; i++) {
-      const px = -L/2 + (L * (i + 0.5) / perSide);
-      const py = wallY;
+      var grad = ctx.createRadialGradient(px, py, 0, px, py, coverR);
+      grad.addColorStop(0, "rgba(56,189,248,0.28)");
+      grad.addColorStop(0.5, "rgba(56,189,248,0.12)");
+      grad.addColorStop(1, "rgba(56,189,248,0.02)");
 
-      // ── COVERAGE (gradient radial) ──
-      if (opts.cover) {
-        const half = (angle / 2) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
 
-        const grad = ctx.createRadialGradient(px, py, 0, px, py, coverR);
-        grad.addColorStop(0, "rgba(56,189,248,0.22)");
-        grad.addColorStop(0.5, "rgba(56,189,248,0.10)");
-        grad.addColorStop(1, "rgba(56,189,248,0)");
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+      ctx.lineWidth = 1 / zoom;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+      ctx.lineWidth = 1 / zoom;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px + Math.cos(centerAng) * coverR, py + Math.sin(centerAng) * coverR);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawSoundRays(L, W, cfg, scale) {
+  var half = (cfg.spk.angle / 2) * Math.PI / 180;
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan(half) * scale;
+
+  for (var s = 0; s < 2; s++) {
+    var isTop = s === 0;
+    var wallY = isTop ? -W/2 : W/2;
+    var centerAng = isTop ? Math.PI/2 : -Math.PI/2;
+
+    for (var i = 0; i < cfg.perSide; i++) {
+      var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
+      var py = wallY;
+
+      for (var w = 0; w < 3; w++) {
+        var t = ((animTime * 0.8 + w * 0.33) % 1);
+        var radius = coverR * t;
+        var alpha = (1 - t) * 0.6;
+        ctx.strokeStyle = "rgba(56, 189, 248, " + alpha + ")";
+        ctx.lineWidth = 1.5 / zoom;
+        ctx.beginPath();
+        ctx.arc(px, py, radius, centerAng - half * t, centerAng + half * t);
+        ctx.stroke();
+      }
+
+      var numRays = 5;
+      for (var r = 0; r < numRays; r++) {
+        var tr = r / (numRays - 1);
+        var rayAng = centerAng - half + tr * (half * 2);
+        var pulse = (Math.sin(animTime * 2.5 + i * 0.5 + s) + 1) / 2;
+        var len = coverR * (0.35 + pulse * 0.65);
+
+        var grad2 = ctx.createLinearGradient(px, py, px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
+        grad2.addColorStop(0, "rgba(56,189,248,0.7)");
+        grad2.addColorStop(1, "rgba(56,189,248,0)");
 
         ctx.beginPath();
         ctx.moveTo(px, py);
-        ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
-        ctx.closePath();
-        ctx.fillStyle = grad;
-        ctx.fill();
+        ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
+        ctx.strokeStyle = grad2;
+        ctx.lineWidth = 1.2 / zoom;
+        ctx.stroke();
       }
-
-      // ── SOUND RAYS (animated) ──
-      if (opts.rays) {
-        const half = (angle / 2) * Math.PI / 180;
-        const numRays = 5;
-        for (let r = 0; r < numRays; r++) {
-          const t = r / (numRays - 1);
-          const rayAng = centerAng - half + t * (half * 2);
-          const pulse = (Math.sin(animTime * 2 + i * 0.5) + 1) / 2;
-          const len = coverR * (0.4 + pulse * 0.6);
-
-          const grad2 = ctx.createLinearGradient(px, py,
-            px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
-          grad2.addColorStop(0, "rgba(56,189,248,0.5)");
-          grad2.addColorStop(1, "rgba(56,189,248,0)");
-
-          ctx.beginPath();
-          ctx.moveTo(px, py);
-          ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
-          ctx.strokeStyle = grad2;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        }
-      }
-
-      // ── SPEAKER ICON (realistic ceiling speaker) ──
-      drawSpeakerIcon(px, py, isTop);
     }
   }
 }
 
-function drawSpeakerIcon(x, y, isTop) {
-  const cy = y + (isTop ? 0 : 0);
+function drawSpeakers(L, W, cfg) {
+  var spkIndex = 1;
+  for (var s = 0; s < 2; s++) {
+    var wallY = s === 0 ? -W/2 : W/2;
+    var isTop = s === 0;
+    for (var i = 0; i < cfg.perSide; i++) {
+      var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
+      drawSpeakerIcon(px, wallY, isTop, spkIndex++);
+    }
+  }
+}
 
-  // shadow
+function drawSpeakerIcon(x, y, isTop, index) {
+  var R = 14;
+  var offsetY = isTop ? R + 6 : -(R + 6);
+
   ctx.beginPath();
-  ctx.arc(x, cy, 13, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.arc(x, y, R + 2, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
   ctx.fill();
 
-  // outer ring
+  var bezelGrad = ctx.createRadialGradient(x - 2, y - 2, 0, x, y, R);
+  bezelGrad.addColorStop(0, "#4a5568");
+  bezelGrad.addColorStop(1, "#1a202c");
   ctx.beginPath();
-  ctx.arc(x, cy, 12, 0, Math.PI*2);
-  ctx.fillStyle = "#1a1f26";
+  ctx.arc(x, y, R, 0, Math.PI*2);
+  ctx.fillStyle = bezelGrad;
   ctx.fill();
-  ctx.strokeStyle = "#444";
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "#2d3748";
+  ctx.lineWidth = 1.5 / zoom;
   ctx.stroke();
 
-  // inner grille (concentric rings)
-  ctx.beginPath();
-  ctx.arc(x, cy, 9, 0, Math.PI*2);
-  ctx.strokeStyle = "#555";
-  ctx.lineWidth = 0.8;
-  ctx.stroke();
+  ctx.strokeStyle = "rgba(200, 210, 220, 0.4)";
+  ctx.lineWidth = 0.6 / zoom;
+  for (var r = 3; r <= R - 2; r += 2.5) {
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.stroke();
+  }
+  for (var a = 0; a < 12; a++) {
+    var ang = (a * Math.PI / 6);
+    ctx.beginPath();
+    ctx.moveTo(x + Math.cos(ang) * 3, y + Math.sin(ang) * 3);
+    ctx.lineTo(x + Math.cos(ang) * (R - 2), y + Math.sin(ang) * (R - 2));
+    ctx.strokeStyle = "rgba(200, 210, 220, 0.25)";
+    ctx.stroke();
+  }
 
   ctx.beginPath();
-  ctx.arc(x, cy, 6, 0, Math.PI*2);
-  ctx.strokeStyle = "#555";
-  ctx.lineWidth = 0.8;
-  ctx.stroke();
-
-  // center red dot
-  ctx.beginPath();
-  ctx.arc(x, cy, 3.5, 0, Math.PI*2);
+  ctx.arc(x, y, 3.5, 0, Math.PI*2);
   ctx.fillStyle = "#e60012";
-  ctx.fill();
-  ctx.shadowColor = "rgba(230,0,18,0.8)";
-  ctx.shadowBlur = 8;
+  ctx.shadowColor = "rgba(230,0,18,0.9)";
+  ctx.shadowBlur = 8 / zoom;
   ctx.fill();
   ctx.shadowBlur = 0;
 
-  // highlight
   ctx.beginPath();
-  ctx.arc(x - 1.5, cy - 1.5, 1, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.arc(x - 2, y - 2, 1.2, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
   ctx.fill();
+
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "bold 8px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  var label = 'SP-' + (index < 10 ? '0' + index : index);
+  ctx.fillText(label, x, y + offsetY);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   MICROPHONES
-   ═══════════════════════════════════════════════════════════ */
-function drawMicrophones(L, W, mode) {
-  const cQty = parseInt(document.getElementById('cQty').value) || 0;
-  const dQty = parseInt(document.getElementById('dQty').value) || 0;
-  const total = cQty + dQty;
+function drawConferenceUnits(L, W, cfg) {
+  var total = cfg.cQty + cfg.dQty;
   if (total === 0) return;
+  var chair = CONF_CHAIRS[cfg.confChair] || {};
+  var isWireless = chair.type === 'wireless' || chair.type === 'wireless5g';
 
-  if (mode === 'meeting') {
-    // Table
-    ctx.strokeStyle = "rgba(56,189,248,0.3)";
-    ctx.lineWidth = 2;
-    ctx.fillStyle = "rgba(30,40,55,0.6)";
-    ctx.beginPath();
-    ctx.ellipse(0, 0, L*0.35, W*0.3, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
-
-    for (let i = 0; i < total; i++) {
-      const ang = (i * 2 * Math.PI) / total - Math.PI / 2;
-      const mx = Math.cos(ang) * L * 0.35;
-      const my = Math.sin(ang) * W * 0.3;
-      drawMic(mx, my, i < cQty, i + 1);
+  var positions = [];
+  if (cfg.mode === 'meeting') {
+    for (var i = 0; i < total; i++) {
+      var ang = (i * 2 * Math.PI) / total - Math.PI / 2;
+      positions.push({
+        x: Math.cos(ang) * L * 0.36,
+        y: Math.sin(ang) * W * 0.30,
+        rot: ang + Math.PI/2,
+        isChair: i < cfg.cQty,
+        num: i + 1
+      });
+    }
+  } else if (cfg.mode === 'boardroom') {
+    var w = L * 0.75, h = W * 0.55, t = 22;
+    var perSide = Math.ceil(total / 3);
+    var idx = 0;
+    for (var i2 = 0; i2 < perSide && idx < total; i2++, idx++) {
+      var y = -h/2 + 15 + (i2 * (h - 30) / Math.max(1, perSide - 1));
+      positions.push({ x: -w/2 + t/2, y: y, rot: -Math.PI/2, isChair: idx < cfg.cQty, num: idx + 1 });
+    }
+    for (var i3 = 0; i3 < perSide && idx < total; i3++, idx++) {
+      var y2 = -h/2 + 15 + (i3 * (h - 30) / Math.max(1, perSide - 1));
+      positions.push({ x: w/2 - t/2, y: y2, rot: Math.PI/2, isChair: idx < cfg.cQty, num: idx + 1 });
+    }
+    var bottomCount = total - idx;
+    for (var i4 = 0; i4 < bottomCount && idx < total; i4++, idx++) {
+      var x = -w/2 + 15 + (i4 * (w - 30) / Math.max(1, bottomCount - 1));
+      positions.push({ x: x, y: h/2 - t/2, rot: 0, isChair: idx < cfg.cQty, num: idx + 1 });
     }
   } else {
-    const cols = Math.min(10, Math.ceil(Math.sqrt(total * 2)));
-    const rows = Math.ceil(total / cols);
-
-    for (let i = 0; i < total; i++) {
-      const r = Math.floor(i / cols);
-      const c = i % cols;
-      const rowCount = Math.min(cols, total - r * cols);
-      const xSpan = L * 0.75;
-      const xStep = xSpan / Math.max(1, rowCount - 1);
-      const x = -xSpan/2 + c * xStep;
-      const y = -W * 0.15 + r * (W * 0.55 / Math.max(1, rows));
-      drawMic(x, y, i < cQty, i + 1);
+    var cols = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(total))));
+    var rows = Math.ceil(total / cols);
+    var xSpan = L * 0.80;
+    var yStart = -W*0.18, yEnd = W * 0.40;
+    var yStep = (yEnd - yStart) / Math.max(1, rows);
+    var xStep = xSpan / cols;
+    for (var i5 = 0; i5 < total; i5++) {
+      var r = Math.floor(i5 / cols);
+      var c = i5 % cols;
+      var x2 = -xSpan/2 + xStep * c + xStep/2;
+      var y3 = yStart + yStep * r;
+      positions.push({ x: x2, y: y3, rot: -Math.PI/2, isChair: i5 < cfg.cQty, num: i5 + 1 });
     }
+  }
 
-    // Podium line
-    ctx.strokeStyle = "rgba(230,0,18,0.5)";
-    ctx.lineWidth = 2;
+  if (positions.length > 1) {
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.35)";
+    ctx.lineWidth = 1 / zoom;
+    ctx.setLineDash([2, 3]);
     ctx.beginPath();
-    ctx.moveTo(-L*0.35, -W*0.35);
-    ctx.lineTo(L*0.35, -W*0.35);
+    for (var p = 0; p < positions.length; p++) {
+      if (p === 0) ctx.moveTo(positions[p].x, positions[p].y);
+      else ctx.lineTo(positions[p].x, positions[p].y);
+    }
     ctx.stroke();
+    ctx.setLineDash([]);
+  }
 
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "bold 11px Cairo";
-    ctx.textAlign = "center";
-    ctx.fillText("منصة العرض", 0, -W*0.35 - 12);
+  for (var k = 0; k < positions.length; k++) {
+    var pos = positions[k];
+    drawConfMic(pos.x, pos.y, pos.rot, pos.isChair, pos.num, isWireless);
   }
 }
 
-function drawMic(x, y, isC, num) {
-  // glow
-  if (isC) {
+function drawConfMic(x, y, rotation, isChair, num, isWireless) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
+
+  var baseColor = isChair ? "#e60012" : (isWireless ? "#a855f7" : "#38bdf8");
+
+  if (isChair) {
     ctx.beginPath();
-    ctx.arc(x, y, 14, 0, Math.PI*2);
-    ctx.fillStyle = "rgba(230,0,18,0.2)";
+    ctx.arc(0, 0, 16, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(230, 0, 18, 0.20)";
     ctx.fill();
   }
 
+  if (isWireless) {
+    ctx.beginPath();
+    ctx.arc(0, 0, 12, 0, Math.PI*2);
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.55)";
+    ctx.lineWidth = 1.5 / zoom;
+    ctx.setLineDash([3, 3]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
   ctx.beginPath();
-  ctx.arc(x, y, 7, 0, Math.PI*2);
-  ctx.fillStyle = isC ? "#e60012" : "#38bdf8";
+  ctx.moveTo(-6, 5);
+  ctx.lineTo(6, 5);
+  ctx.lineTo(4, -3);
+  ctx.lineTo(-4, -3);
+  ctx.closePath();
+  var baseGrad = ctx.createLinearGradient(0, -3, 0, 5);
+  baseGrad.addColorStop(0, "#2d3748");
+  baseGrad.addColorStop(1, "#1a202c");
+  ctx.fillStyle = baseGrad;
   ctx.fill();
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = baseColor;
+  ctx.lineWidth = 1.2 / zoom;
   ctx.stroke();
 
+  ctx.beginPath();
+  ctx.moveTo(0, -3);
+  ctx.lineTo(0, -12);
+  ctx.strokeStyle = baseColor;
+  ctx.lineWidth = 2 / zoom;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(0, -12, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = baseColor;
+  ctx.fill();
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 0.8 / zoom;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(0, 2, 1.2, 0, Math.PI*2);
+  ctx.fillStyle = isChair ? "#22c55e" : "#fbbf24";
+  ctx.fill();
+
+  ctx.restore();
+
   ctx.fillStyle = "#fff";
+  ctx.font = "bold 7px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(num), x, y + 14);
+}
+
+function drawTechnicalAnnotations(L, W, cfg, scale) {
+  drawDimensionLine(-L/2, -W/2 - 40, L/2, -W/2 - 40, cfg.L.toFixed(1) + ' م', 'h');
+  drawDimensionLine(-L/2 - 40, -W/2, -L/2 - 40, W/2, cfg.W.toFixed(1) + ' م', 'v');
+  drawScaleBar(L/2 + 20, W/2 + 40, scale);
+  drawNorthArrow(L/2 + 40, -W/2 - 30);
+}
+
+function drawDimensionLine(x1, y1, x2, y2, label, dir) {
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.4)";
+  ctx.lineWidth = 1 / zoom;
+  ctx.setLineDash([]);
+  if (dir === 'h') {
+    ctx.beginPath(); ctx.moveTo(x1, y1 + 5); ctx.lineTo(x1, y1 - 5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2 + 5); ctx.lineTo(x2, y2 - 5); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.moveTo(x1 - 5, y1); ctx.lineTo(x1 + 5, y1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2 - 5, y2); ctx.lineTo(x2 + 5, y2); ctx.stroke();
+  }
+
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 1.2 / zoom;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  var arrowSize = 6;
+  var ang = Math.atan2(y2 - y1, x2 - x1);
+  drawArrow(x1, y1, ang + Math.PI, arrowSize);
+  drawArrow(x2, y2, ang, arrowSize);
+
+  var mx = (x1 + x2) / 2;
+  var my = (y1 + y2) / 2;
+  ctx.font = "bold 11px Cairo";
+  var tw = ctx.measureText(label).width + 10;
+  ctx.fillStyle = "#0a1520";
+  ctx.fillRect(mx - tw/2, my - 7, tw, 14);
+  ctx.fillStyle = "#fbbf24";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, mx, my);
+}
+
+function drawArrow(x, y, ang, size) {
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + Math.cos(ang - 0.4) * size, y + Math.sin(ang - 0.4) * size);
+  ctx.lineTo(x + Math.cos(ang + 0.4) * size, y + Math.sin(ang + 0.4) * size);
+  ctx.closePath();
+  ctx.fillStyle = "#fbbf24";
+  ctx.fill();
+}
+
+function drawScaleBar(x, y, scale) {
+  var totalPx = 5 * scale;
+  var segments = 5;
+  var segPx = totalPx / segments;
+
+  ctx.fillStyle = "#7fb8d8";
   ctx.font = "bold 9px Cairo";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(String(num), x, y + 0.5);
+  ctx.fillText("SCALE BAR", x + totalPx/2, y - 12);
+
+  for (var i = 0; i < segments; i++) {
+    ctx.fillStyle = i % 2 === 0 ? "#7fb8d8" : "#0a1520";
+    ctx.fillRect(x + i * segPx, y, segPx, 8);
+    ctx.strokeStyle = "#7fb8d8";
+    ctx.lineWidth = 0.8 / zoom;
+    ctx.strokeRect(x + i * segPx, y, segPx, 8);
+  }
+
+  ctx.fillStyle = "#7fb8d8";
+  ctx.font = "bold 8px Cairo";
+  ctx.textAlign = "center";
+  ctx.fillText("0", x, y + 18);
+  ctx.fillText("5m", x + totalPx, y + 18);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   DIMENSIONS & SCALE BAR
-   ═══════════════════════════════════════════════════════════ */
-function drawDimensions(L, W, L_m, W_m) {
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 14px Cairo";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(L_m + " م", 0, -W/2 - 16);
-
+function drawNorthArrow(x, y) {
+  var size = 20;
   ctx.save();
-  ctx.translate(-L/2 - 22, 0);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillText(W_m + " م", 0, 0);
+  ctx.translate(x, y);
+
+  ctx.beginPath();
+  ctx.arc(0, 0, size + 4, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(10, 21, 32, 0.85)";
+  ctx.fill();
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1 / zoom;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(-6, 4);
+  ctx.lineTo(0, 0);
+  ctx.lineTo(6, 4);
+  ctx.closePath();
+  ctx.fillStyle = "#e60012";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(0, size * 0.5);
+  ctx.lineTo(-4, 2);
+  ctx.lineTo(4, 2);
+  ctx.closePath();
+  ctx.fillStyle = "#7fb8d8";
+  ctx.fill();
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 11px Cairo";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("N", 0, -size - 8);
+
   ctx.restore();
 }
 
-function drawScaleBar(L, W) {
-  const scale = 25;
-  const barM = 5;
-  const barPx = barM * scale;
-  const bx = L/2 - barPx;
-  const by = W/2 + 30;
+function drawScreenOverlays(cfg) {
+  var w = canvas.clientWidth || canvas.width;
+  var h = canvas.clientHeight || canvas.height;
 
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(bx, by);
-  ctx.lineTo(bx + barPx, by);
-  ctx.stroke();
+  // Title block
+  var tbW = 260, tbH = 95;
+  var tbX = 20, tbY = h - tbH - 20;
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  var dpr = window.devicePixelRatio || 1;
+  ctx.scale(dpr, dpr);
 
-  ctx.beginPath(); ctx.moveTo(bx, by-5); ctx.lineTo(bx, by+5); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(bx+barPx, by-5); ctx.lineTo(bx+barPx, by+5); ctx.stroke();
+  ctx.fillStyle = "rgba(10, 21, 32, 0.92)";
+  ctx.fillRect(tbX, tbY, tbW, tbH);
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(tbX, tbY, tbW, tbH);
+
+  var barGrad = ctx.createLinearGradient(tbX, 0, tbX + tbW, 0);
+  barGrad.addColorStop(0, "#e60012");
+  barGrad.addColorStop(1, "#38bdf8");
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(tbX, tbY, tbW, 4);
 
   ctx.fillStyle = "#fff";
-  ctx.font = "11px Cairo";
-  ctx.textAlign = "center";
-  ctx.fillText(barM + " م", bx + barPx/2, by + 16);
+  ctx.font = "bold 11px Cairo";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "top";
+  ctx.fillText("MOTIVITY · ELITE ENGINEERING", tbX + tbW - 10, tbY + 12);
+
+  ctx.fillStyle = "#7fb8d8";
+  ctx.font = "10px Cairo";
+  ctx.fillText("Project: " + cfg.projName, tbX + tbW - 10, tbY + 32);
+  ctx.fillText("Engineer: " + cfg.engName, tbX + tbW - 10, tbY + 48);
+  ctx.fillText("Room: " + cfg.L + "×" + cfg.W + "m · H=" + cfg.H + "m", tbX + tbW - 10, tbY + 64);
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "bold 10px Cairo";
+  ctx.fillText("Scale 1:" + Math.round(1000/PX_PER_M) + " · Ref " + cfg.projRef, tbX + tbW - 10, tbY + 78);
+
+  // Legend
+  var lgW = 190;
+  var items = [
+    { sym: 'spk',   label: 'Ceiling Speaker' },
+    { sym: 'chair', label: 'Chairman Unit' },
+    { sym: 'del',   label: 'Delegate Unit' },
+    { sym: 'wl',    label: 'Wireless Unit' },
+    { sym: 'door',  label: 'Door / Window' },
+    { sym: 'dim',   label: 'Dimensions (m)' }
+  ];
+  var lgH = 30 + items.length * 22;
+  var lgX = 20, lgY = 90;
+
+  ctx.fillStyle = "rgba(10, 21, 32, 0.92)";
+  ctx.fillRect(lgX, lgY, lgW, lgH);
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(lgX, lgY, lgW, lgH);
+
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "bold 10px Cairo";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  ctx.fillText("LEGEND", lgX + lgW - 10, lgY + 15);
+
+  var iconX = lgX + lgW - 25;
+  for (var i = 0; i < items.length; i++) {
+    var iy = lgY + 30 + i * 22 + 11;
+    drawLegendIcon(iconX, iy, items[i].sym);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "10px Cairo";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(items[i].label, iconX - 22, iy);
+  }
+  ctx.restore();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   AUTO OPTIMIZE
-   ═══════════════════════════════════════════════════════════ */
-function autoOptimize() {
-  const L = parseFloat(document.getElementById('dim_l').value) || 25;
-  const W = parseFloat(document.getElementById('dim_w').value) || 15;
-  const H = parseFloat(document.getElementById('dim_h').value) || 4;
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const angle = parseFloat(opt.dataset.angle);
-
-  const throwH = Math.max(0.5, H - 1.2);
-  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
-  const spacing = Math.max(2.5, coverR * 1.5);
-  const perSide = Math.max(2, Math.round(L / spacing));
-
-  document.getElementById('spkPerSide').value = perSide;
-  resetView();
-  initDraw();
+function drawLegendIcon(x, y, type) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (type === 'spk') {
+    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2);
+    ctx.fillStyle = "#1a202c"; ctx.fill();
+    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI*2);
+    ctx.fillStyle = "#e60012"; ctx.fill();
+  } else if (type === 'chair') {
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
+    ctx.fillStyle = "#e60012"; ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
+  } else if (type === 'del') {
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
+    ctx.fillStyle = "#38bdf8"; ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
+  } else if (type === 'wl') {
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
+    ctx.fillStyle = "#a855f7"; ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath(); ctx.arc(0, 0, 7, 0, Math.PI*2);
+    ctx.strokeStyle = "#a855f7"; ctx.stroke();
+    ctx.setLineDash([]);
+  } else if (type === 'door') {
+    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(-5, 3); ctx.lineTo(5, 3); ctx.stroke();
+    ctx.setLineDash([2, 2]);
+    ctx.beginPath(); ctx.arc(-5, 3, 6, 0, -Math.PI/2, true); ctx.stroke();
+    ctx.setLineDash([]);
+  } else if (type === 'dim') {
+    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(-7, 0); ctx.lineTo(7, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-7, -2); ctx.lineTo(-7, 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(7, -2); ctx.lineTo(7, 2); ctx.stroke();
+  }
+  ctx.restore();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   ZOOM / PAN / TOGGLE
-   ═══════════════════════════════════════════════════════════ */
-function zoomIn()  { zoom = Math.min(3, zoom * 1.2); }
-function zoomOut() { zoom = Math.max(0.3, zoom / 1.2); }
-function resetView() { zoom = 1; offsetX = 0; offsetY = 0; }
+function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
+  var key = cfg.L + '|' + cfg.W + '|' + cfg.H + '|' + cfg.earH + '|' + cfg.perSide + '|' + cfg.modelKey + '|' + cfg.alpha;
+  if (key !== heatmapKey || !heatmapCache) {
+    heatmapCache = document.createElement('canvas');
+    heatmapCache.width = Math.ceil(Lpx);
+    heatmapCache.height = Math.ceil(Wpx);
+    var hctx = heatmapCache.getContext('2d');
+    var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+    var R = calcRoomConstant(cfg.L, cfg.W, cfg.H, cfg.alpha);
+    var throwH = Math.max(0.5, cfg.H - cfg.earH);
 
+    var positions = [];
+    for (var s = 0; s < 2; s++) {
+      var wallY = s === 0 ? -cfg.W/2 : cfg.W/2;
+      for (var i = 0; i < cfg.perSide; i++) {
+        positions.push([ -cfg.L/2 + cfg.L * (i + 0.5) / cfg.perSide, wallY ]);
+      }
+    }
+    var img = hctx.createImageData(heatmapCache.width, heatmapCache.height);
+    var data = img.data;
+    for (var py = 0; py < heatmapCache.height; py++) {
+      var y_m = (py / scale) - cfg.W/2;
+      for (var px = 0; px < heatmapCache.width; px++) {
+        var x_m = (px / scale) - cfg.L/2;
+        var pTotal = 0;
+        for (var k = 0; k < positions.length; k++) {
+          pTotal += splFromSource(cfg.spk.sens, cfg.spk.pwr, cfg.spk.q, R, x_m - positions[k][0], y_m - positions[k][1], throwH);
+        }
+        var spl = pTotal > 0 ? 10 * Math.log10(pTotal) : 0;
+        var col = splColorRGBA(spl);
+        var idx = (py * heatmapCache.width + px) * 4;
+        data[idx] = col[0]; data[idx+1] = col[1]; data[idx+2] = col[2]; data[idx+3] = col[3];
+      }
+    }
+    hctx.putImageData(img, 0, 0);
+    heatmapKey = key;
+  }
+  ctx.drawImage(heatmapCache, -Lpx/2, -Wpx/2);
+}
+
+function splColorRGBA(spl) {
+  var stops = [
+    { v: 60, c: [10, 20, 40, 140] },
+    { v: 70, c: [30, 60, 120, 130] },
+    { v: 78, c: [56, 130, 200, 120] },
+    { v: 84, c: [34, 197, 94, 110] },
+    { v: 90, c: [132, 204, 22, 105] },
+    { v: 96, c: [245, 158, 11, 115] },
+    { v: 102, c: [239, 68, 68, 130] }
+  ];
+  if (spl <= stops[0].v) return stops[0].c;
+  if (spl >= stops[stops.length-1].v) return stops[stops.length-1].c;
+  for (var i = 0; i < stops.length - 1; i++) {
+    if (spl >= stops[i].v && spl <= stops[i+1].v) {
+      var t = (spl - stops[i].v) / (stops[i+1].v - stops[i].v);
+      return [
+        Math.round(stops[i].c[0] + (stops[i+1].c[0] - stops[i].c[0]) * t),
+        Math.round(stops[i].c[1] + (stops[i+1].c[1] - stops[i].c[1]) * t),
+        Math.round(stops[i].c[2] + (stops[i+1].c[2] - stops[i].c[2]) * t),
+        Math.round(stops[i].c[3] + (stops[i+1].c[3] - stops[i].c[3]) * t)
+      ];
+    }
+  }
+  return stops[0].c;
+}
+
+/* ============================================================
+   SAFE RENDER
+   ============================================================ */
+var __renderErrorCount = 0;
+function safeRender() {
+  try {
+    render();
+    __renderErrorCount = 0;
+  } catch (err) {
+    __renderErrorCount++;
+    console.error('❌ RENDER ERROR:', err);
+    if (__renderErrorCount <= 3) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = "#0a0e13";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#e60012";
+      ctx.font = "bold 20px Cairo, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("⚠️ خطأ في الرسم", canvas.width / 2, 100);
+      ctx.fillStyle = "#fbbf24";
+      ctx.font = "14px monospace";
+      ctx.fillText(String(err.message || err).substring(0, 100), canvas.width / 2, 140);
+      ctx.fillStyle = "#8b949e";
+      ctx.font = "12px monospace";
+      ctx.fillText("افتح Console (F12) للتفاصيل", canvas.width / 2, 180);
+      ctx.restore();
+    }
+  }
+}
+
+/* ============================================================
+   LOOP
+   ============================================================ */
+function loop(now) {
+  var dt = (now - lastFrameTime) / 1000;
+  lastFrameTime = now;
+  if (opts.rays || needsRedraw) {
+    if (opts.rays) animTime += Math.min(0.05, dt || 0.016);
+    safeRender();
+    needsRedraw = opts.rays;
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ============================================================
+   UI BINDINGS
+   ============================================================ */
+var debouncedUpdate = debounce(function() { updateKPI(); markDirty(); pushHistory(); }, 150);
+var inputIds = ['dim_l','dim_w','dim_h','earH','spkPerSide','cQty','dQty','interpLang','interpUnits','irReceivers','irEmitters'];
+for (var i = 0; i < inputIds.length; i++) {
+  (function(id) {
+    var el = $(id);
+    if (el) el.addEventListener('input', debouncedUpdate);
+  })(inputIds[i]);
+}
+var changeIds = ['spkModel','roomMode','roomType','confMode','confHost','confChair','confDelegate','confExtMic','confMixer'];
+for (var j = 0; j < changeIds.length; j++) {
+  (function(id) {
+    var el = $(id);
+    if (el) el.addEventListener('change', function() {
+      if (id === 'confMode') populateHosts();
+      else if (id === 'confHost' || id === 'confChair') onHostChange();
+      updateKPI(); markDirty(); pushHistory();
+    });
+  })(changeIds[j]);
+}
+var textIds = ['projName','engName','clientName','siteLoc','projRef'];
+for (var k = 0; k < textIds.length; k++) {
+  (function(id) {
+    var el = $(id);
+    if (el) el.addEventListener('input', debounce(function() { pushHistory(); }, 400));
+  })(textIds[k]);
+}
+var checkIds = ['useCharger','useFeedback','useSeq'];
+for (var m = 0; m < checkIds.length; m++) {
+  (function(id) {
+    var el = $(id);
+    if (el) el.addEventListener('change', function() { updateKPI(); pushHistory(); });
+  })(checkIds[m]);
+}
+
+function zoomIn()  { zoom = clamp(zoom * 1.2, 0.3, 4); markDirty(); }
+function zoomOut() { zoom = clamp(zoom / 1.2, 0.3, 4); markDirty(); }
+function resetView() { zoom = 1; offsetX = 0; offsetY = 0; markDirty(); }
 function toggle(key) {
   opts[key] = !opts[key];
-  const btn = document.getElementById('tg' + key.charAt(0).toUpperCase() + key.slice(1));
+  var btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
   if (btn) btn.classList.toggle('on', opts[key]);
+  if (key === 'heat') heatmapKey = '';
+  markDirty();
 }
 
-vArea.addEventListener('mousedown', e => {
+vArea.addEventListener('mousedown', function(e) {
   if (e.button === 0 || e.button === 1) {
     isPanning = true;
     startX = e.clientX - offsetX;
@@ -752,170 +1895,357 @@ vArea.addEventListener('mousedown', e => {
     vArea.style.cursor = 'grabbing';
   }
 });
-
-vArea.addEventListener('mousemove', e => {
+vArea.addEventListener('mousemove', function(e) {
   if (isPanning) {
     offsetX = e.clientX - startX;
     offsetY = e.clientY - startY;
+    markDirty();
   }
   updateCursorInfo(e);
 });
-
-vArea.addEventListener('mouseup', () => {
-  isPanning = false;
-  vArea.style.cursor = '';
+vArea.addEventListener('mouseup', function() { isPanning = false; vArea.style.cursor = ''; });
+vArea.addEventListener('mouseleave', function() {
+  isPanning = false; vArea.style.cursor = '';
+  $('cursorSPL').textContent = '—';
+  $('cursorSTI').textContent = '—';
+  $('cursorDist').textContent = '—';
 });
-
-vArea.addEventListener('mouseleave', () => {
-  isPanning = false;
-  vArea.style.cursor = '';
-  document.getElementById('cursorSPL').textContent = '—';
-});
-
-vArea.addEventListener('wheel', e => {
+vArea.addEventListener('wheel', function(e) {
   e.preventDefault();
-  zoom = Math.max(0.3, Math.min(3, zoom * (e.deltaY < 0 ? 1.1 : 1/1.1)));
+  zoom = clamp(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), 0.3, 4);
+  markDirty();
 }, { passive: false });
 
 function updateCursorInfo(e) {
-  const rect = canvas.getBoundingClientRect();
-  const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
-  const my = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-  // Convert to world (room) coords
-  const worldX = (mx - canvas.width/2 - offsetX) / zoom;
-  const worldY = (my - canvas.height/2 - offsetY) / zoom;
-
-  const L_m = parseFloat(document.getElementById('dim_l').value);
-  const W_m = parseFloat(document.getElementById('dim_w').value);
-  const scale = 25;
-  const L = L_m * scale, W = W_m * scale;
-
-  // Only compute inside room
-  if (Math.abs(worldX) > L/2 || Math.abs(worldY) > W/2) {
-    document.getElementById('cursorSPL').textContent = '—';
+  var rect = canvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var cfg = readConfig();
+  var cx = rect.width / 2 + offsetX;
+  var cy = rect.height / 2 + offsetY;
+  var x_m = (mx - cx) / (zoom * PX_PER_M);
+  var y_m = (my - cy) / (zoom * PX_PER_M);
+  if (Math.abs(x_m) > cfg.L/2 || Math.abs(y_m) > cfg.W/2) {
+    $('cursorSPL').textContent = '—';
+    $('cursorSTI').textContent = '—';
+    $('cursorDist').textContent = '—';
     return;
   }
+  var result = splAtPoint(x_m, y_m, cfg);
+  var d = Math.sqrt(x_m*x_m + y_m*y_m);
+  $('cursorSPL').textContent = result.spl.toFixed(1) + ' dB';
+  var stiEl = $('cursorSTI');
+  stiEl.textContent = result.sti.toFixed(2);
+  stiEl.className = result.sti >= 0.6 ? 'sti-good' : result.sti >= 0.45 ? 'st' : 'sti-bad';
+  $('cursorDist').textContent = d.toFixed(1) + ' م';
+}
 
-  // Compute SPL at this point
-  const H_m = parseFloat(document.getElementById('dim_h').value);
-  const perSide = parseInt(document.getElementById('spkPerSide').value) || 4;
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const pwr = parseFloat(opt.dataset.pwr);
-  const sens = parseFloat(opt.dataset.sens);
-  const listH = 1.2;
-  const throwH = Math.max(0.5, H_m - listH);
-  const spl1m = sens + 10 * Math.log10(pwr);
-
-  let pTotal = 0;
-  for (let s = 0; s < 2; s++) {
-    const isTop = s === 0;
-    const wallY = isTop ? -W/2 : W/2;
-    for (let i = 0; i < perSide; i++) {
-      const sx = -L/2 + (L * (i + 0.5) / perSide);
-      const sy = wallY;
-      const dx = worldX - sx;
-      const dy = worldY - sy;
-      const dz = throwH;
-      const d = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-      const spl = spl1m - 20 * Math.log10(d);
-      pTotal += Math.pow(10, spl/10);
-    }
+/* ============================================================
+   UNDO / REDO
+   ============================================================ */
+function getState() {
+  var ids = ['projName','engName','clientName','siteLoc','projRef',
+    'roomMode','roomType','dim_l','dim_w','dim_h','earH',
+    'spkModel','spkPerSide','cQty','dQty',
+    'confMode','confHost','confChair','confDelegate','confExtMic','confMixer',
+    'interpLang','interpUnits','irReceivers','irEmitters'];
+  var s = {};
+  for (var i = 0; i < ids.length; i++) {
+    var el = $(ids[i]);
+    if (el) s[ids[i]] = el.value;
   }
-  const spl = 10 * Math.log10(pTotal);
-  document.getElementById('cursorSPL').textContent = spl.toFixed(1) + ' dB';
+  s.useCharger = $('useCharger').checked;
+  s.useFeedback = $('useFeedback').checked;
+  s.useSeq = $('useSeq').checked;
+  return s;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   REPORT
-   ═══════════════════════════════════════════════════════════ */
-function generateReport() {
-  const opt = document.getElementById('spkModel').selectedOptions[0];
-  const model = document.getElementById('spkModel').value;
-  const pwr = parseFloat(opt.dataset.pwr);
-  const angle = parseFloat(opt.dataset.angle);
-  const sens = parseFloat(opt.dataset.sens);
-
-  const perSide = parseInt(document.getElementById('spkPerSide').value);
-  const total = perSide * 2;
-  const totalW = pwr * total;
-
-  const cQty = parseInt(document.getElementById('cQty').value);
-  const dQty = parseInt(document.getElementById('dQty').value);
-  const totalMic = cQty + dQty;
-
-  const L = parseFloat(document.getElementById('dim_l').value);
-  const W = parseFloat(document.getElementById('dim_w').value);
-  const H = parseFloat(document.getElementById('dim_h').value);
-  const modeText = document.getElementById('roomMode').selectedOptions[0].text;
-
-  const throwH = Math.max(0.5, H - 1.2);
-  const coverR = throwH * Math.tan((angle/2) * Math.PI/180);
-  const maxDist = Math.sqrt((L/2)**2 + (W/2)**2 + throwH**2);
-  const splFar = sens + 10 * Math.log10(pwr) - 20 * Math.log10(maxDist);
-
-  let ampModel = "MA-650-MP5P", ampQty = 1;
-  if (totalW <= 120) ampModel = "MA-120-MP5P";
-  else if (totalW <= 240) ampModel = "MA-240-MP5P";
-  else if (totalW <= 360) ampModel = "MA-360-MP5P";
-  else if (totalW <= 500) ampModel = "MA-500-MP5P";
-  else ampQty = Math.ceil(totalW / 650);
-
-  const today = new Date().toLocaleDateString('ar-EG');
-
-  document.getElementById('repProjName').textContent = document.getElementById('projName').value;
-  document.getElementById('repEngName').textContent = document.getElementById('engName').value;
-  document.getElementById('repDate').textContent = today;
-  document.getElementById('reportImg').src = canvas.toDataURL();
-
-  document.getElementById('boqBody').innerHTML = `
-    <tr><td>النظام الصوتي</td><td>Motivity ${model}</td><td>${total}</td>
-        <td>${pwr}W · ${angle}° · ${sens}dB</td></tr>
-    <tr><td>وحدات المؤتمر</td><td>Motivity Digital</td><td>${totalMic}</td>
-        <td>${cQty} رئيس + ${dQty} عضو · Daisy-Chain CAT6</td></tr>
-    <tr><td>مضخم القدرة</td><td>Motivity ${ampModel}</td><td>${ampQty}</td>
-        <td>Class-D · حمل ${totalW}W</td></tr>
-    <tr><td>كيبل الصوت</td><td>Twin Core 2×1.5mm</td><td>~${Math.round(total*(L+W)*0.4)} م</td>
-        <td>Fire Rated</td></tr>
-  `;
-
-  document.getElementById('justificationBody').innerHTML = `
-    <strong>أولاً: توزيع ضغط الصوت (SPL)</strong><br>
-    تم اختيار <b>Motivity ${model}</b> بقدرة <b>${pwr}W</b> وحساسية <b>${sens}dB</b>.
-    عند أبعد نقطة (مسافة <b>${maxDist.toFixed(1)}م</b>) يبلغ SPL المتوقع
-    <b>${splFar.toFixed(1)} dB</b> — مناسب لوضوح الكلام في قاعة <b>${(L*W).toFixed(0)}م²</b>.<br><br>
-
-    <strong>ثانياً: معامل التغطية</strong><br>
-    زاوية انتشار <b>${angle}°</b> على ارتفاع <b>${H}م</b> تعطي نصف قطر تغطية
-    <b>${coverR.toFixed(2)}م</b> عند مستوى الأذن.
-    <b>${total}</b> سماعة موزّعة على الجدارين بمسافات متساوية تضمن تقليل
-    Comb Filtering ورفع وضوح الكلام.<br><br>
-
-    <strong>ثالثاً: النمط الوظيفي</strong><br>
-    النمط: <b>${modeText}</b>. التغطية <b>${angle}°</b> تضمن وصولاً متساوياً لكل مقعد
-    مع توجيه كل سماعة نحو منطقة الاستماع.<br><br>
-
-    <strong>رابعاً: نظام المؤتمرات الرقمي</strong><br>
-    إجمالي <b>${totalMic}</b> وحدة (<b>${cQty}</b> رئيس + <b>${dQty}</b> عضو)
-    بنظام Daisy-Chain عبر CAT6 لسهولة التركيب والصيانة.<br><br>
-
-    <strong>خامساً: القدرة والمضخم</strong><br>
-    إجمالي الحمل <b>${totalW}W</b>، تم اختيار <b>${ampQty} × ${ampModel}</b>
-    بهامش أمان كافٍ لمنع القطع وحماية المضخم.
-  `;
-
-  document.getElementById('reportModal').style.display = 'block';
+function applyState(s) {
+  for (var k in s) {
+    var el = $(k);
+    if (!el) continue;
+    if (el.type === 'checkbox') el.checked = s[k];
+    else el.value = s[k];
+  }
+  onHostChange(); updateKPI(); markDirty();
 }
-
-/* ═══════════════════════════════════════════════════════════
-   BOOT
-   ═══════════════════════════════════════════════════════════ */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    initDraw();
-    autoOptimize();
-  }, 30);
+function pushHistory() {
+  if (suppressHistory) return;
+  var s = getState();
+  var str = JSON.stringify(s);
+  if (history.length > 0 && JSON.stringify(history[historyIndex]) === str) return;
+  history.splice(historyIndex + 1);
+  history.push(s);
+  if (history.length > 50) history.shift();
+  historyIndex = history.length - 1;
+}
+function undo() {
+  if (historyIndex <= 0) return;
+  historyIndex--; suppressHistory = true;
+  applyState(history[historyIndex]);
+  suppressHistory = false;
+}
+function redo() {
+  if (historyIndex >= history.length - 1) return;
+  historyIndex++; suppressHistory = true;
+  applyState(history[historyIndex]);
+  suppressHistory = false;
+}
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
+  if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
+  if (e.key === 'Escape') $('reportModal').style.display = 'none';
 });
+
+/* ============================================================
+   SAVE / LOAD
+   ============================================================ */
+function saveProject() {
+  var data = { state: getState(), opts: opts, savedAt: new Date().toISOString(), version: 'v4.1' };
+  try {
+    localStorage.setItem('motivity_project_v4', JSON.stringify(data));
+    pushWarning('ok', '✅ تم الحفظ', 3000);
+  } catch (e) {
+    pushWarning('critical', 'فشل الحفظ', 3000);
+  }
+}
+function loadProject() {
+  var raw = localStorage.getItem('motivity_project_v4') || localStorage.getItem('motivity_project_v3');
+  if (!raw) { pushWarning('warn', 'لا يوجد مشروع محفوظ', 3000); return; }
+  try {
+    var data = JSON.parse(raw);
+    applyState(data.state);
+    if (data.opts) {
+      for (var k in data.opts) opts[k] = data.opts[k];
+      var toggles = ['tile','cover','heat','rays','grid','conf','furn','tech'];
+      for (var i = 0; i < toggles.length; i++) {
+        var btn = $('tg' + toggles[i].charAt(0).toUpperCase() + toggles[i].slice(1));
+        if (btn) btn.classList.toggle('on', opts[toggles[i]]);
+      }
+      heatmapKey = '';
+    }
+    pushHistory();
+    pushWarning('ok', '✅ تم التحميل', 3000);
+  } catch (err) { pushWarning('critical', 'خطأ في القراءة', 3000); }
+}
+
+/* ============================================================
+   REPORT
+   ============================================================ */
+function generateReport() {
+  var cfg = readConfig();
+  var total = cfg.perSide * 2;
+  var totalW = cfg.spk.pwr * total;
+  var totalMic = cfg.cQty + cfg.dQty;
+  var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+  var Dc = calcCriticalDistance(cfg.spk.q, cfg.L, cfg.W, cfg.H, RT60);
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan((cfg.spk.angle/2) * Math.PI/180);
+  var maxDist = Math.sqrt((cfg.L/2)*(cfg.L/2) + (cfg.W/2)*(cfg.W/2) + throwH*throwH);
+
+  var minSpl = Infinity, minSti = 1;
+  var S = 20;
+  for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
+    var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
+    var r = splAtPoint(x, y, cfg);
+    if (r.spl < minSpl) minSpl = r.spl;
+    if (r.sti < minSti) minSti = r.sti;
+  }
+
+  var today = new Date().toLocaleDateString('ar-EG');
+  $('repProjName').textContent = cfg.projName;
+  $('repEngName').textContent = cfg.engName;
+  $('repClient').textContent = cfg.clientName;
+  $('repLoc').textContent = cfg.siteLoc;
+  $('repRef').textContent = cfg.projRef;
+  $('repDate').textContent = today;
+  $('reportImg').src = canvas.toDataURL('image/png');
+
+  var host = CONF_HOSTS[cfg.confHost] || {};
+  var chair = CONF_CHAIRS[cfg.confChair] || {};
+  var delegate = CONF_DELEGATES[cfg.confDelegate] || {};
+  var modeNames = { basic:'مناقشة أساسي', camera:'تتبع كاميرا', voting:'تصويت', premium:'راقٍ', wireless:'لاسلكي 5G', interpretation:'ترجمة فورية' };
+
+  $('sysOverview').innerHTML =
+    '<div class="sys-card">' +
+      '<h4>🎛️ المضيف</h4>' +
+      '<div class="row-item"><span>الموديل:</span><b>' + (host.name || '—') + '</b></div>' +
+      '<div class="row-item"><span>النوع:</span><b>' + (host.desc || '—') + '</b></div>' +
+      '<div class="row-item"><span>السعة:</span><b>' + (host.maxUnits || 0) + ' وحدة</b></div>' +
+      '<div class="row-item"><span>الاستهلاك:</span><b>' + (host.power || 0) + 'W</b></div>' +
+    '</div>' +
+    '<div class="sys-card">' +
+      '<h4>🎤 الوحدات</h4>' +
+      '<div class="row-item"><span>رئيس:</span><b>' + (chair.name || '—') + ' × ' + cfg.cQty + '</b></div>' +
+      '<div class="row-item"><span>أعضاء:</span><b>' + (delegate.name || '—') + ' × ' + cfg.dQty + '</b></div>' +
+      '<div class="row-item"><span>الإجمالي:</span><b>' + totalMic + ' وحدة</b></div>' +
+      '<div class="row-item"><span>النمط:</span><b>' + (modeNames[cfg.confMode] || '—') + '</b></div>' +
+    '</div>' +
+    '<div class="sys-card">' +
+      '<h4>🎚️ المعالجة</h4>' +
+      '<div class="row-item"><span>الميكسر:</span><b>' + (cfg.confMixer || '—') + '</b></div>' +
+      '<div class="row-item"><span>مانع صفير:</span><b>' + (cfg.useFeedback ? 'DF224 ✓' : 'لا') + '</b></div>' +
+      '<div class="row-item"><span>منظم:</span><b>' + (cfg.useSeq ? 'SC-802 ✓' : 'لا') + '</b></div>' +
+      '<div class="row-item"><span>شاحن:</span><b>' + (cfg.useCharger ? 'GW5020 ✓' : 'لا') + '</b></div>' +
+    '</div>';
+
+  $('acousticSummary').innerHTML =
+    '<div class="ac-box ' + (RT60 < 1.2 ? 'good' : RT60 > 1.8 ? 'bad' : '') + '"><div class="v">' + RT60.toFixed(2) + 's</div><div class="l">RT60</div></div>' +
+    '<div class="ac-box ' + (minSpl >= 85 ? 'good' : minSpl < 78 ? 'bad' : '') + '"><div class="v">' + minSpl.toFixed(1) + 'dB</div><div class="l">أدنى SPL</div></div>' +
+    '<div class="ac-box ' + (minSti >= 0.6 ? 'good' : minSti < 0.45 ? 'bad' : '') + '"><div class="v">' + minSti.toFixed(2) + '</div><div class="l">STI</div></div>' +
+    '<div class="ac-box"><div class="v">' + Dc.toFixed(1) + 'm</div><div class="l">Dc</div></div>';
+
+  var rowNum = 1;
+  var boq = [];
+  var addCat = function(t) { boq.push('<tr class="cat-row"><td colspan="5">' + t + '</td></tr>'); };
+  var addRow = function(it, m, q, s) { boq.push('<tr><td>' + (rowNum++) + '</td><td>' + it + '</td><td>' + m + '</td><td>' + q + '</td><td>' + s + '</td></tr>'); };
+
+  addCat('🔊 أولاً: النظام الصوتي');
+  addRow('سماعات سقف', 'Motivity ' + cfg.modelKey, total, cfg.spk.pwr + 'W · ' + cfg.spk.angle + '° · ' + cfg.spk.sens + 'dB');
+
+  var ampModel = "MA-1000C", ampQty = 1, ampPower = 1000;
+  if (totalW <= 350) { ampModel = "MA-350C"; ampPower = 350; }
+  else if (totalW <= 450) { ampModel = "MA-450C"; ampPower = 450; }
+  else if (totalW <= 800) { ampModel = "MA-800C"; ampPower = 800; }
+  else if (totalW <= 1000) { ampModel = "MA-1000C"; ampPower = 1000; }
+  else if (totalW <= 1500) { ampModel = "MA-1500C"; ampPower = 1500; }
+  else { ampModel = "MA-41300C"; ampPower = 1300; ampQty = Math.ceil(totalW / (ampPower * 4)); }
+  addRow('مضخم Class-H', 'Motivity ' + ampModel, ampQty, 'حمل ' + totalW + 'W');
+
+  addCat('🎤 ثانياً: نظام الاجتماعات');
+  addRow('المضيف', 'Motivity ' + host.name, 1, (host.features || []).slice(0, 2).join(' · '));
+  addRow('وحدة رئيس', 'Motivity ' + chair.name, cfg.cQty, chair.display || '');
+  addRow('وحدة عضو', 'Motivity ' + delegate.name, cfg.dQty, 'Daisy-Chain');
+
+  addCat('🎚️ ثالثاً: المعالجة');
+  if (cfg.confMixer) addRow('ميكسر رقمي', 'Motivity ' + cfg.confMixer, 1, CONF_ACCESSORIES[cfg.confMixer].desc);
+  if (cfg.useFeedback) addRow('مانع صفير', 'Motivity DF224', 1, CONF_ACCESSORIES['DF224'].desc);
+  if (cfg.useCharger && (cfg.confMode === 'wireless' || host.type === 'wireless')) {
+    addRow('شاحن', 'Motivity GW5020', Math.ceil(totalMic / 20), CONF_ACCESSORIES['GW5020'].desc);
+  }
+  if (cfg.useSeq) {
+    var totalPower = (host.power || 0) + 500;
+    var seqModel = totalPower > 8000 ? 'CP382' : 'SC-802 II';
+    addRow('منظم', 'Motivity ' + seqModel, 1, totalPower > 8000 ? '16 قناة · 90A' : CONF_ACCESSORIES['SC-802 II'].desc);
+  }
+
+  if (cfg.confMode === 'interpretation' || (cfg.interpLang > 1 && (host.type === 'hybrid' || host.type === 'premium'))) {
+    addCat('🌐 رابعاً: الترجمة الفورية');
+    addRow('مضيف الترجمة', 'Motivity MT606Z', 1, INTERP_DB['MT606Z'].desc);
+    addRow('وحدة مترجم', 'Motivity MTO6Y', cfg.interpUnits, INTERP_DB['MTO6Y'].desc);
+    if (cfg.irReceivers > 0) addRow('مستقبل IR', 'Motivity MT606J', cfg.irReceivers, INTERP_DB['MT606J'].desc);
+    if (cfg.irEmitters > 0) addRow('لوح IR', 'Motivity MT25F', cfg.irEmitters, INTERP_DB['MT25F'].desc);
+  }
+
+  addCat('🔌 خامساً: الكابلات');
+  addRow('كيبل صوت', 'Twin Core 2×1.5mm', '~' + Math.round(total*(cfg.L+cfg.W)*0.4) + 'م', 'Fire Rated LSZH');
+  addRow('كيبل مؤتمرات', 'Motivity G8PS-10', '~' + Math.round(totalMic*2.5+20) + 'م', 'CAT6 Shielded');
+  addRow('موصلات', 'Motivity Standard Kit', 1, 'Rack · Patch · Connectors');
+
+  var totalPowerFinal = (host.power || 0) + (chair.power || 0)*cfg.cQty + (delegate.power || 0)*cfg.dQty;
+  boq.push('<tr class="total-row"><td colspan="3">إجمالي الاستهلاك</td><td>~' + Math.round(totalPowerFinal) + 'W</td><td>منظم 40A</td></tr>');
+  $('boqBody').innerHTML = boq.join('');
+
+  var modeText = $('roomMode').selectedOptions[0].text;
+  $('justificationBody').innerHTML =
+    '<div class="eng-note">' +
+      '<strong>أولاً: توزيع SPL</strong><br>' +
+      'Motivity ' + cfg.modelKey + ' · ' + cfg.spk.pwr + 'W · ' + cfg.spk.sens + 'dB · Q=' + cfg.spk.q + '.' +
+      ' أدنى SPL عند أبعد نقطة (' + maxDist.toFixed(1) + 'م) = <b>' + minSpl.toFixed(1) + 'dB</b>.<br><br>' +
+      '<strong>ثانياً: التغطية</strong><br>' +
+      'زاوية ' + cfg.spk.angle + '° → نصف قطر ' + coverR.toFixed(2) + 'م. ' + total + ' سماعة على الجدارين.<br><br>' +
+      '<strong>ثالثاً: الخصائص الصوتية</strong><br>' +
+      'حجم ' + (cfg.L*cfg.W*cfg.H).toFixed(0) + 'م³ · RT60 = <b>' + RT60.toFixed(2) + 'ث</b> · Dc = ' + Dc.toFixed(1) + 'م.<br><br>' +
+      '<strong>رابعاً: STI = ' + minSti.toFixed(2) + '</strong> — ' + (minSti >= 0.6 ? 'ممتاز' : minSti >= 0.45 ? 'جيد' : 'يحتاج تحسين') + '.<br><br>' +
+      '<strong>خامساً: نظام الاجتماعات</strong><br>' +
+      (modeNames[cfg.confMode] || '') + ' · المضيف ' + host.name + ' (حتى ' + host.maxUnits + ' وحدة) · ' +
+      chair.name + ' × ' + cfg.cQty + ' · ' + delegate.name + ' × ' + cfg.dQty + '.' +
+    '</div>';
+
+  var allW = calculateWarnings().concat(tempWarnings);
+  if (allW.length === 0) {
+    $('warningsReport').innerHTML = '<div class="eng-note ok"><strong>✅ لا توجد تحذيرات</strong></div>';
+  } else {
+    var whtml = '';
+    for (var w = 0; w < allW.length; w++) {
+      var ww = allW[w];
+      var cls = ww.level === 'critical' ? 'critical' : ww.level === 'warn' ? 'warn' : 'ok';
+      var ico = ww.level === 'critical' ? '⛔' : ww.level === 'warn' ? '⚠️' : '✅';
+      whtml += '<div class="eng-note ' + cls + '"><strong>' + ico + ':</strong> ' + ww.text + '</div>';
+    }
+    $('warningsReport').innerHTML = whtml;
+  }
+
+  $('reportModal').style.display = 'block';
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function bootApp() {
+  console.log('🚀 Motivity v4.1 boot...');
+  console.log('   roundRect:', typeof ctx.roundRect);
+
+  try {
+    populateHosts();
+    if ($('confChair').options.length) $('confChair').value = 'MT380VC';
+    onHostChange();
+    if ($('confDelegate').options.length) $('confDelegate').value = 'MT380VD';
+  } catch (e) { console.error('Init error:', e); }
+
+  // انتظر استقرار الـ layout
+  setTimeout(function() {
+    resizeCanvas();
+    console.log('📐 Canvas:', canvas.width + '×' + canvas.height);
+    console.log('📐 Client:', canvas.clientWidth + '×' + canvas.clientHeight);
+
+    try { updateKPI(); } catch (e) { console.error('KPI:', e); }
+
+    markDirty();
+    lastFrameTime = performance.now();
+    safeRender();
+    requestAnimationFrame(loop);
+    pushHistory();
+    console.log('✅ Ready');
+  }, 150);
+}
+
+// ResizeObserver
+if (window.ResizeObserver) {
+  try {
+    var ro = new ResizeObserver(function() {
+      clearTimeout(window.__roT);
+      window.__roT = setTimeout(function() {
+        resizeCanvas();
+        markDirty();
+      }, 100);
+    });
+    ro.observe(vArea);
+  } catch (e) { console.warn('ResizeObserver failed:', e); }
+}
+
+// Window resize fallback
+window.addEventListener('resize', debounce(function() {
+  resizeCanvas();
+  markDirty();
+}, 150));
+
+// Boot
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(bootApp, 50);
+} else {
+  document.addEventListener('DOMContentLoaded', bootApp);
+}
+
+// Force fallback
+setTimeout(function() {
+  if (!canvas.width || canvas.width < 10) {
+    console.warn('⚠️ Canvas empty — forcing size');
+    canvas.width = 1200;
+    canvas.height = 800;
+    markDirty();
+    safeRender();
+  }
+}, 1000);
 </script>
 </body>
 </html>
