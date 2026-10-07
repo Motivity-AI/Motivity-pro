@@ -3,226 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Motivity AI — Elite Engineering v4.1</title>
+<title>Motivity AI — Elite Engineering v5.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --gold:#f59e0b;
-  --green:#22c55e; --surface:#161b22; --border:#30363d; --purple:#a855f7;
-}
-* { box-sizing:border-box; font-family:'Inter',sans-serif; margin:0; padding:0; }
-html, body { height:100%; overflow:hidden; }
-body { background:var(--bg); color:#fff; display:flex; }
-
-/* ═══ SIDEBAR ═══ */
-.sidebar {
-  width:420px; background:linear-gradient(180deg,#161b22,#0f141a);
-  padding:20px; border-right:3px solid var(--red); overflow-y:auto;
-  z-index:100; box-shadow:8px 0 32px rgba(0,0,0,.5);
-  transition:width .3s ease; position:relative; flex-shrink:0;
-}
-.sidebar.collapsed { width:52px; padding:20px 10px; overflow:hidden; }
-.sidebar.collapsed > *:not(.sidebar-toggle) { display:none; }
-.sidebar::-webkit-scrollbar { width:8px; }
-.sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
-.sidebar-toggle {
-  position:absolute; top:16px; right:16px; background:var(--surface);
-  border:1px solid var(--border); color:var(--blue); width:32px; height:32px;
-  border-radius:8px; cursor:pointer; font-size:16px; font-weight:900;
-  display:flex; align-items:center; justify-content:center; z-index:10;
-}
-.sidebar-toggle:hover { background:var(--blue); color:#000; }
-.sidebar.collapsed .sidebar-toggle { right:10px; }
-
-.brand { text-align:center; margin-bottom:22px; margin-top:24px; }
-.brand h1 { font-size:22px; font-weight:900; letter-spacing:2px; }
-.brand h1 span { color:var(--red); }
-.brand p { font-size:10px; color:#8b949e; letter-spacing:3px; margin-top:2px; }
-.brand .ver { font-size:9px; color:var(--blue); margin-top:4px; letter-spacing:1px; }
-
-.box { background:rgba(33,38,45,.7); backdrop-filter:blur(8px);
-  padding:16px; border-radius:12px; margin-bottom:14px;
-  border:1px solid rgba(56,189,248,.15); transition:.3s; }
-.box:hover { border-color:rgba(56,189,248,.35); }
-h3 { font-size:13px; color:var(--blue); margin-bottom:12px; font-weight:700;
-  display:flex; align-items:center; gap:8px; }
-h3::before { content:''; width:3px; height:14px; background:var(--red); border-radius:2px; }
-h3 .badge { margin-left:auto; background:var(--red); color:#fff; font-size:9px;
-  padding:2px 7px; border-radius:10px; font-weight:700; }
-h3 .badge.blue { background:var(--blue); color:#000; }
-h3 .badge.green { background:var(--green); color:#000; }
-h3 .badge.gold { background:var(--gold); color:#000; }
-h3 .badge.purple { background:var(--purple); color:#fff; }
-
-label { font-size:11px; color:#8b949e; display:block; margin-top:10px; font-weight:600; }
-input, select { width:100%; padding:10px 12px; background:#0a0e13; color:#fff;
-  border:1px solid var(--border); border-radius:8px; margin-top:5px;
-  font-family:inherit; font-size:13px; transition:.2s; }
-input:focus, select:focus { outline:none; border-color:var(--blue);
-  box-shadow:0 0 0 3px rgba(56,189,248,.15); }
-.row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-
-/* ═══ KPI ═══ */
-.kpi-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
-.kpi { background:linear-gradient(135deg,#0a0e13,#161b22);
-  border:1px solid var(--border); border-radius:8px;
-  padding:10px 6px; text-align:center; transition:.3s; }
-.kpi .v { font-size:17px; font-weight:900; color:var(--blue); line-height:1.1;
-  font-family:'JetBrains Mono',monospace; }
-.kpi .l { font-size:9.5px; color:#8b949e; margin-top:3px; line-height:1.3; }
-.kpi.ok .v { color:var(--green); }
-.kpi.warn .v { color:var(--gold); }
-.kpi.bad .v { color:var(--red); }
-
-/* ═══ BUTTONS ═══ */
-.btn { border:none; padding:13px; width:100%; border-radius:10px;
-  font-weight:900; cursor:pointer; transition:.25s; font-family:inherit;
-  font-size:13px; letter-spacing:.3px; margin-top:8px;
-  display:flex; align-items:center; justify-content:center; gap:8px; }
-.btn-smart { background:linear-gradient(135deg,#e60012,#ff2e40); color:#fff;
-  box-shadow:0 4px 15px rgba(230,0,18,.35); }
-.btn-smart:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(230,0,18,.5); }
-.btn-report { background:linear-gradient(135deg,#38bdf8,#0ea5e9); color:#000;
-  box-shadow:0 4px 15px rgba(56,189,248,.3); }
-.btn-report:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(56,189,248,.5); }
-.btn-ghost { background:transparent; color:#8b949e; border:1px solid var(--border);
-  font-size:11px; padding:9px; margin-top:0; }
-.btn-ghost:hover { background:var(--border); color:#fff; }
-.btn-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
-
-/* ═══ TABS ═══ */
-.tabs { display:flex; gap:4px; margin-bottom:12px; background:#0a0e13;
-  padding:4px; border-radius:10px; border:1px solid var(--border); }
-.tab { flex:1; padding:8px 6px; text-align:center; cursor:pointer;
-  border-radius:6px; font-size:11px; font-weight:700; color:#8b949e;
-  transition:.2s; user-select:none; }
-.tab:hover { color:#fff; }
-.tab.active { background:var(--red); color:#fff; box-shadow:0 2px 8px rgba(230,0,18,.4); }
-
-/* ═══ VIEWPORT ═══ */
-.viewport { flex:1; position:relative;
-  background:radial-gradient(circle at 50% 50%,#0f1a26,#040a12);
-  overflow:hidden; min-width:0; }
-canvas { display:block; width:100%; height:100%; }
-
-.v-ctrl { position:absolute; background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:10px; padding:6px;
-  display:flex; gap:4px; z-index:10; flex-wrap:wrap; max-width:calc(100% - 32px); }
-.v-ctrl.top-left { top:16px; left:16px; }
-.v-ctrl.top-right { top:16px; right:16px; }
-.v-ctrl button { background:transparent; color:#ccc; border:none; width:34px; height:34px;
-  border-radius:6px; cursor:pointer; font-size:15px; font-weight:700;
-  transition:.2s; font-family:inherit; }
-.v-ctrl button:hover { background:var(--border); color:#fff; }
-.v-ctrl button.on { background:var(--blue); color:#000; }
-
-/* ═══ HINT / CURSOR ═══ */
-.hint-bar { position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
-  background:rgba(22,27,34,.9); backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:10px; padding:8px 16px;
-  font-size:11.5px; color:#8b949e; z-index:10; white-space:nowrap; }
-.hint-bar b { color:var(--blue); }
-
-.cursor-info { position:absolute; bottom:16px; right:16px;
-  background:rgba(22,27,34,.92); backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:10px; padding:10px 16px;
-  font-size:11.5px; color:#fff; z-index:10; display:flex; gap:16px; }
-.cursor-info b { color:var(--blue); font-weight:700; font-family:'JetBrains Mono',monospace; }
-.cursor-info .st { color:var(--gold); }
-.cursor-info .sti-good { color:var(--green); }
-.cursor-info .sti-bad { color:var(--red); }
-
-/* ═══ WARNINGS ═══ */
-.warnings { position:absolute; top:70px; left:16px; max-width:340px;
-  display:flex; flex-direction:column; gap:6px; z-index:9;
-  max-height:calc(100vh - 180px); overflow-y:auto; }
-.warn-item { background:rgba(245,158,11,.15); border:1px solid var(--gold);
-  color:#ffd97a; padding:8px 12px; border-radius:8px; font-size:11.5px;
-  backdrop-filter:blur(8px); font-weight:600; }
-.warn-item.critical { background:rgba(230,0,18,.15); border-color:var(--red); color:#ff8a95; }
-.warn-item.info { background:rgba(56,189,248,.12); border-color:var(--blue); color:#8bd5ff; }
-.warn-item.ok { background:rgba(34,197,94,.12); border-color:var(--green); color:#7fe5a4; }
-
-/* ═══ REPORT ═══ */
-#reportModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.97);
-  z-index:2000; padding:30px; overflow-y:auto; }
-.report-paper { background:#fff; color:#333; max-width:1100px; margin:auto;
-  padding:50px; border-radius:6px; box-shadow:0 0 60px rgba(230,0,18,.15);
-  line-height:1.7; position:relative; }
-.report-paper::before { content:''; position:absolute; top:0; left:0; right:0; height:8px;
-  background:linear-gradient(90deg,var(--red),var(--blue)); border-radius:6px 6px 0 0; }
-.rep-header { display:flex; justify-content:space-between; align-items:flex-start;
-  padding-bottom:20px; border-bottom:3px solid var(--red); margin-bottom:24px;
-  flex-wrap:wrap; gap:20px; }
-.rep-header h1 { color:var(--red); font-size:26px; }
-.rep-header p { font-size:12px; color:#888; margin-top:4px; }
-.rep-header .meta { text-align:right; font-size:12px; color:#555; line-height:1.8; }
-.rep-header .meta b { color:var(--red); }
-.report-paper h3 { color:#111; border-left:5px solid var(--red); padding-left:12px;
-  margin:26px 0 14px; font-size:16px; }
-.report-paper h3::before { display:none; }
-.report-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:12px; }
-.report-table th { background:#1a1a1a; color:#fff; }
-.report-table th, .report-table td { border:1px solid #ddd; padding:10px;
-  text-align:left; }
-.report-table tr:nth-child(even) td { background:#fafafa; }
-.report-table .cat-row td { background:#e8f0f7 !important; font-weight:900;
-  color:#0a5c8a; font-size:13px; border-top:2px solid #0a5c8a; }
-.report-table .total-row td { background:#1a1a1a !important; color:#fff;
-  font-weight:900; border:2px solid var(--red); }
-.eng-note { background:#f0f7ff; border-left:5px solid var(--blue);
-  padding:18px; margin-top:16px; font-size:13px; line-height:2;
-  border-radius:6px 0 0 6px; }
-.eng-note strong { color:#0a5c8a; }
-.eng-note.warn { background:#fff8e6; border-color:var(--gold); }
-.eng-note.warn strong { color:#9a6700; }
-.eng-note.critical { background:#ffebed; border-color:var(--red); }
-.eng-note.critical strong { color:#a30010; }
-.eng-note.ok { background:#f0fff4; border-color:var(--green); }
-.eng-note.ok strong { color:#1a7a3a; }
-.acoustic-summary { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-top:14px; }
-.ac-box { background:#f5f7fa; border:1px solid #e0e4e8; border-radius:8px;
-  padding:12px; text-align:center; }
-.ac-box .v { font-size:20px; font-weight:900; color:#0a5c8a;
-  font-family:'JetBrains Mono',monospace; }
-.ac-box .l { font-size:10px; color:#666; margin-top:4px; }
-.ac-box.good .v { color:#1a7a3a; }
-.ac-box.bad .v { color:#c40010; }
-.sys-overview { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px; }
-.sys-card { background:#f9fafb; border:1px solid #e5e7eb; border-left:4px solid var(--blue);
-  border-radius:8px; padding:14px; }
-.sys-card h4 { color:#0a5c8a; font-size:13px; margin-bottom:8px; }
-.sys-card .row-item { display:flex; justify-content:space-between; font-size:12px;
-  padding:4px 0; border-bottom:1px dashed #e5e7eb; }
-.sys-card .row-item:last-child { border:none; }
-.sys-card .row-item b { color:#c40010; }
-
-@media print {
-  .no-print { display:none !important; }
-  #reportModal { position:static; padding:0; background:#fff; }
-  .report-paper { box-shadow:none; padding:20px; }
-  body { overflow:visible; }
-}
-
-@media (max-width:900px) {
-  .sidebar { width:340px; }
-  .acoustic-summary { grid-template-columns:1fr 1fr; }
-  .sys-overview { grid-template-columns:1fr; }
-  .cursor-info { display:none; }
-}
+:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--gold:#f59e0b;--green:#22c55e;--border:#30363d;--purple:#a855f7;--cyan:#06b6d4}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:#fff;display:flex}
+.sidebar{width:420px;background:linear-gradient(180deg,#161b22,#0f141a);padding:20px;border-right:3px solid var(--red);overflow-y:auto;z-index:100;transition:width .3s;position:relative;flex-shrink:0}
+.sidebar.collapsed{width:52px;padding:20px 10px;overflow:hidden}
+.sidebar.collapsed>*:not(.sidebar-toggle){display:none}
+.sidebar::-webkit-scrollbar{width:8px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.sidebar-toggle{position:absolute;top:16px;right:16px;background:#161b22;border:1px solid var(--border);color:var(--blue);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:10}
+.sidebar-toggle:hover{background:var(--blue);color:#000}
+.sidebar.collapsed .sidebar-toggle{right:10px}
+.brand{text-align:center;margin-bottom:22px;margin-top:24px}
+.brand h1{font-size:22px;font-weight:900;letter-spacing:2px}
+.brand h1 span{color:var(--red)}
+.brand p{font-size:10px;color:#8b949e;letter-spacing:3px;margin-top:2px}
+.brand .ver{font-size:9px;color:var(--blue);margin-top:4px;letter-spacing:1px}
+.box{background:rgba(33,38,45,.7);padding:16px;border-radius:12px;margin-bottom:14px;border:1px solid rgba(56,189,248,.15);transition:.3s}
+.box:hover{border-color:rgba(56,189,248,.35)}
+h3{font-size:13px;color:var(--blue);margin-bottom:12px;font-weight:700;display:flex;align-items:center;gap:8px}
+h3::before{content:'';width:3px;height:14px;background:var(--red);border-radius:2px}
+h3 .badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700}
+h3 .badge.blue{background:var(--blue);color:#000}
+h3 .badge.green{background:var(--green);color:#000}
+h3 .badge.gold{background:var(--gold);color:#000}
+h3 .badge.purple{background:var(--purple);color:#fff}
+h3 .badge.cyan{background:var(--cyan);color:#000}
+label{font-size:11px;color:#8b949e;display:block;margin-top:10px;font-weight:600}
+input,select{width:100%;padding:10px 12px;background:#0a0e13;color:#fff;border:1px solid var(--border);border-radius:8px;margin-top:5px;font-family:inherit;font-size:13px}
+input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--border);border-radius:8px;padding:10px 6px;text-align:center}
+.kpi .v{font-size:17px;font-weight:900;color:var(--blue);font-family:'JetBrains Mono',monospace;line-height:1.1}
+.kpi .l{font-size:9.5px;color:#8b949e;margin-top:3px}
+.kpi.ok .v{color:var(--green)}
+.kpi.warn .v{color:var(--gold)}
+.kpi.bad .v{color:var(--red)}
+.btn{border:none;padding:13px;width:100%;border-radius:10px;font-weight:900;cursor:pointer;transition:.25s;font-family:inherit;font-size:13px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-smart{background:linear-gradient(135deg,#e60012,#ff2e40);color:#fff}
+.btn-smart:hover{transform:translateY(-2px)}
+.btn-report{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000}
+.btn-report:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:#8b949e;border:1px solid var(--border);font-size:11px;padding:9px;margin-top:0}
+.btn-ghost:hover{background:var(--border);color:#fff}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.tabs{display:flex;gap:4px;margin-bottom:12px;background:#0a0e13;padding:4px;border-radius:10px;border:1px solid var(--border)}
+.tab{flex:1;padding:8px 6px;text-align:center;cursor:pointer;border-radius:6px;font-size:11px;font-weight:700;color:#8b949e;transition:.2s;user-select:none}
+.tab:hover{color:#fff}
+.tab.active{background:var(--red);color:#fff}
+.viewport{flex:1;position:relative;background:radial-gradient(circle at 50% 50%,#0f1a26,#040a12);overflow:hidden;min-width:0}
+canvas{display:block;width:100%;height:100%}
+.v-ctrl{position:absolute;background:rgba(22,27,34,.9);border:1px solid var(--border);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:10;flex-wrap:wrap;max-width:calc(100% - 32px)}
+.v-ctrl.top-left{top:16px;left:16px}
+.v-ctrl.top-right{top:16px;right:16px;max-width:440px}
+.v-ctrl button{background:transparent;color:#ccc;border:none;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700}
+.v-ctrl button:hover{background:var(--border);color:#fff}
+.v-ctrl button.on{background:var(--blue);color:#000}
+.hint-bar{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.9);border:1px solid var(--border);border-radius:10px;padding:8px 16px;font-size:11.5px;color:#8b949e;z-index:10}
+.hint-bar b{color:var(--blue)}
+.cursor-info{position:absolute;bottom:16px;right:16px;background:rgba(22,27,34,.92);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:11.5px;color:#fff;z-index:10;display:flex;gap:16px}
+.cursor-info b{color:var(--blue);font-weight:700;font-family:'JetBrains Mono',monospace}
+.cursor-info .st{color:var(--gold)}
+.cursor-info .sti-good{color:var(--green)}
+.cursor-info .sti-bad{color:var(--red)}
+.warnings{position:absolute;top:70px;left:16px;max-width:340px;display:flex;flex-direction:column;gap:6px;z-index:9;max-height:calc(100vh - 180px);overflow-y:auto}
+.warn-item{background:rgba(245,158,11,.15);border:1px solid var(--gold);color:#ffd97a;padding:8px 12px;border-radius:8px;font-size:11.5px;font-weight:600}
+.warn-item.critical{background:rgba(230,0,18,.15);border-color:var(--red);color:#ff8a95}
+.warn-item.info{background:rgba(56,189,248,.12);border-color:var(--blue);color:#8bd5ff}
+.warn-item.ok{background:rgba(34,197,94,.12);border-color:var(--green);color:#7fe5a4}
+#reportModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:2000;padding:30px;overflow-y:auto}
+.report-paper{background:#fff;color:#333;max-width:1100px;margin:auto;padding:50px;border-radius:6px;line-height:1.7;position:relative}
+.report-paper::before{content:'';position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--red),var(--blue));border-radius:6px 6px 0 0}
+.rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid var(--red);margin-bottom:24px;flex-wrap:wrap;gap:20px}
+.rep-header h1{color:var(--red);font-size:26px}
+.rep-header p{font-size:12px;color:#888;margin-top:4px}
+.rep-header .meta{text-align:right;font-size:12px;color:#555;line-height:1.8}
+.rep-header .meta b{color:var(--red)}
+.report-paper h3{color:#111;border-left:5px solid var(--red);padding-left:12px;margin:26px 0 14px;font-size:16px}
+.report-paper h3::before{display:none}
+.report-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}
+.report-table th{background:#1a1a1a;color:#fff}
+.report-table th,.report-table td{border:1px solid #ddd;padding:10px;text-align:left}
+.report-table tr:nth-child(even) td{background:#fafafa}
+.report-table .cat-row td{background:#e8f0f7!important;font-weight:900;color:#0a5c8a;font-size:13px;border-top:2px solid #0a5c8a}
+.report-table .total-row td{background:#1a1a1a!important;color:#fff;font-weight:900;border:2px solid var(--red)}
+.eng-note{background:#f0f7ff;border-left:5px solid var(--blue);padding:18px;margin-top:16px;font-size:13px;line-height:2;border-radius:6px 0 0 6px}
+.eng-note strong{color:#0a5c8a}
+.eng-note.warn{background:#fff8e6;border-color:var(--gold)}
+.eng-note.warn strong{color:#9a6700}
+.eng-note.critical{background:#ffebed;border-color:var(--red)}
+.eng-note.critical strong{color:#a30010}
+.eng-note.ok{background:#f0fff4;border-color:var(--green)}
+.eng-note.ok strong{color:#1a7a3a}
+.acoustic-summary{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px}
+.ac-box{background:#f5f7fa;border:1px solid #e0e4e8;border-radius:8px;padding:12px;text-align:center}
+.ac-box .v{font-size:20px;font-weight:900;color:#0a5c8a;font-family:'JetBrains Mono',monospace}
+.ac-box .l{font-size:10px;color:#666;margin-top:4px}
+.ac-box.good .v{color:#1a7a3a}
+.ac-box.bad .v{color:#c40010}
+.sys-overview{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+.sys-card{background:#f9fafb;border:1px solid #e5e7eb;border-left:4px solid var(--blue);border-radius:8px;padding:14px}
+.sys-card h4{color:#0a5c8a;font-size:13px;margin-bottom:8px}
+.sys-card .row-item{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed #e5e7eb}
+.sys-card .row-item:last-child{border:none}
+.sys-card .row-item b{color:#c40010}
+@media print{.no-print{display:none!important}#reportModal{position:static;padding:0;background:#fff}.report-paper{box-shadow:none;padding:20px}body{overflow:visible}}
+@media(max-width:900px){.sidebar{width:340px}.acoustic-summary{grid-template-columns:1fr 1fr}.sys-overview{grid-template-columns:1fr}.cursor-info{display:none}}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
 <aside class="sidebar" id="sidebar">
   <button class="sidebar-toggle" onclick="toggleSidebar()">◀</button>
-
-  <div class="brand">
-    <h1>MOTIVITY <span>AI</span></h1>
-    <p>ELITE ENGINEERING</p>
-    <div class="ver">v4.1 · ACOUSTIC + CONFERENCE</div>
-  </div>
+  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.0 · STAGE + A/V</div></div>
 
   <div class="tabs">
     <div class="tab active" data-tab="acoustic" onclick="switchTab('acoustic')">🔊 Acoustic</div>
@@ -230,55 +128,41 @@ canvas { display:block; width:100%; height:100%; }
     <div class="tab" data-tab="project" onclick="switchTab('project')">📋 Project</div>
   </div>
 
-  <!-- PROJECT TAB -->
   <div id="tab-project" style="display:none">
-    <div class="box">
-      <h3>Project Information</h3>
-      <label>Project Name</label>
-      <input type="text" id="projName" value="Main Conference Hall">
-      <label>Engineer Name</label>
-      <input type="text" id="engName" value="Eng. Ahmed">
-      <label>Client</label>
-      <input type="text" id="clientName" value="—">
-      <label>Site Location</label>
-      <input type="text" id="siteLoc" value="—">
-      <label>Project Reference</label>
-      <input type="text" id="projRef" value="MOT-ENG-2026-001">
+    <div class="box"><h3>Project Information</h3>
+      <label>Project Name</label><input type="text" id="projName" value="Main Conference Hall">
+      <label>Engineer Name</label><input type="text" id="engName" value="Eng. Ahmed">
+      <label>Client</label><input type="text" id="clientName" value="—">
+      <label>Site Location</label><input type="text" id="siteLoc" value="—">
+      <label>Project Reference</label><input type="text" id="projRef" value="MOT-ENG-2026-001">
     </div>
-
-    <div class="box">
-      <h3>Room Function</h3>
+    <div class="box"><h3>Room Function</h3>
       <select id="roomMode">
         <option value="meeting">Meeting Room (Oval Table)</option>
         <option value="conference">Conference Hall (Theater)</option>
         <option value="boardroom">Boardroom (U-Shape)</option>
       </select>
-      <label>Room Type (Absorption Coefficient α)</label>
+      <label>Room Type (α)</label>
       <select id="roomType">
-        <option value="0.10">Untreated Room (α = 0.10)</option>
+        <option value="0.10">Untreated (α = 0.10)</option>
         <option value="0.20" selected>Standard Office (α = 0.20)</option>
-        <option value="0.35">Acoustically Treated (α = 0.35)</option>
-        <option value="0.50">Studio Treated (α = 0.50)</option>
+        <option value="0.35">Treated (α = 0.35)</option>
+        <option value="0.50">Studio (α = 0.50)</option>
       </select>
     </div>
   </div>
 
-  <!-- ACOUSTIC TAB -->
   <div id="tab-acoustic">
-    <div class="box">
-      <h3>Engineering Dimensions</h3>
+    <div class="box"><h3>Engineering Dimensions</h3>
       <div class="row">
         <div><label>Length (m)</label><input type="number" id="dim_l" value="25" step="0.5" min="3" max="80"></div>
         <div><label>Width (m)</label><input type="number" id="dim_w" value="15" step="0.5" min="3" max="60"></div>
       </div>
-      <label>Ceiling Height (m)</label>
-      <input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12">
-      <label>Ear-to-Ceiling Distance (m)</label>
-      <input type="number" id="earH" value="1.2" step="0.1" min="1" max="2">
+      <label>Ceiling Height (m)</label><input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12">
+      <label>Ear-to-Ceiling (m)</label><input type="number" id="earH" value="1.2" step="0.1" min="1" max="2">
     </div>
 
-    <div class="box">
-      <h3>Motivity Speaker Set <span class="badge blue" id="modelBadge">At-08</span></h3>
+    <div class="box"><h3>Motivity Speakers <span class="badge blue" id="modelBadge">At-08</span></h3>
       <select id="spkModel">
         <option value="At-08">At-08 · 250W · 90° · 97dB</option>
         <option value="At-06">At-06 · 100W · 90° · 96dB</option>
@@ -286,24 +170,63 @@ canvas { display:block; width:100%; height:100%; }
         <option value="Cs-08">Cs-08 · 150W · 120° · 92dB</option>
         <option value="Cs-06">Cs-06 · 100W · 120° · 90dB</option>
       </select>
-      <label>Speakers per Wall</label>
-      <input type="number" id="spkPerSide" value="4" min="1" max="20">
-
+      <label>Speakers per Wall</label><input type="number" id="spkPerSide" value="4" min="1" max="20">
       <div class="kpi-row">
-        <div class="kpi"><div class="v" id="kpiTotalV">0</div><div class="l">Total Speakers</div></div>
-        <div class="kpi"><div class="v" id="kpiWattV">0</div><div class="l">Total Watts</div></div>
+        <div class="kpi"><div class="v" id="kpiTotalV">0</div><div class="l">Speakers</div></div>
+        <div class="kpi"><div class="v" id="kpiWattV">0</div><div class="l">Watts</div></div>
         <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">Coverage</div></div>
         <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">Min SPL</div></div>
         <div class="kpi" id="kpiSti"><div class="v" id="kpiStiV">—</div><div class="l">STI</div></div>
-        <div class="kpi" id="kpiRt"><div class="v" id="kpiRtV">—</div><div class="l">RT60 (s)</div></div>
+        <div class="kpi" id="kpiRt"><div class="v" id="kpiRtV">—</div><div class="l">RT60</div></div>
       </div>
+    </div>
+
+    <div class="box"><h3>Stage &amp; A/V <span class="badge cyan">STAGE</span></h3>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="showPodium" style="width:auto;margin:0;" checked>Include Podium</label>
+      <div class="row">
+        <div><label>Podium Width (m)</label><input type="number" id="podiumW" value="1.2" step="0.1" min="0.6" max="3"></div>
+        <div><label>Podium Depth (m)</label><input type="number" id="podiumD" value="0.7" step="0.1" min="0.4" max="2"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showScreen" style="width:auto;margin:0;" checked>Include Screen</label>
+      <div class="row">
+        <div><label>Screen Width (m)</label><input type="number" id="screenW" value="6" step="0.5" min="2" max="20"></div>
+        <div><label>Screen Type</label>
+          <select id="screenType">
+            <option value="projection" selected>Projection</option>
+            <option value="led">LED Wall</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showCameras" style="width:auto;margin:0;" checked>Include Cameras</label>
+      <div class="row">
+        <div><label>Camera Count</label><input type="number" id="camCount" value="2" min="0" max="4"></div>
+        <div><label>Camera FOV (°)</label><input type="number" id="camFOV" value="60" min="30" max="120"></div>
+      </div>
+    </div>
+
+    <div class="box"><h3>Mixing &amp; Processing <span class="badge green">AUDIO</span></h3>
+      <label>Digital Mixer (DSP)</label>
+      <select id="confMixer">
+        <option value="">— None —</option>
+        <option value="AMIX10 II" selected>AMIX10 II (8ch DSP)</option>
+      </select>
+      <label>Signal Processor</label>
+      <select id="audioDSP">
+        <option value="">— None —</option>
+        <option value="DP24">DP24 (2in/4out)</option>
+        <option value="DP36">DP36 (3in/6out)</option>
+        <option value="DP48">DP48 (4in/8out)</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;"><input type="checkbox" id="useFeedback" style="width:auto;margin:0;" checked>Feedback Suppressor DF224</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="useSeq" style="width:auto;margin:0;" checked>Power Sequencer SC-802</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="useEq" style="width:auto;margin:0;">Graphic EQ GEQ231</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;"><input type="checkbox" id="showRack" style="width:auto;margin:0;" checked>Show Rack on Drawing</label>
     </div>
   </div>
 
-  <!-- CONFERENCE TAB -->
   <div id="tab-conference" style="display:none">
-    <div class="box">
-      <h3>Meeting Mode <span class="badge purple">SYSTEM</span></h3>
+    <div class="box"><h3>Meeting Mode <span class="badge purple">SYSTEM</span></h3>
       <select id="confMode">
         <option value="basic">Basic Discussion</option>
         <option value="camera">Camera Tracking</option>
@@ -312,78 +235,37 @@ canvas { display:block; width:100%; height:100%; }
         <option value="wireless">Wireless 5G</option>
         <option value="interpretation">Simultaneous Interpretation</option>
       </select>
-      <button class="btn btn-smart" style="margin-top:10px; padding:10px" onclick="autoRecommendConference()">
-        🤖 Auto-Recommend System
-      </button>
+      <button class="btn btn-smart" style="margin-top:10px;padding:10px" onclick="autoRecommendConference()">🤖 Auto-Recommend</button>
     </div>
 
-    <div class="box">
-      <h3>Digital Units <span class="badge gold">UNITS</span></h3>
-
-      <label>Main Host</label>
-      <select id="confHost" onchange="onHostChange()"></select>
-
-      <label>Chairman Unit</label>
-      <select id="confChair"></select>
-
-      <label>Delegate Unit</label>
-      <select id="confDelegate"></select>
-
+    <div class="box"><h3>Digital Units <span class="badge gold">UNITS</span></h3>
+      <label>Main Host</label><select id="confHost" onchange="onHostChange()"></select>
+      <label>Chairman Unit</label><select id="confChair"></select>
+      <label>Delegate Unit</label><select id="confDelegate"></select>
       <div class="row">
         <div><label>Chairman Qty</label><input type="number" id="cQty" value="1" min="0" max="10"></div>
         <div><label>Delegate Qty</label><input type="number" id="dQty" value="20" min="0" max="500"></div>
       </div>
-
-      <label>Additional Microphone (Optional)</label>
-      <select id="confExtMic">
-        <option value="">— None —</option>
-        <option value="G-T43">G-T43 (Condenser, XLR)</option>
-      </select>
+      <label>Additional Mic</label>
+      <select id="confExtMic"><option value="">— None —</option><option value="G-T43">G-T43 (XLR)</option></select>
     </div>
 
-    <div class="box">
-      <h3>Mixing &amp; Processing <span class="badge green">MIX</span></h3>
-      <label>Digital Mixer</label>
-      <select id="confMixer">
-        <option value="">— None —</option>
-        <option value="AMIX10 II" selected>AMIX10 II (8ch DSP)</option>
-      </select>
-
-      <label>Additional Accessories</label>
-      <div style="font-size:11px; color:#8b949e; margin-top:8px;">
-        <label style="display:flex; align-items:center; gap:8px; margin-top:6px; cursor:pointer;">
-          <input type="checkbox" id="useCharger" style="width:auto; margin:0;" checked>
-          Central Charger GW5020 (Wireless)
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; margin-top:6px; cursor:pointer;">
-          <input type="checkbox" id="useFeedback" style="width:auto; margin:0;" checked>
-          Feedback Suppressor DF224
-        </label>
-        <label style="display:flex; align-items:center; gap:8px; margin-top:6px; cursor:pointer;">
-          <input type="checkbox" id="useSeq" style="width:auto; margin:0;" checked>
-          Power Sequencer SC-802 II
-        </label>
-      </div>
+    <div class="box"><h3>Wireless Charging</h3>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="useCharger" style="width:auto;margin:0;" checked>Central Charger GW5020</label>
     </div>
 
-    <div class="box" id="interpBox" style="display:none">
-      <h3>Simultaneous Interpretation <span class="badge purple">INTERP</span></h3>
-      <label>Number of Languages</label>
-      <input type="number" id="interpLang" value="2" min="1" max="5">
-      <label>Interpreter Units</label>
-      <input type="number" id="interpUnits" value="2" min="1" max="10">
-      <label>IR Receivers</label>
-      <input type="number" id="irReceivers" value="20" min="0" max="500">
-      <label>IR Emitter Panels</label>
-      <input type="number" id="irEmitters" value="1" min="1" max="10">
+    <div class="box" id="interpBox" style="display:none"><h3>Interpretation <span class="badge purple">INTERP</span></h3>
+      <label>Languages</label><input type="number" id="interpLang" value="2" min="1" max="5">
+      <label>Interpreter Units</label><input type="number" id="interpUnits" value="2" min="1" max="10">
+      <label>IR Receivers</label><input type="number" id="irReceivers" value="20" min="0" max="500">
+      <label>IR Emitter Panels</label><input type="number" id="irEmitters" value="1" min="1" max="10">
     </div>
 
-    <div class="box">
-      <h3>System Summary <span class="badge blue">SUMMARY</span></h3>
+    <div class="box"><h3>Summary <span class="badge blue">SUM</span></h3>
       <div class="kpi-row">
-        <div class="kpi"><div class="v" id="kpiConfTotal">0</div><div class="l">Total Units</div></div>
+        <div class="kpi"><div class="v" id="kpiConfTotal">0</div><div class="l">Units</div></div>
         <div class="kpi"><div class="v" id="kpiConfPower">0</div><div class="l">Power (W)</div></div>
-        <div class="kpi" id="kpiConfCable"><div class="v" id="kpiConfCableV">—</div><div class="l">Cables</div></div>
+        <div class="kpi"><div class="v" id="kpiConfCableV">—</div><div class="l">Cables</div></div>
         <div class="kpi" id="kpiConfLoad"><div class="v" id="kpiConfLoadV">—</div><div class="l">Host Load</div></div>
       </div>
     </div>
@@ -396,31 +278,31 @@ canvas { display:block; width:100%; height:100%; }
   </div>
 </aside>
 
-<!-- ══════════════════════ VIEWPORT ══════════════════════ -->
 <main class="viewport" id="vArea">
   <canvas id="mainCanvas"></canvas>
 
   <div class="v-ctrl top-left">
-    <button onclick="zoomIn()" title="Zoom In">+</button>
-    <button onclick="zoomOut()" title="Zoom Out">−</button>
-    <button onclick="resetView()" title="Reset View">⌂</button>
+    <button onclick="zoomIn()">+</button>
+    <button onclick="zoomOut()">−</button>
+    <button onclick="resetView()">⌂</button>
   </div>
 
   <div class="v-ctrl top-right">
     <button id="tgTile"  class="on" onclick="toggle('tile')"  title="Ceiling Tiles">▦</button>
-    <button id="tgCover" class="on" onclick="toggle('cover')" title="Coverage Cones">🌐</button>
-    <button id="tgHeat"  onclick="toggle('heat')"  title="Sound Heatmap">🌡️</button>
+    <button id="tgCover" class="on" onclick="toggle('cover')" title="Coverage">🌐</button>
+    <button id="tgHeat"  onclick="toggle('heat')"  title="Heatmap">🌡️</button>
     <button id="tgRays"  class="on" onclick="toggle('rays')"  title="Sound Rays">🔊</button>
-    <button id="tgGrid"  onclick="toggle('grid')"  title="Meter Grid">⊞</button>
-    <button id="tgConf"  class="on" onclick="toggle('conf')"  title="Conference Units">🎤</button>
+    <button id="tgGrid"  onclick="toggle('grid')"  title="Grid">⊞</button>
+    <button id="tgConf"  class="on" onclick="toggle('conf')"  title="Conference">🎤</button>
     <button id="tgFurn"  class="on" onclick="toggle('furn')"  title="Furniture">🪑</button>
-    <button id="tgTech"  class="on" onclick="toggle('tech')"  title="Technical Annotations">📐</button>
+    <button id="tgStage" class="on" onclick="toggle('stage')" title="Stage">🎬</button>
+    <button id="tgCam"   class="on" onclick="toggle('cam')"   title="Cameras">🎥</button>
+    <button id="tgRack"  class="on" onclick="toggle('rack')"  title="Rack">🎛️</button>
+    <button id="tgTech"  class="on" onclick="toggle('tech')"  title="Dimensions">📐</button>
   </div>
 
   <div class="warnings" id="warningsPanel"></div>
-
   <div class="hint-bar">🖱️ <b>Wheel</b> Zoom · <b>Drag</b> Pan · <b>Ctrl+Z</b> Undo</div>
-
   <div class="cursor-info">
     <span>SPL: <b id="cursorSPL">—</b></span>
     <span>STI: <b id="cursorSTI" class="st">—</b></span>
@@ -428,19 +310,14 @@ canvas { display:block; width:100%; height:100%; }
   </div>
 </main>
 
-<!-- ══════════════════════ REPORT ══════════════════════ -->
 <div id="reportModal">
   <div class="report-paper">
-    <div class="no-print" style="text-align:right; margin-bottom:20px">
-      <button onclick="window.print()" class="btn btn-smart" style="width:auto; padding:10px 24px; display:inline-flex">🖨️ Save PDF</button>
-      <button onclick="document.getElementById('reportModal').style.display='none'" style="background:#eee; padding:10px 24px; border:none; cursor:pointer; border-radius:10px; font-weight:700; font-family:inherit; margin-left:8px">Close</button>
+    <div class="no-print" style="text-align:right;margin-bottom:20px">
+      <button onclick="window.print()" class="btn btn-smart" style="width:auto;padding:10px 24px;display:inline-flex">🖨️ Save PDF</button>
+      <button onclick="document.getElementById('reportModal').style.display='none'" style="background:#eee;padding:10px 24px;border:none;cursor:pointer;border-radius:10px;font-weight:700;font-family:inherit;margin-left:8px">Close</button>
     </div>
-
     <div class="rep-header">
-      <div>
-        <h1>Technical Project Report</h1>
-        <p>MOTIVITY ELITE ENGINEERING · REF <span id="repRef">—</span></p>
-      </div>
+      <div><h1>Technical Project Report</h1><p>MOTIVITY ELITE ENGINEERING · REF <span id="repRef">—</span></p></div>
       <div class="meta">
         <b>Project:</b> <span id="repProjName">—</span><br>
         <b>Engineer:</b> <span id="repEngName">—</span><br>
@@ -449,42 +326,23 @@ canvas { display:block; width:100%; height:100%; }
         <b>Date:</b> <span id="repDate">—</span>
       </div>
     </div>
-
     <h3>Engineering Layout Drawing</h3>
-    <div style="background:#0a1520; padding:15px; text-align:center; border-radius:8px">
-      <img id="reportImg" style="max-width:100%; border-radius:6px">
-    </div>
-
-    <h3>System Overview</h3>
-    <div class="sys-overview" id="sysOverview"></div>
-
-    <h3>Acoustic Summary</h3>
-    <div class="acoustic-summary" id="acousticSummary"></div>
-
+    <div style="background:#0a1520;padding:15px;text-align:center;border-radius:8px"><img id="reportImg" style="max-width:100%;border-radius:6px"></div>
+    <h3>System Overview</h3><div class="sys-overview" id="sysOverview"></div>
+    <h3>Acoustic Summary</h3><div class="acoustic-summary" id="acousticSummary"></div>
     <h3>Bill of Quantities (BOQ)</h3>
-    <table class="report-table">
-      <thead><tr><th>#</th><th>Item</th><th>Model</th><th>Qty</th><th>Key Specifications</th></tr></thead>
-      <tbody id="boqBody"></tbody>
-    </table>
-
-    <h3>Engineering Justification</h3>
-    <div id="justificationBody"></div>
-
-    <h3>Warnings &amp; Recommendations</h3>
-    <div id="warningsReport"></div>
-
-    <div style="margin-top:40px; padding-top:20px; border-top:2px solid #ddd; text-align:center; font-size:11px; color:#888;">
+    <table class="report-table"><thead><tr><th>#</th><th>Item</th><th>Model</th><th>Qty</th><th>Specifications</th></tr></thead><tbody id="boqBody"></tbody></table>
+    <h3>Engineering Justification</h3><div id="justificationBody"></div>
+    <h3>Warnings &amp; Recommendations</h3><div id="warningsReport"></div>
+    <div style="margin-top:40px;padding-top:20px;border-top:2px solid #ddd;text-align:center;font-size:11px;color:#888">
       MOTIVITY ELITE ENGINEERING · info@whiteirisksa.com · info@mustech.ae<br>
-      Saudi Arabia · UAE · Egypt · Sudan<br>
-      <em>Specifications subject to change without prior notice</em>
+      Saudi Arabia · UAE · Egypt · Sudan
     </div>
   </div>
 </div>
 
 <script>
-/* ============================================================
-   POLYFILL: roundRect for older browsers
-   ============================================================ */
+/* POLYFILL roundRect */
 if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
     if (typeof r === 'number') r = [r, r, r, r];
@@ -503,9 +361,6 @@ if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D
   };
 }
 
-/* ============================================================
-   DATABASES
-   ============================================================ */
 var SPEAKERS = {
   'At-08':  { name:'At-08',  pwr:250, angle:90,  sens:97, freq:'80Hz-20kHz',  q:6.83 },
   'At-06':  { name:'At-06',  pwr:100, angle:90,  sens:96, freq:'80Hz-20kHz',  q:6.83 },
@@ -515,89 +370,64 @@ var SPEAKERS = {
 };
 
 var CONF_HOSTS = {
-  'MT1000S': { name:'MT1000S', fullName:'Motivity MT1000S', type:'basic', desc:'Basic Discussion',
-    maxUnits:60, maxSpeaking:6, parallelPorts:4, power:20,
-    hasCamera:false, hasVoting:false, hasDante:false, hasWireless:false,
-    display:'LCD', features:['7 speech modes','Power-off memory','Anti-feedback','LCD display'] },
-  'MT2000S': { name:'MT2000S', fullName:'Motivity MT2000S', type:'camera', desc:'Camera Tracking',
-    maxUnits:60, maxSpeaking:6, parallelPorts:4, power:25,
-    hasCamera:true, hasVoting:false, hasDante:false, hasWireless:false,
-    display:'4.3" LCD', features:['4 cameras','4.3" screen','USB recording','VISCA/Pelco'] },
-  'G-T40': { name:'G-T40', fullName:'Motivity G-T40', type:'hybrid', desc:'Hybrid Wired/Wireless',
-    maxUnits:200, maxSpeaking:6, parallelPorts:4, power:35,
-    hasCamera:true, hasVoting:false, hasDante:true, hasWireless:true,
-    display:'4.3" IPS', features:['Wired+Wireless','Dante','HDMI 4x1','TCP/IP'] },
-  'G-W40': { name:'G-W40', fullName:'Motivity G-W40', type:'wireless', desc:'Full Wireless',
-    maxUnits:200, maxSpeaking:4, parallelPorts:0, power:15,
-    hasCamera:true, hasVoting:false, hasDante:false, hasWireless:true,
-    display:'2.69" IPS', features:['UHF 512-945MHz','50m indoors','RS-485 Extender','USB'] },
-  'G-S40': { name:'G-S40', fullName:'Motivity G-S40', type:'premium', desc:'Premium Multi-Function',
-    maxUnits:256, maxSpeaking:8, parallelPorts:4, power:45,
-    hasCamera:true, hasVoting:true, hasDante:true, hasWireless:false,
-    display:'5" IPS Touch', features:['256 units','Dante','HDMI 4x1','Voting'] },
-  'G-T50': { name:'G-T50', fullName:'Motivity G-T50 (5G)', type:'premium', desc:'5G Fully Converged',
-    maxUnits:999, maxSpeaking:6, parallelPorts:8, power:60,
-    hasCamera:true, hasVoting:true, hasDante:true, hasWireless:true,
-    display:'5" IPS Touch', features:['WiFi 5G','AES-128','8 RJ45','Dante'] }
+  'MT1000S': { name:'MT1000S', type:'basic', desc:'Basic', maxUnits:60, power:20, features:['7 modes','Memory'] },
+  'MT2000S': { name:'MT2000S', type:'camera', desc:'Camera', maxUnits:60, power:25, features:['4 cams','USB'] },
+  'G-T40': { name:'G-T40', type:'hybrid', desc:'Hybrid', maxUnits:200, power:35, features:['Wireless','Dante'] },
+  'G-W40': { name:'G-W40', type:'wireless', desc:'Wireless', maxUnits:200, power:15, features:['UHF','50m'] },
+  'G-S40': { name:'G-S40', type:'premium', desc:'Premium', maxUnits:256, power:45, features:['Voting','Dante'] },
+  'G-T50': { name:'G-T50', type:'premium', desc:'5G', maxUnits:999, power:60, features:['WiFi 5G','AES-128'] }
 };
 
 var CONF_CHAIRS = {
   'MT380VC': { name:'MT380VC', type:'basic', power:0, display:'—' },
   'MT880VC': { name:'MT880VC', type:'basic', power:2, display:'2.4"' },
   'G-T31':   { name:'G-T31',   type:'premium', power:2, display:'LED' },
-  'G-T45':   { name:'G-T45',   type:'voting', power:2, display:'4.0" IPS' },
-  'G-T40C':  { name:'G-T40C',  type:'wireless', power:2, display:'2.4" IPS' },
-  'G-T51':   { name:'G-T51',   type:'digital', power:2, display:'2.4" TFT' },
-  'G-T51W':  { name:'G-T51W',  type:'wireless5g', power:2, display:'2.4" TFT' },
-  'G-T53':   { name:'G-T53',   type:'premium', power:3, display:'5" Touch' },
-  'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5" Touch' }
+  'G-T45':   { name:'G-T45',   type:'voting', power:2, display:'4" IPS' },
+  'G-T40C':  { name:'G-T40C',  type:'wireless', power:2, display:'2.4"' },
+  'G-T51':   { name:'G-T51',   type:'digital', power:2, display:'2.4"' },
+  'G-T51W':  { name:'G-T51W',  type:'wireless5g', power:2, display:'2.4"' },
+  'G-T53':   { name:'G-T53',   type:'premium', power:3, display:'5"' },
+  'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5"' }
 };
 
 var CONF_DELEGATES = {
-  'MT380VD': { name:'MT380VD', type:'basic', power:0 },
-  'MT880VD': { name:'MT880VD', type:'basic', power:2 },
-  'G-T32':   { name:'G-T32',   type:'premium', power:2 },
-  'G-T46':   { name:'G-T46',   type:'voting', power:2 },
-  'G-T40D':  { name:'G-T40D',  type:'wireless', power:2 },
-  'G-T52':   { name:'G-T52',   type:'digital', power:2 },
-  'G-T52W':  { name:'G-T52W',  type:'wireless5g', power:2 },
-  'G-T54':   { name:'G-T54',   type:'premium', power:3 },
-  'G-T54W':  { name:'G-T54W',  type:'wireless5g', power:3 }
+  'MT380VD': { name:'MT380VD', power:0 }, 'MT880VD': { name:'MT880VD', power:2 },
+  'G-T32': { name:'G-T32', power:2 }, 'G-T46': { name:'G-T46', power:2 },
+  'G-T40D': { name:'G-T40D', power:2 }, 'G-T52': { name:'G-T52', power:2 },
+  'G-T52W': { name:'G-T52W', power:2 }, 'G-T54': { name:'G-T54', power:3 },
+  'G-T54W': { name:'G-T54W', power:3 }
 };
 
 var CONF_ACCESSORIES = {
-  'AMIX10 II': { name:'AMIX10 II', power:30, desc:'Digital mixer 8ch · DSP · AGC · FBX' },
-  'GW5020':    { name:'GW5020',    power:200, desc:'Central charger 20-port USB' },
-  'DF224':     { name:'DF224',     power:10, desc:'Feedback suppressor · 24-notch' },
-  'SC-802 II': { name:'SC-802 II', power:8000, desc:'Power sequencer 8ch · LCD · 40A' },
-  'G-T43':     { name:'G-T43',     power:0.5, desc:'Condenser microphone · XLR · 48V' }
+  'AMIX10 II': { name:'AMIX10 II', power:30, desc:'Digital mixer 8ch · DSP' },
+  'GW5020': { name:'GW5020', power:200, desc:'Central charger 20-port' },
+  'DF224': { name:'DF224', power:10, desc:'Feedback suppressor' },
+  'SC-802 II': { name:'SC-802 II', power:8000, desc:'Power sequencer 8ch' },
+  'G-T43': { name:'G-T43', power:0.5, desc:'Condenser XLR' },
+  'GEQ231': { name:'GEQ231', power:30, desc:'Graphic EQ 31-band' },
+  'DP24': { name:'DP24', power:15, desc:'DSP 2in/4out' },
+  'DP36': { name:'DP36', power:18, desc:'DSP 3in/6out' },
+  'DP48': { name:'DP48', power:20, desc:'DSP 4in/8out' }
 };
 
 var INTERP_DB = {
-  'MT606Z': { name:'MT606Z', power:50, desc:'5+1 languages · PLL · 2U' },
-  'MTO6Y':  { name:'MTO6Y',  power:5,  desc:'Interpreter unit · echo suppression' },
-  'MT606J': { name:'MT606J', power:0.5, desc:'IR receiver 6ch · 40h battery' },
-  'MT25F':  { name:'MT25F',  power:25, desc:'IR emitter panel · 15/25W' }
+  'MT606Z': { name:'MT606Z', power:50, desc:'5+1 languages' },
+  'MTO6Y': { name:'MTO6Y', power:5, desc:'Interpreter unit' },
+  'MT606J': { name:'MT606J', power:0.5, desc:'IR receiver 6ch' },
+  'MT25F': { name:'MT25F', power:25, desc:'IR emitter 15/25W' }
 };
 
-/* ============================================================
-   STATE
-   ============================================================ */
 var canvas = document.getElementById('mainCanvas');
 var ctx = canvas.getContext('2d');
 var vArea = document.getElementById('vArea');
 var PX_PER_M = 25;
-
 var zoom = 1, offsetX = 0, offsetY = 0;
 var isPanning = false, startX = 0, startY = 0;
-var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true, furn:true, tech:true };
+var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true, furn:true, stage:true, cam:true, rack:true, tech:true };
 var heatmapCache = null, heatmapKey = '';
 var needsRedraw = true;
 var animTime = 0, lastFrameTime = 0;
-
-var history = [];
-var historyIndex = -1;
-var suppressHistory = false;
+var history = [], historyIndex = -1, suppressHistory = false;
 
 function debounce(fn, ms) { var t; return function() { var a = arguments; clearTimeout(t); t = setTimeout(function() { fn.apply(null, a); }, ms); }; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
@@ -618,25 +448,21 @@ function toggleSidebar() {
   setTimeout(resizeCanvas, 320);
 }
 
-/* ============================================================
-   ACOUSTIC ENGINE
-   ============================================================ */
+/* ACOUSTIC ENGINE */
 function calcRT60(L, W, H, alpha) {
-  var V = L * W * H;
-  var S = 2 * (L*W + L*H + W*H);
-  var A = S * alpha + 4 * 0.001 * V;
-  return 0.161 * V / Math.max(0.01, A);
+  var V = L*W*H, S = 2*(L*W+L*H+W*H);
+  return 0.161 * V / Math.max(0.01, S*alpha + 4*0.001*V);
 }
 function calcCriticalDistance(Q, L, W, H, RT60) {
   return 0.057 * Math.sqrt(Q * L * W * H / Math.max(0.01, RT60));
 }
 function calcRoomConstant(L, W, H, alpha) {
-  var S = 2 * (L*W + L*H + W*H);
+  var S = 2*(L*W+L*H+W*H);
   return S * alpha / Math.max(0.01, 1 - alpha);
 }
 function splFromSource(sens, pwr, Q, R, dx, dy, dz) {
-  var r = Math.max(0.5, Math.sqrt(dx*dx + dy*dy + dz*dz));
-  var spl1m = sens + 10 * Math.log10(pwr);
+  var r = Math.max(0.5, Math.sqrt(dx*dx+dy*dy+dz*dz));
+  var spl1m = sens + 10*Math.log10(pwr);
   var direct = Math.pow(10, (spl1m + 10*Math.log10(Q) - 20*Math.log10(r)) / 10);
   var reverb = Math.pow(10, (spl1m + 10*Math.log10(4/R)) / 10);
   return direct + reverb;
@@ -644,55 +470,54 @@ function splFromSource(sens, pwr, Q, R, dx, dy, dz) {
 function estimateSTI(RT60, spl, noiseFloor) {
   noiseFloor = noiseFloor || 40;
   var SNR = spl - noiseFloor;
-  var MTF = 1 / Math.sqrt(1 + Math.pow(2 * Math.PI * 4 * RT60, 2));
-  var effSNR = 10 * Math.log10(MTF / Math.max(0.001, 1 - MTF)) + SNR;
+  var MTF = 1 / Math.sqrt(1 + Math.pow(2*Math.PI*4*RT60, 2));
+  var effSNR = 10*Math.log10(MTF / Math.max(0.001, 1-MTF)) + SNR;
   return clamp((effSNR + 15) / 30, 0, 1);
 }
 function splAtPoint(x_m, y_m, cfg) {
-  var L = cfg.L, W = cfg.W, H = cfg.H, earH = cfg.earH, perSide = cfg.perSide, spk = cfg.spk, alpha = cfg.alpha;
-  var throwH = Math.max(0.5, H - earH);
-  var RT60 = calcRT60(L, W, H, alpha);
-  var R = calcRoomConstant(L, W, H, alpha);
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+  var R = calcRoomConstant(cfg.L, cfg.W, cfg.H, cfg.alpha);
   var pTotal = 0;
   for (var s = 0; s < 2; s++) {
-    var wallY = s === 0 ? -W/2 : W/2;
-    for (var i = 0; i < perSide; i++) {
-      var sx = -L/2 + (L * (i + 0.5) / perSide);
-      pTotal += splFromSource(spk.sens, spk.pwr, spk.q, R, x_m - sx, y_m - wallY, throwH);
+    var wallY = s === 0 ? -cfg.W/2 : cfg.W/2;
+    for (var i = 0; i < cfg.perSide; i++) {
+      var sx = -cfg.L/2 + (cfg.L * (i + 0.5) / cfg.perSide);
+      pTotal += splFromSource(cfg.spk.sens, cfg.spk.pwr, cfg.spk.q, R, x_m - sx, y_m - wallY, throwH);
     }
   }
-  var spl = pTotal > 0 ? 10 * Math.log10(pTotal) : 0;
+  var spl = pTotal > 0 ? 10*Math.log10(pTotal) : 0;
   return { spl: spl, sti: estimateSTI(RT60, spl), rt60: RT60 };
 }
 
-/* ============================================================
-   CONFIG
-   ============================================================ */
 function readConfig() {
   var mk = $('spkModel').value;
   return {
     projName: $('projName').value, engName: $('engName').value,
     clientName: $('clientName').value, siteLoc: $('siteLoc').value,
     projRef: $('projRef').value,
-    L: parseFloat($('dim_l').value) || 25,
-    W: parseFloat($('dim_w').value) || 15,
-    H: parseFloat($('dim_h').value) || 4,
-    earH: parseFloat($('earH').value) || 1.2,
-    mode: $('roomMode').value,
-    alpha: parseFloat($('roomType').value) || 0.2,
+    L: parseFloat($('dim_l').value) || 25, W: parseFloat($('dim_w').value) || 15,
+    H: parseFloat($('dim_h').value) || 4, earH: parseFloat($('earH').value) || 1.2,
+    mode: $('roomMode').value, alpha: parseFloat($('roomType').value) || 0.2,
     perSide: clamp(parseInt($('spkPerSide').value) || 4, 1, 20),
     spk: SPEAKERS[mk], modelKey: mk,
-    confMode: $('confMode').value,
-    confHost: $('confHost').value,
-    confChair: $('confChair').value,
-    confDelegate: $('confDelegate').value,
+    showPodium: $('showPodium').checked,
+    podiumW: parseFloat($('podiumW').value) || 1.2,
+    podiumD: parseFloat($('podiumD').value) || 0.7,
+    showScreen: $('showScreen').checked,
+    screenW: parseFloat($('screenW').value) || 6,
+    screenType: $('screenType').value,
+    showCameras: $('showCameras').checked,
+    camCount: clamp(parseInt($('camCount').value) || 2, 0, 4),
+    camFOV: parseFloat($('camFOV').value) || 60,
+    showRack: $('showRack').checked,
+    confMode: $('confMode').value, confHost: $('confHost').value,
+    confChair: $('confChair').value, confDelegate: $('confDelegate').value,
     confExtMic: $('confExtMic').value,
-    cQty: parseInt($('cQty').value) || 0,
-    dQty: parseInt($('dQty').value) || 0,
-    confMixer: $('confMixer').value,
-    useCharger: $('useCharger').checked,
-    useFeedback: $('useFeedback').checked,
-    useSeq: $('useSeq').checked,
+    cQty: parseInt($('cQty').value) || 0, dQty: parseInt($('dQty').value) || 0,
+    confMixer: $('confMixer').value, audioDSP: $('audioDSP').value,
+    useCharger: $('useCharger').checked, useFeedback: $('useFeedback').checked,
+    useSeq: $('useSeq').checked, useEq: $('useEq').checked,
     interpLang: parseInt($('interpLang').value) || 2,
     interpUnits: parseInt($('interpUnits').value) || 2,
     irReceivers: parseInt($('irReceivers').value) || 0,
@@ -700,21 +525,15 @@ function readConfig() {
   };
 }
 
-/* ============================================================
-   CONFERENCE LOGIC
-   ============================================================ */
+/* CONFERENCE LOGIC */
 function populateHosts() {
-  var mode = $('confMode').value;
-  var sel = $('confHost');
-  var prev = sel.value;
+  var mode = $('confMode').value, sel = $('confHost'), prev = sel.value;
   sel.innerHTML = '';
   var filter = {
-    'basic': ['basic', 'camera'],
-    'camera': ['camera', 'hybrid'],
-    'voting': ['premium'],
-    'premium': ['premium'],
-    'wireless': ['wireless', 'hybrid', 'premium'],
-    'interpretation': ['basic', 'camera', 'hybrid', 'premium']
+    'basic': ['basic','camera'], 'camera': ['camera','hybrid'],
+    'voting': ['premium'], 'premium': ['premium'],
+    'wireless': ['wireless','hybrid','premium'],
+    'interpretation': ['basic','camera','hybrid','premium']
   };
   var allowed = filter[mode] || Object.keys(CONF_HOSTS);
   for (var k in CONF_HOSTS) {
@@ -728,8 +547,7 @@ function populateHosts() {
   }
   if (sel.options.length === 0) {
     var opt2 = document.createElement('option');
-    opt2.value = 'MT1000S';
-    opt2.textContent = 'MT1000S — Basic Discussion';
+    opt2.value = 'MT1000S'; opt2.textContent = 'MT1000S';
     sel.appendChild(opt2);
   }
   var found = false;
@@ -741,39 +559,32 @@ function populateHosts() {
 function onHostChange() {
   var host = CONF_HOSTS[$('confHost').value];
   if (!host) return;
-
-  var chairSel = $('confChair');
-  var prevChair = chairSel.value;
+  var chairSel = $('confChair'), prevChair = chairSel.value;
   chairSel.innerHTML = '';
   var chairFilter = {
-    'wireless': ['wireless'],
-    'hybrid': ['digital', 'wireless5g', 'premium', 'voting', 'wireless'],
-    'premium': ['premium', 'digital', 'voting', 'wireless5g'],
-    'camera': ['voting', 'digital', 'premium'],
-    'basic': ['basic', 'premium']
+    'wireless': ['wireless'], 'hybrid': ['digital','wireless5g','premium','voting','wireless'],
+    'premium': ['premium','digital','voting','wireless5g'],
+    'camera': ['voting','digital','premium'], 'basic': ['basic','premium']
   };
   var allowedChairs = chairFilter[host.type] || ['premium'];
   for (var k in CONF_CHAIRS) {
     var c = CONF_CHAIRS[k];
     if (allowedChairs.indexOf(c.type) !== -1 || host.type === 'premium') {
       var opt = document.createElement('option');
-      opt.value = k;
-      opt.textContent = c.name + (c.display !== '—' ? ' · ' + c.display : '');
+      opt.value = k; opt.textContent = c.name + (c.display !== '—' ? ' · ' + c.display : '');
       chairSel.appendChild(opt);
     }
   }
   if (chairSel.options.length === 0) {
     var opt2 = document.createElement('option');
-    opt2.value = 'MT380VC';
-    opt2.textContent = 'MT380VC';
+    opt2.value = 'MT380VC'; opt2.textContent = 'MT380VC';
     chairSel.appendChild(opt2);
   }
   var found = false;
   for (var i = 0; i < chairSel.options.length; i++) if (chairSel.options[i].value === prevChair) found = true;
   if (found) chairSel.value = prevChair;
 
-  var delSel = $('confDelegate');
-  var prevDel = delSel.value;
+  var delSel = $('confDelegate'), prevDel = delSel.value;
   delSel.innerHTML = '';
   var familyMap = {
     'MT380VC': ['MT380VD'], 'MT880VC': ['MT880VD'], 'G-T31': ['G-T32'],
@@ -784,15 +595,13 @@ function onHostChange() {
   for (var k2 in CONF_DELEGATES) {
     if (allowed.indexOf(k2) !== -1) {
       var opt3 = document.createElement('option');
-      opt3.value = k2;
-      opt3.textContent = CONF_DELEGATES[k2].name;
+      opt3.value = k2; opt3.textContent = CONF_DELEGATES[k2].name;
       delSel.appendChild(opt3);
     }
   }
   if (delSel.options.length === 0) {
     var opt4 = document.createElement('option');
-    opt4.value = 'MT380VD';
-    opt4.textContent = 'MT380VD';
+    opt4.value = 'MT380VD'; opt4.textContent = 'MT380VD';
     delSel.appendChild(opt4);
   }
   var found2 = false;
@@ -804,31 +613,22 @@ function onHostChange() {
 }
 
 function autoRecommendConference() {
-  var cQty = parseInt($('cQty').value) || 0;
-  var dQty = parseInt($('dQty').value) || 0;
-  var total = cQty + dQty;
-  var mode = $('confMode').value;
+  var cQty = parseInt($('cQty').value) || 0, dQty = parseInt($('dQty').value) || 0;
+  var total = cQty + dQty, mode = $('confMode').value;
   var hostKey = 'MT1000S', chairKey = 'MT380VC', delegateKey = 'MT380VD';
-
   if (total <= 20) { hostKey='MT1000S'; chairKey='MT380VC'; delegateKey='MT380VD'; }
   else if (total <= 60) { hostKey = mode==='camera'?'MT2000S':'MT1000S'; chairKey='MT880VC'; delegateKey='MT880VD'; }
   else if (total <= 120) { hostKey = mode==='wireless'?'G-W40':'G-T40'; chairKey='G-T51'; delegateKey='G-T52'; }
   else if (total <= 256) { hostKey = mode==='voting'?'G-S40':(mode==='wireless'?'G-W40':'G-S40'); chairKey = mode==='voting'?'G-T45':'G-T53'; delegateKey = mode==='voting'?'G-T46':'G-T54'; }
   else { hostKey='G-T50'; chairKey='G-T53W'; delegateKey='G-T54W'; }
-
-  $('confHost').value = hostKey;
-  onHostChange();
-  $('confChair').value = chairKey;
-  onHostChange();
+  $('confHost').value = hostKey; onHostChange();
+  $('confChair').value = chairKey; onHostChange();
   $('confDelegate').value = delegateKey;
-  updateKPI();
-  markDirty();
+  updateKPI(); markDirty();
   pushWarning('ok', '✅ ' + CONF_HOSTS[hostKey].name + ' + ' + CONF_CHAIRS[chairKey].name + ' + ' + CONF_DELEGATES[delegateKey].name, 5000);
 }
 
-/* ============================================================
-   WARNINGS
-   ============================================================ */
+/* WARNINGS */
 var tempWarnings = [];
 function pushWarning(level, text, ttl) {
   ttl = ttl || 0;
@@ -852,8 +652,7 @@ function calculateWarnings() {
   var cfg = readConfig();
   var warnings = [];
   var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
-  var minSpl = Infinity, minSti = 1;
-  var S = 10;
+  var minSpl = Infinity, minSti = 1, S = 10;
   for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
     var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
     var r = splAtPoint(x, y, cfg);
@@ -862,52 +661,44 @@ function calculateWarnings() {
   }
   if (minSpl < 78) warnings.push({ level:'critical', text:'Min SPL ' + minSpl.toFixed(1) + 'dB — below threshold' });
   else if (minSpl < 85) warnings.push({ level:'warn', text:'Min SPL ' + minSpl.toFixed(1) + 'dB' });
-  if (minSti < 0.45) warnings.push({ level:'critical', text:'STI ' + minSti.toFixed(2) + ' — poor intelligibility' });
+  if (minSti < 0.45) warnings.push({ level:'critical', text:'STI ' + minSti.toFixed(2) + ' — poor' });
   if (RT60 > 1.8) warnings.push({ level:'warn', text:'RT60 ' + RT60.toFixed(2) + 's — too high' });
   var host = CONF_HOSTS[cfg.confHost];
   if (host && (cfg.cQty + cfg.dQty) > host.maxUnits) {
     warnings.push({ level:'critical', text:'Units exceed host capacity (' + host.maxUnits + ')' });
   }
+  if (cfg.showScreen && cfg.screenW > cfg.L * 0.85) {
+    warnings.push({ level:'warn', text:'Screen exceeds 85% of room length' });
+  }
   return warnings;
 }
 
-/* ============================================================
-   RESIZE
-   ============================================================ */
 function resizeCanvas() {
   var rect = vArea.getBoundingClientRect();
   var w = Math.max(100, Math.floor(rect.width));
   var h = Math.max(100, Math.floor(rect.height));
   var dpr = window.devicePixelRatio || 1;
-
   canvas.width = Math.floor(w * dpr);
   canvas.height = Math.floor(h * dpr);
   canvas.style.width = w + 'px';
   canvas.style.height = h + 'px';
-
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   needsRedraw = true;
 }
 
-/* ============================================================
-   KPI
-   ============================================================ */
 function updateKPI() {
   var cfg = readConfig();
   var total = cfg.perSide * 2;
   $('kpiTotalV').textContent = total;
   $('kpiWattV').textContent = cfg.spk.pwr * total;
   $('modelBadge').textContent = cfg.modelKey;
-
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
   var coverR = throwH * Math.tan((cfg.spk.angle/2) * Math.PI/180);
   var spacing = cfg.L / cfg.perSide;
   var cov = Math.min(100, (coverR / spacing) * 200);
   $('kpiCovV').textContent = cov.toFixed(0) + '%';
   $('kpiCov').className = 'kpi ' + (cov >= 80 ? 'ok' : cov >= 60 ? 'warn' : 'bad');
-
-  var minSpl = Infinity, minSti = 1;
-  var S = 12;
+  var minSpl = Infinity, minSti = 1, S = 12;
   for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
     var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
     var r = splAtPoint(x, y, cfg);
@@ -918,7 +709,6 @@ function updateKPI() {
   $('kpiSpl').className = 'kpi ' + (minSpl >= 85 ? 'ok' : minSpl >= 78 ? 'warn' : 'bad');
   $('kpiStiV').textContent = minSti.toFixed(2);
   $('kpiSti').className = 'kpi ' + (minSti >= 0.6 ? 'ok' : minSti >= 0.45 ? 'warn' : 'bad');
-
   var rt = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
   $('kpiRtV').textContent = rt.toFixed(2);
   $('kpiRt').className = 'kpi ' + (rt < 1.2 ? 'ok' : rt < 1.8 ? 'warn' : 'bad');
@@ -930,20 +720,19 @@ function updateKPI() {
   $('kpiConfTotal').textContent = totalUnits;
   var power = (host.power || 0) + (chair.power || 0)*cfg.cQty + (delegate.power || 0)*cfg.dQty;
   if (cfg.confMixer && CONF_ACCESSORIES[cfg.confMixer]) power += CONF_ACCESSORIES[cfg.confMixer].power;
+  if (cfg.audioDSP && CONF_ACCESSORIES[cfg.audioDSP]) power += CONF_ACCESSORIES[cfg.audioDSP].power;
   if (cfg.useCharger && (cfg.confMode === 'wireless' || host.type === 'wireless')) power += 200;
   if (cfg.useFeedback) power += 10;
+  if (cfg.useEq) power += 30;
   $('kpiConfPower').textContent = Math.round(power);
   $('kpiConfCableV').textContent = Math.round(totalUnits * 2.5 + 20) + 'm';
   var loadPct = host.maxUnits ? Math.round((totalUnits / host.maxUnits) * 100) : 0;
   $('kpiConfLoadV').textContent = loadPct + '%';
   $('kpiConfLoad').className = 'kpi ' + (loadPct <= 70 ? 'ok' : loadPct <= 100 ? 'warn' : 'bad');
-
   renderWarnings();
 }
 
-/* ============================================================
-   RENDER — MAIN
-   ============================================================ */
+/* RENDER */
 function render() {
   var cfg = readConfig();
   var scale = PX_PER_M;
@@ -959,23 +748,22 @@ function render() {
   ctx.save();
   var cw = canvas.clientWidth || canvas.width;
   var ch = canvas.clientHeight || canvas.height;
-  var cx = cw / 2 + offsetX;
-  var cy = ch / 2 + offsetY;
-  ctx.translate(cx, cy);
+  ctx.translate(cw/2 + offsetX, ch/2 + offsetY);
   ctx.scale(zoom, zoom);
 
   if (opts.tile) drawCeilingTiles(Lpx, Wpx, scale);
   if (opts.grid) drawMeterGrid(Lpx, Wpx, scale);
   if (opts.heat) drawHeatmapCached(Lpx, Wpx, cfg, scale);
-
   drawRoomWalls(Lpx, Wpx);
+  if (opts.stage) drawStageArea(Lpx, Wpx, cfg, scale);
   if (opts.furn) drawFurniture(Lpx, Wpx, cfg);
   if (opts.cover) drawCoverageCones(Lpx, Wpx, cfg, scale);
   if (opts.rays) drawSoundRays(Lpx, Wpx, cfg, scale);
   drawSpeakers(Lpx, Wpx, cfg);
   if (opts.conf) drawConferenceUnits(Lpx, Wpx, cfg);
+  if (opts.cam) drawCameras(Lpx, Wpx, cfg, scale);
+  if (opts.rack) drawEquipmentRack(Lpx, Wpx, cfg, scale);
   if (opts.tech) drawTechnicalAnnotations(Lpx, Wpx, cfg, scale);
-
   ctx.restore();
 
   if (opts.tech) drawScreenOverlays(cfg);
@@ -985,61 +773,38 @@ function drawBlueprintBg() {
   var w = canvas.width, h = canvas.height;
   ctx.strokeStyle = "rgba(56,189,248,0.035)";
   ctx.lineWidth = 1;
-  var step = 40;
-  for (var x = 0; x < w; x += step) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-  }
-  for (var y = 0; y < h; y += step) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-  }
+  for (var x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+  for (var y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
   ctx.strokeStyle = "rgba(56,189,248,0.07)";
-  for (var x2 = 0; x2 < w; x2 += step*5) {
-    ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke();
-  }
-  for (var y2 = 0; y2 < h; y2 += step*5) {
-    ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();
-  }
+  for (var x2 = 0; x2 < w; x2 += 200) { ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke(); }
+  for (var y2 = 0; y2 < h; y2 += 200) { ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke(); }
 }
 
 function drawCeilingTiles(L, W, scale) {
-  var tile = 0.6 * scale;
-  var mainBar = 1.2 * scale;
+  var tile = 0.6 * scale, mainBar = 1.2 * scale;
   ctx.fillStyle = "rgba(15, 30, 45, 0.5)";
   ctx.fillRect(-L/2, -W/2, L, W);
   ctx.strokeStyle = "rgba(127, 184, 216, 0.10)";
   ctx.lineWidth = 1 / zoom;
-  for (var x = -L/2 + tile; x < L/2; x += tile) {
-    ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke();
-  }
-  for (var y = -W/2 + tile; y < W/2; y += tile) {
-    ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke();
-  }
+  for (var x = -L/2 + tile; x < L/2; x += tile) { ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke(); }
+  for (var y = -W/2 + tile; y < W/2; y += tile) { ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke(); }
   ctx.strokeStyle = "rgba(127, 184, 216, 0.22)";
   ctx.lineWidth = 1.5 / zoom;
-  for (var x2 = -L/2 + mainBar; x2 < L/2; x2 += mainBar) {
-    ctx.beginPath(); ctx.moveTo(x2, -W/2); ctx.lineTo(x2, W/2); ctx.stroke();
-  }
-  for (var y2 = -W/2 + mainBar; y2 < W/2; y2 += mainBar) {
-    ctx.beginPath(); ctx.moveTo(-L/2, y2); ctx.lineTo(L/2, y2); ctx.stroke();
-  }
+  for (var x2 = -L/2 + mainBar; x2 < L/2; x2 += mainBar) { ctx.beginPath(); ctx.moveTo(x2, -W/2); ctx.lineTo(x2, W/2); ctx.stroke(); }
+  for (var y2 = -W/2 + mainBar; y2 < W/2; y2 += mainBar) { ctx.beginPath(); ctx.moveTo(-L/2, y2); ctx.lineTo(L/2, y2); ctx.stroke(); }
 }
 
 function drawMeterGrid(L, W, scale) {
   ctx.strokeStyle = "rgba(251, 191, 36, 0.18)";
   ctx.lineWidth = 1 / zoom;
   ctx.setLineDash([4, 4]);
-  for (var x = -L/2 + scale; x < L/2; x += scale) {
-    ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke();
-  }
-  for (var y = -W/2 + scale; y < W/2; y += scale) {
-    ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke();
-  }
+  for (var x = -L/2 + scale; x < L/2; x += scale) { ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke(); }
+  for (var y = -W/2 + scale; y < W/2; y += scale) { ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke(); }
   ctx.setLineDash([]);
 }
 
 function drawRoomWalls(L, W) {
   var wallThk = 0.2 * PX_PER_M;
-
   ctx.fillStyle = "rgba(127, 184, 216, 0.15)";
   ctx.fillRect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, wallThk);
   ctx.fillRect(-L/2 - wallThk, W/2, L + wallThk*2, wallThk);
@@ -1055,8 +820,7 @@ function drawRoomWalls(L, W) {
   ctx.clip();
   ctx.strokeStyle = "rgba(127, 184, 216, 0.35)";
   ctx.lineWidth = 0.5 / zoom;
-  var hatchStep = 5;
-  for (var i = -L - wallThk*2; i < L + wallThk*2; i += hatchStep) {
+  for (var i = -L - wallThk*2; i < L + wallThk*2; i += 5) {
     ctx.beginPath();
     ctx.moveTo(-L/2 - wallThk + i, -W/2 - wallThk);
     ctx.lineTo(-L/2 - wallThk + i - W - wallThk, W/2 + wallThk);
@@ -1070,7 +834,6 @@ function drawRoomWalls(L, W) {
   ctx.strokeStyle = "rgba(127, 184, 216, 0.6)";
   ctx.lineWidth = 1 / zoom;
   ctx.strokeRect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, W + wallThk*2);
-
   ctx.strokeStyle = "#38bdf8";
   ctx.lineWidth = 2 / zoom;
   ctx.shadowColor = "rgba(56,189,248,0.7)";
@@ -1079,10 +842,8 @@ function drawRoomWalls(L, W) {
   ctx.shadowBlur = 0;
 
   var markers = [
-    { x: -L/2, y: -W/2, label: 'A' },
-    { x:  L/2, y: -W/2, label: 'B' },
-    { x:  L/2, y:  W/2, label: 'C' },
-    { x: -L/2, y:  W/2, label: 'D' }
+    { x: -L/2, y: -W/2, label: 'A' }, { x: L/2, y: -W/2, label: 'B' },
+    { x: L/2, y: W/2, label: 'C' }, { x: -L/2, y: W/2, label: 'D' }
   ];
   ctx.fillStyle = "#fbbf24";
   ctx.font = "bold 12px Inter";
@@ -1090,57 +851,227 @@ function drawRoomWalls(L, W) {
   ctx.textBaseline = "middle";
   for (var m = 0; m < markers.length; m++) {
     var mk = markers[m];
-    ctx.beginPath();
-    ctx.arc(mk.x, mk.y, 3, 0, Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(mk.x, mk.y, 3, 0, Math.PI*2); ctx.fill();
     ctx.fillText(mk.label, mk.x + (mk.x < 0 ? -12 : 12), mk.y + (mk.y < 0 ? -12 : 12));
   }
 
-  // Door
   var doorW = 1.0 * PX_PER_M;
   var doorX = L/2 - 2 * PX_PER_M;
   ctx.strokeStyle = "#7fb8d8";
   ctx.lineWidth = 1.5 / zoom;
-  ctx.beginPath();
-  ctx.moveTo(doorX - doorW/2, W/2);
-  ctx.lineTo(doorX + doorW/2, W/2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(doorX - doorW/2, W/2, doorW, 0, -Math.PI/2, true);
+  ctx.beginPath(); ctx.moveTo(doorX - doorW/2, W/2); ctx.lineTo(doorX + doorW/2, W/2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(doorX - doorW/2, W/2, doorW, 0, -Math.PI/2, true);
   ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
   ctx.setLineDash([3, 3]);
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.beginPath();
-  ctx.moveTo(doorX - doorW/2, W/2);
-  ctx.lineTo(doorX - doorW/2, W/2 + doorW * 0.9);
-  ctx.strokeStyle = "#7fb8d8";
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(doorX - doorW/2, W/2); ctx.lineTo(doorX - doorW/2, W/2 + doorW * 0.9);
+  ctx.strokeStyle = "#7fb8d8"; ctx.stroke();
   ctx.fillStyle = "#7fb8d8";
   ctx.font = "bold 9px Inter";
   ctx.textAlign = "center";
   ctx.fillText("DOOR", doorX, W/2 + wallThk + 14);
+}
 
-  // Windows
-  var winW = 2 * PX_PER_M;
-  var winY = -W/2;
-  for (var i2 = -1; i2 <= 1; i2++) {
-    var wx = i2 * L * 0.3;
-    ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
-    ctx.lineWidth = 3 / zoom;
+function drawStageArea(L, W, cfg, scale) {
+  var frontY = -W/2;
+  if (cfg.showScreen && cfg.screenType !== 'none') {
+    var scrW = cfg.screenW * scale;
+    var scrDepth = 4;
+    var scrX = 0;
+    var scrY = frontY + scrDepth/2 + 5;
+    ctx.save();
+    ctx.shadowColor = cfg.screenType === 'led' ? "rgba(56,189,248,0.8)" : "rgba(6,182,212,0.6)";
+    ctx.shadowBlur = 15 / zoom;
+    var scrGrad = ctx.createLinearGradient(scrX - scrW/2, 0, scrX + scrW/2, 0);
+    if (cfg.screenType === 'led') {
+      scrGrad.addColorStop(0, "rgba(14, 165, 233, 0.85)");
+      scrGrad.addColorStop(0.5, "rgba(56, 189, 248, 0.95)");
+      scrGrad.addColorStop(1, "rgba(14, 165, 233, 0.85)");
+    } else {
+      scrGrad.addColorStop(0, "rgba(200, 220, 235, 0.9)");
+      scrGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.95)");
+      scrGrad.addColorStop(1, "rgba(200, 220, 235, 0.9)");
+    }
+    ctx.fillStyle = scrGrad;
+    ctx.fillRect(scrX - scrW/2, scrY - scrDepth/2, scrW, scrDepth);
+    ctx.restore();
+    ctx.strokeStyle = "#0a1520";
+    ctx.lineWidth = 2 / zoom;
+    ctx.strokeRect(scrX - scrW/2, scrY - scrDepth/2, scrW, scrDepth);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 10px Inter";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText((cfg.screenType === 'led' ? 'LED WALL' : 'SCREEN') + ' · ' + cfg.screenW + 'm', scrX, scrY + 14);
+
+    if (cfg.screenType === 'projection') {
+      var projY = W/2 - 30;
+      var coneGrad = ctx.createLinearGradient(0, projY, 0, scrY);
+      coneGrad.addColorStop(0, "rgba(56, 189, 248, 0)");
+      coneGrad.addColorStop(1, "rgba(255, 255, 255, 0.08)");
+      ctx.beginPath();
+      ctx.moveTo(0, projY);
+      ctx.lineTo(scrX - scrW/2, scrY);
+      ctx.lineTo(scrX + scrW/2, scrY);
+      ctx.closePath();
+      ctx.fillStyle = coneGrad;
+      ctx.fill();
+      ctx.beginPath(); ctx.arc(0, projY, 7, 0, Math.PI*2);
+      ctx.fillStyle = "#1a202c"; ctx.fill();
+      ctx.strokeStyle = "#06b6d4"; ctx.lineWidth = 1.5 / zoom; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, projY, 3, 0, Math.PI*2);
+      ctx.fillStyle = "#38bdf8";
+      ctx.shadowColor = "rgba(56,189,248,0.9)";
+      ctx.shadowBlur = 8 / zoom;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = "#06b6d4";
+      ctx.font = "bold 8px Inter";
+      ctx.textAlign = "center";
+      ctx.fillText("PROJECTOR", 0, projY + 14);
+    }
+  }
+
+  if (cfg.showPodium) {
+    var pw = cfg.podiumW * scale;
+    var pd = cfg.podiumD * scale;
+    var px = 0;
+    var py = frontY + pd/2 + 5 + (cfg.showScreen ? 12 : 0);
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(px - pw/2 + 3, py - pd/2 + 3, pw, pd);
+    var podGrad = ctx.createLinearGradient(px - pw/2, py - pd/2, px + pw/2, py + pd/2);
+    podGrad.addColorStop(0, "rgba(80, 20, 25, 0.95)");
+    podGrad.addColorStop(0.5, "rgba(120, 25, 30, 0.95)");
+    podGrad.addColorStop(1, "rgba(80, 20, 25, 0.95)");
+    ctx.fillStyle = podGrad;
+    ctx.fillRect(px - pw/2, py - pd/2, pw, pd);
+    ctx.strokeStyle = "#e60012";
+    ctx.lineWidth = 2 / zoom;
+    ctx.shadowColor = "rgba(230,0,18,0.7)";
+    ctx.shadowBlur = 8 / zoom;
+    ctx.strokeRect(px - pw/2, py - pd/2, pw, pd);
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(px, py - pd*0.15, 3, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)"; ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(wx - winW/2, winY - wallThk/2);
-    ctx.lineTo(wx + winW/2, winY - wallThk/2);
-    ctx.stroke();
+    ctx.moveTo(px - 5, py + pd*0.15);
+    ctx.lineTo(px + 5, py + pd*0.15);
+    ctx.lineTo(px + 7, py + pd*0.4);
+    ctx.lineTo(px - 7, py + pd*0.4);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(255, 255, 255, 0.3)"; ctx.fill();
+    ctx.fillStyle = "#ff8a95";
+    ctx.font = "bold 9px Inter";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("PODIUM", px, py + pd/2 + 12);
+  }
+}
+
+function drawCameras(L, W, cfg, scale) {
+  if (!cfg.showCameras || cfg.camCount === 0) return;
+  var camPositions = [];
+  var margin = 15;
+  if (cfg.camCount >= 1) camPositions.push({ x: 0, y: -W/2 + margin, angle: Math.PI/2, label: 'CAM-01' });
+  if (cfg.camCount >= 2) camPositions.push({ x: 0, y: W/2 - margin, angle: -Math.PI/2, label: 'CAM-02' });
+  if (cfg.camCount >= 3) camPositions.push({ x: -L/2 + margin, y: 0, angle: 0, label: 'CAM-03' });
+  if (cfg.camCount >= 4) camPositions.push({ x: L/2 - margin, y: 0, angle: Math.PI, label: 'CAM-04' });
+  var fov = (cfg.camFOV * Math.PI / 180);
+  var range = 6 * scale;
+  for (var i = 0; i < camPositions.length; i++) {
+    var cam = camPositions[i];
+    var pulse = 0.5 + 0.5 * Math.sin(animTime * 1.5 + i * 0.7);
+    var grad = ctx.createRadialGradient(cam.x, cam.y, 0, cam.x, cam.y, range);
+    grad.addColorStop(0, "rgba(34, 197, 94, " + (0.28 + pulse * 0.12) + ")");
+    grad.addColorStop(0.6, "rgba(34, 197, 94, 0.06)");
+    grad.addColorStop(1, "rgba(34, 197, 94, 0)");
+    ctx.beginPath();
+    ctx.moveTo(cam.x, cam.y);
+    ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.5)";
     ctx.lineWidth = 1 / zoom;
-    ctx.strokeStyle = "rgba(127, 184, 216, 0.4)";
+    ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.moveTo(wx - winW/2, winY - wallThk*0.8);
-    ctx.lineTo(wx + winW/2, winY - wallThk*0.8);
-    ctx.moveTo(wx - winW/2, winY - wallThk*0.2);
-    ctx.lineTo(wx + winW/2, winY - wallThk*0.2);
+    ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.7)";
+    ctx.beginPath();
+    ctx.moveTo(cam.x, cam.y);
+    ctx.lineTo(cam.x + Math.cos(cam.angle) * range, cam.y + Math.sin(cam.angle) * range);
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(cam.x, cam.y);
+    ctx.rotate(cam.angle);
+    ctx.fillStyle = "#0a1520";
+    ctx.strokeStyle = "#22c55e";
+    ctx.lineWidth = 1.5 / zoom;
+    ctx.beginPath(); ctx.rect(-8, -5, 12, 10); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(6, 0, 3, 0, Math.PI*2);
+    ctx.fillStyle = "#0a1520"; ctx.fill();
+    ctx.strokeStyle = "#22c55e"; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, -3, 1, 0, Math.PI*2);
+    ctx.fillStyle = pulse > 0.5 ? "#e60012" : "#22c55e";
+    ctx.shadowColor = pulse > 0.5 ? "rgba(230,0,18,0.9)" : "rgba(34,197,94,0.9)";
+    ctx.shadowBlur = 6 / zoom;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.restore();
+    ctx.fillStyle = "#22c55e";
+    ctx.font = "bold 8px Inter";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    var labelOffsetY = cam.y < 0 ? -14 : (cam.y > 0 ? 14 : 0);
+    var labelOffsetX = (cam.x < -L/4 || cam.x > L/4) ? (cam.x < 0 ? -22 : 22) : 0;
+    ctx.fillText(cam.label, cam.x + labelOffsetX, cam.y + labelOffsetY);
+  }
+}
+
+function drawEquipmentRack(L, W, cfg, scale) {
+  if (!cfg.showRack) return;
+  var rw = 0.6 * scale, rd = 0.9 * scale;
+  var rx = -L/2 + rd/2 + 10, ry = W/2 - rd/2 - 10;
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillRect(rx - rw/2 + 2, ry - rd/2 + 2, rw, rd);
+  var rackGrad = ctx.createLinearGradient(rx - rw/2, ry - rd/2, rx + rw/2, ry + rd/2);
+  rackGrad.addColorStop(0, "#1a202c");
+  rackGrad.addColorStop(0.5, "#2d3748");
+  rackGrad.addColorStop(1, "#1a202c");
+  ctx.fillStyle = rackGrad;
+  ctx.fillRect(rx - rw/2, ry - rd/2, rw, rd);
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 1.5 / zoom;
+  ctx.strokeRect(rx - rw/2, ry - rd/2, rw, rd);
+  var units = 6, unitH = rd / units;
+  for (var i = 1; i < units; i++) {
+    ctx.beginPath();
+    ctx.moveTo(rx - rw/2, ry - rd/2 + i * unitH);
+    ctx.lineTo(rx + rw/2, ry - rd/2 + i * unitH);
+    ctx.strokeStyle = "rgba(251, 191, 36, 0.3)";
+    ctx.lineWidth = 0.5 / zoom;
     ctx.stroke();
   }
+  var ledColors = ['#22c55e', '#38bdf8', '#f59e0b', '#a855f7', '#22c55e', '#e60012'];
+  for (var u = 0; u < units; u++) {
+    var lx = rx + rw/2 - 5;
+    var ly = ry - rd/2 + u * unitH + unitH/2;
+    var blink = (Math.floor(animTime * 3 + u * 0.5) % 2) === 0;
+    ctx.beginPath();
+    ctx.arc(lx, ly, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = blink ? ledColors[u % ledColors.length] : "rgba(100, 100, 100, 0.3)";
+    if (blink) { ctx.shadowColor = ledColors[u % ledColors.length]; ctx.shadowBlur = 4 / zoom; }
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  ctx.fillStyle = "#fbbf24";
+  ctx.font = "bold 8px Inter";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("RACK", rx, ry + rd/2 + 12);
 }
 
 function drawFurniture(L, W, cfg) {
@@ -1152,33 +1083,22 @@ function drawFurniture(L, W, cfg) {
 function drawOvalTableFurniture(L, W, total) {
   var tableRx = L * 0.36, tableRy = W * 0.30;
   ctx.fillStyle = "rgba(0,0,0,0.4)";
-  ctx.beginPath();
-  ctx.ellipse(3, 3, tableRx, tableRy, 0, 0, Math.PI*2);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.ellipse(3, 3, tableRx, tableRy, 0, 0, Math.PI*2); ctx.fill();
   var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(tableRx, tableRy));
   grad.addColorStop(0, "rgba(60, 75, 95, 0.85)");
   grad.addColorStop(1, "rgba(35, 48, 65, 0.85)");
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, tableRx, tableRy, 0, 0, Math.PI*2);
-  ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, 0, tableRx, tableRy, 0, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
   ctx.lineWidth = 2 / zoom;
   ctx.stroke();
-
   ctx.strokeStyle = "rgba(127, 184, 216, 0.3)";
   ctx.lineWidth = 1 / zoom;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, tableRx - 8, tableRy - 6, 0, 0, Math.PI*2);
-  ctx.stroke();
-
+  ctx.beginPath(); ctx.ellipse(0, 0, tableRx - 8, tableRy - 6, 0, 0, Math.PI*2); ctx.stroke();
   var chairCount = Math.max(total, 8);
   for (var i = 0; i < chairCount; i++) {
     var ang = (i * 2 * Math.PI) / chairCount - Math.PI / 2;
-    var cx = Math.cos(ang) * (tableRx + 18);
-    var cy = Math.sin(ang) * (tableRy + 14);
-    drawChair(cx, cy, ang);
+    drawChair(Math.cos(ang) * (tableRx + 18), Math.sin(ang) * (tableRy + 14), ang);
   }
 }
 
@@ -1187,11 +1107,9 @@ function drawUShapeFurniture(L, W, total) {
   ctx.fillStyle = "rgba(50, 65, 85, 0.85)";
   ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
   ctx.lineWidth = 2 / zoom;
-
   ctx.beginPath(); ctx.rect(-w/2, -h/2, t, h); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.rect(w/2 - t, -h/2, t, h); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.rect(-w/2, h/2 - t, w, t); ctx.fill(); ctx.stroke();
-
   var perSide = Math.ceil(total / 3);
   for (var i = 0; i < perSide; i++) {
     var y = -h/2 + 15 + (i * (h - 30) / Math.max(1, perSide - 1));
@@ -1206,30 +1124,16 @@ function drawUShapeFurniture(L, W, total) {
 }
 
 function drawTheaterFurniture(L, W, total) {
-  var pw = 0.8 * PX_PER_M, ph = 0.5 * PX_PER_M;
-  ctx.fillStyle = "rgba(230, 0, 18, 0.25)";
-  ctx.strokeStyle = "rgba(230, 0, 18, 0.8)";
-  ctx.lineWidth = 2 / zoom;
-  ctx.fillRect(-pw/2, -W/2 + 20, pw, ph);
-  ctx.strokeRect(-pw/2, -W/2 + 20, pw, ph);
-  ctx.fillStyle = "#ff8a95";
-  ctx.font = "bold 8px Inter";
-  ctx.textAlign = "center";
-  ctx.fillText("PODIUM", 0, -W/2 + 20 + ph/2 + 3);
-
   var cols = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(total))));
   var rows = Math.ceil(total / cols);
   var xSpan = L * 0.80;
-  var yStart = -W*0.18, yEnd = W * 0.40;
+  var yStart = -W * 0.10, yEnd = W * 0.42;
   var yStep = (yEnd - yStart) / Math.max(1, rows);
   var xStep = xSpan / cols;
-
   for (var r = 0; r < rows; r++) {
     for (var c = 0; c < cols; c++) {
       if (r * cols + c >= total) break;
-      var x = -xSpan/2 + xStep * c + xStep/2;
-      var y = yStart + yStep * r;
-      drawChair(x, y, -Math.PI/2);
+      drawChair(-xSpan/2 + xStep * c + xStep/2, yStart + yStep * r, -Math.PI/2);
     }
   }
 }
@@ -1241,15 +1145,9 @@ function drawChair(cx, cy, rotation) {
   ctx.fillStyle = "rgba(60, 80, 100, 0.6)";
   ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
   ctx.lineWidth = 0.8 / zoom;
-  ctx.beginPath();
-  ctx.rect(-7, -7, 14, 14);
-  ctx.fill();
-  ctx.stroke();
+  ctx.beginPath(); ctx.rect(-7, -7, 14, 14); ctx.fill(); ctx.stroke();
   ctx.fillStyle = "rgba(90, 110, 130, 0.7)";
-  ctx.beginPath();
-  ctx.rect(-7, -9, 14, 3);
-  ctx.fill();
-  ctx.stroke();
+  ctx.beginPath(); ctx.rect(-7, -9, 14, 3); ctx.fill(); ctx.stroke();
   ctx.restore();
 }
 
@@ -1257,28 +1155,23 @@ function drawCoverageCones(L, W, cfg, scale) {
   var half = (cfg.spk.angle / 2) * Math.PI / 180;
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
   var coverR = throwH * Math.tan(half) * scale;
-
   for (var s = 0; s < 2; s++) {
     var isTop = s === 0;
     var wallY = isTop ? -W/2 : W/2;
     var centerAng = isTop ? Math.PI/2 : -Math.PI/2;
-
     for (var i = 0; i < cfg.perSide; i++) {
       var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
       var py = wallY;
-
       var grad = ctx.createRadialGradient(px, py, 0, px, py, coverR);
       grad.addColorStop(0, "rgba(56,189,248,0.28)");
       grad.addColorStop(0.5, "rgba(56,189,248,0.12)");
       grad.addColorStop(1, "rgba(56,189,248,0.02)");
-
       ctx.beginPath();
       ctx.moveTo(px, py);
       ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
       ctx.closePath();
       ctx.fillStyle = grad;
       ctx.fill();
-
       ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
       ctx.lineWidth = 1 / zoom;
       ctx.setLineDash([5, 4]);
@@ -1286,9 +1179,7 @@ function drawCoverageCones(L, W, cfg, scale) {
       ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
       ctx.stroke();
       ctx.setLineDash([]);
-
       ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
-      ctx.lineWidth = 1 / zoom;
       ctx.beginPath();
       ctx.moveTo(px, py);
       ctx.lineTo(px + Math.cos(centerAng) * coverR, py + Math.sin(centerAng) * coverR);
@@ -1301,38 +1192,30 @@ function drawSoundRays(L, W, cfg, scale) {
   var half = (cfg.spk.angle / 2) * Math.PI / 180;
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
   var coverR = throwH * Math.tan(half) * scale;
-
   for (var s = 0; s < 2; s++) {
     var isTop = s === 0;
     var wallY = isTop ? -W/2 : W/2;
     var centerAng = isTop ? Math.PI/2 : -Math.PI/2;
-
     for (var i = 0; i < cfg.perSide; i++) {
       var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
       var py = wallY;
-
       for (var w = 0; w < 3; w++) {
         var t = ((animTime * 0.8 + w * 0.33) % 1);
-        var radius = coverR * t;
         var alpha = (1 - t) * 0.6;
         ctx.strokeStyle = "rgba(56, 189, 248, " + alpha + ")";
         ctx.lineWidth = 1.5 / zoom;
         ctx.beginPath();
-        ctx.arc(px, py, radius, centerAng - half * t, centerAng + half * t);
+        ctx.arc(px, py, coverR * t, centerAng - half * t, centerAng + half * t);
         ctx.stroke();
       }
-
-      var numRays = 5;
-      for (var r = 0; r < numRays; r++) {
-        var tr = r / (numRays - 1);
+      for (var r = 0; r < 5; r++) {
+        var tr = r / 4;
         var rayAng = centerAng - half + tr * (half * 2);
         var pulse = (Math.sin(animTime * 2.5 + i * 0.5 + s) + 1) / 2;
         var len = coverR * (0.35 + pulse * 0.65);
-
         var grad2 = ctx.createLinearGradient(px, py, px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
         grad2.addColorStop(0, "rgba(56,189,248,0.7)");
         grad2.addColorStop(1, "rgba(56,189,248,0)");
-
         ctx.beginPath();
         ctx.moveTo(px, py);
         ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
@@ -1350,67 +1233,46 @@ function drawSpeakers(L, W, cfg) {
     var wallY = s === 0 ? -W/2 : W/2;
     var isTop = s === 0;
     for (var i = 0; i < cfg.perSide; i++) {
-      var px = -L/2 + (L * (i + 0.5) / cfg.perSide);
-      drawSpeakerIcon(px, wallY, isTop, spkIndex++);
+      drawSpeakerIcon(-L/2 + (L * (i + 0.5) / cfg.perSide), wallY, isTop, spkIndex++);
     }
   }
 }
 
 function drawSpeakerIcon(x, y, isTop, index) {
-  var R = 14;
-  var offsetY = isTop ? R + 6 : -(R + 6);
-
-  ctx.beginPath();
-  ctx.arc(x, y, R + 2, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
-  ctx.fill();
-
+  var R = 14, offsetY = isTop ? R + 6 : -(R + 6);
+  ctx.beginPath(); ctx.arc(x, y, R + 2, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fill();
   var bezelGrad = ctx.createRadialGradient(x - 2, y - 2, 0, x, y, R);
   bezelGrad.addColorStop(0, "#4a5568");
   bezelGrad.addColorStop(1, "#1a202c");
-  ctx.beginPath();
-  ctx.arc(x, y, R, 0, Math.PI*2);
-  ctx.fillStyle = bezelGrad;
-  ctx.fill();
-  ctx.strokeStyle = "#2d3748";
-  ctx.lineWidth = 1.5 / zoom;
-  ctx.stroke();
-
+  ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI*2);
+  ctx.fillStyle = bezelGrad; ctx.fill();
+  ctx.strokeStyle = "#2d3748"; ctx.lineWidth = 1.5 / zoom; ctx.stroke();
   ctx.strokeStyle = "rgba(200, 210, 220, 0.4)";
   ctx.lineWidth = 0.6 / zoom;
   for (var r = 3; r <= R - 2; r += 2.5) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI*2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke();
   }
   for (var a = 0; a < 12; a++) {
     var ang = (a * Math.PI / 6);
     ctx.beginPath();
     ctx.moveTo(x + Math.cos(ang) * 3, y + Math.sin(ang) * 3);
     ctx.lineTo(x + Math.cos(ang) * (R - 2), y + Math.sin(ang) * (R - 2));
-    ctx.strokeStyle = "rgba(200, 210, 220, 0.25)";
-    ctx.stroke();
+    ctx.strokeStyle = "rgba(200, 210, 220, 0.25)"; ctx.stroke();
   }
-
-  ctx.beginPath();
-  ctx.arc(x, y, 3.5, 0, Math.PI*2);
+  ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2);
   ctx.fillStyle = "#e60012";
   ctx.shadowColor = "rgba(230,0,18,0.9)";
   ctx.shadowBlur = 8 / zoom;
   ctx.fill();
   ctx.shadowBlur = 0;
-
-  ctx.beginPath();
-  ctx.arc(x - 2, y - 2, 1.2, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  ctx.fill();
-
+  ctx.beginPath(); ctx.arc(x - 2, y - 2, 1.2, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.fill();
   ctx.fillStyle = "#fbbf24";
   ctx.font = "bold 8px Inter";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  var label = 'SP-' + (index < 10 ? '0' + index : index);
-  ctx.fillText(label, x, y + offsetY);
+  ctx.fillText('SP-' + (index < 10 ? '0' + index : index), x, y + offsetY);
 }
 
 function drawConferenceUnits(L, W, cfg) {
@@ -1418,23 +1280,15 @@ function drawConferenceUnits(L, W, cfg) {
   if (total === 0) return;
   var chair = CONF_CHAIRS[cfg.confChair] || {};
   var isWireless = chair.type === 'wireless' || chair.type === 'wireless5g';
-
   var positions = [];
   if (cfg.mode === 'meeting') {
     for (var i = 0; i < total; i++) {
       var ang = (i * 2 * Math.PI) / total - Math.PI / 2;
-      positions.push({
-        x: Math.cos(ang) * L * 0.36,
-        y: Math.sin(ang) * W * 0.30,
-        rot: ang + Math.PI/2,
-        isChair: i < cfg.cQty,
-        num: i + 1
-      });
+      positions.push({ x: Math.cos(ang) * L * 0.36, y: Math.sin(ang) * W * 0.30, rot: ang + Math.PI/2, isChair: i < cfg.cQty, num: i + 1 });
     }
   } else if (cfg.mode === 'boardroom') {
     var w = L * 0.75, h = W * 0.55, t = 22;
-    var perSide = Math.ceil(total / 3);
-    var idx = 0;
+    var perSide = Math.ceil(total / 3), idx = 0;
     for (var i2 = 0; i2 < perSide && idx < total; i2++, idx++) {
       var y = -h/2 + 15 + (i2 * (h - 30) / Math.max(1, perSide - 1));
       positions.push({ x: -w/2 + t/2, y: y, rot: -Math.PI/2, isChair: idx < cfg.cQty, num: idx + 1 });
@@ -1452,18 +1306,13 @@ function drawConferenceUnits(L, W, cfg) {
     var cols = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(total))));
     var rows = Math.ceil(total / cols);
     var xSpan = L * 0.80;
-    var yStart = -W*0.18, yEnd = W * 0.40;
+    var yStart = -W * 0.10, yEnd = W * 0.42;
     var yStep = (yEnd - yStart) / Math.max(1, rows);
     var xStep = xSpan / cols;
     for (var i5 = 0; i5 < total; i5++) {
-      var r = Math.floor(i5 / cols);
-      var c = i5 % cols;
-      var x2 = -xSpan/2 + xStep * c + xStep/2;
-      var y3 = yStart + yStep * r;
-      positions.push({ x: x2, y: y3, rot: -Math.PI/2, isChair: i5 < cfg.cQty, num: i5 + 1 });
+      positions.push({ x: -xSpan/2 + xStep * (i5 % cols) + xStep/2, y: yStart + yStep * Math.floor(i5 / cols), rot: -Math.PI/2, isChair: i5 < cfg.cQty, num: i5 + 1 });
     }
   }
-
   if (positions.length > 1) {
     ctx.strokeStyle = "rgba(168, 85, 247, 0.35)";
     ctx.lineWidth = 1 / zoom;
@@ -1476,7 +1325,6 @@ function drawConferenceUnits(L, W, cfg) {
     ctx.stroke();
     ctx.setLineDash([]);
   }
-
   for (var k = 0; k < positions.length; k++) {
     var pos = positions[k];
     drawConfMic(pos.x, pos.y, pos.rot, pos.isChair, pos.num, isWireless);
@@ -1487,63 +1335,34 @@ function drawConfMic(x, y, rotation, isChair, num, isWireless) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(rotation);
-
   var baseColor = isChair ? "#e60012" : (isWireless ? "#a855f7" : "#38bdf8");
-
   if (isChair) {
-    ctx.beginPath();
-    ctx.arc(0, 0, 16, 0, Math.PI*2);
-    ctx.fillStyle = "rgba(230, 0, 18, 0.20)";
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(230, 0, 18, 0.20)"; ctx.fill();
   }
-
   if (isWireless) {
-    ctx.beginPath();
-    ctx.arc(0, 0, 12, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2);
     ctx.strokeStyle = "rgba(168, 85, 247, 0.55)";
     ctx.lineWidth = 1.5 / zoom;
     ctx.setLineDash([3, 3]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
-
   ctx.beginPath();
-  ctx.moveTo(-6, 5);
-  ctx.lineTo(6, 5);
-  ctx.lineTo(4, -3);
-  ctx.lineTo(-4, -3);
+  ctx.moveTo(-6, 5); ctx.lineTo(6, 5); ctx.lineTo(4, -3); ctx.lineTo(-4, -3);
   ctx.closePath();
   var baseGrad = ctx.createLinearGradient(0, -3, 0, 5);
-  baseGrad.addColorStop(0, "#2d3748");
-  baseGrad.addColorStop(1, "#1a202c");
-  ctx.fillStyle = baseGrad;
-  ctx.fill();
-  ctx.strokeStyle = baseColor;
-  ctx.lineWidth = 1.2 / zoom;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(0, -3);
-  ctx.lineTo(0, -12);
-  ctx.strokeStyle = baseColor;
-  ctx.lineWidth = 2 / zoom;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(0, -12, 2.5, 0, Math.PI*2);
-  ctx.fillStyle = baseColor;
-  ctx.fill();
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 0.8 / zoom;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(0, 2, 1.2, 0, Math.PI*2);
-  ctx.fillStyle = isChair ? "#22c55e" : "#fbbf24";
-  ctx.fill();
-
+  baseGrad.addColorStop(0, "#2d3748"); baseGrad.addColorStop(1, "#1a202c");
+  ctx.fillStyle = baseGrad; ctx.fill();
+  ctx.strokeStyle = baseColor; ctx.lineWidth = 1.2 / zoom; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -3); ctx.lineTo(0, -12);
+  ctx.strokeStyle = baseColor; ctx.lineWidth = 2 / zoom; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -12, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = baseColor; ctx.fill();
+  ctx.strokeStyle = "#fff"; ctx.lineWidth = 0.8 / zoom; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, 2, 1.2, 0, Math.PI*2);
+  ctx.fillStyle = isChair ? "#22c55e" : "#fbbf24"; ctx.fill();
   ctx.restore();
-
   ctx.fillStyle = "#fff";
   ctx.font = "bold 7px Inter";
   ctx.textAlign = "center";
@@ -1561,7 +1380,6 @@ function drawTechnicalAnnotations(L, W, cfg, scale) {
 function drawDimensionLine(x1, y1, x2, y2, label, dir) {
   ctx.strokeStyle = "rgba(251, 191, 36, 0.4)";
   ctx.lineWidth = 1 / zoom;
-  ctx.setLineDash([]);
   if (dir === 'h') {
     ctx.beginPath(); ctx.moveTo(x1, y1 + 5); ctx.lineTo(x1, y1 - 5); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x2, y2 + 5); ctx.lineTo(x2, y2 - 5); ctx.stroke();
@@ -1569,21 +1387,13 @@ function drawDimensionLine(x1, y1, x2, y2, label, dir) {
     ctx.beginPath(); ctx.moveTo(x1 - 5, y1); ctx.lineTo(x1 + 5, y1); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x2 - 5, y2); ctx.lineTo(x2 + 5, y2); ctx.stroke();
   }
-
   ctx.strokeStyle = "#fbbf24";
   ctx.lineWidth = 1.2 / zoom;
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.stroke();
-
-  var arrowSize = 6;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   var ang = Math.atan2(y2 - y1, x2 - x1);
-  drawArrow(x1, y1, ang + Math.PI, arrowSize);
-  drawArrow(x2, y2, ang, arrowSize);
-
-  var mx = (x1 + x2) / 2;
-  var my = (y1 + y2) / 2;
+  drawArrow(x1, y1, ang + Math.PI, 6);
+  drawArrow(x2, y2, ang, 6);
+  var mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
   ctx.font = "bold 11px Inter";
   var tw = ctx.measureText(label).width + 10;
   ctx.fillStyle = "#0a1520";
@@ -1605,24 +1415,19 @@ function drawArrow(x, y, ang, size) {
 }
 
 function drawScaleBar(x, y, scale) {
-  var totalPx = 5 * scale;
-  var segments = 5;
-  var segPx = totalPx / segments;
-
+  var totalPx = 5 * scale, segPx = totalPx / 5;
   ctx.fillStyle = "#7fb8d8";
   ctx.font = "bold 9px Inter";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText("SCALE BAR", x + totalPx/2, y - 12);
-
-  for (var i = 0; i < segments; i++) {
+  for (var i = 0; i < 5; i++) {
     ctx.fillStyle = i % 2 === 0 ? "#7fb8d8" : "#0a1520";
     ctx.fillRect(x + i * segPx, y, segPx, 8);
     ctx.strokeStyle = "#7fb8d8";
     ctx.lineWidth = 0.8 / zoom;
     ctx.strokeRect(x + i * segPx, y, segPx, 8);
   }
-
   ctx.fillStyle = "#7fb8d8";
   ctx.font = "bold 8px Inter";
   ctx.textAlign = "center";
@@ -1634,47 +1439,28 @@ function drawNorthArrow(x, y) {
   var size = 20;
   ctx.save();
   ctx.translate(x, y);
-
+  ctx.beginPath(); ctx.arc(0, 0, size + 4, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(10, 21, 32, 0.85)"; ctx.fill();
+  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1 / zoom; ctx.stroke();
   ctx.beginPath();
-  ctx.arc(0, 0, size + 4, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(10, 21, 32, 0.85)";
-  ctx.fill();
-  ctx.strokeStyle = "#7fb8d8";
-  ctx.lineWidth = 1 / zoom;
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(0, -size);
-  ctx.lineTo(-6, 4);
-  ctx.lineTo(0, 0);
-  ctx.lineTo(6, 4);
+  ctx.moveTo(0, -size); ctx.lineTo(-6, 4); ctx.lineTo(0, 0); ctx.lineTo(6, 4);
   ctx.closePath();
-  ctx.fillStyle = "#e60012";
-  ctx.fill();
-
+  ctx.fillStyle = "#e60012"; ctx.fill();
   ctx.beginPath();
-  ctx.moveTo(0, size * 0.5);
-  ctx.lineTo(-4, 2);
-  ctx.lineTo(4, 2);
+  ctx.moveTo(0, size * 0.5); ctx.lineTo(-4, 2); ctx.lineTo(4, 2);
   ctx.closePath();
-  ctx.fillStyle = "#7fb8d8";
-  ctx.fill();
-
+  ctx.fillStyle = "#7fb8d8"; ctx.fill();
   ctx.fillStyle = "#fff";
   ctx.font = "bold 11px Inter";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText("N", 0, -size - 8);
-
   ctx.restore();
 }
 
 function drawScreenOverlays(cfg) {
-  var w = canvas.clientWidth || canvas.width;
   var h = canvas.clientHeight || canvas.height;
-
-  var tbW = 260, tbH = 95;
-  var tbX = 20, tbY = h - tbH - 20;
+  var tbW = 260, tbH = 95, tbX = 20, tbY = h - tbH - 20;
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   var dpr = window.devicePixelRatio || 1;
@@ -1685,19 +1471,16 @@ function drawScreenOverlays(cfg) {
   ctx.strokeStyle = "#7fb8d8";
   ctx.lineWidth = 1.5;
   ctx.strokeRect(tbX, tbY, tbW, tbH);
-
   var barGrad = ctx.createLinearGradient(tbX, 0, tbX + tbW, 0);
   barGrad.addColorStop(0, "#e60012");
   barGrad.addColorStop(1, "#38bdf8");
   ctx.fillStyle = barGrad;
   ctx.fillRect(tbX, tbY, tbW, 4);
-
   ctx.fillStyle = "#fff";
   ctx.font = "bold 11px Inter";
   ctx.textAlign = "left";
   ctx.textBaseline = "top";
   ctx.fillText("MOTIVITY · ELITE ENGINEERING", tbX + 10, tbY + 12);
-
   ctx.fillStyle = "#7fb8d8";
   ctx.font = "10px Inter";
   ctx.fillText("Project: " + cfg.projName, tbX + 10, tbY + 32);
@@ -1707,30 +1490,27 @@ function drawScreenOverlays(cfg) {
   ctx.font = "bold 10px Inter";
   ctx.fillText("Scale 1:" + Math.round(1000/PX_PER_M) + " · Ref " + cfg.projRef, tbX + 10, tbY + 78);
 
-  var lgW = 190;
+  var lgW = 200;
   var items = [
-    { sym: 'spk',   label: 'Ceiling Speaker' },
+    { sym: 'spk', label: 'Ceiling Speaker' },
     { sym: 'chair', label: 'Chairman Unit' },
-    { sym: 'del',   label: 'Delegate Unit' },
-    { sym: 'wl',    label: 'Wireless Unit' },
-    { sym: 'door',  label: 'Door / Window' },
-    { sym: 'dim',   label: 'Dimensions (m)' }
+    { sym: 'del', label: 'Delegate Unit' },
+    { sym: 'wl', label: 'Wireless Unit' },
+    { sym: 'podium', label: 'Podium / Screen' },
+    { sym: 'cam', label: 'Tracking Camera' },
+    { sym: 'rack', label: 'Equipment Rack' }
   ];
-  var lgH = 30 + items.length * 22;
-  var lgX = 20, lgY = 90;
-
+  var lgH = 30 + items.length * 22, lgX = 20, lgY = 90;
   ctx.fillStyle = "rgba(10, 21, 32, 0.92)";
   ctx.fillRect(lgX, lgY, lgW, lgH);
   ctx.strokeStyle = "#7fb8d8";
   ctx.lineWidth = 1.5;
   ctx.strokeRect(lgX, lgY, lgW, lgH);
-
   ctx.fillStyle = "#38bdf8";
   ctx.font = "bold 10px Inter";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.fillText("LEGEND", lgX + 10, lgY + 15);
-
   var iconX = lgX + 25;
   for (var i = 0; i < items.length; i++) {
     var iy = lgY + 30 + i * 22 + 11;
@@ -1769,17 +1549,23 @@ function drawLegendIcon(x, y, type) {
     ctx.beginPath(); ctx.arc(0, 0, 7, 0, Math.PI*2);
     ctx.strokeStyle = "#a855f7"; ctx.stroke();
     ctx.setLineDash([]);
-  } else if (type === 'door') {
-    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(-5, 3); ctx.lineTo(5, 3); ctx.stroke();
-    ctx.setLineDash([2, 2]);
-    ctx.beginPath(); ctx.arc(-5, 3, 6, 0, -Math.PI/2, true); ctx.stroke();
-    ctx.setLineDash([]);
-  } else if (type === 'dim') {
-    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(-7, 0); ctx.lineTo(7, 0); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-7, -2); ctx.lineTo(-7, 2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(7, -2); ctx.lineTo(7, 2); ctx.stroke();
+  } else if (type === 'podium') {
+    ctx.fillStyle = "rgba(120, 25, 30, 0.9)";
+    ctx.fillRect(-6, -4, 12, 8);
+    ctx.strokeStyle = "#e60012"; ctx.lineWidth = 1; ctx.stroke();
+  } else if (type === 'cam') {
+    ctx.fillStyle = "#0a1520";
+    ctx.strokeStyle = "#22c55e"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.rect(-5, -3, 8, 6); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(4, 0, 2, 0, Math.PI*2);
+    ctx.fillStyle = "#22c55e"; ctx.fill();
+  } else if (type === 'rack') {
+    ctx.fillStyle = "#2d3748";
+    ctx.fillRect(-4, -6, 8, 12);
+    ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1; ctx.strokeRect(-4, -6, 8, 12);
+    ctx.beginPath(); ctx.arc(2, -3, 1, 0, Math.PI*2); ctx.fillStyle = "#22c55e"; ctx.fill();
+    ctx.beginPath(); ctx.arc(2, 0, 1, 0, Math.PI*2); ctx.fillStyle = "#38bdf8"; ctx.fill();
+    ctx.beginPath(); ctx.arc(2, 3, 1, 0, Math.PI*2); ctx.fillStyle = "#f59e0b"; ctx.fill();
   }
   ctx.restore();
 }
@@ -1791,15 +1577,13 @@ function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
     heatmapCache.width = Math.ceil(Lpx);
     heatmapCache.height = Math.ceil(Wpx);
     var hctx = heatmapCache.getContext('2d');
-    var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
     var R = calcRoomConstant(cfg.L, cfg.W, cfg.H, cfg.alpha);
     var throwH = Math.max(0.5, cfg.H - cfg.earH);
-
     var positions = [];
     for (var s = 0; s < 2; s++) {
       var wallY = s === 0 ? -cfg.W/2 : cfg.W/2;
       for (var i = 0; i < cfg.perSide; i++) {
-        positions.push([ -cfg.L/2 + cfg.L * (i + 0.5) / cfg.perSide, wallY ]);
+        positions.push([-cfg.L/2 + cfg.L * (i + 0.5) / cfg.perSide, wallY]);
       }
     }
     var img = hctx.createImageData(heatmapCache.width, heatmapCache.height);
@@ -1815,7 +1599,10 @@ function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
         var spl = pTotal > 0 ? 10 * Math.log10(pTotal) : 0;
         var col = splColorRGBA(spl);
         var idx = (py * heatmapCache.width + px) * 4;
-        data[idx] = col[0]; data[idx+1] = col[1]; data[idx+2] = col[2]; data[idx+3] = col[3];
+        data[idx] = col[0];
+        data[idx+1] = col[1];
+        data[idx+2] = col[2];
+        data[idx+3] = col[3];
       }
     }
     hctx.putImageData(img, 0, 0);
@@ -1850,9 +1637,6 @@ function splColorRGBA(spl) {
   return stops[0].c;
 }
 
-/* ============================================================
-   SAFE RENDER
-   ============================================================ */
 var __renderErrorCount = 0;
 function safeRender() {
   try {
@@ -1871,19 +1655,16 @@ function safeRender() {
       ctx.textAlign = "center";
       ctx.fillText("⚠️ Rendering Error", canvas.width / 2, 100);
       ctx.fillStyle = "#fbbf24";
-      ctx.font = "14px 'JetBrains Mono', monospace";
+      ctx.font = "14px monospace";
       ctx.fillText(String(err.message || err).substring(0, 100), canvas.width / 2, 140);
       ctx.fillStyle = "#8b949e";
-      ctx.font = "12px 'JetBrains Mono', monospace";
+      ctx.font = "12px monospace";
       ctx.fillText("Open Console (F12) for details", canvas.width / 2, 180);
       ctx.restore();
     }
   }
 }
 
-/* ============================================================
-   LOOP
-   ============================================================ */
 function loop(now) {
   var dt = (now - lastFrameTime) / 1000;
   lastFrameTime = now;
@@ -1895,18 +1676,12 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
-/* ============================================================
-   UI BINDINGS
-   ============================================================ */
 var debouncedUpdate = debounce(function() { updateKPI(); markDirty(); pushHistory(); }, 150);
-var inputIds = ['dim_l','dim_w','dim_h','earH','spkPerSide','cQty','dQty','interpLang','interpUnits','irReceivers','irEmitters'];
+var inputIds = ['dim_l','dim_w','dim_h','earH','spkPerSide','cQty','dQty','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','camCount','camFOV'];
 for (var i = 0; i < inputIds.length; i++) {
-  (function(id) {
-    var el = $(id);
-    if (el) el.addEventListener('input', debouncedUpdate);
-  })(inputIds[i]);
+  (function(id) { var el = $(id); if (el) el.addEventListener('input', debouncedUpdate); })(inputIds[i]);
 }
-var changeIds = ['spkModel','roomMode','roomType','confMode','confHost','confChair','confDelegate','confExtMic','confMixer'];
+var changeIds = ['spkModel','roomMode','roomType','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','screenType'];
 for (var j = 0; j < changeIds.length; j++) {
   (function(id) {
     var el = $(id);
@@ -1919,16 +1694,13 @@ for (var j = 0; j < changeIds.length; j++) {
 }
 var textIds = ['projName','engName','clientName','siteLoc','projRef'];
 for (var k = 0; k < textIds.length; k++) {
-  (function(id) {
-    var el = $(id);
-    if (el) el.addEventListener('input', debounce(function() { pushHistory(); }, 400));
-  })(textIds[k]);
+  (function(id) { var el = $(id); if (el) el.addEventListener('input', debounce(function() { pushHistory(); }, 400)); })(textIds[k]);
 }
-var checkIds = ['useCharger','useFeedback','useSeq'];
+var checkIds = ['useCharger','useFeedback','useSeq','useEq','showPodium','showScreen','showCameras','showRack'];
 for (var m = 0; m < checkIds.length; m++) {
   (function(id) {
     var el = $(id);
-    if (el) el.addEventListener('change', function() { updateKPI(); pushHistory(); });
+    if (el) el.addEventListener('change', function() { updateKPI(); markDirty(); pushHistory(); });
   })(checkIds[m]);
 }
 
@@ -1974,11 +1746,9 @@ vArea.addEventListener('wheel', function(e) {
 
 function updateCursorInfo(e) {
   var rect = canvas.getBoundingClientRect();
-  var mx = e.clientX - rect.left;
-  var my = e.clientY - rect.top;
+  var mx = e.clientX - rect.left, my = e.clientY - rect.top;
   var cfg = readConfig();
-  var cx = rect.width / 2 + offsetX;
-  var cy = rect.height / 2 + offsetY;
+  var cx = rect.width / 2 + offsetX, cy = rect.height / 2 + offsetY;
   var x_m = (mx - cx) / (zoom * PX_PER_M);
   var y_m = (my - cy) / (zoom * PX_PER_M);
   if (Math.abs(x_m) > cfg.L/2 || Math.abs(y_m) > cfg.W/2) {
@@ -1996,23 +1766,15 @@ function updateCursorInfo(e) {
   $('cursorDist').textContent = d.toFixed(1) + ' m';
 }
 
-/* ============================================================
-   UNDO / REDO
-   ============================================================ */
 function getState() {
-  var ids = ['projName','engName','clientName','siteLoc','projRef',
-    'roomMode','roomType','dim_l','dim_w','dim_h','earH',
-    'spkModel','spkPerSide','cQty','dQty',
-    'confMode','confHost','confChair','confDelegate','confExtMic','confMixer',
-    'interpLang','interpUnits','irReceivers','irEmitters'];
+  var ids = ['projName','engName','clientName','siteLoc','projRef','roomMode','roomType',
+    'dim_l','dim_w','dim_h','earH','spkModel','spkPerSide','cQty','dQty',
+    'confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP',
+    'interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','screenType','camCount','camFOV'];
   var s = {};
-  for (var i = 0; i < ids.length; i++) {
-    var el = $(ids[i]);
-    if (el) s[ids[i]] = el.value;
-  }
-  s.useCharger = $('useCharger').checked;
-  s.useFeedback = $('useFeedback').checked;
-  s.useSeq = $('useSeq').checked;
+  for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) s[ids[i]] = el.value; }
+  var checks = ['useCharger','useFeedback','useSeq','useEq','showPodium','showScreen','showCameras','showRack'];
+  for (var c = 0; c < checks.length; c++) { var el2 = $(checks[c]); if (el2) s[checks[c]] = el2.checked; }
   return s;
 }
 function applyState(s) {
@@ -2034,59 +1796,32 @@ function pushHistory() {
   if (history.length > 50) history.shift();
   historyIndex = history.length - 1;
 }
-function undo() {
-  if (historyIndex <= 0) return;
-  historyIndex--; suppressHistory = true;
-  applyState(history[historyIndex]);
-  suppressHistory = false;
-}
-function redo() {
-  if (historyIndex >= history.length - 1) return;
-  historyIndex++; suppressHistory = true;
-  applyState(history[historyIndex]);
-  suppressHistory = false;
-}
+function undo() { if (historyIndex <= 0) return; historyIndex--; suppressHistory = true; applyState(history[historyIndex]); suppressHistory = false; }
+function redo() { if (historyIndex >= history.length - 1) return; historyIndex++; suppressHistory = true; applyState(history[historyIndex]); suppressHistory = false; }
 document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
   if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
   if (e.key === 'Escape') $('reportModal').style.display = 'none';
 });
 
-/* ============================================================
-   SAVE / LOAD
-   ============================================================ */
 function saveProject() {
-  var data = { state: getState(), opts: opts, savedAt: new Date().toISOString(), version: 'v4.1-en' };
   try {
-    localStorage.setItem('motivity_project_v4_en', JSON.stringify(data));
-    pushWarning('ok', '✅ Project saved', 3000);
-  } catch (e) {
-    pushWarning('critical', 'Save failed', 3000);
-  }
+    localStorage.setItem('motivity_project_v5', JSON.stringify({ state: getState(), opts: opts }));
+    pushWarning('ok', '✅ Saved', 3000);
+  } catch (e) { pushWarning('critical', 'Save failed', 3000); }
 }
 function loadProject() {
-  var raw = localStorage.getItem('motivity_project_v4_en') || localStorage.getItem('motivity_project_v4');
+  var raw = localStorage.getItem('motivity_project_v5');
   if (!raw) { pushWarning('warn', 'No saved project', 3000); return; }
   try {
     var data = JSON.parse(raw);
     applyState(data.state);
-    if (data.opts) {
-      for (var k in data.opts) opts[k] = data.opts[k];
-      var toggles = ['tile','cover','heat','rays','grid','conf','furn','tech'];
-      for (var i = 0; i < toggles.length; i++) {
-        var btn = $('tg' + toggles[i].charAt(0).toUpperCase() + toggles[i].slice(1));
-        if (btn) btn.classList.toggle('on', opts[toggles[i]]);
-      }
-      heatmapKey = '';
-    }
+    if (data.opts) { for (var k in data.opts) opts[k] = data.opts[k]; heatmapKey = ''; }
     pushHistory();
-    pushWarning('ok', '✅ Project loaded', 3000);
+    pushWarning('ok', '✅ Loaded', 3000);
   } catch (err) { pushWarning('critical', 'Load error', 3000); }
 }
 
-/* ============================================================
-   REPORT
-   ============================================================ */
 function generateReport() {
   var cfg = readConfig();
   var total = cfg.perSide * 2;
@@ -2097,16 +1832,13 @@ function generateReport() {
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
   var coverR = throwH * Math.tan((cfg.spk.angle/2) * Math.PI/180);
   var maxDist = Math.sqrt((cfg.L/2)*(cfg.L/2) + (cfg.W/2)*(cfg.W/2) + throwH*throwH);
-
-  var minSpl = Infinity, minSti = 1;
-  var S = 20;
+  var minSpl = Infinity, minSti = 1, S = 20;
   for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
     var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
     var r = splAtPoint(x, y, cfg);
     if (r.spl < minSpl) minSpl = r.spl;
     if (r.sti < minSti) minSti = r.sti;
   }
-
   var today = new Date().toLocaleDateString('en-GB');
   $('repProjName').textContent = cfg.projName;
   $('repEngName').textContent = cfg.engName;
@@ -2119,33 +1851,20 @@ function generateReport() {
   var host = CONF_HOSTS[cfg.confHost] || {};
   var chair = CONF_CHAIRS[cfg.confChair] || {};
   var delegate = CONF_DELEGATES[cfg.confDelegate] || {};
-  var modeNames = {
-    basic: 'Basic Discussion', camera: 'Camera Tracking', voting: 'Voting & Attendance',
-    premium: 'Premium 5" Touch', wireless: 'Wireless 5G', interpretation: 'Simultaneous Interpretation'
-  };
 
   $('sysOverview').innerHTML =
-    '<div class="sys-card">' +
-      '<h4>🎛️ Main Host</h4>' +
+    '<div class="sys-card"><h4>🎛️ Host</h4>' +
       '<div class="row-item"><span>Model:</span><b>' + (host.name || '—') + '</b></div>' +
-      '<div class="row-item"><span>Type:</span><b>' + (host.desc || '—') + '</b></div>' +
       '<div class="row-item"><span>Capacity:</span><b>' + (host.maxUnits || 0) + ' units</b></div>' +
-      '<div class="row-item"><span>Power:</span><b>' + (host.power || 0) + 'W</b></div>' +
-    '</div>' +
-    '<div class="sys-card">' +
-      '<h4>🎤 Units</h4>' +
+      '<div class="row-item"><span>Power:</span><b>' + (host.power || 0) + 'W</b></div></div>' +
+    '<div class="sys-card"><h4>🎤 Units</h4>' +
       '<div class="row-item"><span>Chairman:</span><b>' + (chair.name || '—') + ' × ' + cfg.cQty + '</b></div>' +
       '<div class="row-item"><span>Delegate:</span><b>' + (delegate.name || '—') + ' × ' + cfg.dQty + '</b></div>' +
-      '<div class="row-item"><span>Total:</span><b>' + totalMic + ' units</b></div>' +
-      '<div class="row-item"><span>Mode:</span><b>' + (modeNames[cfg.confMode] || '—') + '</b></div>' +
-    '</div>' +
-    '<div class="sys-card">' +
-      '<h4>🎚️ Processing</h4>' +
-      '<div class="row-item"><span>Mixer:</span><b>' + (cfg.confMixer || '—') + '</b></div>' +
-      '<div class="row-item"><span>Feedback Suppressor:</span><b>' + (cfg.useFeedback ? 'DF224 ✓' : 'No') + '</b></div>' +
-      '<div class="row-item"><span>Power Sequencer:</span><b>' + (cfg.useSeq ? 'SC-802 ✓' : 'No') + '</b></div>' +
-      '<div class="row-item"><span>Charger:</span><b>' + (cfg.useCharger ? 'GW5020 ✓' : 'No') + '</b></div>' +
-    '</div>';
+      '<div class="row-item"><span>Total:</span><b>' + totalMic + ' units</b></div></div>' +
+    '<div class="sys-card"><h4>🎬 Stage & A/V</h4>' +
+      '<div class="row-item"><span>Podium:</span><b>' + (cfg.showPodium ? 'Yes (' + cfg.podiumW + '×' + cfg.podiumD + 'm)' : 'No') + '</b></div>' +
+      '<div class="row-item"><span>Screen:</span><b>' + (cfg.showScreen ? cfg.screenType.toUpperCase() + ' (' + cfg.screenW + 'm)' : 'No') + '</b></div>' +
+      '<div class="row-item"><span>Cameras:</span><b>' + (cfg.showCameras ? cfg.camCount + ' × ' + cfg.camFOV + '°' : 'No') + '</b></div></div>';
 
   $('acousticSummary').innerHTML =
     '<div class="ac-box ' + (RT60 < 1.2 ? 'good' : RT60 > 1.8 ? 'bad' : '') + '"><div class="v">' + RT60.toFixed(2) + 's</div><div class="l">RT60</div></div>' +
@@ -2153,8 +1872,7 @@ function generateReport() {
     '<div class="ac-box ' + (minSti >= 0.6 ? 'good' : minSti < 0.45 ? 'bad' : '') + '"><div class="v">' + minSti.toFixed(2) + '</div><div class="l">STI</div></div>' +
     '<div class="ac-box"><div class="v">' + Dc.toFixed(1) + 'm</div><div class="l">Dc</div></div>';
 
-  var rowNum = 1;
-  var boq = [];
+  var rowNum = 1, boq = [];
   var addCat = function(t) { boq.push('<tr class="cat-row"><td colspan="5">' + t + '</td></tr>'); };
   var addRow = function(it, m, q, s) { boq.push('<tr><td>' + (rowNum++) + '</td><td>' + it + '</td><td>' + m + '</td><td>' + q + '</td><td>' + s + '</td></tr>'); };
 
@@ -2170,59 +1888,54 @@ function generateReport() {
   else { ampModel = "MA-41300C"; ampPower = 1300; ampQty = Math.ceil(totalW / (ampPower * 4)); }
   addRow('Class-H Amplifier', 'Motivity ' + ampModel, ampQty, 'Load ' + totalW + 'W');
 
-  addCat('🎤 2. Conference System');
+  if (cfg.confMixer) addRow('Digital Mixer', 'Motivity ' + cfg.confMixer, 1, CONF_ACCESSORIES[cfg.confMixer].desc);
+  if (cfg.audioDSP) addRow('DSP Processor', 'Motivity ' + cfg.audioDSP, 1, CONF_ACCESSORIES[cfg.audioDSP].desc);
+  if (cfg.useFeedback) addRow('Feedback Suppressor', 'Motivity DF224', 1, CONF_ACCESSORIES['DF224'].desc);
+  if (cfg.useEq) addRow('Graphic EQ', 'Motivity GEQ231', 1, CONF_ACCESSORIES['GEQ231'].desc);
+  if (cfg.useSeq) addRow('Power Sequencer', 'Motivity SC-802 II', 1, CONF_ACCESSORIES['SC-802 II'].desc);
+
+  addCat('🎬 2. Stage & A/V');
+  if (cfg.showPodium) addRow('Podium', 'Custom ' + cfg.podiumW + '×' + cfg.podiumD + 'm', 1, 'Stage furniture');
+  if (cfg.showScreen && cfg.screenType !== 'none') addRow('Screen', cfg.screenType === 'led' ? 'LED Wall' : 'Projection Screen', 1, cfg.screenW + 'm wide');
+  if (cfg.showCameras) addRow('Tracking Cameras', 'SD/HD PTZ', cfg.camCount, cfg.camFOV + '° FOV');
+
+  addCat('🎤 3. Conference System');
   addRow('Main Host', 'Motivity ' + host.name, 1, (host.features || []).slice(0, 2).join(' · '));
   addRow('Chairman Unit', 'Motivity ' + chair.name, cfg.cQty, chair.display || '');
   addRow('Delegate Unit', 'Motivity ' + delegate.name, cfg.dQty, 'Daisy-Chain');
-
-  addCat('🎚️ 3. Processing');
-  if (cfg.confMixer) addRow('Digital Mixer', 'Motivity ' + cfg.confMixer, 1, CONF_ACCESSORIES[cfg.confMixer].desc);
-  if (cfg.useFeedback) addRow('Feedback Suppressor', 'Motivity DF224', 1, CONF_ACCESSORIES['DF224'].desc);
   if (cfg.useCharger && (cfg.confMode === 'wireless' || host.type === 'wireless')) {
     addRow('Central Charger', 'Motivity GW5020', Math.ceil(totalMic / 20), CONF_ACCESSORIES['GW5020'].desc);
   }
-  if (cfg.useSeq) {
-    var totalPower = (host.power || 0) + 500;
-    var seqModel = totalPower > 8000 ? 'CP382' : 'SC-802 II';
-    addRow('Power Sequencer', 'Motivity ' + seqModel, 1, totalPower > 8000 ? '16 channels · 90A' : CONF_ACCESSORIES['SC-802 II'].desc);
-  }
 
   if (cfg.confMode === 'interpretation' || (cfg.interpLang > 1 && (host.type === 'hybrid' || host.type === 'premium'))) {
-    addCat('🌐 4. Simultaneous Interpretation');
+    addCat('🌐 4. Interpretation');
     addRow('Interp Host', 'Motivity MT606Z', 1, INTERP_DB['MT606Z'].desc);
     addRow('Interpreter Unit', 'Motivity MTO6Y', cfg.interpUnits, INTERP_DB['MTO6Y'].desc);
     if (cfg.irReceivers > 0) addRow('IR Receiver', 'Motivity MT606J', cfg.irReceivers, INTERP_DB['MT606J'].desc);
-    if (cfg.irEmitters > 0) addRow('IR Emitter Panel', 'Motivity MT25F', cfg.irEmitters, INTERP_DB['MT25F'].desc);
+    if (cfg.irEmitters > 0) addRow('IR Emitter', 'Motivity MT25F', cfg.irEmitters, INTERP_DB['MT25F'].desc);
   }
 
-  addCat('🔌 5. Cables & Infrastructure');
-  addRow('Audio Cable', 'Twin Core 2×1.5mm', '~' + Math.round(total*(cfg.L+cfg.W)*0.4) + 'm', 'Fire Rated LSZH');
+  addCat('🔌 5. Cables');
+  addRow('Audio Cable', 'Twin Core 2×1.5mm', '~' + Math.round(total*(cfg.L+cfg.W)*0.4) + 'm', 'Fire Rated');
   addRow('Conference Cable', 'Motivity G8PS-10', '~' + Math.round(totalMic*2.5+20) + 'm', 'CAT6 Shielded');
-  addRow('Connectors', 'Motivity Standard Kit', 1, 'Rack · Patch · Connectors');
+  addRow('Connectors', 'Motivity Kit', 1, 'Rack · Patch');
 
   var totalPowerFinal = (host.power || 0) + (chair.power || 0)*cfg.cQty + (delegate.power || 0)*cfg.dQty;
-  boq.push('<tr class="total-row"><td colspan="3">Total Power Consumption</td><td>~' + Math.round(totalPowerFinal) + 'W</td><td>40A Sequencer</td></tr>');
+  boq.push('<tr class="total-row"><td colspan="3">Total Power</td><td>~' + Math.round(totalPowerFinal) + 'W</td><td>40A</td></tr>');
   $('boqBody').innerHTML = boq.join('');
 
-  var modeText = $('roomMode').selectedOptions[0].text;
   $('justificationBody').innerHTML =
     '<div class="eng-note">' +
-      '<strong>1. SPL Distribution</strong><br>' +
-      'Motivity ' + cfg.modelKey + ' · ' + cfg.spk.pwr + 'W · ' + cfg.spk.sens + 'dB · Q=' + cfg.spk.q + '.' +
-      ' Minimum SPL at the farthest point (' + maxDist.toFixed(1) + 'm) = <b>' + minSpl.toFixed(1) + 'dB</b>.<br><br>' +
-      '<strong>2. Coverage</strong><br>' +
-      'Coverage angle ' + cfg.spk.angle + '° → radius ' + coverR.toFixed(2) + 'm. ' + total + ' speakers distributed on both walls.<br><br>' +
-      '<strong>3. Room Acoustics</strong><br>' +
-      'Volume ' + (cfg.L*cfg.W*cfg.H).toFixed(0) + 'm³ · RT60 = <b>' + RT60.toFixed(2) + 's</b> · Dc = ' + Dc.toFixed(1) + 'm.<br><br>' +
-      '<strong>4. STI = ' + minSti.toFixed(2) + '</strong> — ' + (minSti >= 0.6 ? 'Excellent' : minSti >= 0.45 ? 'Good' : 'Needs improvement') + '.<br><br>' +
-      '<strong>5. Conference System</strong><br>' +
-      (modeNames[cfg.confMode] || '') + ' · Host ' + host.name + ' (up to ' + host.maxUnits + ' units) · ' +
-      chair.name + ' × ' + cfg.cQty + ' · ' + delegate.name + ' × ' + cfg.dQty + '.' +
+    '<strong>1. SPL Distribution</strong><br>Motivity ' + cfg.modelKey + ' · ' + cfg.spk.pwr + 'W · ' + cfg.spk.sens + 'dB · Q=' + cfg.spk.q + '. Min SPL = <b>' + minSpl.toFixed(1) + 'dB</b>.<br><br>' +
+    '<strong>2. Coverage</strong><br>Angle ' + cfg.spk.angle + '° → radius ' + coverR.toFixed(2) + 'm.<br><br>' +
+    '<strong>3. Room Acoustics</strong><br>Volume ' + (cfg.L*cfg.W*cfg.H).toFixed(0) + 'm³ · RT60 = <b>' + RT60.toFixed(2) + 's</b>.<br><br>' +
+    '<strong>4. STI = ' + minSti.toFixed(2) + '</strong><br><br>' +
+    '<strong>5. Conference System</strong><br>' + host.name + ' (up to ' + host.maxUnits + ' units) · ' + chair.name + ' × ' + cfg.cQty + ' · ' + delegate.name + ' × ' + cfg.dQty + '.' +
     '</div>';
 
   var allW = calculateWarnings().concat(tempWarnings);
   if (allW.length === 0) {
-    $('warningsReport').innerHTML = '<div class="eng-note ok"><strong>✅ No warnings</strong> — design meets engineering standards.</div>';
+    $('warningsReport').innerHTML = '<div class="eng-note ok"><strong>✅ No warnings</strong></div>';
   } else {
     var whtml = '';
     for (var w = 0; w < allW.length; w++) {
@@ -2233,37 +1946,26 @@ function generateReport() {
     }
     $('warningsReport').innerHTML = whtml;
   }
-
   $('reportModal').style.display = 'block';
 }
 
-/* ============================================================
-   BOOT
-   ============================================================ */
 function bootApp() {
-  console.log('🚀 Motivity v4.1-EN boot...');
-  console.log('   roundRect:', typeof ctx.roundRect);
-
+  console.log('🚀 Motivity v5.0 boot...');
   try {
     populateHosts();
     if ($('confChair').options.length) $('confChair').value = 'MT380VC';
     onHostChange();
     if ($('confDelegate').options.length) $('confDelegate').value = 'MT380VD';
-  } catch (e) { console.error('Init error:', e); }
-
+  } catch (e) { console.error('Init:', e); }
   setTimeout(function() {
     resizeCanvas();
-    console.log('📐 Canvas:', canvas.width + '×' + canvas.height);
-    console.log('📐 Client:', canvas.clientWidth + '×' + canvas.clientHeight);
-
     try { updateKPI(); } catch (e) { console.error('KPI:', e); }
-
     markDirty();
     lastFrameTime = performance.now();
     safeRender();
     requestAnimationFrame(loop);
     pushHistory();
-    console.log('✅ Ready');
+    console.log('✅ Ready · Canvas:', canvas.width + '×' + canvas.height);
   }, 150);
 }
 
@@ -2271,33 +1973,22 @@ if (window.ResizeObserver) {
   try {
     var ro = new ResizeObserver(function() {
       clearTimeout(window.__roT);
-      window.__roT = setTimeout(function() {
-        resizeCanvas();
-        markDirty();
-      }, 100);
+      window.__roT = setTimeout(function() { resizeCanvas(); markDirty(); }, 100);
     });
     ro.observe(vArea);
-  } catch (e) { console.warn('ResizeObserver failed:', e); }
+  } catch (e) {}
 }
-
-window.addEventListener('resize', debounce(function() {
-  resizeCanvas();
-  markDirty();
-}, 150));
+window.addEventListener('resize', debounce(function() { resizeCanvas(); markDirty(); }, 150));
 
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   setTimeout(bootApp, 50);
 } else {
   document.addEventListener('DOMContentLoaded', bootApp);
 }
-
 setTimeout(function() {
   if (!canvas.width || canvas.width < 10) {
-    console.warn('⚠️ Canvas empty — forcing size');
-    canvas.width = 1200;
-    canvas.height = 800;
-    markDirty();
-    safeRender();
+    canvas.width = 1200; canvas.height = 800;
+    markDirty(); safeRender();
   }
 }, 1000);
 </script>
