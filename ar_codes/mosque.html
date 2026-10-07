@@ -36,8 +36,11 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .toolbar button{width:auto;padding:5px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d}
-.toolbar button:hover{background:#30363d}
+.toolbar button:hover:not(:disabled){background:#30363d}
 .toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
+.toolbar button:disabled{opacity:.35;cursor:not-allowed}
+.toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
+.toolbar button.hist:hover:not(:disabled){background:#3d3016}
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
 canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
@@ -117,6 +120,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
       </label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
+             onmousedown="pushUndo()"
              oninput="setSelectedAngle(this.value)">
       <div class="hint">↔️ اسحب المنزلق أو المقبض الأبيض على الرسم للتدوير</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ إلغاء التحديد</button>
@@ -152,6 +156,8 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 
   <div class="canvas-container">
     <div class="toolbar no-print">
+      <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ تراجع</button>
+      <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ إعادة</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 التغطية</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ الشبكة</button>
       <button onclick="clearSpeakers()">🗑️ مسح السماعات</button>
@@ -230,6 +236,54 @@ let uid = 0;
 let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
 let ampResult = {amps:0};
 
+/* ============ نظام التراجع / الإعادة ============ */
+const MAX_UNDO = 40;
+let undoStack = [];
+let redoStack = [];
+let dragSnapshot = null;
+
+function snapshot(){
+  return JSON.stringify(speakers.map(s => ({...s})));
+}
+function pushUndo(){
+  const snap = snapshot();
+  if (undoStack.length && undoStack[undoStack.length-1] === snap) return;
+  undoStack.push(snap);
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+  redoStack = [];
+  updateUndoButtons();
+}
+function undo(){
+  if (undoStack.length === 0) return;
+  redoStack.push(snapshot());
+  const prev = JSON.parse(undoStack.pop());
+  speakers = prev;
+  selectedId = null;
+  updateRotationPanel();
+  updateAmpLogic();
+  draw();
+  updateUndoButtons();
+  toast('↶ تم التراجع', 'ok');
+}
+function redo(){
+  if (redoStack.length === 0) return;
+  undoStack.push(snapshot());
+  const next = JSON.parse(redoStack.pop());
+  speakers = next;
+  selectedId = null;
+  updateRotationPanel();
+  updateAmpLogic();
+  draw();
+  updateUndoButtons();
+  toast('↷ تم الإعادة', 'ok');
+}
+function updateUndoButtons(){
+  const u = document.getElementById('undoBtn');
+  const r = document.getElementById('redoBtn');
+  if (u) u.disabled = (undoStack.length === 0);
+  if (r) r.disabled = (redoStack.length === 0);
+}
+
 /* ============ أدوات ============ */
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
@@ -302,21 +356,17 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ رسم السماعة الحائطية (صندوق واضح) ============ */
+/* ============ رسم السماعة الحائطية ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const wall = whichWall(s);
   const isLeft = wall === 'left';
   const isCol = isColumnType(db.type);
-
-  // حجم صندوق أكبر وأوضح
   const boxW = isCol ? 16 : 20;
   const boxH = isCol ? 40 : 30;
-
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
   const py = pos.y;
   const bx = isLeft ? wallX : wallX - boxW;
 
-  // 1) قوس تثبيت على الحائط (خط سميك بارز)
   ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
   ctx.lineWidth = 5;
   ctx.beginPath();
@@ -324,38 +374,25 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.lineTo(wallX, py + boxH/2 + 6);
   ctx.stroke();
 
-  // 2) صندوق السماعة (ممتلئ بلون بارز)
   const col = isCol ? "#e60012" : "#ff8c1a";
   ctx.fillStyle = isSel ? "#38bdf8" : col;
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
 
-  // 3) إطار أسود سميك
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 3;
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
   if (isSel) {
-    ctx.strokeStyle = "#fff";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.strokeRect(bx - 2, py - boxH/2 - 2, boxW + 4, boxH + 4);
   }
-
-  // 4) خطوط الشبك الأفقية
-  ctx.strokeStyle = "rgba(0,0,0,.55)";
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.lineWidth = 1.5;
   const lines = isCol ? 7 : 5;
   for (let i = 1; i < lines; i++) {
     const ly = py - boxH/2 + i * (boxH/lines);
-    ctx.beginPath();
-    ctx.moveTo(bx + 3, ly);
-    ctx.lineTo(bx + boxW - 3, ly);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx + 3, ly); ctx.lineTo(bx + boxW - 3, ly); ctx.stroke();
   }
-
-  // 5) وهج أبيض على الوجه الداخلي (يشير إلى أن الوجه للداخل)
   ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
   ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
 
-  // 6) سهم الاتجاه (بارز)
   const facing = getFacing(s);
   const arrowStartX = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
   ctx.save();
@@ -364,15 +401,11 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(32, 0);
-  ctx.lineTo(24, -9);
-  ctx.moveTo(32, 0);
-  ctx.lineTo(24, 9);
+  ctx.moveTo(0, 0); ctx.lineTo(32, 0);
+  ctx.lineTo(24, -9); ctx.moveTo(32, 0); ctx.lineTo(24, 9);
   ctx.stroke();
   ctx.restore();
 
-  // 7) اسم الموديل (خلفية داكنة ليكون واضحاً)
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
   ctx.font = "bold 12px Cairo";
   ctx.textAlign = isLeft ? "left" : "right";
@@ -383,57 +416,45 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "#fff";
   ctx.fillText(s.model, lx, py + 4);
 
-  // 8) التصنيف أسفل الاسم
   ctx.font = "bold 9px Cairo";
   ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
   ctx.textAlign = isLeft ? "left" : "right";
   ctx.fillText(isCol ? "عمودي" : "حائطي", lx, py + 18);
 }
 
-/* ============ رسم السماعة الحرة (وسط المسجد) ============ */
+/* ============ رسم السماعة الحرة ============ */
 function drawFreeSpeaker(pos, s, isSel, db){
   const isCol = isColumnType(db.type);
   const facing = getFacing(s);
   const r = isSel ? 15 : 13;
 
-  // 1) هالة خارجية
   ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 6, 0, Math.PI*2); ctx.fill();
 
-  // 2) دائرة السماعة الرئيسية
   ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
 
-  // 3) إطار أسود
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
 
-  // 4) إطار أبيض إضافي عند التحديد
   if (isSel) {
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 4, 0, Math.PI*2); ctx.stroke();
   }
-
-  // 5) نقطة بيضاء داخلية (مركز السماعة)
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
 
-  // 6) سهم الاتجاه بارز
   ctx.save();
   ctx.translate(pos.x, pos.y);
   ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(r + 3, 0);
-  ctx.lineTo(r + 26, 0);
-  ctx.lineTo(r + 20, -8);
-  ctx.moveTo(r + 26, 0);
-  ctx.lineTo(r + 20, 8);
+  ctx.moveTo(r + 3, 0); ctx.lineTo(r + 26, 0);
+  ctx.lineTo(r + 20, -8); ctx.moveTo(r + 26, 0); ctx.lineTo(r + 20, 8);
   ctx.stroke();
   ctx.restore();
 
-  // 7) اسم الموديل بخلفية
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
   ctx.font = "bold 12px Cairo";
@@ -473,7 +494,6 @@ function draw(){
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // شبكة
   if (showGrid) {
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
     for (let x=0; x<=d.W; x+=2) {
@@ -486,23 +506,19 @@ function draw(){
     }
   }
 
-  // إطار القاعة
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
-  // المحراب
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo"; ctx.textAlign = "center";
   ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
 
-  // الأبعاد
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo";
   ctx.fillText(`${d.W} م (العرض)`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`${d.L} م (الطول)`, 0, 0); ctx.restore();
 
-  // المئذنة
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -513,9 +529,7 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
-  /* ============ مخروطات التغطية ============ */
   if (showCoverage) {
-    // داخلي: مقصوص على مستطيل القاعة
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
@@ -537,7 +551,6 @@ function draw(){
     });
     ctx.restore();
 
-    // خارجي: بدون قص
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2) * RAD;
@@ -552,7 +565,6 @@ function draw(){
     });
   }
 
-  /* ============ رسم السماعات ============ */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -573,8 +585,7 @@ function draw(){
       ctx.strokeStyle = isSel ? "#fff" : "#000";
       ctx.lineWidth = 2; ctx.stroke();
       if (isSel) {
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(r*1.8, 0);
         ctx.lineTo(-r*1.3, -r*1.3);
@@ -588,7 +599,6 @@ function draw(){
       drawFreeSpeaker(pos, s, isSel, db);
     }
 
-    // مقبض التدوير
     if (isSel) {
       const hx = pos.x + Math.cos(facing) * 52;
       const hy = pos.y + Math.sin(facing) * 52;
@@ -642,42 +652,47 @@ canvas.addEventListener('mousedown', e => {
   const m = getMouse(e);
   const p = toLocal(m);
 
-  // 1) مقبض التدوير
+  /* 1) مقبض التدوير */
   if (selectedId) {
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)) {
-      rotating = s; canvas.style.cursor = 'grabbing'; return;
+      dragSnapshot = snapshot();
+      rotating = s;
+      canvas.style.cursor = 'grabbing';
+      return;
     }
   }
 
-  // 2) سماعة موجودة → تحديد + سحب حر
+  /* 2) سحب سماعة موجودة */
   const hit = hitTest(p);
   if (hit) {
     selectedId = hit.id;
     updateRotationPanel();
     if (hit.zone !== 'minaret') {
+      dragSnapshot = snapshot();
       dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
 
-  // 3) نقرة على فراغ
+  /* 3) نقرة على فراغ */
   if (!p.inside && !isMinaretArea(m)) { deselectSpeaker(); return; }
 
   const model = $('m_model').value;
   const spk = DB_SPK[model];
 
-  // ========== الوضع اليدوي ==========
+  /* ========== الوضع اليدوي ========== */
   if (manualMode) {
+    pushUndo();
     if (isMinaretArea(m)) {
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
       toast('تم إضافة بوق على المئذنة', 'ok');
     } else if (isHornType(spk.type)) {
+      undoStack.pop(); updateUndoButtons();
       toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn');
       return;
     } else {
-      // وضع حر في أي مكان داخل المسجد — الاتجاه نحو مركز المسجد
       const cx = layout.x0 + layout.W * 0.5;
       const cy = layout.y0 + layout.L * 0.5;
       const facing = Math.atan2(cy - m.my, cx - m.mx);
@@ -688,15 +703,17 @@ canvas.addEventListener('mousedown', e => {
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  // ========== الوضع التلقائي ==========
+  /* ========== الوضع التلقائي ========== */
   if (isHornType(spk.type)) {
     if (isMinaretArea(m)) {
+      pushUndo();
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
     } else {
       toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn'); return;
     }
   } else {
+    pushUndo();
     addSpeaker(0, p.ry, model, 0);
     addSpeaker(1, p.ry, model, Math.PI);
   }
@@ -732,7 +749,19 @@ canvas.addEventListener('mousemove', e => {
 });
 
 window.addEventListener('mouseup', () => {
-  dragging = null; rotating = null; canvas.style.cursor = 'crosshair';
+  /* إذا انتهى سحب/تدوير بتغيير فعلي، احفظ الحالة السابقة في الـ undo */
+  if ((dragging || rotating) && dragSnapshot) {
+    const after = snapshot();
+    if (dragSnapshot !== after) {
+      undoStack.push(dragSnapshot);
+      if (undoStack.length > MAX_UNDO) undoStack.shift();
+      redoStack = [];
+      updateUndoButtons();
+    }
+  }
+  dragSnapshot = null;
+  dragging = null; rotating = null;
+  canvas.style.cursor = 'crosshair';
 });
 
 canvas.addEventListener('contextmenu', e => {
@@ -740,6 +769,7 @@ canvas.addEventListener('contextmenu', e => {
   const p = toLocal(getMouse(e));
   const hit = hitTest(p);
   if (hit) {
+    pushUndo();
     speakers = speakers.filter(s => s.id !== hit.id);
     if (selectedId === hit.id) { selectedId = null; updateRotationPanel(); }
     updateAmpLogic(); draw();
@@ -766,6 +796,7 @@ function toggleGrid(){
 function clearSpeakers(){
   if (speakers.length === 0) return toast('لا توجد سماعات', 'warn');
   if (confirm(`مسح جميع السماعات (${speakers.length})؟`)) {
+    pushUndo();
     speakers = []; selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
     toast('تم مسح السماعات', 'ok');
@@ -773,11 +804,11 @@ function clearSpeakers(){
 }
 function resetData(){
   if (!confirm('مسح كافة البيانات والسماعات؟')) return;
+  pushUndo();
   speakers = []; selectedId = null; manualMode = false;
   $('manualBtn').classList.remove('active-mode');
   $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
   $('p_name').value = 'مسجد جديد'; $('p_client').value = ''; $('p_engineer').value = 'م. أحمد';
-  localStorage.removeItem('motivity_project');
   updateRotationPanel(); updateAmpLogic(); draw();
   toast('تم تصفير البيانات', 'ok');
 }
@@ -819,6 +850,7 @@ function aiSmartDistribute(){
   const addHorns = $('addHornsChk').checked;
   const isHorn = isHornType(spk.type);
 
+  pushUndo();
   speakers = [];
   let hornCount = 0;
 
@@ -1032,6 +1064,7 @@ function loadProject(){
   if (!raw) return toast('لا يوجد مشروع محفوظ', 'warn');
   try {
     const d = JSON.parse(raw);
+    pushUndo();
     speakers = (d.speakers || []).map(s => {
       const ns = {...s, zone: s.zone || 'mosque'};
       if (ns.zone !== 'minaret' && ns.facing === undefined) {
@@ -1057,9 +1090,27 @@ function loadProject(){
 
 /* ============ اختصارات ============ */
 document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
+
+  /* Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y */
+  if (e.ctrlKey || e.metaKey) {
+    const k = e.key.toLowerCase();
+    if (k === 'z' && !inField) {
+      e.preventDefault();
+      if (e.shiftKey) redo(); else undo();
+      return;
+    }
+    if (k === 'y' && !inField) {
+      e.preventDefault(); redo(); return;
+    }
+  }
+
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
   if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (inField) return;
+    pushUndo();
     speakers = speakers.filter(x => x.id !== selectedId);
     selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
@@ -1073,6 +1124,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === ',') delta = -1;
   else if (e.key === '.') delta = 1;
   if (delta) {
+    pushUndo();
     const rad = delta * RAD;
     if (s.zone === 'minaret') s.ang += rad;
     else s.facing = (s.facing ?? Math.PI/2) + rad;
@@ -1086,7 +1138,7 @@ window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
     $(id).addEventListener('input', () => updateAmpLogic()));
-  updateRotationPanel(); updateAmpLogic(); draw();
+  updateRotationPanel(); updateAmpLogic(); updateUndoButtons(); draw();
   toast('مرحباً بك في Motivity PRO', 'ok');
 });
 window.addEventListener('resize', () => { draw(); });
