@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Motiviti v5.1 — Acoustic Design Suite</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<title>Motiviti v5.5 — Acoustic Engineering Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--red:#e60012;--bg:#0d1117;--panel:#161b22;--card:#1c2128;--bd:#30363d;--accent:#38bdf8;--tx:#e6edf3;--mu:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--sa-t:env(safe-area-inset-top,0px);--sa-b:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;width:100%;overscroll-behavior:none}
 body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;overflow:hidden}
 .header{background:var(--card);padding:8px 14px;padding-top:calc(8px + var(--sa-t));display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--red);flex-shrink:0;gap:10px;flex-wrap:wrap}
@@ -28,6 +28,12 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ove
 .tab.add{background:transparent;border-style:dashed;padding:6px 11px}
 .tab .del{background:#0005;border:none;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;padding:0;line-height:1;display:flex;align-items:center;justify-content:center}
 .tab .del:hover{background:#7f1d1d}
+.quick-nav{background:var(--panel);padding:8px 10px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--bd);flex-shrink:0;flex-wrap:wrap}
+.quick-nav label{margin:0;font-size:11px;color:var(--mu);font-weight:700;white-space:nowrap}
+.quick-nav select{width:auto;min-width:150px;padding:6px 10px;min-height:36px;font-size:12px;background:var(--bg);border:1px solid var(--bd);color:#fff;border-radius:6px;font-family:inherit}
+.quick-nav select:focus{outline:none;border-color:var(--accent)}
+.quick-nav button{background:var(--card);color:#fff;border:1px solid var(--bd);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;min-height:36px;font-family:inherit}
+.quick-nav button:hover{background:#252b34}
 .main{display:flex;flex:1;min-height:0;overflow:hidden}
 .canvas-area{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:radial-gradient(circle,#1a1f26 0%,#0d1117 100%);position:relative}
 .canvas-wrap{flex:1;min-height:0;position:relative;overflow:hidden}
@@ -39,14 +45,16 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ove
 #cv.room-t,#cv.room-b{cursor:ns-resize}
 #cv.room-l,#cv.room-r{cursor:ew-resize}
 #cv.hover{cursor:pointer}
+#cv.place-mode{cursor:copy}
 .viewport-info{position:absolute;bottom:12px;left:12px;background:rgba(22,27,34,.92);padding:5px 10px;border-radius:6px;font-size:10.5px;color:var(--mu);border:1px solid var(--bd);font-weight:700;z-index:10;font-family:monospace;pointer-events:none}
 .minimap{position:absolute;bottom:12px;right:12px;width:160px;height:110px;background:rgba(22,27,34,.94);border:1px solid var(--bd);border-radius:6px;z-index:10;cursor:pointer}
 .minimap canvas{display:block;width:100%;height:100%;border-radius:6px}
-.sidebar{width:400px;background:var(--panel);padding:12px;overflow-y:auto;border-right:1px solid var(--bd);flex-shrink:0;order:1}
-.canvas-area{order:2}
+.sidebar{width:400px;background:var(--panel);padding:12px;overflow-y:auto;border-left:1px solid var(--bd);flex-shrink:0}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:11px;border:1px solid var(--bd)}
+.box.highlight{animation:pulseBox 1.2s ease 1}
+@keyframes pulseBox{0%,100%{box-shadow:0 0 0 rgba(56,189,248,0)}50%{box-shadow:0 0 0 4px rgba(56,189,248,.35)}}
 .box h3{font-size:12px;color:var(--accent);margin-bottom:9px;font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:6px;cursor:pointer}
 .box h3.collapsed::after{content:'▶';font-size:9px;color:var(--mu)}
 .box h3:not(.collapsed)::after{content:'▼';font-size:9px;color:var(--mu)}
@@ -59,7 +67,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--red);color:#fff}
 .btn-accent{background:var(--accent);color:#000}
-.btn-mini{padding:5px 9px;font-size:11px;font-weight:700;background:var(--bd);color:#fff;border:none;border-radius:5px;cursor:pointer;min-height:30px;min-width:30px}
+.btn-mini{padding:5px 9px;font-size:11px;font-weight:700;background:var(--bd);color:#fff;border:none;border-radius:5px;cursor:pointer;min-height:30px;min-width:30px;display:inline-flex;align-items:center;justify-content:center}
 .btn-mini.danger{background:#3a1518;color:#fca5a5}
 .room-item{background:var(--bg);padding:8px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;border:2px solid transparent;display:flex;align-items:center;gap:8px;min-height:46px}
 .room-item.active{border-color:var(--accent);background:#152028}
@@ -68,6 +76,11 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .room-item .rname{font-size:12px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .room-item .rmeta{font-size:10px;color:var(--mu);font-weight:600;margin-top:2px}
 .room-item .rcount{font-size:10px;font-weight:800;color:var(--accent);padding:2px 6px;background:#0006;border-radius:8px;flex-shrink:0}
+.speaker-row{display:flex;align-items:center;gap:6px;padding:5px 7px;border-radius:5px;margin-bottom:3px;background:transparent;border:1px solid transparent;transition:.15s}
+.speaker-row.sel{background:#152028;border-color:var(--accent)}
+.speaker-row:hover{background:#0a0e13}
+.speaker-row .snum{font-weight:900;font-size:11px;color:var(--accent);min-width:24px;text-align:center;background:#0006;border-radius:4px;padding:2px 4px}
+.speaker-row .sinfo{flex:1;font-size:10px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .layer-row{display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:12px;font-weight:700;color:#dde;cursor:pointer;border-radius:4px;min-height:32px}
 .layer-row:hover{background:var(--bg)}
 .layer-row input[type=checkbox]{width:auto;min-height:auto;flex-shrink:0;cursor:pointer;accent-color:var(--accent)}
@@ -105,10 +118,12 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .toolbar::-webkit-scrollbar{display:none}
 .toolbar button{background:var(--card);color:#ccc;border:1px solid var(--bd);padding:7px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;white-space:nowrap;flex-shrink:0;min-height:34px}
 .toolbar button.on{background:var(--accent);color:#000;border-color:var(--accent)}
+.toolbar button.place-btn.on{background:var(--ok);color:#000;border-color:var(--ok)}
 .toolbar .sep{width:1px;background:var(--bd);margin:0 3px;flex-shrink:0}
 .fab{position:fixed;bottom:calc(16px + var(--sa-b));left:16px;display:flex;flex-direction:column;gap:8px;z-index:200}
 .fab button{width:52px;height:52px;border-radius:50%;border:none;background:var(--card);color:#fff;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.5);border:2px solid var(--bd);display:flex;align-items:center;justify-content:center}
 .fab button.primary{background:var(--red);border-color:var(--red)}
+.fab button.place-on{background:var(--ok);border-color:var(--ok);color:#000}
 .ctx-menu{position:fixed;background:var(--card);border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.7);padding:6px;z-index:500;display:none;min-width:200px;max-height:70vh;overflow-y:auto}
 .ctx-menu button{width:100%;padding:11px 14px;background:transparent;color:#fff;border:none;text-align:left;border-radius:6px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:42px}
 .ctx-menu button:active{background:var(--bd)}
@@ -116,7 +131,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .ctx-menu .divider{height:1px;background:var(--bd);margin:4px 0}
 .ctx-menu .title{font-size:10.5px;color:var(--mu);padding:6px 12px;font-weight:800}
 #report{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;padding:14px;overflow-y:auto;padding-top:calc(14px + var(--sa-t))}
-.paper{background:#fff;color:#333;max-width:1000px;margin:auto;padding:22px;border-radius:8px;text-align:left}
+.paper{background:#fff;color:#333;max-width:1000px;margin:auto;padding:22px;border-radius:8px;direction:ltr;text-align:left}
 .rep-head{display:flex;justify-content:space-between;border-bottom:4px solid var(--red);padding-bottom:12px;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .rep-head h1{color:var(--red);font-size:19px}
 .paper h2{color:var(--red);font-size:16px;margin:22px 0 10px;border-bottom:2px solid #eee;padding-bottom:6px}
@@ -136,8 +151,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .toast.show{opacity:1}
 @media (max-width:900px){
 .main{flex-direction:column}
-.sidebar{width:100%;max-height:52vh;border-right:none;border-bottom:1px solid var(--bd);padding-bottom:calc(12px + 70px + var(--sa-b));order:2}
-.canvas-area{flex:1;min-height:44vh;order:1}
+.sidebar{width:100%;max-height:52vh;border-left:none;border-bottom:1px solid var(--bd);padding-bottom:calc(12px + 70px + var(--sa-b))}
+.canvas-area{flex:1;min-height:44vh}
 .toolbar{position:fixed;bottom:0;left:0;right:0;padding:6px 10px calc(6px + var(--sa-b));background:var(--card);border-top:1px solid var(--bd);z-index:150}
 .fab{bottom:calc(70px + var(--sa-b))}
 .kpi-grid{grid-template-columns:repeat(4,1fr)}
@@ -145,30 +160,16 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 .kpi-cards{grid-template-columns:repeat(2,1fr)}
 .minimap{display:none}
 .hdr-stats{font-size:10px;gap:5px}
+.quick-nav{font-size:11px;padding:6px 8px}
+.quick-nav select{min-width:120px;font-size:11px;padding:4px 8px;min-height:32px}
 }
 @media print{
-  @page{
-    size:A4 portrait;
-    margin:15mm 12mm 18mm 12mm;
-    @bottom-center{
-      content:"Motiviti v5.1 — Page " counter(page) " of " counter(pages);
-      font-family:'Inter',sans-serif;
-      font-size:9pt;
-      color:#666;
-      padding-top:6mm;
-      border-top:1px solid #ddd;
-    }
-    @top-center{
-      content:"Motiviti — Acoustic Design Report";
-      font-family:'Inter',sans-serif;
-      font-size:8pt;
-      color:#999;
-      padding-bottom:4mm;
-      border-bottom:1px solid #eee;
-    }
+  @page{size:A4 portrait;margin:15mm 12mm 18mm 12mm;
+    @bottom-center{content:"Motiviti v5.5 — Page " counter(page) " of " counter(pages);font-family:'Cairo',sans-serif;font-size:9pt;color:#666;padding-top:6mm;border-top:1px solid #ddd;}
+    @top-center{content:"Motiviti — Acoustic Design Report";font-family:'Cairo',sans-serif;font-size:8pt;color:#999;padding-bottom:4mm;border-bottom:1px solid #eee;}
   }
   html,body{height:auto!important;width:auto!important;min-height:0!important;overflow:visible!important;display:block!important;position:static!important;background:#fff!important;color:#000!important;padding:0!important;margin:0!important;}
-  .no-print,.header,.tabs-row,.main,.sidebar,.canvas-area,.canvas-wrap,#cv,#miniCv,.fab,.toolbar,.ctx-menu,.toast,.minimap,.viewport-info{display:none!important;}
+  .no-print,.header,.tabs-row,.quick-nav,.main,.sidebar,.canvas-area,.canvas-wrap,#cv,#miniCv,.fab,.toolbar,.ctx-menu,.toast,.minimap,.viewport-info{display:none!important;}
   #report{display:block!important;position:static!important;inset:auto!important;width:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;background:#fff!important;padding:0!important;margin:0!important;z-index:auto!important;}
   .paper{box-shadow:none!important;padding:0!important;margin:0!important;border-radius:0!important;max-width:100%!important;background:#fff!important;color:#000!important;}
   .paper h1,.paper h2,.paper h3,.paper h4{page-break-after:avoid;page-break-inside:avoid;}
@@ -198,7 +199,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 <body>
 
 <div class="header no-print">
-  <h1>Motiviti <span>Acoustic Suite</span> <span style="font-size:10px;color:#666">v5.1</span></h1>
+  <h1>Motiviti <span>Engineering Analyzer</span> <span style="font-size:10px;color:#666">v5.5</span></h1>
   <div class="hdr-stats">
     <div>🏢 <b id="topBlds">0</b></div>
     <div>🧭 <b id="topFloors">0</b></div>
@@ -213,6 +214,19 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
   </div>
 </div>
 
+<div class="quick-nav no-print" id="quickNav">
+  <label>🏢 Building:</label>
+  <select id="quickBuildingSelect" onchange="quickSelectBuilding(this.value)">
+    <option>— No buildings —</option>
+  </select>
+  <label>🧭 Floor:</label>
+  <select id="quickFloorSelect" onchange="quickSelectFloor(this.value)">
+    <option>— No floors —</option>
+  </select>
+  <button type="button" onclick="addFloor()">➕ Floor</button>
+  <button type="button" onclick="addBuilding()">➕ Building</button>
+</div>
+
 <div class="tabs-row bld no-print" id="buildingTabs"></div>
 <div class="tabs-row no-print" id="floorTabs"></div>
 
@@ -225,14 +239,14 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
         <input type="text" id="projName" value="New Project">
         <label>Template</label>
         <select id="templateSelect" onchange="loadTemplate(this.value)">
-          <option value="">— Select Template —</option>
-          <option value="hotel">🏨 Hotel (3 Floors)</option>
-          <option value="hospital">🏥 Hospital (3 Floors)</option>
-          <option value="school">🏫 School (2 Floors)</option>
+          <option value="">— Select a template —</option>
+          <option value="hotel">🏨 Hotel (3 floors)</option>
+          <option value="hospital">🏥 Hospital (3 floors)</option>
+          <option value="school">🏫 School (2 floors)</option>
           <option value="mosque">🕌 Mosque</option>
-          <option value="office">🏢 Office (3 Floors)</option>
-          <option value="compound">🏘️ Compound (2 Buildings)</option>
-          <option value="tower">🏬 Tower (10 Floors)</option>
+          <option value="office">🏢 Offices (3 floors)</option>
+          <option value="compound">🏘️ Compound (2 buildings)</option>
+          <option value="tower">🏬 Tower (10 floors)</option>
           <option value="empty">Empty</option>
         </select>
       </div>
@@ -282,9 +296,14 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
             </select>
           </div>
         </div>
-        <button class="btn btn-accent" onclick="autoDistributeRoom()">✨ Distribute Speakers</button>
-        <button class="btn" style="background:#4a2f0f;color:#fbbf24" onclick="regenRoomFurniture()">🔄 Regenerate Elements</button>
-        <button class="btn" style="background:#7f1d1d;color:#fff" onclick="deleteRoom()">🗑️ Delete Room</button>
+        <button class="btn btn-accent" onclick="autoDistributeRoom()">✨ Auto-distribute speakers</button>
+        <button class="btn" id="btnPlaceMode" style="background:#0e4f60;color:#7dd3fc" onclick="togglePlaceMode()">📍 Place speaker manually (off)</button>
+        <label style="margin-top:12px;display:block;color:var(--tx);font-size:12px">🔊 Speakers in this room (<span id="spkCountLbl">0</span>)</label>
+        <div id="roomSpeakersList" style="max-height:200px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:6px;border:1px solid var(--bd)">
+          <div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">Select a room first</div>
+        </div>
+        <button class="btn" style="background:#4a2f0f;color:#fbbf24" onclick="regenRoomFurniture()">🔄 Regenerate elements</button>
+        <button class="btn" style="background:#7f1d1d;color:#fff" onclick="deleteRoom()">🗑️ Delete room</button>
       </div>
     </div>
 
@@ -302,7 +321,16 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
           <option value="half" selected>Half (50%)</option>
           <option value="low">Low (25%)</option>
         </select>
-        <button class="btn btn-accent" onclick="autoDistributeFloor()">✨ Distribute Whole Floor</button>
+        <button class="btn btn-accent" onclick="autoDistributeFloor()">✨ Distribute whole floor</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 onclick="toggleBox(this)">🔬 Acoustic Engineering Analysis</h3>
+      <div class="box-body">
+        <div id="roomAcousticsPanel">
+          <div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">Select a room to view analysis</div>
+        </div>
       </div>
     </div>
 
@@ -325,12 +353,12 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
     </div>
 
     <div class="box">
-      <h3 onclick="toggleBox(this)">✅ EN 54-16 Compliance</h3>
+      <h3 onclick="toggleBox(this)">✅ EN 54-16 Check</h3>
       <div class="box-body"><div id="compliancePanel"></div></div>
     </div>
 
     <div class="box">
-      <h3 onclick="toggleBox(this)">📊 Summary</h3>
+      <h3 onclick="toggleBox(this)">📊 Totals</h3>
       <div class="box-body">
         <div class="kpi-grid">
           <div class="kpi" id="kpiSpk"><div class="val" id="kpiSpkVal">0</div><div class="lbl">Speakers</div></div>
@@ -353,6 +381,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 
 <div class="fab no-print">
   <button class="primary" onclick="autoDistributeFloor()" title="Distribute">✨</button>
+  <button id="fabPlace" onclick="togglePlaceMode()" title="Place speaker">📍</button>
   <button onclick="fitToView()" title="Fit">⛶</button>
   <button onclick="undo()" title="Undo">↶</button>
   <button onclick="openReport()" title="Report">📄</button>
@@ -361,6 +390,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 <div class="toolbar no-print" id="mainToolbar">
   <button id="toolSelect" class="on" onclick="setTool('select')">🖱️ Select</button>
   <button id="toolPan" onclick="setTool('pan')">🖐️ Pan</button>
+  <button id="toolPlace" class="place-btn" onclick="togglePlaceMode()">📍 Place Speaker</button>
   <button onclick="zoomIn()">🔍+</button>
   <button onclick="zoomOut()">🔍−</button>
   <button onclick="fitToView()">⛶ Fit</button>
@@ -369,14 +399,14 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
   <button id="tgDoors" class="on" onclick="toggle('doors')">🚪 Doors</button>
   <button id="tgFurniture" class="on" onclick="toggle('furniture')">🪑 Furniture</button>
   <button id="tgHvac" class="on" onclick="toggle('hvac')">❄️ HVAC</button>
-  <button id="tgLights" class="on" onclick="toggle('lights')">💡 Lighting</button>
+  <button id="tgLights" class="on" onclick="toggle('lights')">💡 Lights</button>
   <button id="tgCctv" class="on" onclick="toggle('cctv')">📹 CCTV</button>
   <button id="tgFire" class="on" onclick="toggle('fire')">🔥 Fire</button>
   <button id="tgGrid" class="on" onclick="toggle('grid')">▦ Grid</button>
-  <button id="tgLabels" class="on" onclick="toggle('labels')">🏷️ Labels</button>
+  <button id="tgLabels" class="on" onclick="toggle('labels')">🏷️ Names</button>
   <button id="tgDims" onclick="toggle('dims')">📏 Dims</button>
   <button id="tgCover" class="on" onclick="toggle('cover')">🌐 Coverage</button>
-  <button id="tgHeat" onclick="toggle('heat')">🌡️ SPL Map</button>
+  <button id="tgHeat" onclick="toggle('heat')">🌡️ Heatmap</button>
   <button id="tgGuides" class="on" onclick="toggle('guides')">📐 Guides</button>
   <div class="sep"></div>
   <button id="tgSnap" class="on" onclick="toggleSnap()">🧲 Snap</button>
@@ -397,14 +427,15 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 
 <div id="report">
   <div class="paper">
-    <div class="no-print" style="text-align:right;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+    <div class="no-print" style="text-align:left;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-primary" style="width:auto;padding:9px 18px" onclick="printReport()">🖨️ Save PDF</button>
+      <button class="btn btn-accent" style="width:auto;padding:9px 18px" onclick="exportCSV()">📊 Export Excel</button>
       <button class="btn btn-accent" style="width:auto;padding:9px 18px" onclick="closeReport()">✕ Close</button>
     </div>
     <div class="rep-head">
       <div>
         <h1>Acoustic Design Report</h1>
-        <p style="color:#666;font-size:11.5px">Motiviti Engine v5.1 · MOT-ENG-2026</p>
+        <p style="color:#666;font-size:11.5px">Motiviti Engineering Engine v5.5 · MOT-ENG-2026</p>
       </div>
       <div style="text-align:right;font-size:11px" id="repMeta"></div>
     </div>
@@ -414,7 +445,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   Motiviti v5.1 — Complete Engine
+   Motiviti v5.5 — Full Engineering Engine
    ═══════════════════════════════════════════════════════════════ */
 
 var cv = document.getElementById('cv');
@@ -431,6 +462,7 @@ var activeCircuit = 0;
 var selIdx = -1;
 var snapEnabled = true;
 var currentTool = 'select';
+var placeMode = false;
 
 var layers = {
   walls: true, doors: true, furniture: true, hvac: true, lights: true,
@@ -465,8 +497,8 @@ function $(id){ return document.getElementById(id); }
 function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 function num(v, d){ var n = parseFloat(v); return isFinite(n) ? n : d; }
 function toast(msg){
-  var t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(window._tt); window._tt = setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  var t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._tt); window._tt = setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
 function toggleBox(el){
   el.classList.toggle('collapsed');
@@ -497,7 +529,7 @@ var ROOM_TYPES = {
   parking:{name:'Parking',ambient:60,target:75,absorb:0.10,color:'#334155',icon:'🚗'}
 };
 
-/* ═══════════ Libraries ═══════════ */
+/* ═══════════ Item Libraries ═══════════ */
 var FURNITURE_LIB = {
   bed_double:{name:'Double Bed',w:1.8,h:2.0,color:'#7c6f9e',draw:drawBed},
   bed_single:{name:'Single Bed',w:1.0,h:2.0,color:'#7c6f9e',draw:drawBedSingle},
@@ -538,7 +570,7 @@ var HVAC_LIB = {
 var LIGHTS_LIB = {
   panel_60:{name:'LED Panel 60×60',w:0.6,h:0.6,color:'#e8d24a',draw:drawLightPanel},
   panel_120:{name:'LED Panel 120×60',w:1.2,h:0.6,color:'#e8d24a',draw:drawLightPanel},
-  spot:{name:'Spot Light',w:0.15,h:0.15,color:'#e8d24a',draw:drawLightSpot},
+  spot:{name:'Spot',w:0.15,h:0.15,color:'#e8d24a',draw:drawLightSpot},
   linear:{name:'Linear Light',w:1.5,h:0.15,color:'#e8d24a',draw:drawLightLinear},
   downlight:{name:'Downlight',w:0.2,h:0.2,color:'#e8d24a',draw:drawLightSpot},
   emergency:{name:'Emergency Light',w:0.35,h:0.15,color:'#22c55e',draw:drawEmergencyLight}
@@ -554,11 +586,11 @@ var FIRE_LIB = {
   smoke:{name:'Smoke Detector',w:0.15,h:0.15,color:'#ef4444',draw:drawFireSmoke},
   heat:{name:'Heat Detector',w:0.15,h:0.15,color:'#f59e0b',draw:drawFireHeat},
   multi_sensor:{name:'Multi-Sensor Detector',w:0.18,h:0.18,color:'#dc2626',draw:drawFireMulti},
-  sprinkler:{name:'Sprinkler Head',w:0.12,h:0.12,color:'#06b6d4',draw:drawFireSprinkler},
-  manual:{name:'Manual Alarm',w:0.15,h:0.2,color:'#dc2626',draw:drawFireManual}
+  sprinkler:{name:'Sprinkler',w:0.12,h:0.12,color:'#06b6d4',draw:drawFireSprinkler},
+  manual:{name:'Manual Call Point',w:0.15,h:0.2,color:'#dc2626',draw:drawFireManual}
 };
 
-/* ═══════════ Furniture Draw Functions ═══════════ */
+/* ═══════════ Drawing Functions ═══════════ */
 function drawRect(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); }
 function drawBed(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fillStyle='#f0f0f0'; g.fillRect(-w/2+4,-h/2+4,w-8,12); g.fillStyle='#ddd'; g.fillRect(-w/2+4,-h/2+18,w-8,4); }
 function drawBedSingle(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fillStyle='#f0f0f0'; g.fillRect(-w/2+3,-h/2+3,w-6,9); }
@@ -576,35 +608,27 @@ function drawPulpit(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fi
 function drawRug(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#00000044'; g.lineWidth=1; g.strokeRect(-w/2+2,-h/2+2,w-4,h-4); g.beginPath(); g.moveTo(0,-h/2+4); g.lineTo(0,h/2-4); g.stroke(); }
 function drawPlant(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.fillStyle='#2d5a2d'; g.beginPath(); g.arc(-2,-2,3,0,Math.PI*2); g.fill(); g.beginPath(); g.arc(3,2,3,0,Math.PI*2); g.fill(); }
 function drawCar(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.moveTo(-w/2,-h/2+10); g.quadraticCurveTo(-w/2,-h/2,-w/4,-h/2); g.lineTo(w/4,-h/2); g.quadraticCurveTo(w/2,-h/2,w/2,-h/2+10); g.lineTo(w/2,h/2-10); g.quadraticCurveTo(w/2,h/2,w/4,h/2); g.lineTo(-w/4,h/2); g.quadraticCurveTo(-w/2,h/2,-w/2,h/2-10); g.closePath(); g.fill(); g.fillStyle='#1a1f26'; g.fillRect(-w/2+4,-h/2+20,w-8,25); g.fillRect(-w/2+4,h/2-45,w-8,25); }
-
-/* ═══════════ HVAC Draw ═══════════ */
 function drawDiffuserSquare(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#e6edf3'; g.lineWidth=1; g.strokeRect(-w/2,-h/2,w,h); g.strokeStyle='#1e3a4a'; g.lineWidth=0.5; for(var i=1;i<4;i++){ var y=-h/2+i*h/4; g.beginPath(); g.moveTo(-w/2+2,y); g.lineTo(w/2-2,y); g.stroke(); } g.fillStyle='#e6edf3'; g.beginPath(); g.arc(0,0,1.5,0,Math.PI*2); g.fill(); }
 function drawDiffuserRound(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#e6edf3'; g.lineWidth=1; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.beginPath(); g.arc(0,0,w/4,0,Math.PI*2); g.stroke(); g.fillStyle='#e6edf3'; g.beginPath(); g.arc(0,0,1.5,0,Math.PI*2); g.fill(); }
 function drawGrille(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#e6edf3'; g.lineWidth=1; g.strokeRect(-w/2,-h/2,w,h); g.strokeStyle='#1e3a4a'; g.lineWidth=0.8; for(var i=1;i<6;i++){ var x=-w/2+i*w/6; g.beginPath(); g.moveTo(x,-h/2+1); g.lineTo(x,h/2-1); g.stroke(); } }
-function drawVAV(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#8bb8d0'; g.lineWidth=1; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#8bb8d0'; g.font='bold '+Math.max(6,w*0.3)+'px Inter'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('VAV',0,0); }
+function drawVAV(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#8bb8d0'; g.lineWidth=1; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#8bb8d0'; g.font='bold '+Math.max(6,w*0.3)+'px Cairo'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('VAV',0,0); }
 function drawExhaustFan(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#e6edf3'; g.lineWidth=1; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.strokeStyle='#e6edf3'; g.lineWidth=1.2; for(var i=0;i<4;i++){ var a=i*Math.PI/2; g.beginPath(); g.moveTo(0,0); g.arc(0,0,w/2-2,a,a+Math.PI/2); g.lineTo(0,0); g.stroke(); } }
 function drawDuct(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#2c5364'; g.lineWidth=0.8; g.strokeRect(-w/2,-h/2,w,h); }
-
-/* ═══════════ Lighting Draw ═══════════ */
 function drawLightPanel(g,w,h,col){ g.fillStyle=col+'55'; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle=col; g.lineWidth=1.5; g.strokeRect(-w/2,-h/2,w,h); g.strokeStyle=col+'AA'; g.lineWidth=0.8; g.beginPath(); g.moveTo(-w/2,0); g.lineTo(w/2,0); g.stroke(); }
 function drawLightSpot(g,w,h,col){ var rg=g.createRadialGradient(0,0,0,0,0,w*1.5); rg.addColorStop(0,col+'AA'); rg.addColorStop(1,col+'00'); g.fillStyle=rg; g.beginPath(); g.arc(0,0,w*1.5,0,Math.PI*2); g.fill(); g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.6; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); }
 function drawLightLinear(g,w,h,col){ g.fillStyle=col+'55'; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle=col; g.lineWidth=1.5; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle=col; g.beginPath(); g.arc(-w/2+3,0,1.5,0,Math.PI*2); g.fill(); g.beginPath(); g.arc(w/2-3,0,1.5,0,Math.PI*2); g.fill(); }
-function drawEmergencyLight(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#fff'; g.lineWidth=0.8; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#fff'; g.font='bold 5px Inter'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('EXIT',0,0); }
-
-/* ═══════════ CCTV Draw ═══════════ */
+function drawEmergencyLight(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#fff'; g.lineWidth=0.8; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#fff'; g.font='bold 5px Cairo'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('EXIT',0,0); }
 function drawCctvDome(g,w,h,col){ var r=w/2+3; g.fillStyle=col+'30'; g.beginPath(); g.arc(0,0,r,0,Math.PI*2); g.fill(); g.strokeStyle=col+'80'; g.lineWidth=0.8; g.beginPath(); g.arc(0,0,r,0,Math.PI*2); g.stroke(); g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.fillStyle='#000'; g.beginPath(); g.arc(0,0,w/4,0,Math.PI*2); g.fill(); g.fillStyle='#fff'; g.beginPath(); g.arc(-1,-1,w/8,0,Math.PI*2); g.fill(); }
 function drawCctvBullet(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#000'; g.lineWidth=0.5; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#000'; g.beginPath(); g.arc(w/2-2,0,1.5,0,Math.PI*2); g.fill(); }
 function drawCctvPtz(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#fff'; g.lineWidth=0.7; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#000'; g.beginPath(); g.arc(0,0,w/3,0,Math.PI*2); g.fill(); g.fillStyle=col; g.beginPath(); g.moveTo(w/3,0); g.lineTo(w/3+4,-2); g.lineTo(w/3+4,2); g.closePath(); g.fill(); }
 function drawCctvMulti(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fillStyle='#000'; g.beginPath(); g.arc(-w/4,-h/4,2,0,Math.PI*2); g.fill(); g.beginPath(); g.arc(w/4,-h/4,2,0,Math.PI*2); g.fill(); g.beginPath(); g.arc(-w/4,h/4,2,0,Math.PI*2); g.fill(); g.beginPath(); g.arc(w/4,h/4,2,0,Math.PI*2); g.fill(); }
-
-/* ═══════════ Fire Draw ═══════════ */
 function drawFireSmoke(g,w,h,col){ var r=w/2+2; g.fillStyle=col+'30'; g.beginPath(); g.arc(0,0,r,0,Math.PI*2); g.fill(); g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.7; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; g.beginPath(); g.arc(0,0,1.5,0,Math.PI*2); g.fill(); }
-function drawFireHeat(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.7; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; g.font='bold 6px Inter'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('H',0,0); }
+function drawFireHeat(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.7; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; g.font='bold 6px Cairo'; g.textAlign='center'; g.textBaseline='middle'; g.fillText('H',0,0); }
 function drawFireMulti(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.8; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.beginPath(); g.arc(0,0,w/3,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; g.beginPath(); g.arc(0,0,1.2,0,Math.PI*2); g.fill(); }
 function drawFireSprinkler(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.6; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; for(var i=0;i<4;i++){ var a=i*Math.PI/2+Math.PI/4; g.beginPath(); g.arc(Math.cos(a)*w/4,Math.sin(a)*w/4,0.8,0,Math.PI*2); g.fill(); } }
 function drawFireManual(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#fff'; g.lineWidth=0.8; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#fff'; g.beginPath(); g.arc(0,0,w/3,0,Math.PI*2); g.fill(); g.fillStyle=col; g.beginPath(); g.arc(0,0,w/5,0,Math.PI*2); g.fill(); }
 
-/* ═══════════ Furniture Generator ═══════════ */
+/* ═══════════ Furniture Generation ═══════════ */
 function generateFurniture(room){
   room.furniture = [];
   var t=room.type, L=room.L, W=room.W;
@@ -721,7 +745,7 @@ function generateFurniture(room){
   }
 }
 
-/* ═══════════ Doors Generator ═══════════ */
+/* ═══════════ Door Generation ═══════════ */
 function generateDoors(room){
   room.doors = [];
   var L=room.L, W=room.W, t=room.type;
@@ -762,7 +786,7 @@ function generateDoors(room){
   } else if (t==='parking') room.doors.push({side:'s',pos:0.5,width:3.0,type:'double',swing:'in'});
 }
 
-/* ═══════════ HVAC Generator ═══════════ */
+/* ═══════════ HVAC Generation ═══════════ */
 function generateHVAC(room){
   room.hvac = [];
   var t=room.type, L=room.L, W=room.W;
@@ -796,7 +820,7 @@ function generateHVAC(room){
   }
 }
 
-/* ═══════════ Lighting Generator ═══════════ */
+/* ═══════════ Lighting Generation ═══════════ */
 function generateLights(room){
   room.lights = [];
   var t=room.type, L=room.L, W=room.W;
@@ -826,7 +850,7 @@ function generateLights(room){
   }
 }
 
-/* ═══════════ CCTV Generator ═══════════ */
+/* ═══════════ CCTV Generation ═══════════ */
 function generateCCTV(room){
   room.cctv = [];
   var t=room.type, L=room.L, W=room.W;
@@ -854,7 +878,7 @@ function generateCCTV(room){
   }
 }
 
-/* ═══════════ Fire Generator ═══════════ */
+/* ═══════════ Fire Generation ═══════════ */
 function generateFire(room){
   room.fire = [];
   var t=room.type, L=room.L, W=room.W;
@@ -876,7 +900,7 @@ function generateFire(room){
   }
 }
 
-/* ═══════════ Object Factories ═══════════ */
+/* ═══════════ Object Creation ═══════════ */
 function createBuilding(name){ return {id:uid(),name:name}; }
 function createFloor(name,bid,h,level){ return {id:uid(),name:name,buildingId:bid,height:h||3.5,level:level||0,rooms:[]}; }
 function createRoom(name,type,x,y,L,W,h){
@@ -887,7 +911,7 @@ function createRoom(name,type,x,y,L,W,h){
   return room;
 }
 
-/* ═══════════ Data Access ═══════════ */
+/* ═══════════ Accessors ═══════════ */
 function activeFloor(){ return project.floors[activeFloorIdx]; }
 function floorsOfBuilding(bid){ return project.floors.filter(function(f){return f.buildingId===bid;}); }
 function activeBuildingFloors(){ return floorsOfBuilding(activeBuildingId); }
@@ -905,41 +929,115 @@ function getFloorOfRoom(id){
 function spkInRoom(rid){ return project.speakers.filter(function(s){return s.roomId===rid;}); }
 function spkInFloor(f){ var ids=f.rooms.map(function(r){return r.id;}); return project.speakers.filter(function(s){return ids.indexOf(s.roomId)>=0;}); }
 
-/* ═══════════ Physics ═══════════ */
+/* ═══════════════════════════════════════════════════════════════
+   🔊 Engineering Acoustics Engine v5.5
+   ═══════════════════════════════════════════════════════════════ */
 function getModel(){ return $('modelSelect').options[$('modelSelect').selectedIndex]; }
 function getWatt(){ return parseFloat(getModel().dataset[$('tapSelect').value]); }
 function getAngle(){ return parseFloat(getModel().dataset.angle); }
 function getSens(){ return parseFloat(getModel().dataset.sens); }
-function computeSPLInRoom(room,xm,ym){
-  var watt=getWatt(),sens=getSens(),listH=1.5;
-  var spks=spkInRoom(room.id); if (!spks.length) return 0;
-  var pTotal=0;
-  for(var i=0;i<spks.length;i++){
-    var s=spks[i];
-    var dx=xm-s.rx*room.L,dy=ym-s.ry*room.W,dz=room.height-listH;
-    var dist=Math.max(1,Math.sqrt(dx*dx+dy*dy+dz*dz));
-    pTotal+=Math.pow(10,(sens+10*Math.log10(watt)-20*Math.log10(dist))/10);
+
+function roomSurfaceArea(room){
+  return 2 * (room.L * room.W + room.L * room.height + room.W * room.height);
+}
+function roomConstant(room){
+  var S = roomSurfaceArea(room);
+  var a = Math.max(0.02, Math.min(0.90, room.absorb));
+  return (S * a) / (1 - a);
+}
+function directivityFactor(angleDeg){
+  var halfRad = (angleDeg / 2) * Math.PI / 180;
+  var Q = 2 / Math.max(0.05, 1 - Math.cos(halfRad));
+  return Math.min(Q, 25);
+}
+function offAxisAttenuation(thetaDeg, coverageAngle){
+  var half = coverageAngle / 2;
+  if (thetaDeg <= half){
+    var r = thetaDeg / half;
+    return -3 * Math.pow(r, 2);
   }
-  return 10*Math.log10(pTotal);
+  var excess = thetaDeg - half;
+  return Math.max(-30, -3 - excess * 0.45);
+}
+function computeRT60(room){
+  var V = room.L * room.W * room.height;
+  var S = roomSurfaceArea(room);
+  var a = Math.max(0.02, Math.min(0.90, room.absorb));
+  if (a > 0.20){
+    return 0.161 * V / (-S * Math.log(1 - a));
+  }
+  return 0.161 * V / (S * a);
+}
+function criticalDistance(room){
+  var Q = directivityFactor(getAngle());
+  var R = roomConstant(room);
+  return 0.141 * Math.sqrt(Math.max(0.1, Q * R));
+}
+function splFromSpeaker(room, spk, xm, ym){
+  var watt = getWatt();
+  var sens = getSens();
+  var covAngle = getAngle();
+  var listH = 1.5;
+  var dx = xm - spk.rx * room.L;
+  var dy = ym - spk.ry * room.W;
+  var dz = Math.max(0.3, room.height - listH);
+  var r = Math.max(0.5, Math.sqrt(dx*dx + dy*dy + dz*dz));
+  var thetaRad = Math.atan(Math.sqrt(dx*dx + dy*dy) / dz);
+  var thetaDeg = thetaRad * 180 / Math.PI;
+  var offAxis = offAxisAttenuation(thetaDeg, covAngle);
+  var Ld = sens + 10*Math.log10(watt) - 20*Math.log10(r) + offAxis;
+  var Lw = sens + 10*Math.log10(watt) + 11;
+  var R = roomConstant(room);
+  var Lr = Lw + 10*Math.log10(4 / Math.max(0.5, R));
+  return { Ld: Ld, Lr: Lr, r: r, theta: thetaDeg, offAxis: offAxis };
+}
+function computeSPLInRoom(room, xm, ym){
+  var spks = spkInRoom(room.id);
+  if (!spks.length) return 0;
+  var sumDirect = 0;
+  var maxReverb = -Infinity;
+  for (var i = 0; i < spks.length; i++){
+    var res = splFromSpeaker(room, spks[i], xm, ym);
+    sumDirect += Math.pow(10, res.Ld / 10);
+    if (res.Lr > maxReverb) maxReverb = res.Lr;
+  }
+  var reverbEnergy = Math.pow(10, maxReverb / 10) * Math.min(2, Math.sqrt(spks.length));
+  var pTotal = sumDirect + reverbEnergy;
+  return 10 * Math.log10(pTotal);
 }
 function roomStats(room){
-  var spks=spkInRoom(room.id); if (!spks.length) return null;
-  var n=8,sum=0,mn=Infinity,mx=-Infinity,good=0,total=n*n;
-  for(var i=0;i<n;i++) for(var j=0;j<n;j++){
-    var spl=computeSPLInRoom(room,(j+0.5)/n*room.L,(i+0.5)/n*room.W);
-    sum+=spl;
-    if (spl<mn) mn=spl;
-    if (spl>mx) mx=spl;
-    if (spl>=room.target-6 && spl<=room.target+6) good++;
+  var spks = spkInRoom(room.id);
+  if (!spks.length) return null;
+  var n = 12, sum = 0, mn = Infinity, mx = -Infinity, good = 0, total = n*n;
+  for (var i = 0; i < n; i++){
+    for (var j = 0; j < n; j++){
+      var spl = computeSPLInRoom(room, (j+0.5)/n * room.L, (i+0.5)/n * room.W);
+      sum += spl;
+      if (spl < mn) mn = spl;
+      if (spl > mx) mx = spl;
+      if (spl >= room.target - 6 && spl <= room.target + 6) good++;
+    }
   }
-  var V=room.L*room.W*room.height;
-  var S=2*(room.L*room.W+room.L*room.height+room.W*room.height);
-  var rt60=0.161*V/(S*room.absorb);
-  var snr=mn-room.ambient;
-  var sF=clamp((snr-3)/12,0,1);
-  var rF=1/(1+Math.pow(Math.max(0,rt60)/1.2,2));
-  var sti=clamp(sF*rF,0,1);
-  return {avg:sum/total,min:mn,max:mx,variation:mx-mn,coverage:good/total*100,rt60:rt60,sti:sti,count:spks.length,watts:spks.length*getWatt()};
+  var rt60 = computeRT60(room);
+  var rc = criticalDistance(room);
+  var R = roomConstant(room);
+  var Q = directivityFactor(getAngle());
+  var centerRes = splFromSpeaker(room, spks[0], room.L/2, room.W/2);
+  var snr = mn - room.ambient;
+  var sF = 1 / (1 + Math.pow(10, -snr / 10));
+  var rF = 1 / (1 + Math.pow(rt60 / 0.8, 2));
+  var sti = Math.max(0, Math.min(1, sF * rF));
+  return {
+    avg: sum / total, min: mn, max: mx,
+    variation: mx - mn, coverage: good / total * 100,
+    rt60: rt60, sti: sti, count: spks.length,
+    watts: spks.length * getWatt(),
+    criticalDist: rc, roomConstant: R, directivity: Q,
+    surfaceArea: roomSurfaceArea(room),
+    volume: room.L * room.W * room.height,
+    centerDirect: centerRes.Ld, centerReverb: centerRes.Lr,
+    reverbRatio: centerRes.Lr - centerRes.Ld
+  };
 }
 
 /* ═══════════ Camera ═══════════ */
@@ -1032,6 +1130,7 @@ function addRoom(){
   var room=createRoom(name,'office',maxX+0.5,0,6,5,f.height);
   while (roomOverlaps(room,f.rooms)) room.x+=6.5;
   f.rooms.push(room); activeRoomId=room.id;
+  placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll(); fitToView();
   toast('🚪 '+name);
 }
@@ -1043,7 +1142,12 @@ function deleteRoom(){
   var f=getFloorOfRoom(activeRoomId);
   if (f) f.rooms=f.rooms.filter(function(r){return r.id!==activeRoomId;});
   activeRoomId=null;
+  placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll();
+  var list=$('roomSpeakersList');
+  if (list) list.innerHTML='<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">Select a room first</div>';
+  var lbl=$('spkCountLbl');
+  if (lbl) lbl.textContent='0';
 }
 function updateRoomField(field,value){
   if (activeRoomId==null) return;
@@ -1078,19 +1182,108 @@ function regenRoomFurniture(){
   toast('🔄 Regenerated');
 }
 
-/* ═══════════ Buildings & Floors ═══════════ */
+/* ═══════════ Place Mode ═══════════ */
+function togglePlaceMode(){
+  if (activeRoomId == null){ toast('⚠️ Select a room first'); return; }
+  placeMode = !placeMode;
+  updatePlaceBtnUI();
+  if (placeMode) toast('📍 Click inside ' + getRoomById(activeRoomId).name + ' to add a speaker');
+  else toast('Select mode');
+}
+function updatePlaceBtnUI(){
+  var btn = $('btnPlaceMode');
+  var fab = $('fabPlace');
+  var tbtn = $('toolPlace');
+  if (btn){
+    if (placeMode){
+      btn.style.background = '#22c55e'; btn.style.color = '#000';
+      btn.textContent = '📍 Place mode active — click on the plan';
+    } else {
+      btn.style.background = '#0e4f60'; btn.style.color = '#7dd3fc';
+      btn.textContent = '📍 Place speaker manually (off)';
+    }
+  }
+  if (fab) fab.classList.toggle('place-on', placeMode);
+  if (tbtn) tbtn.classList.toggle('on', placeMode);
+  cv.classList.toggle('place-mode', placeMode);
+  draw();
+}
+
+/* ═══════════ Room Speakers List ═══════════ */
+function renderRoomSpeakersList(){
+  var list = $('roomSpeakersList');
+  var lbl = $('spkCountLbl');
+  if (!list) return;
+  if (activeRoomId == null){
+    list.innerHTML = '<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">Select a room first</div>';
+    if (lbl) lbl.textContent = '0';
+    return;
+  }
+  var spks = spkInRoom(activeRoomId);
+  if (lbl) lbl.textContent = spks.length;
+  if (!spks.length){
+    list.innerHTML = '<div style="font-size:11px;color:var(--mu);text-align:center;padding:12px;line-height:1.7">No speakers in this room<br><br>Use "✨ Auto-distribute speakers" for automatic layout<br>or "📍 Place speaker manually" for manual placement</div>';
+    return;
+  }
+  var html = '';
+  spks.forEach(function(s, i){
+    var globalIdx = project.speakers.indexOf(s);
+    var zone = project.zones.find(function(z){ return z.id === s.zoneId; });
+    var circuit = project.circuits.find(function(c){ return c.id === s.circuitId; });
+    var sel = globalIdx === selIdx;
+    html += '<div class="speaker-row' + (sel ? ' sel' : '') + '">';
+    html += '<span class="snum">#' + (i+1) + '</span>';
+    html += '<span class="sinfo">' + (zone ? zone.name : '—') + ' · ' + (circuit ? circuit.name : '—') + '</span>';
+    html += '<button class="btn-mini" onclick="event.stopPropagation();selectSpeakerById(' + globalIdx + ')" title="Select">🎯</button>';
+    html += '<button class="btn-mini danger" onclick="event.stopPropagation();deleteSpeakerById(' + globalIdx + ')" title="Delete">✕</button>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+function selectSpeakerById(globalIdx){
+  if (globalIdx < 0 || globalIdx >= project.speakers.length) return;
+  selIdx = globalIdx;
+  var s = project.speakers[globalIdx];
+  if (s){
+    var fl = getFloorOfRoom(s.roomId);
+    if (fl){
+      var flIdx = project.floors.indexOf(fl);
+      if (flIdx !== activeFloorIdx){
+        activeFloorIdx = flIdx;
+        renderAll();
+        fitToView();
+      }
+    }
+    activeRoomId = s.roomId;
+    renderRoomsList(); renderRoomEditor(); renderRoomSpeakersList();
+  }
+  draw();
+  toast('🎯 Speaker #' + (selIdx + 1) + ' selected');
+}
+function deleteSpeakerById(globalIdx){
+  if (globalIdx < 0 || globalIdx >= project.speakers.length) return;
+  if (!confirm('Delete this speaker?')) return;
+  project.speakers.splice(globalIdx, 1);
+  selIdx = -1;
+  calculateAll();
+  pushHistory();
+  renderRoomSpeakersList();
+}
+
+/* ═══════════ Floor & Building Management ═══════════ */
 function addBuilding(){
   var name=prompt('Building name:','Building '+(project.buildings.length+1));
   if (!name) return;
   var b=createBuilding(name); project.buildings.push(b);
   var f=createFloor('Floor 1',b.id,3.5,1); project.floors.push(f);
   activeBuildingId=b.id; activeFloorIdx=project.floors.indexOf(f);
-  activeRoomId=null;
+  activeRoomId=null; placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll();
 }
 function removeBuilding(bid){
   if (project.buildings.length<=1){ toast('⚠️'); return; }
   var b=project.buildings.find(function(x){return x.id===bid;});
+  if (!b) return;
   if (!confirm('Delete '+b.name+'?')) return;
   var fIds=floorsOfBuilding(bid).map(function(f){return f.id;}); var rIds=[];
   project.floors.forEach(function(f){ if(fIds.indexOf(f.id)>=0) f.rooms.forEach(function(r){rIds.push(r.id);}); });
@@ -1100,15 +1293,21 @@ function removeBuilding(bid){
   activeBuildingId=project.buildings[0].id;
   var firstF=activeBuildingFloors()[0];
   activeFloorIdx=firstF?project.floors.indexOf(firstF):0;
-  activeRoomId=null;
+  activeRoomId=null; placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll();
 }
 function selectBuilding(bid){
-  activeBuildingId=bid;
-  var fls=activeBuildingFloors();
-  activeFloorIdx=fls.length?project.floors.indexOf(fls[0]):0;
-  activeRoomId=null;
-  renderAll(); fitToView();
+  bid = parseInt(bid, 10);
+  if (isNaN(bid)){ console.error('❌ Invalid building'); return; }
+  console.log('🏢 Switching to building:', bid);
+  activeBuildingId = bid;
+  var fls = project.floors.filter(function(f){ return f.buildingId === bid; });
+  activeFloorIdx = fls.length ? project.floors.indexOf(fls[0]) : 0;
+  activeRoomId = null;
+  placeMode = false;
+  updatePlaceBtnUI();
+  renderAll();
+  fitToView();
 }
 function addFloor(){
   var fls=activeBuildingFloors();
@@ -1117,25 +1316,26 @@ function addFloor(){
   var level=fls.length?Math.max.apply(null,fls.map(function(f){return f.level||0;}))+1:1;
   var f=createFloor(name,activeBuildingId,3.5,level);
   project.floors.push(f); activeFloorIdx=project.floors.indexOf(f);
-  activeRoomId=null;
+  activeRoomId=null; placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll(); fitToView();
 }
 function addMultipleFloors(){
   var n=parseInt(prompt('How many floors?','5'),10);
   if (!n||n<1||n>100) return;
-  var h=parseFloat(prompt('Floor height (m):','3.5'))||3.5;
+  var h=parseFloat(prompt('Height of each floor (m):','3.5'))||3.5;
   var fls=activeBuildingFloors();
   var level=fls.length?Math.max.apply(null,fls.map(function(f){return f.level||0;})):0;
   var last=null;
   for(var i=0;i<n;i++){ level++; var f=createFloor('Floor '+level,activeBuildingId,h,level); project.floors.push(f); last=f; }
   if (last) activeFloorIdx=project.floors.indexOf(last);
-  activeRoomId=null;
+  activeRoomId=null; placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll(); fitToView();
   toast('➕ Added '+n+' floors');
 }
 function removeFloor(idx){
+  idx = parseInt(idx, 10);
   if (project.floors.length<=1){ toast('⚠️'); return; }
-  var f=project.floors[idx];
+  var f=project.floors[idx]; if (!f) return;
   if (!confirm('Delete '+f.name+'?')) return;
   var rIds=f.rooms.map(function(r){return r.id;});
   project.speakers=project.speakers.filter(function(s){return rIds.indexOf(s.roomId)<0;});
@@ -1150,14 +1350,70 @@ function removeFloor(idx){
     }
   }
   if (activeFloorIdx>=project.floors.length) activeFloorIdx=project.floors.length-1;
-  activeRoomId=null;
+  activeRoomId=null; placeMode=false; updatePlaceBtnUI();
   pushHistory(); renderAll(); fitToView();
 }
-function selectFloor(i){ activeFloorIdx=i; activeRoomId=null; renderAll(); fitToView(); }
+function selectFloor(i){
+  i = parseInt(i, 10);
+  if (isNaN(i) || i < 0 || i >= project.floors.length){
+    console.error('❌ Invalid floor:', i);
+    return;
+  }
+  console.log('🎯 Switching to floor [' + i + ']:', project.floors[i].name);
+  activeFloorIdx = i;
+  activeRoomId = null;
+  placeMode = false;
+  updatePlaceBtnUI();
+  renderAll();
+  fitToView();
+}
 function renameFloor(fid,name){ var f=project.floors.find(function(x){return x.id===fid;}); if(f){f.name=name; pushHistory();} }
 function setFloorHeight(fid,h){
   var f=project.floors.find(function(x){return x.id===fid;});
   if (f){ f.height=num(parseFloat(h),f.height); f.rooms.forEach(function(r){r.height=f.height;}); pushHistory(); calculateAll(); }
+}
+
+/* ═══════════ Quick Navigation ═══════════ */
+function renderQuickNav(){
+  var bSel = $('quickBuildingSelect');
+  var fSel = $('quickFloorSelect');
+  if (!bSel || !fSel) return;
+  var bHtml = '';
+  if (!project.buildings.length){
+    bHtml = '<option>— No buildings —</option>';
+  } else {
+    project.buildings.forEach(function(b){
+      var cnt = project.floors.filter(function(f){ return f.buildingId === b.id; }).length;
+      bHtml += '<option value="' + b.id + '"' + (b.id === activeBuildingId ? ' selected' : '') + '>';
+      bHtml += '🏢 ' + b.name + ' (' + cnt + ' floors)';
+      bHtml += '</option>';
+    });
+  }
+  bSel.innerHTML = bHtml;
+  var fls = project.floors.filter(function(f){ return f.buildingId === activeBuildingId; });
+  var fHtml = '';
+  if (!fls.length){
+    fHtml = '<option>— No floors —</option>';
+  } else {
+    fls.forEach(function(f){
+      var idx = project.floors.indexOf(f);
+      fHtml += '<option value="' + idx + '"' + (idx === activeFloorIdx ? ' selected' : '') + '>';
+      fHtml += '📍 ' + f.name + ' (' + (f.rooms ? f.rooms.length : 0) + ' rooms)';
+      fHtml += '</option>';
+    });
+  }
+  fSel.innerHTML = fHtml;
+  console.log('✅ QuickNav: ' + project.buildings.length + ' buildings, ' + fls.length + ' floors');
+}
+function quickSelectBuilding(bidStr){
+  var bid = parseInt(bidStr, 10);
+  if (isNaN(bid)) return;
+  selectBuilding(bid);
+}
+function quickSelectFloor(fidxStr){
+  var fidx = parseInt(fidxStr, 10);
+  if (isNaN(fidx)) return;
+  selectFloor(fidx);
 }
 
 /* ═══════════ Distribution, Zones, Circuits ═══════════ */
@@ -1166,6 +1422,8 @@ function autoDistributeRoom(){
   var room=getRoomById(activeRoomId); if (!room) return;
   autoDistRoom(room);
   calculateAll(); pushHistory();
+  renderRoomSpeakersList();
+  toast('✨ Distributed ' + spkInRoom(room.id).length + ' speakers in ' + room.name);
 }
 function autoDistRoom(room){
   var angle=getAngle();
@@ -1181,6 +1439,8 @@ function autoDistributeFloor(){
   var f=activeFloor(); if (!f) return;
   f.rooms.forEach(autoDistRoom);
   calculateAll(); pushHistory();
+  renderRoomSpeakersList();
+  toast('✨ Distributed ' + spkInFloor(f).length + ' speakers on the floor');
 }
 function clearFloor(){
   var f=activeFloor(); if (!f) return;
@@ -1190,6 +1450,7 @@ function clearFloor(){
   if (before===project.speakers.length){ toast('Nothing to clear'); return; }
   if (!confirm('Clear all speakers on this floor?')) return;
   calculateAll(); pushHistory();
+  renderRoomSpeakersList();
 }
 function addZone(){
   var id=project.zones.length?Math.max.apply(null,project.zones.map(function(z){return z.id;}))+1:0;
@@ -1199,7 +1460,7 @@ function addZone(){
 }
 function removeZone(id){
   if (project.zones.length<=1){ toast('⚠️'); return; }
-  if (!confirm('Delete zone?')) return;
+  if (!confirm('Delete this zone?')) return;
   var firstId=project.zones.find(function(z){return z.id!==id;}).id;
   project.speakers.forEach(function(s){ if(s.zoneId===id) s.zoneId=firstId; });
   project.zones=project.zones.filter(function(z){return z.id!==id;});
@@ -1216,7 +1477,7 @@ function addCircuit(){
 }
 function removeCircuit(id){
   if (project.circuits.length<=1){ toast('⚠️'); return; }
-  if (!confirm('Delete circuit?')) return;
+  if (!confirm('Delete this circuit?')) return;
   var firstId=project.circuits.find(function(c){return c.id!==id;}).id;
   project.speakers.forEach(function(s){ if(s.circuitId===id) s.circuitId=firstId; });
   project.circuits=project.circuits.filter(function(c){return c.id!==id;});
@@ -1238,7 +1499,7 @@ function circuitStats(c){
   return {watts:w,count:n,amp:amp,loadPct:loadPct,vdrop:vdrop,vdropPct:vdrop,amps:I};
 }
 
-/* ═══════════ Drawing ═══════════ */
+/* ═══════════ Rendering ═══════════ */
 function zoneColor(id){ var z=project.zones.find(function(x){return x.id===id;}); return z?z.color:'#e60012'; }
 function splColor(spl){
   if (spl<55) return "rgba(15,25,45,0.55)";
@@ -1272,10 +1533,10 @@ function draw(){
   ctx.fillStyle=grad; ctx.fillRect(0,0,cw,ch);
   var f=activeFloor();
   if (!f||!f.rooms.length){
-    ctx.fillStyle="#666"; ctx.font="bold 16px Inter";
+    ctx.fillStyle="#666"; ctx.font="bold 16px Cairo";
     ctx.textAlign="center"; ctx.textBaseline="middle";
     ctx.fillText('No rooms — add a room or load a template',cw/2,ch/2);
-    drawMinimap(); return;
+    drawMinimap(); drawPlaceModeIndicator(); return;
   }
   var eff=effScale();
   if (layers.grid) drawFloorGrid(eff);
@@ -1307,6 +1568,22 @@ function draw(){
   drawScaleBar(20,ch-30,eff);
   if (project.zones.length>1) drawZoneLegend(cw-180,12);
   drawMinimap();
+  drawPlaceModeIndicator();
+}
+function drawPlaceModeIndicator(){
+  if (!placeMode) return;
+  ctx.save();
+  var w = Math.min(canvasW - 40, 400);
+  var x = (canvasW - w)/2;
+  ctx.fillStyle = 'rgba(34,197,94,0.95)';
+  roundRect(x, 14, w, 40, 8);
+  ctx.fill();
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 13px Cairo';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('📍 Place mode active — click inside the room to add a speaker', canvasW/2, 34);
+  ctx.restore();
 }
 function drawFloorGrid(eff){
   var f=activeFloor(); var b=floorBounds(f); var pad=5;
@@ -1445,7 +1722,7 @@ function drawDoors(room,eff){
     if (isExit){
       var nx=(d.side==='e'||d.side==='w')?(d.side==='e'?-1:1):0;
       var ny=(d.side==='n'||d.side==='s')?(d.side==='n'?1:-1):0;
-      ctx.fillStyle=RENDER.exitColor; ctx.font='bold 9px Inter';
+      ctx.fillStyle=RENDER.exitColor; ctx.font='bold 9px Cairo';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.save();
       ctx.translate((x1+x2)/2+nx*14,(y1+y2)/2+ny*14);
@@ -1460,7 +1737,7 @@ function drawRoomDimensions(room,eff){
   var p=w2s(room.x,room.y); var w=room.L*eff,h=room.W*eff;
   var col=RENDER.dimColor; var dist=14;
   ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=1;
-  ctx.font='bold 9px Inter'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font='bold 9px Cairo'; ctx.textAlign='center'; ctx.textBaseline='middle';
   drawDimLine(p.x,p.y-dist,p.x+w,p.y-dist,room.L.toFixed(1)+'m');
   drawDimLineVertical(p.x+w+dist,p.y,p.y+h,room.W.toFixed(1)+'m');
 }
@@ -1490,9 +1767,15 @@ function drawSpeakersInRoom(room,eff){
     var globalIdx=project.speakers.indexOf(s);
     var sel=globalIdx===selIdx;
     if (sel){
-      ctx.beginPath(); ctx.arc(cx,cy,baseR+8,0,Math.PI*2);
-      ctx.fillStyle='rgba(56,189,248,0.35)'; ctx.fill();
-      ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cy,baseR+10,0,Math.PI*2);
+      ctx.fillStyle='rgba(56,189,248,0.40)'; ctx.fill();
+      ctx.strokeStyle='#38bdf8'; ctx.lineWidth=2.5; ctx.stroke();
+      ctx.fillStyle='#38bdf8';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - baseR - 22);
+      ctx.lineTo(cx - 5, cy - baseR - 14);
+      ctx.lineTo(cx + 5, cy - baseR - 14);
+      ctx.closePath(); ctx.fill();
     }
     ctx.save();
     ctx.shadowColor='rgba(0,0,0,0.7)'; ctx.shadowBlur=4; ctx.shadowOffsetY=1;
@@ -1511,17 +1794,17 @@ function drawRoomLabel(room,eff){
   var t=ROOM_TYPES[room.type]||ROOM_TYPES.office;
   var labelTxt=room.name; var subTxt=room.L.toFixed(1)+'×'+room.W.toFixed(1);
   var spkCount=spkInRoom(room.id).length;
-  ctx.font='bold 11px Inter';
+  ctx.font='bold 11px Cairo';
   var mw=Math.max(ctx.measureText(labelTxt).width,ctx.measureText(subTxt).width)+44;
   mw=Math.min(mw,w-8);
   var lx=p.x+6,ly=p.y+6,lh=30;
   ctx.fillStyle='rgba(5,10,15,0.78)';
   roundRect(lx,ly,mw,lh,4); ctx.fill();
   ctx.fillStyle=t.color||'#888'; ctx.fillRect(lx,ly,3,lh);
-  ctx.fillStyle='#fff'; ctx.font='bold 11px Inter';
+  ctx.fillStyle='#fff'; ctx.font='bold 11px Cairo';
   ctx.textAlign='left'; ctx.textBaseline='top';
   ctx.fillText((t.icon||'')+' '+labelTxt,lx+10,ly+4);
-  ctx.fillStyle='#8b949e'; ctx.font='9px Inter';
+  ctx.fillStyle='#8b949e'; ctx.font='9px Cairo';
   var rightTxt=subTxt;
   if (spkCount>0) rightTxt='🔊 '+spkCount+' · '+subTxt;
   ctx.fillText(rightTxt,lx+10,ly+18);
@@ -1545,7 +1828,7 @@ function drawNorthArrow(x,y){
   roundRect(-22,-22,44,44,6); ctx.fill(); ctx.stroke();
   ctx.fillStyle='#38bdf8';
   ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(6,8); ctx.lineTo(0,4); ctx.lineTo(-6,8); ctx.closePath(); ctx.fill();
-  ctx.fillStyle='#8b949e'; ctx.font='bold 8px Inter';
+  ctx.fillStyle='#8b949e'; ctx.font='bold 8px Cairo';
   ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('N',0,12);
   ctx.restore();
 }
@@ -1558,7 +1841,7 @@ function drawScaleBar(x,y,eff){
   ctx.strokeStyle='#e6edf3'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.moveTo(x+8,y-10); ctx.lineTo(x+8+px,y-10); ctx.stroke();
   for(var i=0;i<=4;i++){ var sx=x+8+px*i/4; ctx.beginPath(); ctx.moveTo(sx,y-14); ctx.lineTo(sx,y-6); ctx.stroke(); }
-  ctx.fillStyle='#e6edf3'; ctx.font='bold 10px Inter';
+  ctx.fillStyle='#e6edf3'; ctx.font='bold 10px Cairo';
   ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText(niceM+' m',x+8+px/2,y-18);
   ctx.restore();
@@ -1573,7 +1856,7 @@ function drawZoneLegend(x,y){
   ctx.save();
   ctx.fillStyle='rgba(22,27,34,0.92)'; ctx.strokeStyle='#30363d'; ctx.lineWidth=1;
   roundRect(x,y,w,h,6); ctx.fill(); ctx.stroke();
-  ctx.font='bold 10px Inter'; ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.font='bold 10px Cairo'; ctx.textAlign='left'; ctx.textBaseline='middle';
   project.zones.slice(0,8).forEach(function(z,i){
     var ry=y+6+i*rowH+rowH/2;
     ctx.fillStyle=z.color;
@@ -1590,7 +1873,7 @@ function drawMinimap(){
   miniCtx.fillStyle='rgba(5,7,10,0.95)'; miniCtx.fillRect(0,0,mw,mh);
   var f=activeFloor();
   if (!f||!f.rooms.length){
-    miniCtx.fillStyle='#444'; miniCtx.font='bold 10px Inter';
+    miniCtx.fillStyle='#444'; miniCtx.font='bold 10px Cairo';
     miniCtx.textAlign='center'; miniCtx.textBaseline='middle';
     miniCtx.fillText('—',mw/2,mh/2); return;
   }
@@ -1678,7 +1961,7 @@ function calculateAll(){
     html+='<div class="compliance-item"><span>Variation</span><span class="v" style="color:'+(st.variation<=worstRoom.maxVar?'var(--ok)':'var(--bad)')+'">'+st.variation.toFixed(1)+'</span></div>';
     html+='<div class="compliance-item"><span>STI</span><span class="v" style="color:'+(st.sti>=worstRoom.minSTI?'var(--ok)':'var(--bad)')+'">'+st.sti.toFixed(2)+'</span></div>';
   } else if (countCov>0){
-    html+='<div style="color:var(--ok);font-weight:800;font-size:12px;text-align:center;padding:8px">✅ All Compliant</div>';
+    html+='<div style="color:var(--ok);font-weight:800;font-size:12px;text-align:center;padding:8px">✅ Compliant</div>';
   } else html+='<div style="color:var(--mu);font-size:11px;text-align:center;padding:8px">No speakers</div>';
   if (circuitIssues.length){
     html+='<div style="margin-top:8px;font-size:10.5px;color:var(--bad);font-weight:700">';
@@ -1686,33 +1969,127 @@ function calculateAll(){
     html+='</div>';
   }
   $('compliancePanel').innerHTML=html;
-  renderCircuits(); draw();
+  renderCircuits();
+  if (typeof renderRoomSpeakersList === 'function') renderRoomSpeakersList();
+  if (typeof renderRoomAcousticsPanel === 'function') renderRoomAcousticsPanel();
+  draw();
 }
 
-/* ═══════════ UI Render ═══════════ */
+/* ═══════════ Engineering Acoustics Analysis ═══════════ */
+function renderRoomAcousticsPanel(){
+  var panel = $('roomAcousticsPanel');
+  if (!panel) return;
+  if (activeRoomId == null){
+    panel.innerHTML = '<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">Select a room to view analysis</div>';
+    return;
+  }
+  var room = getRoomById(activeRoomId);
+  if (!room) return;
+  var st = roomStats(room);
+  if (!st){
+    panel.innerHTML = '<div style="font-size:11px;color:var(--mu);text-align:center;padding:8px">No speakers in this room</div>';
+    return;
+  }
+  var html = '';
+  var t = ROOM_TYPES[room.type] || ROOM_TYPES.office;
+  html += '<div style="background:var(--bg);padding:8px;border-radius:6px;margin-bottom:8px;font-size:11.5px;font-weight:800">';
+  html += '<span style="color:' + (t.color || '#888') + '">●</span> ' + room.name;
+  html += '<span style="float:right;color:var(--mu);font-size:10.5px">' + t.name + '</span>';
+  html += '</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">';
+  html += '<div style="background:var(--bg);padding:7px;border-radius:5px;text-align:center">';
+  html += '<div style="font-size:15px;font-weight:900;color:var(--accent)">' + st.rt60.toFixed(2) + '</div>';
+  html += '<div style="font-size:9px;color:var(--mu);margin-top:2px">RT60 (s)</div></div>';
+  html += '<div style="background:var(--bg);padding:7px;border-radius:5px;text-align:center">';
+  html += '<div style="font-size:15px;font-weight:900;color:' + (st.sti >= 0.5 ? 'var(--ok)' : 'var(--warn)') + '">' + st.sti.toFixed(2) + '</div>';
+  html += '<div style="font-size:9px;color:var(--mu);margin-top:2px">STI</div></div>';
+  html += '<div style="background:var(--bg);padding:7px;border-radius:5px;text-align:center">';
+  html += '<div style="font-size:15px;font-weight:900;color:var(--accent)">' + st.criticalDist.toFixed(1) + ' m</div>';
+  html += '<div style="font-size:9px;color:var(--mu);margin-top:2px">Critical Distance</div></div>';
+  html += '<div style="background:var(--bg);padding:7px;border-radius:5px;text-align:center">';
+  html += '<div style="font-size:15px;font-weight:900;color:var(--accent)">Q=' + st.directivity.toFixed(1) + '</div>';
+  html += '<div style="font-size:9px;color:var(--mu);margin-top:2px">Directivity</div></div>';
+  html += '</div>';
+  html += '<div style="font-size:10.5px;line-height:1.9;color:var(--tx);background:var(--bg);padding:8px;border-radius:5px">';
+  html +=.my '<div style="display:flex;justify-content:space-between"><span style="color-room:var(--mu)P">Room Volume:</span><b>' + st.volume.toFixed(0) + ' m³</b></div>';
+  html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Surface Area:</span><b>' + st.surfaceArea.toFixed(0) + ' m²</b></div>';
+  html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Room Constant R:</span><b>' + st.roomConstant.toFixed(1) + ' m²</b></div>';
+  html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Direct (center):</span><b>' + st.centerDirect.toFixed(1) + ' dB</b></div>';
+  html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Reverb (center):</span><b>' + st.centerReverb.toFixed(1) + ' dB</b></div>';
+  var ratioColor = st.reverbRatio > 0 ? 'var(--warn)' : 'var(--ok)';
+  html += '<div style="display:flex;justify-content:space-between"><span style="color:var(--mu)">Reverb/Direct:</span><b style="color:' + ratioColor + '">' + (st.reverbRatio > 0 ? '+' : '') + st.reverbRatio.toFixed(1) + ' dB</b></div>';
+  html += '</div>';
+  if (st.reverbRatio > 0){
+    html += '<div style="background:#3a2f0f;border-left:3px solid var(--warn);padding:6px 8px;border-radius:4px;font-size:10.5px;margin-top:6px;color:#fbbf24">';
+    html += '⚠️ Reverberant field dominant — sound is not well directed. Consider acoustic treatment or more speakers.</div>';
+  }
+  if (st.rt60 > 1.5 && room.type !== 'hall' && room.type !== 'mosque'){
+    html += '<div style="background:#3a0f0f;border-left:3px solid var(--bad);padding:6px 8px;border-radius:4px;font-size:10.5px;margin-top:6px;color:#fca5a5">';
+    html += '⚠️ Long RT60 (' + st.rt60.toFixed(2) + ' s) — may harm speech intelligibility.</div>';
+  }
+  panel.innerHTML = html;
+}
+
+/* ═══════════ UI Rendering ═══════════ */
 function renderBuildingTabs(){
-  var html='';
+  var el = $('buildingTabs');
+  if (!el) return;
+  var html = '';
   project.buildings.forEach(function(b){
-    var active=b.id===activeBuildingId?' active':'';
-    var cnt=floorsOfBuilding(b.id).length;
-    html+='<button class="tab bld'+active+'" onclick="selectBuilding('+b.id+')">🏢 '+b.name+' <span class="cnt">'+cnt+'</span>';
-    if (project.buildings.length>1) html+='<span class="del" onclick="event.stopPropagation();removeBuilding('+b.id+')">✕</span>';
-    html+='</button>';
+    var active = (b.id === activeBuildingId) ? ' active' : '';
+    var cnt = project.floors.filter(function(f){ return f.buildingId === b.id; }).length;
+    html += '<button type="button" class="tab bld' + active + '" data-action="select-bld" data-bid="' + b.id + '">';
+    html += '🏢 ' + b.name + ' <span class="cnt">' + cnt + '</span>';
+    if (project.buildings.length > 1){
+      html += '<span class="del" data-action="del-bld" data-bid="' + b.id + '">✕</span>';
+    }
+    html += '</button>';
   });
-  html+='<button class="tab add" onclick="addBuilding()">➕ Building</button>';
-  $('buildingTabs').innerHTML=html;
+  html += '<button type="button" class="tab add" data-action="add-bld">➕ Building</button>';
+  el.innerHTML = html;
+  if (!el._listenerAttached){
+    el._listenerAttached = true;
+    el.addEventListener('click', function(ev){
+      var target = ev.target.closest('[data-action]');
+      if (!target) return;
+      ev.preventDefault();
+      var action = target.getAttribute('data-action');
+      if (action === 'select-bld') selectBuilding(parseInt(target.getAttribute('data-bid'), 10));
+      else if (action === 'del-bld'){ ev.stopPropagation(); removeBuilding(parseInt(target.getAttribute('data-bid'), 10)); }
+      else if (action === 'add-bld') addBuilding();
+    });
+  }
 }
 function renderFloorTabs(){
-  var fls=activeBuildingFloors(); var html='';
+  var el = $('floorTabs');
+  if (!el) return;
+  var fls = project.floors.filter(function(f){ return f.buildingId === activeBuildingId; });
+  var html = '';
   fls.forEach(function(f){
-    var idx=project.floors.indexOf(f);
-    var active=idx===activeFloorIdx?' active':'';
-    html+='<button class="tab'+active+'" onclick="selectFloor('+idx+')">'+f.name+' <span class="cnt">'+f.rooms.length+'</span>';
-    if (fls.length>1) html+='<span class="del" onclick="event.stopPropagation();removeFloor('+idx+')">✕</span>';
-    html+='</button>';
+    var idx = project.floors.indexOf(f);
+    var active = (idx === activeFloorIdx) ? ' active' : '';
+    html += '<button type="button" class="tab' + active + '" data-action="select-fl" data-fidx="' + idx + '">';
+    html += '📍 ' + f.name;
+    html += ' <span class="cnt">' + (f.rooms ? f.rooms.length : 0) + '</span>';
+    if (fls.length > 1){
+      html += '<span class="del" data-action="del-fl" data-fidx="' + idx + '">✕</span>';
+    }
+    html += '</button>';
   });
-  html+='<button class="tab add" onclick="addFloor()">➕ Floor</button>';
-  $('floorTabs').innerHTML=html;
+  html += '<button type="button" class="tab add" data-action="add-fl">➕ Floor</button>';
+  el.innerHTML = html;
+  if (!el._listenerAttached){
+    el._listenerAttached = true;
+    el.addEventListener('click', function(ev){
+      var target = ev.target.closest('[data-action]');
+      if (!target) return;
+      ev.preventDefault();
+      var action = target.getAttribute('data-action');
+      if (action === 'select-fl') selectFloor(parseInt(target.getAttribute('data-fidx'), 10));
+      else if (action === 'del-fl'){ ev.stopPropagation(); removeFloor(parseInt(target.getAttribute('data-fidx'), 10)); }
+      else if (action === 'add-fl') addFloor();
+    });
+  }
 }
 function renderFloorsPanel(){
   var fls=activeBuildingFloors(); var html='';
@@ -1727,7 +2104,7 @@ function renderFloorsPanel(){
     html+='</div>';
   });
   html+='<div style="display:flex;gap:6px;margin-top:8px">';
-  html+='<button class="btn-mini" style="flex:1;min-height:34px" onclick="addFloor()">➕ Add</button>';
+  html+='<button class="btn-mini" style="flex:1;min-height:34px" onclick="addFloor()">➕ Floor</button>';
   html+='<button class="btn-mini" style="flex:1;min-height:34px" onclick="addMultipleFloors()">➕➕ Multiple</button>';
   html+='</div>';
   $('floorsPanel').innerHTML=html;
@@ -1737,11 +2114,11 @@ function renderLayersPanel(){
     {k:'walls',label:'Walls',icon:'🧱'},{k:'doors',label:'Doors & Exits',icon:'🚪'},
     {k:'furniture',label:'Furniture',icon:'🪑'},{k:'hvac',label:'HVAC',icon:'❄️'},
     {k:'lights',label:'Lighting',icon:'💡'},{k:'cctv',label:'CCTV',icon:'📹'},
-    {k:'fire',label:'Fire Detection',icon:'🔥'},{k:'grid',label:'Grid',icon:'▦'},
-    {k:'labels',label:'Room Labels',icon:'🏷️'},{k:'dims',label:'Dimensions',icon:'📏'},
+    {k:'fire',label:'Fire',icon:'🔥'},{k:'grid',label:'Grid',icon:'▦'},
+    {k:'labels',label:'Room Names',icon:'🏷️'},{k:'dims',label:'Dimensions',icon:'📏'},
     {k:'cover',label:'Coverage',icon:'🌐'},{k:'heat',label:'SPL Heatmap',icon:'🌡️'},
     {k:'speakers',label:'Speakers',icon:'🔊'},{k:'guides',label:'Guides',icon:'📐'},
-    {k:'north',label:'North Compass',icon:'🧭'}
+    {k:'north',label:'Compass',icon:'🧭'}
   ];
   var html='';
   defs.forEach(function(d){
@@ -1781,7 +2158,21 @@ function renderRoomsList(){
   });
   $('roomsList').innerHTML=html;
 }
-function selectRoom(id){ activeRoomId=id; renderRoomsList(); renderRoomEditor(); draw(); }
+function selectRoom(id){
+  activeRoomId = id;
+  placeMode = false;
+  updatePlaceBtnUI();
+  renderRoomsList(); renderRoomEditor(); renderRoomSpeakersList(); renderRoomAcousticsPanel();
+  draw();
+  var ed = $('roomEditor');
+  if (ed){
+    ed.classList.remove('highlight');
+    void ed.offsetWidth;
+    ed.classList.add('highlight');
+    setTimeout(function(){ ed.classList.remove('highlight'); }, 1300);
+    try { ed.scrollIntoView({behavior:'smooth', block:'nearest'}); } catch(e){}
+  }
+}
 function renderRoomEditor(){
   var ed=$('roomEditor');
   if (activeRoomId==null){ ed.style.display='none'; return; }
@@ -1799,6 +2190,7 @@ function renderRoomEditor(){
   $('editRoomL').value=r.L; $('editRoomW').value=r.W;
   $('editRoomH').value=r.height; $('editRoomAmbient').value=r.ambient;
   $('editRoomTarget').value=r.target; $('editRoomAbsorb').value=String(r.absorb);
+  renderRoomSpeakersList();
 }
 function renderZones(){
   var html='';
@@ -1836,8 +2228,10 @@ function renderCircuits(){
   $('circuitsList').innerHTML=html;
 }
 function renderAll(){
-  renderBuildingTabs(); renderFloorTabs(); renderFloorsPanel(); renderLayersPanel();
+  renderBuildingTabs(); renderFloorTabs(); renderQuickNav();
+  renderFloorsPanel(); renderLayersPanel();
   renderRoomsList(); renderRoomEditor(); renderZones(); renderCircuits();
+  renderRoomSpeakersList(); renderRoomAcousticsPanel();
   calculateAll(); computeBaseScale(); draw();
 }
 
@@ -1932,7 +2326,8 @@ function setTool(t){
   currentTool=t;
   $('toolSelect').classList.toggle('on',t==='select');
   $('toolPan').classList.toggle('on',t==='pan');
-  cv.className=t==='pan'?'tool-pan':'';
+  if (t==='pan' && placeMode){ placeMode=false; updatePlaceBtnUI(); }
+  cv.className=t==='pan'?'tool-pan':(placeMode?'place-mode':'');
 }
 cv.addEventListener('wheel',function(e){ e.preventDefault(); var p=pointerPos(e); zoomAt(p.mx,p.my,e.deltaY<0?1.15:1/1.15); },{passive:false});
 cv.addEventListener('pointerdown',function(e){
@@ -1954,10 +2349,11 @@ cv.addEventListener('pointerdown',function(e){
   var item=hitAnyRoomItem(p.mx,p.my);
   var zone=hitRoomZone(p.mx,p.my);
   if (sIdx>=0){
-    dragMode='speaker'; var s=project.speakers[sIdx];
-    if (s.roomId!==activeRoomId) activeRoomId=s.roomId;
+    dragMode='speaker';
+    var s=project.speakers[sIdx];
+    if (s.roomId!==activeRoomId){ activeRoomId=s.roomId; renderRoomsList(); renderRoomEditor(); renderRoomAcousticsPanel(); }
     selIdx=sIdx;
-    renderRoomsList(); renderRoomEditor(); draw();
+    renderRoomSpeakersList(); draw();
     if (e.pointerType==='touch'){
       longPressTimer=setTimeout(function(){ longPressFired=true; showSpeakerMenu(e.clientX,e.clientY,sIdx); },550);
     }
@@ -1968,6 +2364,16 @@ cv.addEventListener('pointerdown',function(e){
     return;
   }
   if (zone){
+    if (placeMode && zone.type==='interior'){
+      var eff=effScale(); var r=zone.room; var roomP=w2s(r.x,r.y);
+      var rx=(p.mx-roomP.x)/(r.L*eff); var ry=(p.y)/(r.W*eff);
+      var sn=snapInRoom(r,rx,ry);
+      project.speakers.push({roomId:r.id,rx:sn.rx,ry:sn.ry,zoneId:activeZone,circuitId:activeCircuit});
+      selIdx=project.speakers.length-1;
+      calculateAll(); pushHistory(); renderRoomSpeakersList(); renderRoomAcousticsPanel();
+      if (navigator.vibrate) navigator.vibrate(15);
+      return;
+    }
     if (zone.type==='corner'&&zone.room.id===activeRoomId){
       dragMode='resize';
       roomDrag={room:zone.room,corner:zone.corner,orig:Object.assign({},zone.room),startP:{mx:p.mx,my:p.my}};
@@ -1978,7 +2384,9 @@ cv.addEventListener('pointerdown',function(e){
       roomDrag={room:zone.room,corner:zone.corner,orig:Object.assign({},zone.room),startP:{mx:p.mx,my:p.my}}; return;
     }
     if (zone.room.id!==activeRoomId){
-      activeRoomId=zone.room.id; renderRoomsList(); renderRoomEditor(); draw(); return;
+      activeRoomId=zone.room.id;
+      placeMode=false; updatePlaceBtnUI();
+      renderRoomsList(); renderRoomEditor(); renderRoomAcousticsPanel(); draw(); return;
     }
     if (zone.type==='edge'){
       dragMode='room';
@@ -1986,13 +2394,8 @@ cv.addEventListener('pointerdown',function(e){
       cv.className='room-move'; return;
     }
     if (zone.type==='interior'){
-      var eff=effScale(); var r=zone.room; var roomP=w2s(r.x,r.y);
-      var rx=(p.mx-roomP.x)/(r.L*eff); var ry=(p.my-roomP.y)/(r.W*eff);
-      var sn=snapInRoom(r,rx,ry);
-      project.speakers.push({roomId:r.id,rx:sn.rx,ry:sn.ry,zoneId:activeZone,circuitId:activeCircuit});
-      selIdx=project.speakers.length-1;
-      calculateAll(); pushHistory();
-      if (navigator.vibrate) navigator.vibrate(15);
+      selIdx = -1;
+      renderRoomSpeakersList(); draw();
       return;
     }
   }
@@ -2020,7 +2423,8 @@ cv.addEventListener('pointermove',function(e){
     else if (zone&&zone.type==='corner'&&zone.room.id===activeRoomId) cv.className='room-'+zone.corner;
     else if (zone&&zone.type==='midresize'&&zone.room.id===activeRoomId) cv.className='room-'+zone.corner;
     else if (zone&&zone.type==='edge'&&zone.room.id===activeRoomId) cv.className='room-move';
-    else cv.className='';
+    else if (placeMode && zone && zone.type==='interior') cv.className='place-mode';
+    else cv.className=placeMode?'place-mode':'';
     return;
   }
   if (longPressFired) return;
@@ -2082,8 +2486,8 @@ function endPointer(e){
   clearTimeout(longPressTimer);
   if (dragMode==='speaker'&&!longPressFired){
     if (isDragging){ calculateAll(); pushHistory(); }
-    dragMode=null; selIdx=-1;
-    cv.className=currentTool==='pan'?'tool-pan':'';
+    dragMode=null;
+    cv.className=currentTool==='pan'?'tool-pan':(placeMode?'place-mode':'');
     draw(); return;
   }
   if (dragMode==='room'){
@@ -2092,7 +2496,7 @@ function endPointer(e){
     if (roomOverlaps(r,others)){ r.x=roomDrag.orig.x; r.y=roomDrag.orig.y; toast('⚠️ Overlap'); }
     else pushHistory();
     roomDrag=null; guides=null;
-    cv.className=currentTool==='pan'?'tool-pan':'';
+    cv.className=currentTool==='pan'?'tool-pan':(placeMode?'place-mode':'');
     renderRoomEditor(); renderRoomsList(); draw();
     dragMode=null; return;
   }
@@ -2105,13 +2509,13 @@ function endPointer(e){
       toast('⚠️ Overlap');
     } else pushHistory();
     roomDrag=null; guides=null;
-    cv.className=currentTool==='pan'?'tool-pan':'';
+    cv.className=currentTool==='pan'?'tool-pan':(placeMode?'place-mode':'');
     renderRoomEditor(); renderRoomsList(); draw();
     dragMode=null; return;
   }
   if (dragMode==='pan'){ cv.classList.remove('panning'); dragMode=null; return; }
   dragMode=null;
-  if (currentTool!=='pan') cv.className='';
+  if (currentTool!=='pan') cv.className=placeMode?'place-mode':'';
 }
 cv.addEventListener('pointerup',endPointer,{passive:true});
 cv.addEventListener('pointercancel',endPointer,{passive:true});
@@ -2134,13 +2538,14 @@ function showSpeakerMenu(cx,cy,sIdx){
   var menu=$('ctxMenu');
   if (navigator.vibrate) navigator.vibrate(30);
   var html='<div class="title">🔊 Speaker</div>';
-  html+='<button onclick="ctxMoveZone('+sIdx+')">🎯 Move to Zone</button>';
-  html+='<button onclick="ctxMoveCircuit('+sIdx+')">⚡ Move to Circuit</button>';
+  html+='<button onclick="ctxMoveZone('+sIdx+')">🎯 Move to zone</button>';
+  html+='<button onclick="ctxMoveCircuit('+sIdx+')">⚡ Move to circuit</button>';
+  html+='<button onclick="ctxHighlight('+sIdx+')">📍 Highlight in list</button>';
   html+='<div class="divider"></div>';
   html+='<button class="danger" onclick="ctxDelete('+sIdx+')">🗑️ Delete</button>';
   menu.innerHTML=html; menu.style.display='block';
   menu.style.left=Math.min(cx,window.innerWidth-220)+'px';
-  menu.style.top=Math.min(cy,window.innerHeight-260)+'px';
+  menu.style.top=Math.min(cy,window.innerHeight-280)+'px';
   setTimeout(function(){ document.addEventListener('pointerdown',closeCtxOnce,{once:true}); },50);
 }
 function showItemMenu(cx,cy,item){
@@ -2160,15 +2565,15 @@ function showRoomMenu(cx,cy){
   var menu=$('ctxMenu');
   var room=getRoomById(activeRoomId); if (!room) return;
   var html='<div class="title">🚪 '+room.name+'</div>';
-  html+='<button onclick="openAddMenu(\'furniture\')">🪑 Add Furniture</button>';
+  html+='<button onclick="openAddMenu(\'furniture\')">🪑 Add furniture</button>';
   html+='<button onclick="openAddMenu(\'hvac\')">❄️ Add HVAC</button>';
-  html+='<button onclick="openAddMenu(\'lights\')">💡 Add Light</button>';
-  html+='<button onclick="openAddMenu(\'cctv\')">📹 Add Camera</button>';
-  html+='<button onclick="openAddMenu(\'fire\')">🔥 Add Detector</button>';
-  html+='<button onclick="openAddDoorMenu()">🚪 Add Door</button>';
+  html+='<button onclick="openAddMenu(\'lights\')">💡 Add lighting</button>';
+  html+='<button onclick="openAddMenu(\'cctv\')">📹 Add camera</button>';
+  html+='<button onclick="openAddMenu(\'fire\')">🔥 Add detector</button>';
+  html+='<button onclick="openAddDoorMenu()">🚪 Add door</button>';
   html+='<div class="divider"></div>';
-  html+='<button onclick="regenRoomFurniture()">🔄 Regenerate All</button>';
-  html+='<button class="danger" onclick="deleteRoom()">🗑️ Delete Room</button>';
+  html+='<button onclick="regenRoomFurniture()">🔄 Regenerate all</button>';
+  html+='<button class="danger" onclick="deleteRoom()">🗑️ Delete room</button>';
   menu.innerHTML=html; menu.style.display='block';
   menu.style.left=Math.min(cx,window.innerWidth-240)+'px';
   menu.style.top=Math.min(cy,window.innerHeight-360)+'px';
@@ -2182,7 +2587,7 @@ function openAddMenu(kind){
   else if (kind==='hvac'){ lib=HVAC_LIB; title='❄️ HVAC'; }
   else if (kind==='lights'){ lib=LIGHTS_LIB; title='💡 Lighting'; }
   else if (kind==='cctv'){ lib=CCTV_LIB; title='📹 Cameras'; }
-  else if (kind==='fire'){ lib=FIRE_LIB; title='🔥 Fire Detection'; }
+  else if (kind==='fire'){ lib=FIRE_LIB; title='🔥 Fire'; }
   var html='<div class="title">'+title+'</div>';
   Object.keys(lib).forEach(function(k){ html+='<button onclick="addItem(\''+kind+'\',\''+k+'\')">'+lib[k].name+'</button>'; });
   menu.innerHTML=html; menu.style.display='block';
@@ -2192,11 +2597,11 @@ function openAddMenu(kind){
 function openAddDoorMenu(){
   $('ctxMenu').style.display='none';
   var menu=$('ctxMenu');
-  var html='<div class="title">🚪 Door Type</div>';
-  html+='<button onclick="addDoorItem(\'normal\')">🚪 Normal Door (0.9m)</button>';
-  html+='<button onclick="addDoorItem(\'double\')">🚪🚪 Double Door (1.8m)</button>';
-  html+='<button onclick="addDoorItem(\'sliding\')">↔️ Sliding Door</button>';
-  html+='<button onclick="addDoorItem(\'exit\')">🚨 Emergency Exit</button>';
+  var html='<div class="title">🚪 Choose door type</div>';
+  html+='<button onclick="addDoorItem(\'normal\')">🚪 Standard door (0.9m)</button>';
+  html+='<button onclick="addDoorItem(\'double\')">🚪🚪 Double door (1.8m)</button>';
+  html+='<button onclick="addDoorItem(\'sliding\')">↔️ Sliding door</button>';
+  html+='<button onclick="addDoorItem(\'exit\')">🚨 Emergency exit</button>';
   menu.innerHTML=html; menu.style.display='block';
   menu.style.left=(window.innerWidth/2-110)+'px'; menu.style.top='60px';
   setTimeout(function(){ document.addEventListener('pointerdown',closeCtxOnce,{once:true}); },50);
@@ -2233,36 +2638,39 @@ function deleteItem(libKey,roomId,idx){
   pushHistory(); draw(); $('ctxMenu').style.display='none';
 }
 function closeCtxOnce(e){ if (!e.target.closest('.ctx-menu')) $('ctxMenu').style.display='none'; }
-function ctxDelete(i){ project.speakers.splice(i,1); calculateAll(); pushHistory(); $('ctxMenu').style.display='none'; }
+function ctxDelete(i){ project.speakers.splice(i,1); selIdx=-1; calculateAll(); pushHistory(); renderRoomSpeakersList(); renderRoomAcousticsPanel(); $('ctxMenu').style.display='none'; }
+function ctxHighlight(i){ selIdx=i; renderRoomSpeakersList(); draw(); $('ctxMenu').style.display='none'; toast('🎯 Highlighted in list'); }
 function ctxMoveZone(i){
   var s=project.speakers[i];
   var opts=project.zones.map(function(z,k){return (k+1)+') '+z.name;}).join('\n');
   var n=parseInt(prompt('Zone number:\n'+opts,'1'),10);
-  if (n>=1&&n<=project.zones.length){ s.zoneId=project.zones[n-1].id; calculateAll(); pushHistory(); }
+  if (n>=1&&n<=project.zones.length){ s.zoneId=project.zones[n-1].id; calculateAll(); pushHistory(); renderRoomSpeakersList(); }
   $('ctxMenu').style.display='none';
 }
 function ctxMoveCircuit(i){
   var s=project.speakers[i];
   var opts=project.circuits.map(function(c,k){return (k+1)+') '+c.name;}).join('\n');
   var n=parseInt(prompt('Circuit number:\n'+opts,'1'),10);
-  if (n>=1&&n<=project.circuits.length){ s.circuitId=project.circuits[n-1].id; calculateAll(); pushHistory(); }
+  if (n>=1&&n<=project.circuits.length){ s.circuitId=project.circuits[n-1].id; calculateAll(); pushHistory(); renderRoomSpeakersList(); }
   $('ctxMenu').style.display='none';
 }
 
-/* ═══════════ Undo/Redo ═══════════ */
-var history=[],historyIdx=-1;
+/* ═══════════ Undo/Redo — ⚠️ _undoStack name avoids window.history conflict ═══════════ */
+var _undoStack = [];
+var historyIdx = -1;
 function snapshot(){
   return JSON.stringify({buildings:project.buildings,floors:project.floors,speakers:project.speakers,zones:project.zones,circuits:project.circuits,activeBuildingId:activeBuildingId,activeFloorIdx:activeFloorIdx,activeZone:activeZone,activeCircuit:activeCircuit,layers:layers});
 }
 function pushHistory(){
   var s=snapshot();
-  if (historyIdx>=0&&history[historyIdx]===s) return;
-  history=history.slice(0,historyIdx+1); history.push(s);
-  if (history.length>50) history.shift();
-  historyIdx=history.length-1;
+  if (historyIdx>=0 && _undoStack[historyIdx]===s) return;
+  _undoStack = _undoStack.slice(0, historyIdx+1);
+  _undoStack.push(s);
+  if (_undoStack.length > 50) _undoStack.shift();
+  historyIdx = _undoStack.length - 1;
 }
 function restoreHistory(){
-  var s=JSON.parse(history[historyIdx]);
+  var s = JSON.parse(_undoStack[historyIdx]);
   project.buildings=s.buildings; project.floors=s.floors;
   project.speakers=s.speakers; project.zones=s.zones; project.circuits=s.circuits;
   activeBuildingId=s.activeBuildingId; activeFloorIdx=s.activeFloorIdx;
@@ -2270,30 +2678,31 @@ function restoreHistory(){
   if (s.layers) layers=s.layers;
   renderAll();
 }
-function undo(){ if (historyIdx>0){ historyIdx--; restoreHistory(); toast('↶ Undo'); } else toast('Nothing to undo'); }
-function redo(){ if (historyIdx<history.length-1){ historyIdx++; restoreHistory(); toast('↷ Redo'); } else toast('Nothing to redo'); }
+function undo(){ if (historyIdx>0){ historyIdx--; restoreHistory(); toast('↶'); } else toast('Nothing to undo'); }
+function redo(){ if (historyIdx < _undoStack.length-1){ historyIdx++; restoreHistory(); toast('↷'); } else toast('Nothing to redo'); }
 document.addEventListener('keydown',function(e){
   if (e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
   if ((e.ctrlKey||e.metaKey)&&e.key==='z'&&!e.shiftKey){ e.preventDefault(); undo(); }
   else if ((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.key==='z'&&e.shiftKey))){ e.preventDefault(); redo(); }
-  else if (e.key==='Delete'&&selIdx>=0){ project.speakers.splice(selIdx,1); selIdx=-1; calculateAll(); pushHistory(); }
-  else if (e.key==='Escape'){ $('ctxMenu').style.display='none'; closeReport(); }
+  else if (e.key==='Delete'&&selIdx>=0){ project.speakers.splice(selIdx,1); selIdx=-1; calculateAll(); pushHistory(); renderRoomSpeakersList(); renderRoomAcousticsPanel(); }
+  else if (e.key==='Escape'){ $('ctxMenu').style.display='none'; closeReport(); if (placeMode){ placeMode=false; updatePlaceBtnUI(); } }
   else if (e.key==='0'){ fitToView(); }
   else if (e.key==='+'||e.key==='='){ zoomIn(); }
   else if (e.key==='-'){ zoomOut(); }
+  else if (e.key==='p'||e.key==='P'){ togglePlaceMode(); }
   else if (e.key===' '){ e.preventDefault(); setTool('pan'); }
 });
 document.addEventListener('keyup',function(e){ if (e.key===' ') setTool('select'); });
 
 /* ═══════════ Save/Load ═══════════ */
-var STORAGE_KEY='motiviti_en_v51';
+var STORAGE_KEY='motiviti_v55';
 function projectData(){
-  return {version:5.1,name:$('projName').value,buildings:project.buildings,floors:project.floors,speakers:project.speakers,zones:project.zones,circuits:project.circuits,activeBuildingId:activeBuildingId,activeFloorIdx:activeFloorIdx,activeZone:activeZone,activeCircuit:activeCircuit,layers:layers,model:$('modelSelect').value,tap:$('tapSelect').value,cableGauge:$('cableGauge').value,savedAt:new Date().toISOString()};
+  return {version:5.5,name:$('projName').value,buildings:project.buildings,floors:project.floors,speakers:project.speakers,zones:project.zones,circuits:project.circuits,activeBuildingId:activeBuildingId,activeFloorIdx:activeFloorIdx,activeZone:activeZone,activeCircuit:activeCircuit,layers:layers,model:$('modelSelect').value,tap:$('tapSelect').value,cableGauge:$('cableGauge').value,savedAt:new Date().toISOString()};
 }
-function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(projectData())); toast('💾 Saved'); }catch(e){ toast('⚠️ Failed'); } }
-function loadLocal(){ var raw=localStorage.getItem(STORAGE_KEY); if (!raw){ toast('Nothing saved'); return; } try{ applyProject(JSON.parse(raw)); toast('📂 Loaded'); }catch(e){ toast('⚠️ Failed'); } }
+function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(projectData())); toast('💾'); }catch(e){ toast('⚠️'); } }
+function loadLocal(){ var raw=localStorage.getItem(STORAGE_KEY); if (!raw){ toast('Nothing saved'); return; } try{ applyProject(JSON.parse(raw)); toast('📂'); }catch(e){ toast('⚠️'); } }
 function exportJSON(){ var blob=new Blob([JSON.stringify(projectData(),null,2)],{type:'application/json'}); var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download=($('projName').value||'project').replace(/\s+/g,'_')+'.json'; a.click(); setTimeout(function(){ URL.revokeObjectURL(url); },1000); }
-function importJSON(e){ var f=e.target.files[0]; if (!f) return; var r=new FileReader(); r.onload=function(ev){ try{ applyProject(JSON.parse(ev.target.result)); toast('📥 Imported'); fitToView(); }catch(err){ toast('⚠️ Invalid file'); } }; r.readAsText(f); e.target.value=''; }
+function importJSON(e){ var f=e.target.files[0]; if (!f) return; var r=new FileReader(); r.onload=function(ev){ try{ applyProject(JSON.parse(ev.target.result)); toast('📥'); fitToView(); }catch(err){ toast('⚠️ Invalid file'); } }; r.readAsText(f); e.target.value=''; }
 function applyProject(p){
   if (!p||!(p.version>=3)) throw new Error('unsupported');
   $('projName').value=p.name||'Project';
@@ -2322,7 +2731,7 @@ function applyProject(p){
   if (p.model) $('modelSelect').value=p.model;
   if (p.tap) $('tapSelect').value=p.tap;
   if (p.cableGauge) $('cableGauge').value=p.cableGauge;
-  history=[]; historyIdx=-1; pushHistory();
+  _undoStack=[]; historyIdx=-1; pushHistory();
   renderAll(); fitToView();
 }
 
@@ -2341,13 +2750,14 @@ function closeReport(){ $('report').style.display='none'; }
 /* ═══════════ Templates ═══════════ */
 function loadTemplate(key){
   if (!key) return;
-  if (!confirm('Replace current project?')){ $('templateSelect').value=''; return; }
+  if (!confirm('Replace the current project?')){ $('templateSelect').value=''; return; }
   _uid=1;
   project.buildings=[createBuilding('Main Building')];
   project.floors=[]; project.speakers=[];
   project.zones=[{id:0,name:'Main Zone',color:ZONE_COLORS[0]}];
   project.circuits=[{id:0,name:'Circuit 1',ampIdx:1,cableLen:80}];
   activeZone=0; activeCircuit=0; activeRoomId=null;
+  placeMode=false;
   var bid=project.buildings[0].id;
   if (key==='empty') project.floors.push(createFloor('Floor 1',bid,3.5,1));
   else if (key==='hotel') buildHotel(bid);
@@ -2360,7 +2770,7 @@ function loadTemplate(key){
   activeBuildingId=bid; activeFloorIdx=0;
   project.floors.forEach(function(f){ f.rooms.forEach(autoDistRoom); });
   pushHistory(); renderAll(); fitToView();
-  toast('✅ Template loaded');
+  toast('✅ Done');
   $('templateSelect').value='';
 }
 function buildHotel(bid){
@@ -2373,7 +2783,7 @@ function buildHotel(bid){
   g.rooms.push(createRoom('Restrooms','wc',0,15.5,6,3,3.5));
   project.floors.push(g);
   for(var fl=1;fl<=2;fl++){
-    var f=createFloor('Floor '+fl,bid,3.2,fl);
+    var f=createFloor('Floor '+(fl===1?'1':'2'),bid,3.2,fl);
     f.rooms.push(createRoom('Corridor '+fl,'corridor',0,0,26,2.5,3.2));
     for(var i=0;i<6;i++) f.rooms.push(createRoom('Room '+(fl*100+i+1),'guestroom',i*4.3,2.8,4,6,3.2));
     f.rooms.push(createRoom('Suite '+fl,'suite',27,0,8,8,3.2));
@@ -2397,7 +2807,7 @@ function buildHospital(bid){
   project.floors.push(f1);
   var f2=createFloor('Wards Floor',bid,3.5,2);
   f2.rooms.push(createRoom('Corridor','corridor',0,0,25,2.5,3.5));
-  for(var i=0;i<6;i++) f2.rooms.push(createRoom('Ward '+(i+1),'guestroom',i*4.2,2.8,4,6,3.5));
+  for(var i=0;i<6;i++) f2.rooms.push(createRoom('Room '+(i+1),'guestroom',i*4.2,2.8,4,6,3.5));
   project.floors.push(f2);
 }
 function buildSchool(bid){
@@ -2408,10 +2818,10 @@ function buildSchool(bid){
   g.rooms.push(createRoom('Class 2','classroom',11.8,2.8,5,6,4));
   g.rooms.push(createRoom('Class 3','classroom',17.1,2.8,5,6,4));
   g.rooms.push(createRoom('Class 4','classroom',22.4,2.8,5,6,4));
-  g.rooms.push(createRoom('Lab','lab',0,6.5,8,6,4));
-  g.rooms.push(createRoom('Office','office',0,13,6,5,4));
+  g.rooms.push(createRoom('Laboratory','lab',0,6.5,8,6,4));
+  g.rooms.push(createRoom('Administration','office',0,13,6,5,4));
   project.floors.push(g);
-  var f1=createFloor('Floor 2',bid,3.5,1);
+  var f1=createFloor('First Floor',bid,3.5,1);
   f1.rooms.push(createRoom('Corridor','corridor',0,0,26,2.5,3.5));
   for(var i=0;i<5;i++) f1.rooms.push(createRoom('Class '+(i+5),'classroom',i*5.2,2.8,5,6,3.5));
   project.floors.push(f1);
@@ -2458,156 +2868,316 @@ function buildTower(bid){
   }
 }
 
-/* ═══════════ Floor Image Capture ═══════════ */
+/* ═══════════════════════════════════════════════════════════════
+   Floor Image Capture for Report
+   ═══════════════════════════════════════════════════════════════ */
 function captureFloorImage(floorIdx){
-  var oldIdx=activeFloorIdx;
-  var oldZoom=view.zoom,oldPanX=view.panX,oldPanY=view.panY;
-  var oldBase=baseScale;
-  var oldCv=cv,oldCtx=ctx,oldCW=canvasW,oldCH=canvasH;
-  activeFloorIdx=floorIdx;
-  var f=project.floors[floorIdx];
-  if (!f||!f.rooms.length){ activeFloorIdx=oldIdx; return null; }
-  var b=floorBounds(f);
-  var pad=100;
-  var maxW=1400;
-  var targetW=Math.min(maxW,Math.max(600,b.w*35+pad*2));
-  var targetH=Math.round(targetW*(b.h/b.w));
-  if (targetH>1000){ targetH=1000; targetW=Math.round(1000*(b.w/b.h))+pad*2; }
-  targetH+=pad;
-  var tempCv=document.createElement('canvas');
-  var dpr=2;
-  tempCv.width=Math.round(targetW*dpr);
-  tempCv.height=Math.round(targetH*dpr);
-  var tempCtx=tempCv.getContext('2d');
-  tempCtx.setTransform(dpr,0,0,dpr,0,0);
-  cv=tempCv; ctx=tempCtx;
-  canvasW=targetW; canvasH=targetH;
-  var eff=Math.min((targetW-pad*2)/b.w,(targetH-pad*2)/b.h);
-  eff=Math.min(eff,100);
-  baseScale=eff;
-  view.zoom=1;
-  view.panX=(targetW-b.w*eff)/2;
-  view.panY=(targetH-b.h*eff)/2;
+  var oldIdx = activeFloorIdx;
+  var oldZoom = view.zoom, oldPanX = view.panX, oldPanY = view.panY;
+  var oldBase = baseScale;
+  var oldCv = cv, oldCtx = ctx, oldCW = canvasW, oldCH = canvasH;
+  var oldPlace = placeMode;
+  placeMode = false;
+  activeFloorIdx = floorIdx;
+  var f = project.floors[floorIdx];
+  if (!f || !f.rooms.length){ activeFloorIdx = oldIdx; placeMode = oldPlace; return null; }
+  var b = floorBounds(f);
+  var pad = 100;
+  var maxW = 1400;
+  var targetW = Math.min(maxW, Math.max(600, b.w * 35 + pad * 2));
+  var targetH = Math.round(targetW * (b.h / b.w));
+  if (targetH > 1000){ targetH = 1000; targetW = Math.round(1000 * (b.w / b.h)) + pad * 2; }
+  targetH += pad;
+  var tempCv = document.createElement('canvas');
+  var dpr = 2;
+  tempCv.width = Math.round(targetW * dpr);
+  tempCv.height = Math.round(targetH * dpr);
+  var tempCtx = tempCv.getContext('2d');
+  tempCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cv = tempCv; ctx = tempCtx;
+  canvasW = targetW; canvasH = targetH;
+  var eff = Math.min((targetW - pad * 2) / b.w, (targetH - pad * 2) / b.h);
+  eff = Math.min(eff, 100);
+  baseScale = eff;
+  view.zoom = 1;
+  view.panX = (targetW - b.w * eff) / 2;
+  view.panY = (targetH - b.h * eff) / 2;
   try { draw(); } catch(e){ console.error(e); }
-  var url=tempCv.toDataURL('image/png');
-  cv=oldCv; ctx=oldCtx;
-  canvasW=oldCW; canvasH=oldCH;
-  activeFloorIdx=oldIdx;
-  view.zoom=oldZoom; view.panX=oldPanX; view.panY=oldPanY;
-  baseScale=oldBase;
+  var url = tempCv.toDataURL('image/png');
+  cv = oldCv; ctx = oldCtx;
+  canvasW = oldCW; canvasH = oldCH;
+  activeFloorIdx = oldIdx;
+  view.zoom = oldZoom; view.panX = oldPanX; view.panY = oldPanY;
+  baseScale = oldBase;
+  placeMode = oldPlace;
   try { draw(); } catch(e){}
   return url;
 }
 
-/* ═══════════ Report ═══════════ */
-function generateReport(){
-  if (!project.speakers.length){ toast('⚠️ No speakers'); return; }
-  var totalSpk=project.speakers.length;
-  var totalW=totalSpk*getWatt();
-  var today=new Date().toLocaleDateString('en-US');
-  $('repMeta').innerHTML='<b>'+$('projName').value+'</b><br>Date: '+today+'<br>Ref: MOT-ENG-2026-v5.1';
-  var html='';
-  html+='<h2>1. Executive Summary</h2>';
-  html+='<div class="kpi-cards">';
-  html+='<div class="kpi-card"><div class="n">'+project.buildings.length+'</div><div class="l">Buildings</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+project.floors.length+'</div><div class="l">Floors</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+project.floors.reduce(function(a,f){return a+f.rooms.length;},0)+'</div><div class="l">Rooms</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+totalSpk+'</div><div class="l">Speakers</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+totalW.toFixed(0)+'</div><div class="l">Total Watts</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+project.zones.length+'</div><div class="l">Zones</div></div>';
-  html+='<div class="kpi-card"><div class="n">'+project.circuits.length+'</div><div class="l">Circuits</div></div>';
-  html+='<div class="kpi-card"><div class="n" style="font-size:12px">'+$('modelSelect').value+'</div><div class="l">Model</div></div>';
-  html+='</div>';
-  html+='<h2>2. Architectural Drawings (All Floors)</h2>';
-  project.buildings.forEach(function(b){
-    var bFloors=floorsOfBuilding(b.id);
-    if (!bFloors.length) return;
-    html+='<h3>🏢 '+b.name+'</h3>';
-    bFloors.forEach(function(f){
-      var fidx=project.floors.indexOf(f);
-      var img=captureFloorImage(fidx);
-      var spkCount=spkInFloor(f).length;
-      html+='<div class="floor-section">';
-      html+='<div style="background:#1a1a1a;color:#fff;padding:8px 12px;font-weight:800;font-size:12.5px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between">';
-      html+='<span>📍 '+f.name+' — Height '+f.height+'m</span>';
-      html+='<span>🔊 '+spkCount+' speakers · '+f.rooms.length+' rooms</span>';
-      html+='</div>';
-      if (img){
-        html+='<div style="border:1px solid #ddd;border-top:none;padding:8px;background:#f9f9f9;text-align:center;border-radius:0 0 6px 6px">';
-        html+='<img src="'+img+'" style="max-width:100%;display:block;margin:auto;border-radius:4px">';
-        html+='</div>';
-      } else {
-        html+='<div style="border:1px solid #ddd;padding:16px;text-align:center;color:#999;font-size:11px;border-radius:0 0 6px 6px">No drawing available</div>';
-      }
-      html+='</div>';
+/* ═══════════════════════════════════════════════════════════════
+   SLD — Circuit Diagram + Voltage Drop Table
+   ═══════════════════════════════════════════════════════════════ */
+function generateSLDSection(){
+  var html = '';
+  html += '<h2>5. SLD Diagram + Voltage Drop Table</h2>';
+  project.circuits.forEach(function(c){
+    var st = circuitStats(c);
+    var spkList = project.speakers.filter(function(s){ return s.circuitId === c.id; });
+    var zoneGroups = {};
+    spkList.forEach(function(s){
+      if (!zoneGroups[s.zoneId]) zoneGroups[s.zoneId] = [];
+      zoneGroups[s.zoneId].push(s);
     });
-  });
-  html+='<h2>3. Detailed Room Tables</h2>';
-  project.buildings.forEach(function(b){
-    var bFloors=floorsOfBuilding(b.id);
-    if (!bFloors.length) return;
-    html+='<h3>🏢 '+b.name+'</h3>';
-    bFloors.forEach(function(f){
-      html+='<h4>📍 '+f.name+'</h4>';
-      html+='<table><thead><tr><th>Room</th><th>Type</th><th>Dimensions</th><th>Speakers</th><th>Watts</th><th>Avg SPL</th><th>Min SPL</th><th>Coverage</th><th>RT60</th><th>STI</th></tr></thead><tbody>';
-      f.rooms.forEach(function(r){
-        var st=roomStats(r);
-        var t=ROOM_TYPES[r.type]||ROOM_TYPES.office;
-        html+='<tr><td><span class="dot" style="background:'+(t.color||'#888')+'"></span>'+r.name+'</td>';
-        html+='<td>'+(t.icon||'')+' '+(t.name||r.type)+'</td>';
-        html+='<td>'+r.L+'×'+r.W+'×'+r.height+'m</td>';
-        if (st){
-          html+='<td>'+st.count+'</td><td>'+st.watts.toFixed(0)+'</td>';
-          html+='<td>'+st.avg.toFixed(1)+' dB</td><td>'+st.min.toFixed(1)+' dB</td>';
-          html+='<td>'+st.coverage.toFixed(0)+'%</td>';
-          html+='<td>'+st.rt60.toFixed(2)+'s</td><td>'+st.sti.toFixed(2)+'</td>';
-        } else html+='<td colspan="7" style="text-align:center;color:#999">No speakers</td>';
-        html+='</tr>';
+    html += '<div style="border:2px solid #333;border-radius:6px;padding:12px;margin:12px 0;background:#f9f9f9;page-break-inside:avoid">';
+    html += '<div style="background:#1a1a1a;color:#fff;padding:8px 12px;border-radius:4px;font-weight:800;font-size:12px;display:flex;justify-content:space-between">';
+    html += '<span>🔌 ' + c.name + ' — Motiviti ' + st.amp.id + '</span>';
+    html += '<span>' + st.amp.pwr + ' W · ' + st.loadPct.toFixed(0) + '% load</span>';
+    html += '</div>';
+    html += '<div style="text-align:center;padding:6px 0;color:#666;font-size:11px">↓ 100V Line · cable ' + $('cableGauge').value + ' mm² · length ' + c.cableLen + ' m</div>';
+    html += '<div style="border-left:2px solid #999;margin-left:20px;padding-left:20px;padding-bottom:10px">';
+    Object.keys(zoneGroups).forEach(function(zid){
+      var zone = project.zones.find(function(z){ return z.id === parseInt(zid); });
+      var zSpks = zoneGroups[zid];
+      var zWatts = zSpks.length * getWatt();
+      html += '<div style="margin-bottom:10px;position:relative">';
+      html += '<div style="position:absolute;left:-22px;top:12px;width:12px;height:2px;background:#999"></div>';
+      html += '<div style="background:#e8f4fd;border:1px solid #38bdf8;border-radius:4px;padding:8px 10px">';
+      html += '<div style="font-weight:800;font-size:11.5px;color:#0369a1;margin-bottom:4px">';
+      html += '<span class="dot" style="background:' + (zone ? zone.color : '#888') + '"></span>';
+      html += (zone ? zone.name : 'Unknown') + ' — ' + zSpks.length + ' speakers × ' + getWatt() + 'W = ' + zWatts + 'W';
+      html += '</div>';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">';
+      var globalList = project.speakers;
+      zSpks.slice(0, 30).forEach(function(s){
+        var globalIdx = globalList.indexOf(s) + 1;
+        html += '<span style="background:#fff;border:1px solid #38bdf8;border-radius:3px;padding:2px 6px;font-size:9.5px;font-weight:700;color:#0369a1">#' + globalIdx + '</span>';
       });
-      html+='</tbody></table>';
+      if (zSpks.length > 30) html += '<span style="font-size:9.5px;color:#666">+' + (zSpks.length - 30) + ' more</span>';
+      html += '</div></div></div>';
     });
+    html += '</div>';
+    var I = st.watts / 100;
+    var gauge = parseFloat($('cableGauge').value) || 2.5;
+    var R_per_m = (0.0172 * 2) / gauge;
+    var totalR = R_per_m * (c.cableLen || 0);
+    var vdrop = I * totalR;
+    var vdropPct = vdrop;
+    var powerLoss = I * I * totalR;
+    html += '<table style="width:100%;font-size:10px;margin-top:8px;border-collapse:collapse">';
+    html += '<thead><tr style="background:#333;color:#fff">';
+    html += '<th style="padding:5px;text-align:left;border:1px solid #ddd">Parameter</th>';
+    html += '<th style="padding:5px;text-align:left;border:1px solid #ddd">Value</th>';
+    html += '<th style="padding:5px;text-align:left;border:1px solid #ddd">Allowed Limit</th>';
+    html += '<th style="padding:5px;text-align:left;border:1px solid #ddd">Status</th>';
+    html += '</tr></thead><tbody>';
+    html += '<tr><td style="padding:4px;border:1px solid #ddd">Current I</td><td style="padding:4px;border:1px solid #ddd">' + I.toFixed(3) + ' A</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
+    html += '<tr><td style="padding:4px;border:1px solid #ddd">Total Resistance</td><td style="padding:4px;border:1px solid #ddd">' + totalR.toFixed(3) + ' Ω</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
+    html += '<tr><td style="padding:4px;border:1px solid #ddd"><b>Voltage Drop ΔV</b></td><td style="padding:4px;border:1px solid #ddd"><b>' + vdrop.toFixed(2) + ' V</b> (' + vdropPct.toFixed(1) + '%)</td><td style="padding:4px;border:1px solid #ddd">≤ 10% (10V)</td><td style="padding:4px;border:1px solid #ddd">' + (vdropPct <= 10 ? '✅' : '❌') + '</td></tr>';
+    html += '<tr><td style="padding:4px;border:1px solid #ddd">Cable Power Loss</td><td style="padding:4px;border:1px solid #ddd">' + powerLoss.toFixed(2) + ' W</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
+    html += '<tr><td style="padding:4px;border:1px solid #ddd"><b>Amplifier Load</b></td><td style="padding:4px;border:1px solid #ddd"><b>' + st.loadPct.toFixed(1) + '%</b></td><td style="padding:4px;border:1px solid #ddd">≤ 80%</td><td style="padding:4px;border:1px solid #ddd">' + (st.loadPct <= 80 ? '✅' : st.loadPct <= 90 ? '⚠️' : '❌') + '</td></tr>';
+    html += '</tbody></table>';
+    html += '</div>';
   });
-  html+='<h2>4. Zones</h2>';
-  html+='<table><thead><tr><th>#</th><th>Zone</th><th>Speakers</th><th>Watts</th></tr></thead><tbody>';
-  project.zones.forEach(function(z,i){
-    var cnt=project.speakers.filter(function(s){return s.zoneId===z.id;}).length;
-    html+='<tr><td>'+(i+1)+'</td><td><span class="dot" style="background:'+z.color+'"></span>'+z.name+'</td><td>'+cnt+'</td><td>'+(cnt*getWatt()).toFixed(0)+'</td></tr>';
-  });
-  html+='</tbody></table>';
-  html+='<h2>5. Amplifier Circuits (100V Line)</h2>';
-  html+='<table><thead><tr><th>Circuit</th><th>Amplifier</th><th>Speakers</th><th>Load</th><th>Voltage Drop</th><th>Cable Length</th></tr></thead><tbody>';
-  project.circuits.forEach(function(c){
-    var st=circuitStats(c);
-    html+='<tr><td>'+c.name+'</td><td>Motiviti '+st.amp.id+' ('+st.amp.pwr+'W)</td>';
-    html+='<td>'+st.count+'</td><td>'+st.loadPct.toFixed(0)+'%</td>';
-    html+='<td>'+st.vdropPct.toFixed(1)+'%</td><td>'+c.cableLen+' m</td></tr>';
-  });
-  html+='</tbody></table>';
-  html+='<h2>6. Bill of Materials (BOM)</h2>';
-  html+='<table><thead><tr><th>Item</th><th>Specification</th><th>Qty</th><th>Notes</th></tr></thead><tbody>';
-  html+='<tr><td>Ceiling Speaker</td><td>Motiviti '+$('modelSelect').value+' — '+getSens()+'dB — '+getAngle()+'°</td><td>'+totalSpk+'</td><td>Tap set to '+getWatt()+' W</td></tr>';
-  project.circuits.forEach(function(c){
-    var st=circuitStats(c);
-    html+='<tr><td>Amplifier — '+c.name+'</td><td>Motiviti '+st.amp.id+' ('+st.amp.pwr+'W)</td><td>1</td><td>Load '+st.loadPct.toFixed(0)+'%</td></tr>';
-  });
-  var totalCable=project.circuits.reduce(function(a,c){return a+(c.cableLen||0);},0);
-  html+='<tr><td>Copper Cable</td><td>'+$('cableGauge').value+' mm² fire-rated</td><td>~'+totalCable+' m</td><td>EN 54-16</td></tr>';
-  html+='<tr><td>Fire Dome + Ceramic Terminal</td><td>EN 54-24, 60-min rated</td><td>'+totalSpk+'</td><td>Mandatory</td></tr>';
-  html+='</tbody></table>';
-  html+='<h2>7. Engineering Notes</h2>';
-  html+='<div class="note">';
-  html+='• Project: <b>'+project.buildings.length+'</b> buildings · <b>'+project.floors.length+'</b> floors · <b>'+project.floors.reduce(function(a,f){return a+f.rooms.length;},0)+'</b> rooms.<br>';
-  html+='• Each room calculated independently based on its ambient noise and target SPL.<br>';
-  html+='• Speaker: <b>Motiviti '+$('modelSelect').value+'</b> — '+getAngle()+'° — sensitivity '+getSens()+' dB — power '+getWatt()+' W.<br>';
-  html+='• <b>Important:</b> Set each speaker tap to <b>'+getWatt()+' W</b> before closing the ceiling.<br>';
-  html+='• 20% safety margin maintained on all amplifiers (max 80% load).<br>';
-  html+='• Ensure <b>Fire Dome</b> and <b>Ceramic Terminal</b> are installed on each speaker.<br>';
-  html+='• Speaker positions coordinated with <b>HVAC</b>, <b>Lighting</b>, <b>CCTV</b> and <b>Fire Detectors</b>.';
-  html+='</div>';
-  $('repBody').innerHTML=html;
+  return html;
 }
 
-/* ═══════════ Smart Print ═══════════ */
+/* ═══════════════════════════════════════════════════════════════
+   Full Report
+   ═══════════════════════════════════════════════════════════════ */
+function generateReport(){
+  if (!project.speakers.length){ toast('⚠️ No speakers'); return; }
+  var totalSpk = project.speakers.length;
+  var totalW = totalSpk * getWatt();
+  var today = new Date().toLocaleDateString('en-GB');
+  $('repMeta').innerHTML = '<b>' + $('projName').value + '</b><br>' + today + '<br>MOT-ENG-2026-v5.5';
+  var html = '';
+  html += '<h2>1. Executive Summary</h2>';
+  html += '<div class="kpi-cards">';
+  html += '<div class="kpi-card"><div class="n">' + project.buildings.length + '</div><div class="l">Buildings</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + project.floors.length + '</div><div class="l">Floors</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + project.floors.reduce(function(a,f){return a+f.rooms.length;},0) + '</div><div class="l">Rooms</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + totalSpk + '</div><div class="l">Speakers</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + totalW.toFixed(0) + '</div><div class="l">Total Watts</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + project.zones.length + '</div><div class="l">Zones</div></div>';
+  html += '<div class="kpi-card"><div class="n">' + project.circuits.length + '</div><div class="l">Circuits</div></div>';
+  html += '<div class="kpi-card"><div class="n" style="font-size:12px">' + $('modelSelect').value + '</div><div class="l">Model</div></div>';
+  html += '</div>';
+  html += '<h2>2. Architectural Plans for Each Floor</h2>';
+  project.buildings.forEach(function(b){
+    var bFloors = floorsOfBuilding(b.id);
+    if (!bFloors.length) return;
+    html += '<h3>🏢 ' + b.name + '</h3>';
+    bFloors.forEach(function(f){
+      var fidx = project.floors.indexOf(f);
+      var img = captureFloorImage(fidx);
+      var spkCount = spkInFloor(f).length;
+      html += '<div class="floor-section">';
+      html += '<div style="background:#1a1a1a;color:#fff;padding:8px 12px;font-weight:800;font-size:12.5px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between">';
+      html += '<span>📍 ' + f.name + ' — height ' + f.height + 'm</span>';
+      html += '<span>🔊 ' + spkCount + ' speakers · ' + f.rooms.length + ' rooms</span>';
+      html += '</div>';
+      if (img){
+        html += '<div style="border:1px solid #ddd;border-top:none;padding:8px;background:#f9f9f9;text-align:center;border-radius:0 0 6px 6px">';
+        html += '<img src="' + img + '" style="max-width:100%;display:block;margin:auto;border-radius:4px">';
+        html += '</div>';
+      } else {
+        html += '<div style="border:1px solid #ddd;padding:16px;text-align:center;color:#999;font-size:11px;border-radius:0 0 6px 6px">No plan</div>';
+      }
+      html += '</div>';
+    });
+  });
+  html += '<h2>3. Detailed Room Tables</h2>';
+  project.buildings.forEach(function(b){
+    var bFloors = floorsOfBuilding(b.id);
+    if (!bFloors.length) return;
+    html += '<h3>🏢 ' + b.name + '</h3>';
+    bFloors.forEach(function(f){
+      html += '<h4>📍 ' + f.name + '</h4>';
+      html += '<table><thead><tr><th>Room</th><th>Type</th><th>Dimensions</th><th>Speakers</th><th>Watts</th><th>Avg SPL</th><th>Min SPL</th><th>Coverage</th><th>RT60</th><th>STI</th></tr></thead><tbody>';
+      f.rooms.forEach(function(r){
+        var st = roomStats(r);
+        var t = ROOM_TYPES[r.type] || ROOM_TYPES.office;
+        html += '<tr><td><span class="dot" style="background:' + (t.color||'#888') + '"></span>' + r.name + '</td>';
+        html += '<td>' + (t.icon||'') + ' ' + (t.name||r.type) + '</td>';
+        html += '<td>' + r.L + '×' + r.W + '×' + r.height + 'm</td>';
+        if (st){
+          html += '<td>' + st.count + '</td><td>' + st.watts.toFixed(0) + '</td>';
+          html += '<td>' + st.avg.toFixed(1) + ' dB</td><td>' + st.min.toFixed(1) + ' dB</td>';
+          html += '<td>' + st.coverage.toFixed(0) + '%</td>';
+          html += '<td>' + st.rt60.toFixed(2) + 's</td><td>' + st.sti.toFixed(2) + '</td>';
+        } else html += '<td colspan="7" style="text-align:center;color:#999">No speakers</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+    });
+  });
+  html += '<h2>4. Zones</h2>';
+  html += '<table><thead><tr><th>#</th><th>Zone</th><th>Speakers</th><th>Watts</th></tr></thead><tbody>';
+  project.zones.forEach(function(z, i){
+    var cnt = project.speakers.filter(function(s){return s.zoneId===z.id;}).length;
+    html += '<tr><td>' + (i+1) + '</td><td><span class="dot" style="background:' + z.color + '"></span>' + z.name + '</td><td>' + cnt + '</td><td>' + (cnt*getWatt()).toFixed(0) + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  html += generateSLDSection();
+  html += '<h2>6. Bill of Materials (BOM)</h2>';
+  html += '<table><thead><tr><th>Item</th><th>Specifications</th><th>Qty</th><th>Notes</th></tr></thead><tbody>';
+  html += '<tr><td>Ceiling Speaker</td><td>Motiviti ' + $('modelSelect').value + ' — ' + getSens() + 'dB — ' + getAngle() + '°</td><td>' + totalSpk + '</td><td>Tapped at ' + getWatt() + ' W</td></tr>';
+  project.circuits.forEach(function(c){
+    var st = circuitStats(c);
+    html += '<tr><td>Amplifier — ' + c.name + '</td><td>Motiviti ' + st.amp.id + ' (' + st.amp.pwr + 'W)</td><td>1</td><td>Load ' + st.loadPct.toFixed(0) + '%</td></tr>';
+  });
+  var totalCable = project.circuits.reduce(function(a,c){return a+(c.cableLen||0);},0);
+  html += '<tr><td>Copper Cable</td><td>' + $('cableGauge').value + ' mm² fire-rated</td><td>~' + totalCable + ' m</td><td>EN 54-16</td></tr>';
+  html += '<tr><td>Fire Dome + Ceramic Terminal</td><td>EN 54-24, 60-minute rating</td><td>' + totalSpk + '</td><td>Mandatory</td></tr>';
+  html += '</tbody></table>';
+  html += '<h2>7. Engineering Notes</h2>';
+  html += '<div class="note">';
+  html += '• Project: <b>' + project.buildings.length + '</b> buildings · <b>' + project.floors.length + '</b> floors · <b>' + project.floors.reduce(function(a,f){return a+f.rooms.length;},0) + '</b> rooms.<br>';
+  html += '• Engineering Engine v5.5 computes: <b>Direct Field + Reverberant Field + Off-Axis Attenuation</b>.<br>';
+  html += '• Speaker: <b>Motiviti ' + $('modelSelect').value + '</b> — ' + getAngle() + '° — sensitivity ' + getSens() + ' dB — power ' + getWatt() + ' W.<br>';
+  html += '• <b>Important:</b> set each speaker tap to <b>' + getWatt() + ' W</b> before closing the ceiling.<br>';
+  html += '• 20% safety margin preserved on every amplifier (80% max).<br>';
+  html += '• Ensure <b>Fire Dome</b> and <b>Ceramic Terminal</b> are installed on each speaker.<br>';
+  html += '• Speaker positions coordinated with <b>HVAC</b>, <b>lighting</b>, <b>cameras</b>, and <b>fire detectors</b>.';
+  html += '</div>';
+  html += '<div style="text-align:center;margin-top:24px;padding-top:12px;border-top:2px solid #ddd;font-size:10.5px;color:#999">';
+  html += 'Generated by Motiviti v5.5 — Engineering Engine<br>';
+  html += '© MOT-ENG-2026 · All rights reserved';
+  html += '</div>';
+  $('repBody').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Export Excel/CSV
+   ═══════════════════════════════════════════════════════════════ */
+function exportCSV(){
+  var rows = [];
+  var BOM = '\uFEFF';
+  rows.push(['Motiviti Acoustic Report — v5.5']);
+  rows.push(['Project Name', $('projName').value]);
+  rows.push(['Date', new Date().toLocaleDateString('en-GB')]);
+  rows.push(['Reference', 'MOT-ENG-2026-v5.5']);
+  rows.push([]);
+  rows.push(['═══════ Main Room Table ═══════']);
+  rows.push(['Floor', 'Room', 'Type', 'Dimensions', 'Speakers', 'Watts', 'Avg SPL', 'Min SPL', 'Max SPL', 'Coverage %', 'RT60', 'STI', 'Critical Dist', 'Reverb/Direct']);
+  project.buildings.forEach(function(b){
+    floorsOfBuilding(b.id).forEach(function(f){
+      f.rooms.forEach(function(r){
+        var st = roomStats(r);
+        var t = ROOM_TYPES[r.type] || ROOM_TYPES.office;
+        rows.push([
+          f.name, r.name, t.name || r.type,
+          r.L + '×' + r.W + '×' + r.height + 'm',
+          st ? st.count : 0,
+          st ? st.watts.toFixed(0) : 0,
+          st ? st.avg.toFixed(1) : '—',
+          st ? st.min.toFixed(1) : '—',
+          st ? st.max.toFixed(1) : '—',
+          st ? st.coverage.toFixed(0) : '—',
+          st ? st.rt60.toFixed(2) : '—',
+          st ? st.sti.toFixed(2) : '—',
+          st ? st.criticalDist.toFixed(1) : '—',
+          st ? st.reverbRatio.toFixed(1) : '—'
+        ]);
+      });
+    });
+  });
+  rows.push([]);
+  rows.push(['═══════ Bill of Materials (BOM) ═══════']);
+  rows.push(['Item', 'Specifications', 'Qty', 'Notes']);
+  rows.push(['Ceiling Speaker', 'Motiviti ' + $('modelSelect').value + ' — ' + getSens() + 'dB — ' + getAngle() + '°', project.speakers.length, 'Tapped at ' + getWatt() + ' W']);
+  project.circuits.forEach(function(c){
+    var st = circuitStats(c);
+    rows.push(['Amplifier — ' + c.name, 'Motiviti ' + st.amp.id + ' (' + st.amp.pwr + 'W)', 1, 'Load ' + st.loadPct.toFixed(0) + '%']);
+  });
+  var totalCable = project.circuits.reduce(function(a,c){return a+(c.cableLen||0);},0);
+  rows.push(['Copper Cable', $('cableGauge').value + ' mm² fire-rated', '~' + totalCable + ' m', 'EN 54-16']);
+  rows.push(['Fire Dome + Ceramic', 'EN 54-24, 60-min rating', project.speakers.length, 'Mandatory']);
+  rows.push([]);
+  rows.push(['═══════ Circuit Analysis (Voltage Drop) ═══════']);
+  rows.push(['Circuit', 'Amplifier', 'Load %', 'Drop V', 'Drop %', 'Cable Length m', 'Power Loss W', 'Status']);
+  project.circuits.forEach(function(c){
+    var st = circuitStats(c);
+    var gauge = parseFloat($('cableGauge').value) || 2.5;
+    var R = (0.0172 * 2) / gauge * (c.cableLen || 0);
+    var I = st.watts / 100;
+    var powerLoss = I * I * R;
+    var status = st.loadPct > 90 ? 'Over' : st.loadPct > 80 ? 'Warning' : 'OK';
+    rows.push([
+      c.name, st.amp.id, st.loadPct.toFixed(1),
+      st.vdropPct.toFixed(2), st.vdropPct.toFixed(2),
+      c.cableLen, powerLoss.toFixed(2), status
+    ]);
+  });
+  rows.push([]);
+  rows.push(['═══════ Zones ═══════']);
+  rows.push(['Zone', 'Speaker Count', 'Watts']);
+  project.zones.forEach(function(z){
+    var cnt = project.speakers.filter(function(s){return s.zoneId === z.id;}).length;
+    rows.push([z.name, cnt, (cnt * getWatt()).toFixed(0)]);
+  });
+  var csv = BOM + rows.map(function(row){
+    return row.map(function(cell){
+      var s = String(cell == null ? '' : cell);
+      if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0){
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }).join(',');
+  }).join('\n');
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = ($('projName').value || 'project').replace(/\s+/g, '_') + '_report.csv';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  toast('📊 CSV exported — open in Excel');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Smart Printing
+   ═══════════════════════════════════════════════════════════════ */
 function printReport(){
   var rep = document.getElementById('report');
   rep.style.display = 'block';
@@ -2629,29 +3199,60 @@ function printReport(){
   else { checkReady(); }
 }
 
-/* ═══════════ Boot ═══════════ */
+/* ═══════════════════════════════════════════════════════════════
+   Boot
+   ═══════════════════════════════════════════════════════════════ */
 function boot(){
-  var b=createBuilding('Main Building');
-  project.buildings=[b];
-  buildHotel(b.id);
-  activeBuildingId=b.id;
-  activeFloorIdx=0;
-  project.floors.forEach(function(f){ f.rooms.forEach(autoDistRoom); });
-  pushHistory();
-  renderAll();
-  setTimeout(function(){ resizeCanvas(); fitToView(); },80);
-  setTool('select');
+  try {
+    _uid = 1;
+    var b = createBuilding('Main Building');
+    project.buildings = [b];
+    activeBuildingId = b.id;
+    buildHotel(b.id);
+    project.floors.forEach(function(f){
+      if (!f.buildingId) f.buildingId = b.id;
+    });
+    activeFloorIdx = 0;
+    activeRoomId = null;
+    placeMode = false;
+    project.floors.forEach(function(f){
+      f.rooms.forEach(function(r){ autoDistRoom(r); });
+    });
+    _undoStack = [];
+    historyIdx = -1;
+    pushHistory();
+    renderAll();
+    updatePlaceBtnUI();
+    setTimeout(function(){
+      try { resizeCanvas(); fitToView(); } catch(e){ console.error(e); }
+    }, 80);
+    setTool('select');
+    console.log('🚀 App started successfully:');
+    console.log('   🏢 Buildings:', project.buildings.length);
+    console.log('   🧭 Floors:', project.floors.length);
+    console.log('   🚪 Rooms:', project.floors.reduce(function(a,f){ return a + f.rooms.length; }, 0));
+    console.log('   🔊 Speakers:', project.speakers.length);
+  } catch (err) {
+    console.error('❌ Boot error:', err);
+    document.body.innerHTML = '<div style="padding:30px;color:#fff;font-family:Cairo,sans-serif;background:#0d1117;min-height:100vh">' +
+      '<h1 style="color:#e60012">Loading Error</h1>' +
+      '<pre style="background:#161b22;padding:15px;border-radius:8px;overflow:auto;color:#fca5a5">' + err.message + '\n\n' + (err.stack || '') + '</pre>' +
+      '</div>';
+  }
 }
-if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ setTimeout(boot,30); });
-else setTimeout(boot,30);
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 30); });
+else setTimeout(boot, 30);
+
 var rTimer;
-window.addEventListener('resize',function(){ clearTimeout(rTimer); rTimer=setTimeout(resizeCanvas,150); });
-window.addEventListener('orientationchange',function(){ setTimeout(resizeCanvas,400); });
+window.addEventListener('resize', function(){ clearTimeout(rTimer); rTimer = setTimeout(resizeCanvas, 150); });
+window.addEventListener('orientationchange', function(){ setTimeout(resizeCanvas, 400); });
+
 if ('serviceWorker' in navigator){
-  window.addEventListener('load',function(){
-    var sw="self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{})";
+  window.addEventListener('load', function(){
+    var sw = "self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{})";
     try {
-      var blob=new Blob([sw],{type:'application/javascript'});
+      var blob = new Blob([sw], {type:'application/javascript'});
       navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});
     } catch(e){}
   });
