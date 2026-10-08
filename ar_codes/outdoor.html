@@ -2,15 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motivity AI - الجناح المهني للمساحات الخارجية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--red:#e60012;--blue:#38bdf8;--gold:#f59e0b;--bg:#0d1117;--card:#161b22;--card2:#21262d;--bd:#30363d;--mu:#8b949e}
+:root{--red:#e60012;--blue:#38bdf8;--gold:#f59e0b;--bg:#0d1117;--card:#161b22;--card2:#21262d;--bd:#30363d;--mu:#8b949e;--green:#22c55e}
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
 body{display:flex;height:100vh;background:var(--bg);color:#fff;overflow:hidden}
 
-/* ═══ الشريط الجانبي ═══ */
-.sidebar{width:410px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);padding:20px;overflow-y:auto;border-left:3px solid var(--red);flex-shrink:0;box-shadow:-8px 0 32px rgba(0,0,0,.5)}
+.sidebar{width:430px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);padding:20px;overflow-y:auto;border-left:3px solid var(--red);flex-shrink:0;box-shadow:-8px 0 32px rgba(0,0,0,.5)}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
@@ -30,8 +30,9 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}
 .kpi .v{font-size:17px;font-weight:900;color:var(--blue)}
 .kpi .l{font-size:9.5px;color:var(--mu);margin-top:2px}
-.kpi.ok .v{color:#22c55e}
+.kpi.ok .v{color:var(--green)}
 .kpi.warn .v{color:var(--gold)}
+.kpi.bad .v{color:#ef4444}
 
 .btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px;transition:.3s;font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-smart{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 15px rgba(56,189,248,.3)}
@@ -41,21 +42,34 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .btn-reset{background:#2a2f36;color:#ff4d4d;border:1px solid #444}
 .btn-reset:hover{background:#ff4d4d;color:#fff}
 
-/* ═══ المشهد الرئيسي ═══ */
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn-mini{padding:10px 8px;border:none;border-radius:8px;font-family:inherit;font-weight:800;font-size:11px;cursor:pointer;transition:.2s;background:#21262d;color:#ccc;border:1px solid #30363d;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-mini:hover{background:#30363d;color:#fff;border-color:var(--blue)}
+.btn-mini.primary{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;border:none}
+.btn-mini.primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(56,189,248,.4)}
+
+.badge-custom{display:none;background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.4);color:var(--blue);font-size:10px;padding:6px 10px;border-radius:8px;margin-top:8px;text-align:center;font-weight:700}
+.badge-custom.on{display:block}
+.badge-custom button{background:transparent;border:none;color:var(--gold);cursor:pointer;font-family:inherit;font-size:10px;text-decoration:underline;margin-right:6px;padding:0}
+
 .main{flex:1;background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow:hidden}
-canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.05);max-width:100%;max-height:calc(100vh - 100px);display:block}
+canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.05);max-width:100%;max-height:calc(100vh - 100px);display:block;cursor:crosshair}
+canvas.dragging{cursor:grabbing !important}
 
-.toolbar{position:absolute;top:20px;left:20px;display:flex;gap:6px;background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:6px;z-index:10}
-.toolbar button{background:transparent;color:#ccc;border:none;width:36px;height:36px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;transition:.2s;font-family:inherit}
-.toolbar button:hover{background:#30363d;color:#fff}
+.toolbar{position:absolute;top:20px;left:20px;display:flex;gap:6px;background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:6px;z-index:10;align-items:center}
+.toolbar button{background:transparent;color:#ccc;border:none;width:36px;height:36px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;transition:.2s;font-family:inherit;display:flex;align-items:center;justify-content:center}
+.toolbar button:hover:not(:disabled){background:#30363d;color:#fff}
 .toolbar button.on{background:var(--blue);color:#000}
+.toolbar button:disabled{opacity:.35;cursor:not-allowed}
+.toolbar .sep{width:1px;height:22px;background:#30363d;margin:0 4px}
 
-.hint-bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:7px 16px;font-size:11.5px;color:var(--mu);z-index:10}
+.hint-bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:7px 16px;font-size:11.5px;color:var(--mu);z-index:10;text-align:center}
 .hint-bar b{color:var(--blue)}
 
-/* ═══ التقرير ═══ */
+.mobile-toggle{display:none;position:fixed;top:10px;right:10px;z-index:999;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--red),#ff2e40);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 15px rgba(230,0,18,.4);align-items:center;justify-content:center;font-family:inherit}
+
 #report{display:none;position:fixed;inset:0;background:#fafbfc;color:#222;overflow-y:auto;padding:40px;z-index:9999;direction:rtl;text-align:right}
-.report-inner{max-width:1050px;margin:auto;padding:50px;background:#fff;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,.1);position:relative}
+.report-inner{max-width:1080px;margin:auto;padding:50px;background:#fff;border-radius:10px;box-shadow:0 0 40px rgba(0,0,0,.1);position:relative}
 .report-inner::before{content:'';position:absolute;top:0;right:0;left:0;height:8px;background:linear-gradient(90deg,var(--red),var(--blue));border-radius:10px 10px 0 0}
 
 .rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid var(--red);margin-bottom:26px}
@@ -64,20 +78,23 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
 .rep-header .meta{text-align:left;font-size:12px;color:#555;line-height:1.9}
 .rep-header .meta b{color:var(--red)}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:26px 0}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}
 .kpi-card{background:#fff;padding:20px;border-radius:12px;text-align:center;border-top:4px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.06)}
 .kpi-card h4{font-size:11px;color:#888;margin-bottom:6px;font-weight:700}
 .kpi-card span{font-size:22px;font-weight:900;color:#111}
-.kpi-card.ok span{color:#22c55e}
+.kpi-card.ok span{color:var(--green)}
 
 .tech-table{width:100%;border-collapse:collapse;margin:20px 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05)}
 .tech-table th{background:#1a1a1a;color:#fff;padding:14px;text-align:right;font-size:12.5px;font-weight:800}
 .tech-table td{padding:14px;border-bottom:1px solid #eee;font-size:13px;text-align:right}
 .tech-table tr:last-child td{border-bottom:none}
 .tech-table tr:nth-child(even) td{background:#fafbfc}
+.tech-table .num{font-family:monospace;font-weight:700}
 
 .status-badge{padding:10px 22px;border-radius:8px;font-weight:800;margin-bottom:20px;display:inline-block;font-size:13.5px}
-.status-ok{background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;border-right:4px solid #22c55e}
+.status-ok{background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;border-right:4px solid var(--green)}
+.status-warn{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-right:4px solid var(--gold)}
+.status-bad{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;border-right:4px solid #ef4444}
 
 .note-box{background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);border-right:5px solid var(--blue);padding:22px;border-radius:12px 0 0 12px;margin:20px 0;font-size:13.5px;line-height:2}
 .note-box strong{color:#0c4a6e}
@@ -85,6 +102,7 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
 .badge.ok{background:#dcfce7;color:#166534}
 .badge.warn{background:#fef3c7;color:#92400e}
+.badge.bad{background:#fee2e2;color:#991b1b}
 
 .rep-img{width:100%;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.15);border:1px solid #e5e7eb;margin-top:10px}
 
@@ -92,20 +110,68 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
 .rep-controls button{padding:11px 22px;border:none;border-radius:10px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px;transition:.2s}
 .rep-controls .back{background:#e5e7eb;color:#333}
 .rep-controls .back:hover{background:#d1d5db}
-.rep-controls .print{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 15px rgba(34,197,94,.3)}
+.rep-controls .print{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;box-shadow:0 4px 15px rgba(34,197,94,.3)}
 .rep-controls .print:hover{transform:translateY(-2px)}
 
 .rep-footer{text-align:center;font-size:11.5px;color:#999;border-top:1px solid #eee;padding-top:24px;margin-top:50px}
 
 @media print{.no-print{display:none!important}#report{position:static;padding:0;background:#fff}.report-inner{box-shadow:none;padding:0}body{background:#fff}}
+
+/* ═══ التجاوب — موبايل/تابلت ═══ */
+@media (max-width: 900px){
+  body{flex-direction:column;height:auto;overflow-y:auto;overflow-x:hidden}
+  .sidebar{width:100%;max-height:none;border-left:none;border-bottom:3px solid var(--red);box-shadow:0 8px 32px rgba(0,0,0,.5);padding-top:60px}
+  .sidebar.collapsed{display:none}
+  .main{min-height:60vh;padding:10px;position:relative}
+  canvas{max-height:none;width:100%;height:auto}
+  .mobile-toggle{display:flex}
+  .toolbar{top:10px;left:10px;padding:4px}
+  .toolbar button{width:32px;height:32px;font-size:13px}
+  .hint-bar{font-size:10px;padding:5px 10px;white-space:nowrap}
+  .report-inner{padding:20px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .rep-header{flex-direction:column;gap:10px}
+  #report{padding:15px}
+  .rep-controls{flex-wrap:wrap}
+  .tech-table{font-size:11.5px}
+  .tech-table th,.tech-table td{padding:8px}
+}
+
+@media (max-width: 480px){
+  .toolbar button{width:28px;height:28px;font-size:12px}
+  .hint-bar{display:none}
+}
 </style>
 </head>
 <body>
 
-<div class="sidebar no-print">
+<button class="mobile-toggle no-print" onclick="toggleSidebar()" title="القائمة">☰</button>
+
+<div class="sidebar no-print" id="sidebar">
   <div class="brand">
     <h1>موتيفيتي</h1>
     <p>الجناح المهني للمساحات الخارجية</p>
+  </div>
+
+  <div class="box">
+    <h3>📁 إدارة المشروع</h3>
+    <label>قالب جاهز</label>
+    <select id="template_select" onchange="applyTemplate()">
+      <option value="">— اختر قالباً —</option>
+      <option value="mall_parking">🅿️ مواقف مول تجاري (150م · 12 وحدة)</option>
+      <option value="corniche">🌊 كورنيش بحري (200م · 14 وحدة)</option>
+      <option value="city_plaza">🏛️ ساحة بلدية (80م · 8 وحدات)</option>
+      <option value="emergency_hub">🚨 مركز طوارئ (120م · 15 وحدة)</option>
+    </select>
+    <div class="btn-row">
+      <button class="btn-mini" onclick="exportProject()">📤 تصدير JSON</button>
+      <button class="btn-mini" onclick="triggerImport()">📥 استيراد JSON</button>
+    </div>
+    <input type="file" id="import_input" accept=".json" style="display:none" onchange="importProject(event)">
+    <div class="badge-custom" id="custom_positions_badge">
+      📌 مواقع مخصصة نشطة
+      <button onclick="resetPositions()">إعادة للترتيب الآلي</button>
+    </div>
   </div>
 
   <div class="box">
@@ -123,6 +189,23 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
   </div>
 
   <div class="box">
+    <h3>🎯 هدف التطبيق</h3>
+    <label>الغرض الأساسي</label>
+    <select id="app_intent" onchange="onChange()">
+      <option value="announce">📢 إعلانات ونداءات (SNR ≥ 15 dB)</option>
+      <option value="music">🎵 موسيقى خلفية (SNR ≥ 10 dB)</option>
+      <option value="emergency">🚨 إنذار وطوارئ (SNR ≥ 20 dB)</option>
+    </select>
+    <label>مستوى الضوضاء الخلفية (dB)</label>
+    <input type="number" id="bg_noise" value="65" min="30" max="90" oninput="onChange()">
+
+    <div class="kpi-row">
+      <div class="kpi" id="kpiSTI"><div class="v" id="kpiSTIV">—</div><div class="l">STI تقديري</div></div>
+      <div class="kpi" id="kpiCovPct"><div class="v" id="kpiCovPctV">—</div><div class="l">تغطية ميدانية</div></div>
+    </div>
+  </div>
+
+  <div class="box">
     <h3>🔊 إعدادات النظام</h3>
     <label>الموديل المقترح</label>
     <select id="spk_model" onchange="onChange()">
@@ -133,34 +216,37 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
     <input type="number" id="spk_qty" value="12" min="1" max="40" oninput="onChange()">
     <label>نمط التركيب</label>
     <select id="mnt_type" onchange="onChange()">
-      <option value="pole">عمود إنارة (تغطية 360°)</option>
-      <option value="wall">تثبيت جداري (تغطية 120°)</option>
+      <option value="pole">عمود إنارة (تغطية 360° · Q=1.5)</option>
+      <option value="wall">تثبيت جداري (تغطية 120° · Q=4.0)</option>
     </select>
 
     <div class="kpi-row">
       <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">الوحدات</div></div>
       <div class="kpi" id="kpiPow"><div class="v" id="kpiPowV">0</div><div class="l">إجمالي الواط</div></div>
       <div class="kpi" id="kpiSpc"><div class="v" id="kpiSpcV">—</div><div class="l">التباعد</div></div>
-      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">التغطية</div></div>
+      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">تداخل التغطية</div></div>
     </div>
   </div>
 
   <button class="btn btn-smart" onclick="applySmartAI()">✨ تطبيق الذكاء الهندسي</button>
   <button class="btn btn-report" onclick="generateReport()">📄 توليد التقرير الفني</button>
-  <button class="btn btn-reset" onclick="resetData()">🔄 تصفير البيانات</button>
+  <button class="btn btn-reset" onclick="resetData()">🗑️ مسح المشروع بالكامل</button>
 </div>
 
 <div class="main no-print">
-  <canvas id="mainCanvas" width="1200" height="700"></canvas>
+  <canvas id="mainCanvas"></canvas>
 
   <div class="toolbar">
     <button id="tgWaves" class="on" onclick="toggle('waves')" title="الموجات الصوتية">🔊</button>
     <button id="tgHeat" onclick="toggle('heat')" title="خريطة SPL">🌡️</button>
     <button id="tgScene" class="on" onclick="toggle('scene')" title="المشهد">🏙️</button>
     <button id="tgLabels" class="on" onclick="toggle('labels')" title="التسميات">🏷️</button>
+    <div class="sep"></div>
+    <button id="btnUndo" onclick="undo()" title="تراجع (Ctrl+Z)" disabled>↶</button>
+    <button id="btnRedo" onclick="redo()" title="إعادة (Ctrl+Y)" disabled>↷</button>
   </div>
 
-  <div class="hint-bar">🖱️ حرّك الماوس لقراءة SPL · الأدوات لتبديل الطبقات</div>
+  <div class="hint-bar">🖱️ اسحب السماعات لتغيير مواضعها · Ctrl+Z للتراجع</div>
 </div>
 
 <div id="report">
@@ -187,6 +273,14 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
 
     <div class="kpi-grid" id="kpi_data"></div>
 
+    <h3 style="color:#111;border-right:5px solid var(--red);padding-right:12px;margin:26px 0 14px;font-size:16px">الأداء الصوتي ووضوح الكلام</h3>
+    <table class="tech-table">
+      <thead>
+        <tr><th>المعامل الصوتي</th><th>القيمة</th><th>الهدف</th><th>التقييم</th></tr>
+      </thead>
+      <tbody id="acoustic_body"></tbody>
+    </table>
+
     <h3 style="color:#111;border-right:5px solid var(--red);padding-right:12px;margin:26px 0 14px;font-size:16px">المواصفات الفنية</h3>
     <table class="tech-table">
       <thead>
@@ -198,6 +292,14 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
     <h3 style="color:#111;border-right:5px solid var(--red);padding-right:12px;margin:26px 0 14px;font-size:16px">مخطط التوزيع الهندسي (منظور علوي)</h3>
     <img id="report_img" class="rep-img">
 
+    <h3 style="color:#111;border-right:5px solid var(--red);padding-right:12px;margin:26px 0 14px;font-size:16px">قائمة الكميات المطلوبة</h3>
+    <table class="tech-table">
+      <thead>
+        <tr><th>البند</th><th>الكمية</th><th>ملاحظة</th></tr>
+      </thead>
+      <tbody id="bom_body"></tbody>
+    </table>
+
     <h3 style="color:#111;border-right:5px solid var(--red);padding-right:12px;margin:26px 0 14px;font-size:16px">التعليل الهندسي</h3>
     <div class="note-box" id="eng_notes"></div>
 
@@ -208,7 +310,7 @@ canvas{background:#050505;border-radius:16px;border:1px solid #222;box-shadow:0 
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   الإعدادات
+   الإعدادات والثوابت
    ═══════════════════════════════════════════════════════════ */
 const SPEAKERS = {
   'SM-8T': { watt: 80, sens: 96, coverPole: 18, coverWall: 12, name: 'SM-8T' },
@@ -216,9 +318,57 @@ const SPEAKERS = {
 };
 
 const AREA = {
-  parking: { name: 'مواقف سيارات', spacing: 12, bg: '#1a1a1a', accent: '#fbbf24' },
-  walkway: { name: 'ممشى عام',    spacing: 15, bg: '#2a2a2a', accent: '#a78bfa' },
-  plaza:   { name: 'ساحة مفتوحة', spacing: 18, bg: '#3d3630', accent: '#f59e0b' }
+  parking: { name: 'مواقف سيارات', spacing: 12, bg: '#1a1a1a', accent: '#fbbf24', bgNoise: 65 },
+  walkway: { name: 'ممشى عام',    spacing: 15, bg: '#2a2a2a', accent: '#a78bfa', bgNoise: 55 },
+  plaza:   { name: 'ساحة مفتوحة', spacing: 18, bg: '#3d3630', accent: '#f59e0b', bgNoise: 50 }
+};
+
+const INTENT = {
+  announce:  { name: 'إعلانات ونداءات عامة', reqSNR: 15, stiTarget: 0.60 },
+  music:     { name: 'موسيقى خلفية',           reqSNR: 10, stiTarget: 0.45 },
+  emergency: { name: 'إنذار وطوارئ',           reqSNR: 20, stiTarget: 0.75 }
+};
+
+const Q_POLE = 1.5;
+const Q_WALL = 4.0;
+
+const LOGICAL_W = 1200;
+const LOGICAL_H = 700;
+const SITE_MARGIN_PX = 100;
+const EAR_HEIGHT_M = 1.5;
+const MAX_DPR = 2;
+const HEAT_DOWNSCALE = 2;
+const HEAT_STEP_OFF = 5;
+
+const STORAGE_KEY = 'motivity_autosave_v3';
+const MAX_HISTORY = 30;
+const HISTORY_DEBOUNCE_MS = 500;
+const AUTOSAVE_DEBOUNCE_MS = 600;
+
+/* ═══════════════════════════════════════════════════════════
+   القوالب الجاهزة
+   ═══════════════════════════════════════════════════════════ */
+const TEMPLATES = {
+  mall_parking: {
+    name: 'مواقف مول تجاري',
+    state: { len: 150, qty: 12, env: 'parking', model: 'SM-8T', mount: 'pole',
+             height: 4, intent: 'announce', bgNoise: 65, speakerPositions: null }
+  },
+  corniche: {
+    name: 'كورنيش بحري',
+    state: { len: 200, qty: 14, env: 'walkway', model: 'SM-5T', mount: 'pole',
+             height: 3.5, intent: 'music', bgNoise: 55, speakerPositions: null }
+  },
+  city_plaza: {
+    name: 'ساحة بلدية',
+    state: { len: 80, qty: 8, env: 'plaza', model: 'SM-5T', mount: 'pole',
+             height: 3.5, intent: 'announce', bgNoise: 50, speakerPositions: null }
+  },
+  emergency_hub: {
+    name: 'مركز طوارئ',
+    state: { len: 120, qty: 15, env: 'parking', model: 'SM-8T', mount: 'pole',
+             height: 5, intent: 'emergency', bgNoise: 70, speakerPositions: null }
+  }
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -230,67 +380,372 @@ const $ = id => document.getElementById(id);
 
 let state = {
   len: 150, qty: 12, env: 'parking', model: 'SM-8T', mount: 'pole',
-  height: 4, t: 0, hoverX: null, hoverY: null, hoverSPL: null,
+  height: 4, intent: 'announce', bgNoise: 65,
+  speakerPositions: null,
+  t: 0, hoverX: null, hoverY: null, hoverSPL: null,
   layers: { waves: true, heat: false, scene: true, labels: true }
 };
 
-// Decorative scene items (regenerated when area type changes)
-let scene = { cars: [], benches: [], trees: [], people: [] };
+const layout = {
+  leftPx: SITE_MARGIN_PX, rightPx: LOGICAL_W - SITE_MARGIN_PX,
+  widthPx: LOGICAL_W - 2 * SITE_MARGIN_PX, pxPerM: 1
+};
+
+let heatCache = null, heatCacheKey = '';
+function invalidateHeat() { heatCache = null; heatCacheKey = ''; }
+function getHeatKey() {
+  return [state.env, state.model, state.qty, state.mount, state.height, state.len,
+          state.intent, JSON.stringify(state.speakerPositions)].join('|');
+}
+
+let scene = { cars: [], benches: [], trees: [], people: [], speckles: [] };
+
+let history = { past: [], future: [] };
+let suppressHistory = false;
+let historyTimer = null;
+let autosaveTimer = null;
+
+let drag = null;
 
 /* ═══════════════════════════════════════════════════════════
-   التهيئة
+   دوال مساعدة مركزية
+   ═══════════════════════════════════════════════════════════ */
+function getQ() { return state.mount === 'pole' ? Q_POLE : Q_WALL; }
+
+function splAt1m(spk) {
+  return spk.sens + 10 * Math.log10(spk.watt) + 10 * Math.log10(getQ());
+}
+
+function computeSTI(snr) {
+  return Math.max(0, Math.min(1, 0.3 + 0.03 * snr));
+}
+
+function stiLabel(sti) {
+  if (sti >= 0.75) return { text: 'ممتاز', cls: 'ok' };
+  if (sti >= 0.60) return { text: 'جيد',   cls: 'ok' };
+  if (sti >= 0.45) return { text: 'مقبول', cls: 'warn' };
+  return { text: 'ضعيف', cls: 'bad' };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   إعداد الكانفس
+   ═══════════════════════════════════════════════════════════ */
+function setupCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  canvas.width  = LOGICAL_W * dpr;
+  canvas.height = LOGICAL_H * dpr;
+  canvas.style.width  = LOGICAL_W + 'px';
+  canvas.style.height = LOGICAL_H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   اللقطة والتاريخ
+   ═══════════════════════════════════════════════════════════ */
+function snapshot() {
+  return JSON.stringify({
+    len: state.len, qty: state.qty, env: state.env, model: state.model,
+    mount: state.mount, height: state.height, intent: state.intent,
+    bgNoise: state.bgNoise, speakerPositions: state.speakerPositions,
+    layers: state.layers
+  });
+}
+
+function applySnapshot(snap) {
+  const s = typeof snap === 'string' ? JSON.parse(snap) : snap;
+  suppressHistory = true;
+
+  $('site_len').value    = s.len;
+  $('spk_qty').value     = s.qty;
+  $('area_type').value   = s.env;
+  $('spk_model').value   = s.model;
+  $('mnt_type').value    = s.mount;
+  $('mnt_height').value  = s.height;
+  $('app_intent').value  = s.intent;
+  $('bg_noise').value    = s.bgNoise;
+
+  state.speakerPositions = s.speakerPositions || null;
+  if (s.layers) state.layers = { ...s.layers };
+
+  ['waves','heat','scene','labels'].forEach(k => {
+    const btn = $('tg' + k.charAt(0).toUpperCase() + k.slice(1));
+    if (btn) btn.classList.toggle('on', state.layers[k]);
+  });
+
+  onChange();
+  suppressHistory = false;
+  updateHistoryButtons();
+  updateCustomBadge();
+}
+
+function pushHistory() {
+  if (suppressHistory) return;
+  const snap = snapshot();
+  if (history.past.length && history.past[history.past.length - 1] === snap) return;
+  history.past.push(snap);
+  history.future = [];
+  if (history.past.length > MAX_HISTORY) history.past.shift();
+  updateHistoryButtons();
+}
+
+function scheduleHistoryPush() {
+  if (suppressHistory) return;
+  clearTimeout(historyTimer);
+  historyTimer = setTimeout(pushHistory, HISTORY_DEBOUNCE_MS);
+}
+
+function undo() {
+  if (history.past.length < 2) return;
+  const current = history.past.pop();
+  history.future.push(current);
+  applySnapshot(history.past[history.past.length - 1]);
+  scheduleAutosave();
+}
+
+function redo() {
+  if (!history.future.length) return;
+  const next = history.future.pop();
+  history.past.push(next);
+  applySnapshot(next);
+  scheduleAutosave();
+}
+
+function updateHistoryButtons() {
+  const u = $('btnUndo'), r = $('btnRedo');
+  if (u) u.disabled = history.past.length < 2;
+  if (r) r.disabled = history.future.length === 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   الحفظ التلقائي
+   ═══════════════════════════════════════════════════════════ */
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, snapshot());
+    } catch (e) {}
+  }, AUTOSAVE_DEBOUNCE_MS);
+}
+
+function loadAutosave() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || typeof s !== 'object') return false;
+    applySnapshot(s);
+    return true;
+  } catch (e) { return false; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   التصدير والاستيراد
+   ═══════════════════════════════════════════════════════════ */
+function exportProject() {
+  const data = JSON.parse(snapshot());
+  data._meta = { version: 3, exported: new Date().toISOString(), app: 'Motivity AI' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `motivity-project-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport() {
+  $('import_input').click();
+}
+
+function importProject(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || typeof data !== 'object') throw new Error('bad');
+      applySnapshot(data);
+      pushHistory();
+      scheduleAutosave();
+      alert('✓ تم استيراد المشروع بنجاح');
+    } catch (err) {
+      alert('✗ ملف غير صالح — تأكد من أنه ملف JSON مُصدّر من التطبيق');
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   القوالب
+   ═══════════════════════════════════════════════════════════ */
+function applyTemplate() {
+  const key = $('template_select').value;
+  if (!key) return;
+  const tpl = TEMPLATES[key];
+  if (!tpl) return;
+  if (!confirm(`تطبيق قالب "${tpl.name}"؟ سيستبدل التصميم الحالي.`)) {
+    $('template_select').value = '';
+    return;
+  }
+  applySnapshot(tpl.state);
+  pushHistory();
+  scheduleAutosave();
+  $('template_select').value = '';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   onChange
    ═══════════════════════════════════════════════════════════ */
 function onChange() {
-  state.len    = +$('site_len').value || 150;
-  state.qty    = +$('spk_qty').value || 12;
+  const prevEnv = state.env;
+
+  state.len    = +$('site_len').value    || 150;
+  state.qty    = Math.max(1, Math.min(40, +$('spk_qty').value || 12));
   state.env    = $('area_type').value;
   state.model  = $('spk_model').value;
   state.mount  = $('mnt_type').value;
-  state.height = +$('mnt_height').value || 4;
+  state.height = +$('mnt_height').value  || 4;
+  state.intent = $('app_intent').value;
+  state.bgNoise= +$('bg_noise').value    || AREA[state.env].bgNoise;
+
+  if (state.speakerPositions && state.speakerPositions.length !== state.qty) {
+    state.speakerPositions = null;
+  }
+
+  if (prevEnv !== state.env) {
+    $('bg_noise').value = AREA[state.env].bgNoise;
+    state.bgNoise = AREA[state.env].bgNoise;
+  }
+
+  updateLayout();
+  invalidateHeat();
 
   if (!scene._env || scene._env !== state.env) {
     generateScene();
     scene._env = state.env;
   }
   updateKPI();
+  updateCustomBadge();
+  scheduleHistoryPush();
+  scheduleAutosave();
 }
 
 function toggle(key) {
   state.layers[key] = !state.layers[key];
   const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
   if (btn) btn.classList.toggle('on', state.layers[key]);
+  scheduleAutosave();
 }
 
 function updateKPI() {
   const spk = SPEAKERS[state.model];
+  const intent = INTENT[state.intent];
   const totalW = spk.watt * state.qty;
-  const spacing = state.len / state.qty;
+  const spacing = state.qty > 1 ? state.len / state.qty : state.len;
   const cover = state.mount === 'pole' ? spk.coverPole : spk.coverWall;
   const coverage = Math.min(100, (cover / spacing) * 100);
+
+  const spl1m = splAt1m(spk);
+  const dz = state.height - EAR_HEIGHT_M;
+  const maxDist = Math.sqrt((spacing / 2) ** 2 + dz ** 2);
+  const splFar = spl1m - 20 * Math.log10(maxDist);
+  const snr = splFar - state.bgNoise;
+  const sti = computeSTI(snr);
+  const stiL = stiLabel(sti);
+  const covPct = computeCoveragePercent();
 
   $('kpiSpkV').textContent = state.qty;
   $('kpiPowV').textContent = totalW;
   $('kpiSpcV').textContent = spacing.toFixed(1) + ' م';
   $('kpiCovV').textContent = coverage.toFixed(0) + '%';
-
   $('kpiCov').className = 'kpi ' + (coverage >= 75 ? 'ok' : 'warn');
   $('kpiSpc').className = 'kpi ' + (spacing <= cover * 1.4 ? 'ok' : 'warn');
+  $('kpiSTIV').textContent = sti.toFixed(2);
+  $('kpiSTI').className = 'kpi ' + stiL.cls;
+  $('kpiCovPctV').textContent = covPct + '%';
+  $('kpiCovPct').className = 'kpi ' + (covPct >= 85 ? 'ok' : covPct >= 70 ? 'warn' : 'bad');
+}
+
+function updateCustomBadge() {
+  const b = $('custom_positions_badge');
+  if (!b) return;
+  b.classList.toggle('on', !!state.speakerPositions);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   مولد المشهد
+   التغطية الميدانية
+   ═══════════════════════════════════════════════════════════ */
+function computeCoveragePercent() {
+  const intent = INTENT[state.intent];
+  const threshold = state.bgNoise + intent.reqSNR;
+  const spk = SPEAKERS[state.model];
+  const spl1m = splAt1m(spk);
+  const dz = state.height - EAR_HEIGHT_M;
+  const speakers = getSpeakerPositionsMeters();
+
+  const spacingM = state.qty > 1 ? state.len / (state.qty - 1) : state.len;
+  const depth = Math.max(4, spacingM);
+  const step = 2;
+
+  let total = 0, good = 0;
+  const xMin = -spacingM / 2;
+  const xMax = state.len + spacingM / 2;
+  const yMin = -depth / 2;
+  const yMax = depth / 2;
+
+  for (let mx = xMin; mx <= xMax; mx += step) {
+    for (let my = yMin; my <= yMax; my += step) {
+      let p = 0;
+      for (const s of speakers) {
+        const dx = mx - s.mX, dy = my - s.mY;
+        const d = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+        p += Math.pow(10, (spl1m - 20*Math.log10(d)) / 10);
+      }
+      const spl = 10 * Math.log10(Math.max(1e-12, p));
+      total++;
+      if (spl >= threshold) good++;
+    }
+  }
+  return total ? Math.round(100 * good / total) : 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   قائمة الكميات (بدون أسعار)
+   ═══════════════════════════════════════════════════════════ */
+function computeQuantities() {
+  const spk = SPEAKERS[state.model];
+  const totalW = spk.watt * state.qty;
+  const ampW = Math.ceil((totalW * 1.25) / 50) * 50;
+  const cableM = Math.ceil(state.len * 1.2 + 30);
+
+  const items = [
+    { name: `سماعة Motivity ${state.model}`, qty: state.qty,
+      note: `${spk.watt}W · ${spk.sens}dB · IP65` },
+    { name: state.mount === 'pole' ? 'حامل عمود معدني مجلفن' : 'حامل جداري معدني',
+      qty: state.qty,
+      note: state.mount === 'pole' ? 'تغطية 360°' : 'تغطية 120°' },
+    { name: 'علبة توصيل IP65', qty: state.qty, note: 'حماية الوصلات' },
+    { name: 'كابل سماعات خارجي 2×1.5mm²', qty: cableM,
+      note: 'مقاوم للأشعة فوق البنفسجية' },
+    { name: `مضخم مكسر ${ampW}W · خط 100V`, qty: 1, note: 'هامش أمان 25%' }
+  ];
+
+  return { items, ampW, cableM };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   المشهد
    ═══════════════════════════════════════════════════════════ */
 function generateScene() {
-  scene.cars = [];
-  scene.benches = [];
-  scene.trees = [];
-  scene.people = [];
-
-  const W = canvas.width, H = canvas.height;
+  scene = { cars: [], benches: [], trees: [], people: [], speckles: [] };
+  const W = LOGICAL_W, H = LOGICAL_H;
 
   if (state.env === 'parking') {
-    // Cars in top row and bottom row
-    const carColors = ['#e74c3c', '#3498db', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#2ecc71'];
+    const colors = ['#e74c3c','#3498db','#f39c12','#9b59b6','#1abc9c','#e67e22','#2ecc71'];
     for (let row = 0; row < 2; row++) {
       const y = row === 0 ? H * 0.25 : H * 0.75;
       for (let i = 0; i < 6; i++) {
@@ -298,64 +753,78 @@ function generateScene() {
           scene.cars.push({
             x: 120 + i * 165 + Math.random() * 20,
             y: y + (Math.random() - 0.5) * 10,
-            color: carColors[Math.floor(Math.random() * carColors.length)],
+            color: colors[Math.floor(Math.random() * colors.length)],
             rot: row === 0 ? 0 : Math.PI
           });
         }
       }
     }
+    for (let i = 0; i < 600; i++) {
+      scene.speckles.push({ x: Math.random() * W, y: Math.random() * H, a: Math.random() * 0.04 });
+    }
   } else if (state.env === 'walkway') {
-    // Trees along both sides
     for (let i = 0; i < 8; i++) {
-      scene.trees.push({
-        x: 80 + i * 140 + Math.random() * 30,
-        y: 80 + Math.random() * 40,
-        r: 22 + Math.random() * 10
-      });
-      scene.trees.push({
-        x: 100 + i * 140 + Math.random() * 30,
-        y: H - 80 - Math.random() * 40,
-        r: 22 + Math.random() * 10
-      });
+      scene.trees.push({ x: 80 + i * 140 + Math.random() * 30, y: 80 + Math.random() * 40, r: 22 + Math.random() * 10 });
+      scene.trees.push({ x: 100 + i * 140 + Math.random() * 30, y: H - 80 - Math.random() * 40, r: 22 + Math.random() * 10 });
     }
-    // Benches
     for (let i = 0; i < 4; i++) {
-      scene.benches.push({
-        x: 200 + i * 260,
-        y: H * 0.35,
-        horizontal: true
-      });
-      scene.benches.push({
-        x: 250 + i * 260,
-        y: H * 0.65,
-        horizontal: true
-      });
+      scene.benches.push({ x: 200 + i * 260, y: H * 0.35, horizontal: true });
+      scene.benches.push({ x: 250 + i * 260, y: H * 0.65, horizontal: true });
     }
-    // People
     for (let i = 0; i < 10; i++) {
       scene.people.push({
         x: 100 + Math.random() * (W - 200),
         y: H * 0.5 + (Math.random() - 0.5) * 60,
-        color: ['#3498db', '#e74c3c', '#2ecc71', '#f39c12'][Math.floor(Math.random()*4)]
+        color: ['#3498db','#e74c3c','#2ecc71','#f39c12'][Math.floor(Math.random()*4)]
       });
     }
   } else {
-    // Plaza: benches around
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * Math.PI * 2;
-      scene.benches.push({
-        x: W/2 + Math.cos(a) * 280,
-        y: H/2 + Math.sin(a) * 200,
-        horizontal: true,
-        rot: a
-      });
+      scene.benches.push({ x: W/2 + Math.cos(a) * 280, y: H/2 + Math.sin(a) * 200, horizontal: true, rot: a });
     }
-    // Trees in corners
-    const corners = [[150, 120], [W-150, 120], [150, H-120], [W-150, H-120]];
-    corners.forEach(c => {
+    [[150,120],[W-150,120],[150,H-120],[W-150,H-120]].forEach(c => {
       scene.trees.push({ x: c[0], y: c[1], r: 28 });
     });
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   التحويلات ومواقع السماعات
+   ═══════════════════════════════════════════════════════════ */
+function updateLayout() {
+  layout.leftPx  = SITE_MARGIN_PX;
+  layout.rightPx = LOGICAL_W - SITE_MARGIN_PX;
+  layout.widthPx = layout.rightPx - layout.leftPx;
+  layout.pxPerM  = layout.widthPx / Math.max(1, state.len);
+}
+
+function getSpeakerPositionsMeters() {
+  if (state.speakerPositions && state.speakerPositions.length === state.qty) {
+    return state.speakerPositions;
+  }
+  const positions = [];
+  const spacingM = state.qty > 1 ? state.len / (state.qty - 1) : 0;
+  for (let i = 0; i < state.qty; i++) {
+    const mX = state.qty === 1 ? state.len / 2 : i * spacingM;
+    positions.push({ mX, mY: 0 });
+  }
+  return positions;
+}
+
+function metersToPxX(m) { return layout.leftPx + m * layout.pxPerM; }
+function metersToPxY(m) { return LOGICAL_H / 2 + m * layout.pxPerM; }
+function pxToMetersX(px) { return (px - layout.leftPx) / layout.pxPerM; }
+function pxToMetersY(py) { return (py - LOGICAL_H / 2) / layout.pxPerM; }
+
+function resetPositions() {
+  if (!state.speakerPositions) return;
+  state.speakerPositions = null;
+  invalidateHeat();
+  pushHistory();
+  scheduleAutosave();
+  updateCustomBadge();
+  updateKPI();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -368,169 +837,91 @@ function loop() {
 }
 
 function draw() {
-  const W = canvas.width, H = canvas.height;
-  const A = AREA[state.env];
-
   ctx.fillStyle = "#050505";
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
 
-  if (state.layers.scene) drawScene(W, H);
+  if (state.layers.scene) drawScene();
+  if (state.layers.heat)  drawHeatmap();
+  if (state.layers.waves) drawWaves();
 
-  if (state.layers.heat) drawHeatmap(W, H);
+  drawSpeakers();
+  drawScaleBar();
 
-  if (state.layers.waves) drawWaves(W, H);
-
-  drawSpeakers(W, H);
-
-  if (state.layers.labels) drawLabels(W, H);
-
-  if (state.hoverX !== null) drawHoverInfo();
+  if (state.layers.labels) drawLabels();
+  if (state.hoverX !== null && !drag) drawHoverInfo();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   رسم المشهد
+   المشهد — رسم
    ═══════════════════════════════════════════════════════════ */
-function drawScene(W, H) {
-  if (state.env === 'parking') drawParkingScene(W, H);
-  else if (state.env === 'walkway') drawWalkwayScene(W, H);
-  else drawPlazaScene(W, H);
+function drawScene() {
+  if (state.env === 'parking')      drawParkingScene();
+  else if (state.env === 'walkway') drawWalkwayScene();
+  else                              drawPlazaScene();
 }
 
-function drawParkingScene(W, H) {
-  // Asphalt
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, W, H);
-
-  // Texture speckles
-  for (let i = 0; i < 600; i++) {
-    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.04})`;
-    ctx.fillRect(Math.random() * W, Math.random() * H, 1, 1);
+function drawParkingScene() {
+  const W = LOGICAL_W, H = LOGICAL_H;
+  ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, W, H);
+  for (const s of scene.speckles) {
+    ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+    ctx.fillRect(s.x, s.y, 1, 1);
   }
-
-  // Central lane
-  ctx.fillStyle = '#222';
-  ctx.fillRect(0, H * 0.42, W, H * 0.16);
-
-  // Yellow dashed center line
-  ctx.strokeStyle = '#fbbf24';
-  ctx.lineWidth = 3;
+  ctx.fillStyle = '#222'; ctx.fillRect(0, H * 0.42, W, H * 0.16);
+  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3;
   ctx.setLineDash([25, 20]);
-  ctx.beginPath();
-  ctx.moveTo(0, H * 0.5);
-  ctx.lineTo(W, H * 0.5);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, H * 0.5); ctx.lineTo(W, H * 0.5); ctx.stroke();
   ctx.setLineDash([]);
-
-  // Parking slot lines (top row)
-  ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
   for (let i = 0; i < 8; i++) {
     const x = 100 + i * 140;
     ctx.beginPath();
-    ctx.moveTo(x, H * 0.1);
-    ctx.lineTo(x, H * 0.42);
-    ctx.moveTo(x, H * 0.58);
-    ctx.lineTo(x, H * 0.9);
+    ctx.moveTo(x, H * 0.1); ctx.lineTo(x, H * 0.42);
+    ctx.moveTo(x, H * 0.58); ctx.lineTo(x, H * 0.9);
     ctx.stroke();
   }
-
-  // Cars
-  scene.cars.forEach(car => drawCar(car));
+  scene.cars.forEach(drawCar);
 }
 
 function drawCar(car) {
   ctx.save();
-  ctx.translate(car.x, car.y);
-  ctx.rotate(car.rot);
-
-  // Shadow
+  ctx.translate(car.x, car.y); ctx.rotate(car.rot);
   ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.beginPath();
-  ctx.roundRect(-28, -52, 60, 110, 8);
-  ctx.fill();
-
-  // Body
+  ctx.beginPath(); ctx.roundRect(-28, -52, 60, 110, 8); ctx.fill();
   ctx.fillStyle = car.color;
-  ctx.beginPath();
-  ctx.roundRect(-30, -55, 60, 110, 10);
-  ctx.fill();
-
-  // Windshield
+  ctx.beginPath(); ctx.roundRect(-30, -55, 60, 110, 10); ctx.fill();
   ctx.fillStyle = 'rgba(0,0,0,0.35)';
-  ctx.beginPath();
-  ctx.roundRect(-22, -40, 44, 25, 4);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.roundRect(-22, 20, 44, 25, 4);
-  ctx.fill();
-
-  // Roof
+  ctx.beginPath(); ctx.roundRect(-22, -40, 44, 25, 4); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-22, 20, 44, 25, 4); ctx.fill();
   ctx.fillStyle = 'rgba(0,0,0,0.15)';
-  ctx.beginPath();
-  ctx.roundRect(-20, -12, 40, 24, 4);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.roundRect(-20, -12, 40, 24, 4); ctx.fill();
   ctx.restore();
 }
 
-function drawWalkwayScene(W, H) {
-  // Base
-  ctx.fillStyle = '#2a2a2a';
-  ctx.fillRect(0, 0, W, H);
-
-  // Central walkway (lighter)
-  ctx.fillStyle = '#3d3d3d';
-  ctx.fillRect(0, H * 0.35, W, H * 0.3);
-
-  // Tile pattern
-  ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-  ctx.lineWidth = 1;
-  for (let x = 0; x <= W; x += 40) {
-    ctx.beginPath();
-    ctx.moveTo(x, H * 0.35);
-    ctx.lineTo(x, H * 0.65);
-    ctx.stroke();
-  }
-  for (let y = H * 0.35; y <= H * 0.65; y += 40) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(W, y);
-    ctx.stroke();
-  }
-
-  // Side paths
+function drawWalkwayScene() {
+  const W = LOGICAL_W, H = LOGICAL_H;
+  ctx.fillStyle = '#2a2a2a'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#3d3d3d'; ctx.fillRect(0, H * 0.35, W, H * 0.3);
+  ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1;
+  for (let x = 0; x <= W; x += 40) { ctx.beginPath(); ctx.moveTo(x, H * 0.35); ctx.lineTo(x, H * 0.65); ctx.stroke(); }
+  for (let y = H * 0.35; y <= H * 0.65; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
   ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fillRect(0, H * 0.32, W, 6);
-  ctx.fillRect(0, H * 0.65, W, 6);
-
-  // Trees
-  scene.trees.forEach(t => drawTree(t));
-
-  // Benches
-  scene.benches.forEach(b => drawBench(b));
-
-  // People
-  scene.people.forEach(p => drawPerson(p));
+  ctx.fillRect(0, H * 0.32, W, 6); ctx.fillRect(0, H * 0.65, W, 6);
+  scene.trees.forEach(drawTree);
+  scene.benches.forEach(drawBench);
+  scene.people.forEach(drawPerson);
 }
 
-function drawPlazaScene(W, H) {
-  // Base
-  ctx.fillStyle = '#3d3630';
-  ctx.fillRect(0, 0, W, H);
-
-  // Circular pattern from center
+function drawPlazaScene() {
+  const W = LOGICAL_W, H = LOGICAL_H;
   const cx = W / 2, cy = H / 2;
+  ctx.fillStyle = '#3d3630'; ctx.fillRect(0, 0, W, H);
   for (let r = 60; r < 500; r += 60) {
     ctx.strokeStyle = `rgba(245,158,11,${0.15 - r * 0.0002})`;
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
   }
-
-  // Radial lines
-  ctx.strokeStyle = 'rgba(245,158,11,0.12)';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(245,158,11,0.12)'; ctx.lineWidth = 1.5;
   for (let i = 0; i < 12; i++) {
     const a = (i / 12) * Math.PI * 2;
     ctx.beginPath();
@@ -538,50 +929,27 @@ function drawPlazaScene(W, H) {
     ctx.lineTo(cx + Math.cos(a) * 500, cy + Math.sin(a) * 500);
     ctx.stroke();
   }
-
-  // Fountain (center)
   const fgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80);
   fgrad.addColorStop(0, 'rgba(56,189,248,0.6)');
   fgrad.addColorStop(0.7, 'rgba(56,189,248,0.15)');
   fgrad.addColorStop(1, 'rgba(56,189,248,0)');
   ctx.fillStyle = fgrad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 80, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = 'rgba(56,189,248,0.4)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(cx, cy, 60, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Benches
-  scene.benches.forEach(b => drawBench(b));
-
-  // Corner trees
-  scene.trees.forEach(t => drawTree(t));
+  ctx.beginPath(); ctx.arc(cx, cy, 80, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(56,189,248,0.4)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, 60, 0, Math.PI * 2); ctx.stroke();
+  scene.benches.forEach(drawBench);
+  scene.trees.forEach(drawTree);
 }
 
 function drawTree(t) {
-  // Shadow
   ctx.beginPath();
   ctx.ellipse(t.x + 4, t.y + 5, t.r, t.r * 0.9, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fill();
-
-  // Crown
+  ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fill();
   const grad = ctx.createRadialGradient(t.x - 5, t.y - 5, 2, t.x, t.y, t.r);
-  grad.addColorStop(0, '#4ade80');
-  grad.addColorStop(0.5, '#166534');
-  grad.addColorStop(1, '#052e16');
-  ctx.beginPath();
-  ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Radial leaves texture
-  ctx.strokeStyle = 'rgba(74,222,128,0.35)';
-  ctx.lineWidth = 1;
+  grad.addColorStop(0, '#4ade80'); grad.addColorStop(0.5, '#166534'); grad.addColorStop(1, '#052e16');
+  ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+  ctx.fillStyle = grad; ctx.fill();
+  ctx.strokeStyle = 'rgba(74,222,128,0.35)'; ctx.lineWidth = 1;
   for (let i = 0; i < 8; i++) {
     const a = (i / 8) * Math.PI * 2;
     ctx.beginPath();
@@ -589,80 +957,73 @@ function drawTree(t) {
     ctx.lineTo(t.x + Math.cos(a) * t.r * 0.85, t.y + Math.sin(a) * t.r * 0.85);
     ctx.stroke();
   }
-
-  // Trunk
-  ctx.beginPath();
-  ctx.arc(t.x, t.y, 3, 0, Math.PI * 2);
-  ctx.fillStyle = '#7f4f24';
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(t.x, t.y, 3, 0, Math.PI * 2);
+  ctx.fillStyle = '#7f4f24'; ctx.fill();
 }
 
 function drawBench(b) {
   ctx.save();
   ctx.translate(b.x, b.y);
   if (b.rot) ctx.rotate(b.rot);
-
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.fillRect(-24, -7, 50, 18);
-
-  ctx.fillStyle = '#8b5a3c';
-  ctx.fillRect(-25, -8, 50, 16);
-
-  ctx.strokeStyle = '#6b4423';
-  ctx.lineWidth = 1;
-  for (let i = -20; i < 25; i += 8) {
-    ctx.beginPath();
-    ctx.moveTo(i, -8);
-    ctx.lineTo(i, 8);
-    ctx.stroke();
-  }
-
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(-24, -7, 50, 18);
+  ctx.fillStyle = '#8b5a3c';        ctx.fillRect(-25, -8, 50, 16);
+  ctx.strokeStyle = '#6b4423'; ctx.lineWidth = 1;
+  for (let i = -20; i < 25; i += 8) { ctx.beginPath(); ctx.moveTo(i, -8); ctx.lineTo(i, 8); ctx.stroke(); }
   ctx.restore();
 }
 
 function drawPerson(p) {
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-  ctx.fillStyle = p.color;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(p.x - 1, p.y - 1.5, 1.5, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff';
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill();
+  ctx.beginPath(); ctx.arc(p.x - 1, p.y - 1.5, 1.5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   خريطة SPL
+   خريطة حرارية
    ═══════════════════════════════════════════════════════════ */
-function drawHeatmap(W, H) {
-  const spk = SPEAKERS[state.model];
-  const positions = getPositions(W);
-  const step = 12;
-  const spl1m = spk.sens + 10 * Math.log10(spk.watt);
+function drawHeatmap() {
+  const key = getHeatKey();
+  if (!heatCache || heatCacheKey !== key) {
+    heatCache = renderHeatmapOffscreen();
+    heatCacheKey = key;
+  }
+  ctx.drawImage(heatCache, 0, 0, LOGICAL_W, LOGICAL_H);
+}
 
-  for (let py = 0; py < H; py += step) {
-    for (let px = 0; px < W; px += step) {
+function renderHeatmapOffscreen() {
+  const offW = Math.ceil(LOGICAL_W / HEAT_DOWNSCALE);
+  const offH = Math.ceil(LOGICAL_H / HEAT_DOWNSCALE);
+  const off = document.createElement('canvas');
+  off.width = offW; off.height = offH;
+  const octx = off.getContext('2d');
+
+  const spk = SPEAKERS[state.model];
+  const speakers = getSpeakerPositionsMeters();
+  const spl1m = splAt1m(spk);
+  const dz = state.height - EAR_HEIGHT_M;
+  const step = HEAT_STEP_OFF;
+
+  for (let oy = 0; oy < offH; oy += step) {
+    for (let ox = 0; ox < offW; ox += step) {
+      const lpx = ox * HEAT_DOWNSCALE;
+      const lpy = oy * HEAT_DOWNSCALE;
+      const mx = pxToMetersX(lpx);
+      const my = pxToMetersY(lpy);
+
       let pTotal = 0;
-      positions.forEach(pos => {
-        // 3D distance from mount to ground listener at 1.5m
-        const dx = (px - pos.x) / 25;
-        const dy = (py - pos.y) / 25;
-        const dz = state.height - 1.5;
+      for (let i = 0; i < speakers.length; i++) {
+        const s = speakers[i];
+        const dx = mx - s.mX, dy = my - s.mY;
         const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
         const spl = spl1m - 20 * Math.log10(dist);
         pTotal += Math.pow(10, spl / 10);
-      });
-      const spl = 10 * Math.log10(pTotal);
-      ctx.fillStyle = splColor(spl);
-      ctx.fillRect(px, py, step, step);
+      }
+      const spl = 10 * Math.log10(Math.max(1e-12, pTotal));
+      octx.fillStyle = splColor(spl);
+      octx.fillRect(ox, oy, step, step);
     }
   }
+  return off;
 }
 
 function splColor(spl) {
@@ -675,27 +1036,28 @@ function splColor(spl) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   الموجات الصوتية المتحركة
+   الموجات
    ═══════════════════════════════════════════════════════════ */
-function drawWaves(W, H) {
-  const positions = getPositions(W);
-  const maxR = state.mount === 'pole' ? 200 : 140;
+function drawWaves() {
+  const spk = SPEAKERS[state.model];
+  const coverMeters = state.mount === 'pole' ? spk.coverPole : spk.coverWall;
+  const maxR = coverMeters * layout.pxPerM;
   const numRings = 4;
   const isPole = state.mount === 'pole';
+  const speakers = getSpeakerPositionsMeters();
 
-  positions.forEach((p, i) => {
+  speakers.forEach((s, i) => {
+    const px = metersToPxX(s.mX);
+    const py = metersToPxY(s.mY);
+
     for (let r = 0; r < numRings; r++) {
       const offset = (state.t + r * 0.25 + i * 0.04) % 1;
       const radius = offset * maxR;
       const alpha = (1 - offset) * 0.55;
 
       ctx.beginPath();
-      if (isPole) {
-        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-      } else {
-        // Semi-circle for wall mount
-        ctx.arc(p.x, p.y, radius, -Math.PI / 3, Math.PI / 3);
-      }
+      if (isPole) ctx.arc(px, py, radius, 0, Math.PI * 2);
+      else        ctx.arc(px, py, radius, -Math.PI / 3, Math.PI / 3);
       ctx.strokeStyle = `rgba(56,189,248,${alpha})`;
       ctx.lineWidth = 2.5;
       ctx.shadowColor = `rgba(56,189,248,${alpha * 0.8})`;
@@ -705,11 +1067,8 @@ function drawWaves(W, H) {
 
       if (radius > 10) {
         ctx.beginPath();
-        if (isPole) {
-          ctx.arc(p.x, p.y, radius - 5, 0, Math.PI * 2);
-        } else {
-          ctx.arc(p.x, p.y, radius - 5, -Math.PI / 3, Math.PI / 3);
-        }
+        if (isPole) ctx.arc(px, py, radius - 5, 0, Math.PI * 2);
+        else        ctx.arc(px, py, radius - 5, -Math.PI / 3, Math.PI / 3);
         ctx.strokeStyle = `rgba(56,189,248,${alpha * 0.35})`;
         ctx.lineWidth = 1;
         ctx.stroke();
@@ -718,249 +1077,305 @@ function drawWaves(W, H) {
   });
 }
 
-function getPositions(W) {
-  const H = canvas.height;
-  const pathY = H / 2;
-  const startX = 100;
-  const endX = W - 100;
-  const span = endX - startX;
-  const spacing = state.qty > 1 ? span / (state.qty - 1) : 0;
-
-  const positions = [];
-  for (let i = 0; i < state.qty; i++) {
-    const x = state.qty === 1 ? (startX + endX) / 2 : startX + i * spacing;
-    // Wall mount: speakers alternate top/bottom edge
-    let y = pathY;
-    if (state.mount === 'wall') {
-      y = i % 2 === 0 ? H * 0.15 : H * 0.85;
-    }
-    positions.push({ x, y });
-  }
-  return positions;
-}
-
 /* ═══════════════════════════════════════════════════════════
-   السماعات (مصممة يدوياً)
+   رسم السماعات
    ═══════════════════════════════════════════════════════════ */
-function drawSpeakers(W, H) {
-  const positions = getPositions(W);
+function drawSpeakers() {
+  getSpeakerPositionsMeters().forEach((s, i) => {
+    const px = metersToPxX(s.mX);
+    const py = metersToPxY(s.mY);
+    const isDragged = drag && drag.idx === i;
 
-  positions.forEach((p, i) => {
-    if (state.mount === 'pole') {
-      drawPoleSpeaker(p.x, p.y, i + 1);
-    } else {
-      drawWallSpeaker(p.x, p.y, i + 1);
+    if (isDragged) {
+      ctx.beginPath();
+      ctx.arc(px, py, 34, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(56,189,248,0.15)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(56,189,248,0.6)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
+
+    if (state.mount === 'pole') drawPoleSpeaker(px, py, i + 1);
+    else                        drawWallSpeaker(px, py, i + 1);
   });
 }
 
 function drawPoleSpeaker(x, y, num) {
-  // Shadow
-  ctx.beginPath();
-  ctx.ellipse(x, y + 30, 18, 6, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.6)';
-  ctx.fill();
-
-  // Pole
+  ctx.beginPath(); ctx.ellipse(x, y + 30, 18, 6, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fill();
   const poleGrad = ctx.createLinearGradient(x - 5, 0, x + 5, 0);
-  poleGrad.addColorStop(0, '#1a1a1a');
-  poleGrad.addColorStop(0.5, '#3a3a3a');
-  poleGrad.addColorStop(1, '#1a1a1a');
+  poleGrad.addColorStop(0, '#1a1a1a'); poleGrad.addColorStop(0.5, '#3a3a3a'); poleGrad.addColorStop(1, '#1a1a1a');
   ctx.fillStyle = poleGrad;
   ctx.fillRect(x - 4, y - 60, 8, 90);
-
-  // Base
-  ctx.beginPath();
-  ctx.ellipse(x, y + 28, 12, 4, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#222';
-  ctx.fill();
-  ctx.strokeStyle = '#444';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-
-  // Cross-arm at top
-  ctx.fillStyle = '#333';
-  ctx.fillRect(x - 22, y - 65, 44, 6);
-
-  // Speaker 1 (left horn)
+  ctx.beginPath(); ctx.ellipse(x, y + 28, 12, 4, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#222'; ctx.fill();
+  ctx.strokeStyle = '#444'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = '#333'; ctx.fillRect(x - 22, y - 65, 44, 6);
   ctx.fillStyle = '#111';
-  ctx.beginPath();
-  ctx.roundRect(x - 22, y - 62, 16, 20, 2);
-  ctx.fill();
-  ctx.strokeStyle = '#555';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // Speaker 2 (right horn)
-  ctx.beginPath();
-  ctx.roundRect(x + 6, y - 62, 16, 20, 2);
-  ctx.fill();
-  ctx.stroke();
-
-  // Grille patterns
+  ctx.beginPath(); ctx.roundRect(x - 22, y - 62, 16, 20, 2); ctx.fill();
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(x + 6, y - 62, 16, 20, 2); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#3a3a3a';
   for (let i = 0; i < 4; i++) {
     ctx.fillRect(x - 20, y - 60 + i * 4, 12, 2);
-    ctx.fillRect(x + 8, y - 60 + i * 4, 12, 2);
+    ctx.fillRect(x + 8,  y - 60 + i * 4, 12, 2);
   }
-
-  // Red accent strip
-  ctx.fillStyle = '#e60012';
-  ctx.fillRect(x - 4, y - 58, 8, 2);
-  ctx.shadowColor = 'rgba(230,0,18,0.7)';
-  ctx.shadowBlur = 8;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // LED indicator
-  ctx.beginPath();
-  ctx.arc(x, y - 20, 2.5, 0, Math.PI * 2);
-  ctx.fillStyle = '#22c55e';
-  ctx.shadowColor = '#22c55e';
-  ctx.shadowBlur = 6;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // Number badge
+  ctx.fillStyle = '#e60012'; ctx.fillRect(x - 4, y - 58, 8, 2);
+  ctx.shadowColor = 'rgba(230,0,18,0.7)'; ctx.shadowBlur = 8; ctx.fill(); ctx.shadowBlur = 0;
+  ctx.beginPath(); ctx.arc(x, y - 20, 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#22c55e'; ctx.shadowColor = '#22c55e'; ctx.shadowBlur = 6; ctx.fill(); ctx.shadowBlur = 0;
   if (state.layers.labels) {
-    ctx.beginPath();
-    ctx.arc(x, y + 45, 9, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(22,27,34,0.9)';
-    ctx.fill();
-    ctx.strokeStyle = '#38bdf8';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.beginPath(); ctx.arc(x, y + 45, 9, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(22,27,34,0.9)'; ctx.fill();
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(num), x, y + 45);
   }
 }
 
 function drawWallSpeaker(x, y, num) {
-  // Shadow
-  ctx.beginPath();
-  ctx.ellipse(x, y + 26, 16, 5, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.fill();
-
-  // Wall bracket
-  ctx.fillStyle = '#333';
-  ctx.fillRect(x - 3, y - 5, 6, 30);
-
-  // Speaker body (angled box)
+  ctx.beginPath(); ctx.ellipse(x, y + 26, 16, 5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fill();
+  ctx.fillStyle = '#333'; ctx.fillRect(x - 3, y - 5, 6, 30);
   const bodyGrad = ctx.createLinearGradient(x - 20, y - 25, x + 20, y + 5);
-  bodyGrad.addColorStop(0, '#4a4a4a');
-  bodyGrad.addColorStop(0.5, '#1a1a1a');
-  bodyGrad.addColorStop(1, '#0a0a0a');
+  bodyGrad.addColorStop(0, '#4a4a4a'); bodyGrad.addColorStop(0.5, '#1a1a1a'); bodyGrad.addColorStop(1, '#0a0a0a');
   ctx.fillStyle = bodyGrad;
-
   ctx.beginPath();
-  ctx.moveTo(x - 20, y - 15);
-  ctx.lineTo(x + 20, y - 25);
-  ctx.lineTo(x + 20, y + 5);
-  ctx.lineTo(x - 20, y + 15);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#555';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
-
-  // Grille dots
+  ctx.moveTo(x - 20, y - 15); ctx.lineTo(x + 20, y - 25);
+  ctx.lineTo(x + 20, y + 5); ctx.lineTo(x - 20, y + 15);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5; ctx.stroke();
   ctx.fillStyle = '#333';
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 5; c++) {
-      ctx.beginPath();
-      ctx.arc(x - 12 + c * 6, y - 12 + r * 6, 1, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) {
+    ctx.beginPath(); ctx.arc(x - 12 + c * 6, y - 12 + r * 6, 1, 0, Math.PI * 2); ctx.fill();
   }
-
-  // Red strip
-  ctx.fillStyle = '#e60012';
-  ctx.fillRect(x - 16, y + 8, 32, 3);
-  ctx.shadowColor = 'rgba(230,0,18,0.6)';
-  ctx.shadowBlur = 8;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-
-  // Number badge
+  ctx.fillStyle = '#e60012'; ctx.fillRect(x - 16, y + 8, 32, 3);
+  ctx.shadowColor = 'rgba(230,0,18,0.6)'; ctx.shadowBlur = 8; ctx.fill(); ctx.shadowBlur = 0;
   if (state.layers.labels) {
-    ctx.beginPath();
-    ctx.arc(x, y + 40, 9, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(22,27,34,0.9)';
-    ctx.fill();
-    ctx.strokeStyle = '#38bdf8';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.beginPath(); ctx.arc(x, y + 40, 9, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(22,27,34,0.9)'; ctx.fill();
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(num), x, y + 40);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════
+   شريط المقياس
+   ═══════════════════════════════════════════════════════════ */
+function niceMeters(m) {
+  const cands = [1,2,5,10,20,25,50,100,200,250,500,1000,2000];
+  for (const c of cands) if (c >= m) return c;
+  return 5000;
+}
+function drawScaleBar() {
+  const targetPx = 140;
+  const niceM = niceMeters(targetPx / layout.pxPerM);
+  const barPx = niceM * layout.pxPerM;
+  const x0 = 30, y0 = LOGICAL_H - 30, x1 = x0 + barPx;
+
+  ctx.fillStyle = 'rgba(22,27,34,0.85)';
+  ctx.strokeStyle = 'rgba(56,189,248,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.roundRect(x0 - 12, y0 - 30, barPx + 24, 50, 8); ctx.fill(); ctx.stroke();
+
+  ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0); ctx.lineTo(x1, y0);
+  ctx.moveTo(x0, y0 - 6); ctx.lineTo(x0, y0 + 6);
+  ctx.moveTo(x1, y0 - 6); ctx.lineTo(x1, y0 + 6);
+  ctx.stroke();
+
+  ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px Cairo';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText(niceM + ' متر', (x0 + x1) / 2, y0 - 10);
+}
+
+/* ═══════════════════════════════════════════════════════════
    التسميات
    ═══════════════════════════════════════════════════════════ */
-function drawLabels(W, H) {
+function drawLabels() {
   const spk = SPEAKERS[state.model];
   const A = AREA[state.env];
+  const intent = INTENT[state.intent];
+  const W = LOGICAL_W;
 
+  const spl1m = splAt1m(spk);
+  const spacing = state.qty > 1 ? state.len / state.qty : state.len;
+  const dz = state.height - EAR_HEIGHT_M;
+  const maxDist = Math.sqrt((spacing / 2) ** 2 + dz ** 2);
+  const splFar = spl1m - 20 * Math.log10(maxDist);
+  const snr = splFar - state.bgNoise;
+  const sti = computeSTI(snr);
+
+  const boxH = 170;
   ctx.fillStyle = 'rgba(22,27,34,0.9)';
-  ctx.fillRect(W - 300, 20, 280, 110);
+  ctx.fillRect(W - 300, 20, 280, boxH);
   ctx.strokeStyle = 'rgba(56,189,248,0.3)';
   ctx.lineWidth = 1;
-  ctx.strokeRect(W - 300, 20, 280, 110);
+  ctx.strokeRect(W - 300, 20, 280, boxH);
 
   ctx.fillStyle = '#38bdf8';
   ctx.font = 'bold 12px Cairo';
   ctx.textAlign = 'right';
-  ctx.fillText('● ' + spk.name + ' · ' + (state.mount === 'pole' ? 'عمود' : 'جداري'), W - 34, 44);
+  ctx.fillText('● ' + spk.name + ' · ' + (state.mount === 'pole' ? 'عمود 360°' : 'جداري 120°'), W - 34, 44);
 
   ctx.fillStyle = '#8b949e';
   ctx.font = '11px Cairo';
-  ctx.fillText('المنطقة: ' + A.name, W - 34, 64);
-  ctx.fillText('القدرة: ' + spk.watt + ' واط · الحساسية: ' + spk.sens + ' dB', W - 34, 84);
-  ctx.fillText('الارتفاع: ' + state.height + ' م · الطول: ' + state.len + ' م', W - 34, 104);
-  ctx.fillText('الوحدات: ' + state.qty, W - 34, 122);
+  ctx.fillText('المنطقة: ' + A.name + ' · ضوضاء ' + state.bgNoise + ' dB', W - 34, 64);
+  ctx.fillText('الهدف: ' + intent.name + ' (SNR ≥ ' + intent.reqSNR + ')', W - 34, 84);
+  ctx.fillText('SPL عند أبعد نقطة: ' + splFar.toFixed(1) + ' dB', W - 34, 104);
+  ctx.fillText('SNR المحقق: ' + snr.toFixed(1) + ' dB', W - 34, 124);
+
+  const stiL = stiLabel(sti);
+  const stiColors = { ok: '#22c55e', warn: '#f59e0b', bad: '#ef4444' };
+  ctx.fillStyle = stiColors[stiL.cls];
+  ctx.fillText('STI: ' + sti.toFixed(2) + ' (' + stiL.text + ')', W - 34, 144);
+  ctx.fillStyle = '#8b949e';
+  const mPer100 = (100 / layout.pxPerM).toFixed(1);
+  ctx.fillText('المقياس: ' + mPer100 + ' م/100px · ' + state.len + ' م', W - 34, 164);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   قراءة SPL عند المؤشر
+   تفاعل المؤشر — Hover + Drag
    ═══════════════════════════════════════════════════════════ */
-canvas.addEventListener('mousemove', e => {
+function getCanvasCoords(clientX, clientY) {
   const r = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / r.width;
-  const scaleY = canvas.height / r.height;
-  state.hoverX = (e.clientX - r.left) * scaleX;
-  state.hoverY = (e.clientY - r.top) * scaleY;
+  return {
+    x: (clientX - r.left) * (LOGICAL_W / r.width),
+    y: (clientY - r.top)  * (LOGICAL_H / r.height)
+  };
+}
+
+function findSpeakerAt(x, y) {
+  const speakers = getSpeakerPositionsMeters();
+  const HIT_RADIUS = 32;
+  let best = -1, bestD = Infinity;
+  for (let i = 0; i < speakers.length; i++) {
+    const px = metersToPxX(speakers[i].mX);
+    const py = metersToPxY(speakers[i].mY);
+    const d = Math.hypot(px - x, py - y);
+    if (d < HIT_RADIUS && d < bestD) { best = i; bestD = d; }
+  }
+  return best;
+}
+
+function handlePointerDown(x, y) {
+  const idx = findSpeakerAt(x, y);
+  if (idx >= 0) {
+    if (!state.speakerPositions) {
+      state.speakerPositions = getSpeakerPositionsMeters().map(s => ({ mX: s.mX, mY: s.mY }));
+    }
+    drag = { idx, moved: false };
+    canvas.classList.add('dragging');
+    return true;
+  }
+  return false;
+}
+
+function handlePointerMove(x, y) {
+  if (drag) {
+    const mx = pxToMetersX(x);
+    const my = pxToMetersY(y);
+    const maxY = (LOGICAL_H / 2 - 30) / layout.pxPerM;
+    state.speakerPositions[drag.idx] = {
+      mX: Math.max(0, Math.min(state.len, mx)),
+      mY: Math.max(-maxY, Math.min(maxY, my))
+    };
+    drag.moved = true;
+    invalidateHeat();
+    return true;
+  }
+  return false;
+}
+
+function handlePointerUp() {
+  if (drag) {
+    if (drag.moved) {
+      pushHistory();
+      scheduleAutosave();
+      updateKPI();
+      updateCustomBadge();
+    }
+    drag = null;
+    canvas.classList.remove('dragging');
+    return true;
+  }
+  return false;
+}
+
+canvas.addEventListener('mousedown', e => {
+  const { x, y } = getCanvasCoords(e.clientX, e.clientY);
+  if (handlePointerDown(x, y)) e.preventDefault();
+});
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getCanvasCoords(e.clientX, e.clientY);
+
+  if (handlePointerMove(x, y)) {
+    state.hoverX = null;
+    return;
+  }
+
+  state.hoverX = x;
+  state.hoverY = y;
+
+  if (findSpeakerAt(x, y) >= 0) canvas.style.cursor = 'grab';
+  else canvas.style.cursor = 'crosshair';
 
   const spk = SPEAKERS[state.model];
-  const positions = getPositions(canvas.width);
-  const spl1m = spk.sens + 10 * Math.log10(spk.watt);
+  const speakers = getSpeakerPositionsMeters();
+  const spl1m = splAt1m(spk);
+  const dz = state.height - EAR_HEIGHT_M;
+  const mx = pxToMetersX(x), my = pxToMetersY(y);
 
   let pTotal = 0;
-  positions.forEach(p => {
-    const dx = (state.hoverX - p.x) / 25;
-    const dy = (state.hoverY - p.y) / 25;
-    const dz = state.height - 1.5;
+  for (const s of speakers) {
+    const dx = mx - s.mX, dy = my - s.mY;
     const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
     const spl = spl1m - 20 * Math.log10(dist);
     pTotal += Math.pow(10, spl / 10);
-  });
-  state.hoverSPL = 10 * Math.log10(pTotal);
+  }
+  state.hoverSPL = 10 * Math.log10(Math.max(1e-12, pTotal));
 });
 
 canvas.addEventListener('mouseleave', () => {
-  state.hoverX = null;
-  state.hoverSPL = null;
+  state.hoverX = null; state.hoverSPL = null;
+  if (!drag) canvas.style.cursor = 'crosshair';
 });
 
+window.addEventListener('mouseup', () => handlePointerUp());
+
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1) return;
+  const t = e.touches[0];
+  const { x, y } = getCanvasCoords(t.clientX, t.clientY);
+  if (handlePointerDown(x, y)) {
+    e.preventDefault();
+    canvas.style.cursor = 'grabbing';
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length !== 1) return;
+  const t = e.touches[0];
+  const { x, y } = getCanvasCoords(t.clientX, t.clientY);
+  if (handlePointerMove(x, y)) e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  handlePointerUp();
+  canvas.style.cursor = 'crosshair';
+});
+
+/* ═══════════════════════════════════════════════════════════
+   Hover Info
+   ═══════════════════════════════════════════════════════════ */
 function drawHoverInfo() {
   const x = state.hoverX, y = state.hoverY;
 
@@ -968,15 +1383,16 @@ function drawHoverInfo() {
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
   ctx.beginPath();
-  ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height);
-  ctx.moveTo(0, y); ctx.lineTo(canvas.width, y);
+  ctx.moveTo(x, 0); ctx.lineTo(x, LOGICAL_H);
+  ctx.moveTo(0, y); ctx.lineTo(LOGICAL_W, y);
   ctx.stroke();
   ctx.setLineDash([]);
 
   const spl = state.hoverSPL;
-  const boxW = 160, boxH = 46;
+  const snr = spl - state.bgNoise;
+  const boxW = 180, boxH = 72;
   let bx = x + 12, by = y - boxH - 12;
-  if (bx + boxW > canvas.width - 10) bx = x - boxW - 12;
+  if (bx + boxW > LOGICAL_W - 10) bx = x - boxW - 12;
   if (by < 10) by = y + 12;
 
   ctx.fillStyle = 'rgba(22,27,34,0.95)';
@@ -984,37 +1400,41 @@ function drawHoverInfo() {
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.roundRect(bx, by, boxW, boxH, 8);
-  ctx.fill();
-  ctx.stroke();
+  ctx.fill(); ctx.stroke();
 
+  ctx.textAlign = 'right';
   ctx.fillStyle = '#8b949e';
   ctx.font = '10px Cairo';
-  ctx.textAlign = 'right';
-  ctx.fillText('تقدير SPL', bx + boxW - 12, by + 18);
+  ctx.fillText('SPL', bx + boxW - 12, by + 16);
 
   ctx.fillStyle = '#fff';
   ctx.font = 'bold 15px Cairo';
-  ctx.fillText(spl.toFixed(1) + ' ديسيبل', bx + boxW - 12, by + 37);
+  ctx.fillText(spl.toFixed(1) + ' dB', bx + boxW - 12, by + 34);
+
+  ctx.fillStyle = '#8b949e';
+  ctx.font = '10px Cairo';
+  ctx.fillText('SNR / ضوضاء ' + state.bgNoise + ' dB', bx + boxW - 12, by + 50);
+
+  const reqSNR = INTENT[state.intent].reqSNR;
+  ctx.fillStyle = snr >= reqSNR ? '#22c55e' : (snr >= reqSNR - 5 ? '#f59e0b' : '#ef4444');
+  ctx.font = 'bold 12px Cairo';
+  ctx.fillText(snr.toFixed(1) + ' dB', bx + boxW - 12, by + 66);
 }
 
 /* ═══════════════════════════════════════════════════════════
    الذكاء الهندسي
    ═══════════════════════════════════════════════════════════ */
 function applySmartAI() {
-  const A = AREA[state.env];
-  const spk = SPEAKERS[state.model];
-
-  // Parking needs high power (SM-8T), walkway/plaza can use SM-5T
   const recommend = state.env === 'parking' ? 'SM-8T' : 'SM-5T';
   $('spk_model').value = recommend;
 
-  // Coverage-based spacing
   const spkObj = SPEAKERS[recommend];
   const cover = state.mount === 'pole' ? spkObj.coverPole : spkObj.coverWall;
   const optimalSpacing = cover * 0.85;
   const optimalQty = Math.max(2, Math.ceil(state.len / optimalSpacing));
 
   $('spk_qty').value = optimalQty;
+  state.speakerPositions = null;
   onChange();
 
   canvas.style.transition = 'box-shadow .3s';
@@ -1023,19 +1443,49 @@ function applySmartAI() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   إعادة التعيين
+   إعادة تعيين كاملة
    ═══════════════════════════════════════════════════════════ */
 function resetData() {
-  if (!confirm('مسح جميع بيانات التصميم الحالية؟')) return;
+  if (!confirm('مسح المشروع بالكامل؟ سيتم حذف الحفظ التلقائي أيضاً.')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  history = { past: [], future: [] };
+
   $('site_len').value = 150;
   $('spk_qty').value = 12;
   $('mnt_height').value = 4;
   $('area_type').selectedIndex = 0;
   $('spk_model').selectedIndex = 0;
   $('mnt_type').selectedIndex = 0;
+  $('app_intent').selectedIndex = 0;
+  $('bg_noise').value = 65;
+  $('template_select').value = '';
+
+  state.speakerPositions = null;
   scene._env = null;
   onChange();
+  pushHistory();
+  updateHistoryButtons();
 }
+
+/* ═══════════════════════════════════════════════════════════
+   درج الموبايل
+   ═══════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  $('sidebar').classList.toggle('collapsed');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   اختصارات لوحة المفاتيح
+   ═══════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  const tgt = e.target;
+  if (tgt && (tgt.tagName === 'INPUT' || tgt.tagName === 'SELECT' || tgt.tagName === 'TEXTAREA')) return;
+
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+    else if ((e.key === 'y') || (e.key === 'Z' && e.shiftKey)) { e.preventDefault(); redo(); }
+  }
+});
 
 /* ═══════════════════════════════════════════════════════════
    التقرير
@@ -1043,94 +1493,152 @@ function resetData() {
 function generateReport() {
   const spk = SPEAKERS[state.model];
   const A = AREA[state.env];
+  const intent = INTENT[state.intent];
   const totalW = spk.watt * state.qty;
-  const spacing = state.len / state.qty;
-  const ampRec = Math.ceil((totalW * 1.25) / 10) * 10;
+  const spacing = state.qty > 1 ? state.len / state.qty : state.len;
   const cover = state.mount === 'pole' ? spk.coverPole : spk.coverWall;
   const coverage = Math.min(100, (cover / spacing) * 100);
 
-  // SPL at farthest point
-  const spl1m = spk.sens + 10 * Math.log10(spk.watt);
-  const maxDist = Math.sqrt((spacing / 2) ** 2 + ((state.height - 1.5) ** 2));
+  const spl1m = splAt1m(spk);
+  const dz = state.height - EAR_HEIGHT_M;
+  const maxDist = Math.sqrt((spacing / 2) ** 2 + dz ** 2);
   const splFar = spl1m - 20 * Math.log10(maxDist);
+
+  const snr = splFar - state.bgNoise;
+  const sti = computeSTI(snr);
+  const stiL = stiLabel(sti);
+  const covPct = computeCoveragePercent();
+  const qty = computeQuantities();
 
   const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
   $('repDate').textContent = today;
 
-  // Status
-  $('status_msg').innerHTML = coverage >= 75 && splFar >= 75
-    ? '<div class="status-badge status-ok">✓ تم التحقق من التصميم هندسياً — مطابق للمعايير</div>'
-    : '<div class="status-badge status-ok" style="background:#fef3c7;color:#92400e;border-right-color:#f59e0b">⚠ التصميم يحتاج مراجعة — راجع التغطية أو القدرة</div>';
+  const okAcoustic = snr >= intent.reqSNR;
+  const okCoverage = covPct >= 85;
+  const okSTI = sti >= intent.stiTarget;
 
-  // KPI cards
+  if (okAcoustic && okCoverage && okSTI) {
+    $('status_msg').innerHTML = '<div class="status-badge status-ok">✓ التصميم مطابق لجميع المعايير — جاهز للتنفيذ</div>';
+  } else if (okAcoustic && !okCoverage) {
+    $('status_msg').innerHTML = '<div class="status-badge status-warn">⚠ الأداء الصوتي مقبول لكن التغطية الميدانية جزئية — يُنصح بزيادة الوحدات</div>';
+  } else if (!okAcoustic) {
+    $('status_msg').innerHTML = '<div class="status-badge status-bad">✗ SNR غير كافٍ — زد القدرة أو قرّب السماعات</div>';
+  } else {
+    $('status_msg').innerHTML = '<div class="status-badge status-warn">⚠ التصميم يحتاج مراجعة — راجع التفاصيل أدناه</div>';
+  }
+
+  const stiColor = stiL.cls === 'ok' ? 'ok' : '';
   $('kpi_data').innerHTML = `
     <div class="kpi-card"><h4>إجمالي الحمل</h4><span>${totalW} واط</span></div>
-    <div class="kpi-card"><h4>الأمبليفاير الأدنى</h4><span>${ampRec} واط</span></div>
-    <div class="kpi-card"><h4>تباعد السماعات</h4><span>${spacing.toFixed(1)} م</span></div>
-    <div class="kpi-card ${splFar >= 80 ? 'ok' : ''}"><h4>SPL عند أبعد نقطة</h4><span>${splFar.toFixed(1)} dB</span></div>
+    <div class="kpi-card"><h4>SNR المحقق</h4><span>${snr.toFixed(1)} dB</span></div>
+    <div class="kpi-card ${stiColor}"><h4>STI (وضوح الكلام)</h4><span>${sti.toFixed(2)}</span></div>
   `;
 
-  // Technical table
+  const stiBadge = `<span class="badge ${stiL.cls}">${stiL.text}</span>`;
+  const snrBadge = snr >= intent.reqSNR
+    ? '<span class="badge ok">مطابق</span>'
+    : '<span class="badge bad">أقل من الهدف</span>';
+
+  $('acoustic_body').innerHTML = `
+    <tr><td>الضوضاء الخلفية للبيئة</td><td class="num">${state.bgNoise} dB</td><td class="num">${A.bgNoise} dB (مرجعي)</td><td><span class="badge ok">قياسي</span></td></tr>
+    <tr><td>SNR المطلوب للغرض</td><td class="num">${intent.reqSNR} dB</td><td class="num">${intent.name}</td><td><span class="badge ok">مرجعي</span></td></tr>
+    <tr><td>SPL عند أبعد نقطة استماع</td><td class="num">${splFar.toFixed(1)} dB</td><td class="num">≥ ${state.bgNoise + intent.reqSNR} dB</td><td>${snrBadge}</td></tr>
+    <tr><td>SNR المحقق</td><td class="num">${snr.toFixed(1)} dB</td><td class="num">≥ ${intent.reqSNR} dB</td><td>${snrBadge}</td></tr>
+    <tr><td>مؤشر وضوح الكلام STI (تقديري)</td><td class="num">${sti.toFixed(2)}</td><td class="num">≥ ${intent.stiTarget.toFixed(2)}</td><td>${stiBadge}</td></tr>
+    <tr><td>التغطية الميدانية (نقاط تستوفي SNR)</td><td class="num">${covPct}%</td><td class="num">≥ 85%</td><td>${covPct >= 85 ? '<span class="badge ok">ممتاز</span>' : covPct >= 70 ? '<span class="badge warn">مقبول</span>' : '<span class="badge bad">ضعيف</span>'}</td></tr>
+  `;
+
   const covStatus = coverage >= 75 ? '<span class="badge ok">مطابق</span>' : '<span class="badge warn">يحتاج مراجعة</span>';
   const splStatus = splFar >= 80 ? '<span class="badge ok">ممتاز</span>' : splFar >= 70 ? '<span class="badge ok">مقبول</span>' : '<span class="badge warn">منخفض</span>';
 
   $('table_body').innerHTML = `
     <tr><td>الموديل المختار</td><td>Motivity ${state.model}</td><td><span class="badge ok">معتمد</span></td><td>${spk.watt} واط · حساسية ${spk.sens} dB</td></tr>
+    <tr><td>معامل الاتجاهية Q</td><td>${getQ().toFixed(2)} (${(10*Math.log10(getQ())).toFixed(2)} dB DI)</td><td><span class="badge ok">محسوب</span></td><td>${state.mount === 'pole' ? 'عمود 360°' : 'جداري 120°'}</td></tr>
     <tr><td>المحول (Transformer)</td><td>70V / 100V Line</td><td><span class="badge ok">مدعوم</span></td><td>مثالي للمسافات الطويلة حتى 500م</td></tr>
-    <tr><td>معيار الحماية</td><td>IP65</td><td><span class="badge ok">معتمد</span></td><td>مقاوم للماء والغبار — للاستخدام الخارجي</td></tr>
-    <tr><td>تغطية الانتشار</td><td>${state.mount === 'pole' ? '360°' : '120°'}</td><td><span class="badge ok">محدّد</span></td><td>${state.mount === 'pole' ? 'عمود إنارة — تغطية دائرية' : 'تثبيت جداري — تغطية موجهة'}</td></tr>
-    <tr><td>ارتفاع التركيب</td><td>${state.height} م</td><td><span class="badge ok">مناسب</span></td><td>فوق مستوى الأذن بـ ${(state.height - 1.5).toFixed(1)} م</td></tr>
+    <tr><td>معيار الحماية</td><td>IP65</td><td><span class="badge ok">معتمد</span></td><td>مقاوم للماء والغبار</td></tr>
+    <tr><td>ارتفاع التركيب</td><td>${state.height} م</td><td><span class="badge ok">مناسب</span></td><td>فوق مستوى الأذن بـ ${(state.height - EAR_HEIGHT_M).toFixed(1)} م</td></tr>
     <tr><td>متوسط التباعد</td><td>${spacing.toFixed(1)} م</td><td>${covStatus}</td><td>مقابل تغطية ${cover} م لكل وحدة</td></tr>
-    <tr><td>نسبة التغطية</td><td>${coverage.toFixed(0)}%</td><td>${covStatus}</td><td>النطاق الموصى به: ≥ 75%</td></tr>
+    <tr><td>نسبة تداخل التغطية</td><td>${coverage.toFixed(0)}%</td><td>${covStatus}</td><td>النطاق الموصى به: ≥ 75%</td></tr>
     <tr><td>SPL عند أبعد نقطة</td><td>${splFar.toFixed(1)} dB</td><td>${splStatus}</td><td>مسافة قصوى: ${maxDist.toFixed(1)} م</td></tr>
-    <tr><td>عدد الوحدات</td><td>${state.qty}</td><td><span class="badge ok">محسوب</span></td><td>على مسار بطول ${state.len} م</td></tr>
+    <tr><td>عدد الوحدات</td><td>${state.qty}${state.speakerPositions ? ' (مواقع مخصصة)' : ''}</td><td><span class="badge ok">محسوب</span></td><td>على مسار بطول ${state.len} م</td></tr>
   `;
 
-  // Engineering notes
+  // قائمة الكميات (بدون أسعار)
+  let qtyRows = '';
+  qty.items.forEach(it => {
+    qtyRows += `<tr>
+      <td>${it.name}</td>
+      <td class="num">${it.qty}</td>
+      <td>${it.note}</td>
+    </tr>`;
+  });
+  $('bom_body').innerHTML = qtyRows;
+
   $('eng_notes').innerHTML = `
     <strong>١. اختيار الموديل:</strong> تم اختيار <b>${state.model}</b> بقدرة <b>${spk.watt} واط</b>
-    وحساسية <b>${spk.sens} dB</b> ليتناسب مع متطلبات <b>${A.name}</b>.
-    ${state.env === 'parking'
-      ? 'المواقف تتطلب قدرة عالية للتغلب على ضوضاء المحركات والإطارات.'
-      : state.env === 'walkway'
-        ? 'الممشى يحتاج قدرة متوسطة لتوفير موسيقى خلفية وإعلانات واضحة.'
-        : 'الساحة المفتوحة تحتاج توازناً بين القدرة والانتشار الواسع.'}<br><br>
+    وحساسية <b>${spk.sens} dB</b> ليتناسب مع متطلبات <b>${A.name}</b>.<br><br>
 
-    <strong>٢. هندسة التركيب:</strong> على ارتفاع <b>${state.height} متر</b> مع
-    <b>${state.mount === 'pole' ? 'تثبيت عمودي (360°)' : 'تثبيت جداري (120°)'}</b>،
-    يصل الصوت إلى مستوى الأذن (1.5 م) بعد قطع مسافة رأسية
-    <b>${(state.height - 1.5).toFixed(1)} م</b>.<br><br>
+    <strong>٢. هندسة التركيب والاتجاهية:</strong> على ارتفاع <b>${state.height} م</b> بنمط
+    <b>${state.mount === 'pole' ? 'عمود (Q=1.5)' : 'جداري (Q=4.0)'}</b>،
+    معامل الاتجاهية يضيف <b>${(10*Math.log10(getQ())).toFixed(2)} dB</b> للـ SPL الفعّال.<br><br>
 
-    <strong>٣. التغطية الصوتية:</strong> التباعد المحسوب <b>${spacing.toFixed(1)} م</b>
-    ينتج عنه تداخل بنسبة <b>${coverage.toFixed(0)}%</b> بين وحدات متجاورة —
-    ${coverage >= 75 ? 'وهو نطاق مثالي لتجنّب البقع الميتة مع الحد الأدنى من الإلغاء الطوري.' : 'يُنصح بتقليل التباعد أو زيادة عدد الوحدات.'}<br><br>
+    <strong>٣. الأداء الصوتي مقابل الضوضاء:</strong> الضوضاء المرجعية للبيئة <b>${A.bgNoise} dB</b>،
+    والهدف هو <b>${intent.name}</b> بمتطلب SNR ≥ <b>${intent.reqSNR} dB</b>.
+    SPL المحقق <b>${splFar.toFixed(1)} dB</b> عند أبعد نقطة ينتج SNR = <b>${snr.toFixed(1)} dB</b>
+    ${snr >= intent.reqSNR ? '— وهو مطابق للهدف ✓' : '— وهو أقل من الهدف، يُنصح بزيادة القدرة أو تقليل التباعد ✗'}.<br><br>
 
-    <strong>٤. القدرة والتضخيم:</strong> الحمل الإجمالي <b>${totalW} واط</b>
-    يتطلب مضخماً بقدرة لا تقل عن <b>${ampRec} واط</b> على خط 100 فولت —
-    مع هامش أمان 25% لذروة البرنامج الصوتي.<br><br>
+    <strong>٤. وضوح الكلام STI:</strong> القيمة التقديرية <b>${sti.toFixed(2)}</b> (${stiL.text}).
+    ${sti >= 0.6 ? 'النظام يوفّر وضوحاً ممتازاً للكلام والإعلانات.' :
+      sti >= 0.45 ? 'وضوح مقبول للإعلانات القصيرة والموسيقى.' :
+      'الوضوح منخفض — التصميم غير مناسب للإعلانات الحرجة.'}<br><br>
 
-    <strong>٥. مطابقة المعايير:</strong> النظام مطابق لمعيار <b>IEC 60268-5</b>
-    لمعدات الأنظمة الصوتية، ومصنّف <b>IP65</b> وفق <b>IEC 60529</b> لمقاومة
-    الماء والغبار — مناسب للتركيب الخارجي الدائم.
+    <strong>٥. التغطية الميدانية:</strong> <b>${covPct}%</b> من نقاط منطقة الاستماع تستوفي SNR المطلوب.
+    ${covPct >= 85 ? 'التغطية شاملة بدون بقع ميتة معتبرة ✓' :
+      covPct >= 70 ? 'توجد بقع ميتة محدودة — يمكن معالجتها بزيادة طفيفة في الوحدات.' :
+      'بقع ميتة كبيرة — يجب إعادة التوزيع.'}<br><br>
+
+    <strong>٦. القدرة والتضخيم:</strong> الحمل الإجمالي <b>${totalW} واط</b> يتطلب مضخماً بقدرة
+    <b>${qty.ampW} واط</b> على خط 100 فولت مع هامش أمان 25% للذروة.<br><br>
+
+    <strong>٧. قائمة التوريد:</strong> عدد السماعات <b>${state.qty}</b>، حوامل <b>${state.qty}</b>،
+    علب توصيل <b>${state.qty}</b>، كابل خارجي بطول <b>${qty.cableM} م</b>، ومضخم بقدرة <b>${qty.ampW} واط</b>.<br><br>
+
+    <strong>٨. مطابقة المعايير:</strong> النظام مطابق لـ <b>IEC 60268-5</b>
+    ومصنّف <b>IP65</b> وفق <b>IEC 60529</b> — مناسب للتركيب الخارجي الدائم.
   `;
 
-  // Image
   $('report_img').src = canvas.toDataURL();
-
   $('report').style.display = 'block';
   window.scrollTo(0, 0);
 }
 
-function closeReport() {
-  $('report').style.display = 'none';
-}
+function closeReport() { $('report').style.display = 'none'; }
 
 /* ═══════════════════════════════════════════════════════════
    التشغيل
    ═══════════════════════════════════════════════════════════ */
+window.addEventListener('beforeunload', () => {
+  try { localStorage.setItem(STORAGE_KEY, snapshot()); } catch (e) {}
+});
+
 window.addEventListener('load', () => {
-  onChange();
+  setupCanvas();
+
+  const loaded = loadAutosave();
+  if (!loaded) {
+    onChange();
+    pushHistory();
+  } else {
+    if (history.past.length === 0) pushHistory();
+  }
+
+  updateHistoryButtons();
+  updateCustomBadge();
   loop();
+
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    $('sidebar').classList.add('collapsed');
+  }
 });
 </script>
 </body>
