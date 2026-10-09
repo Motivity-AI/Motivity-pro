@@ -2,19 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Motivity AI — Elite Engineering v5.4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Motivity AI — Elite Engineering v5.7</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--gold:#f59e0b;--green:#22c55e;--border:#30363d;--purple:#a855f7;--cyan:#06b6d4}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:#fff;display:flex}
-.sidebar{width:420px;background:linear-gradient(180deg,#161b22,#0f141a);padding:20px;border-left:3px solid var(--red);overflow-y:auto;z-index:100;transition:width .3s;position:relative;flex-shrink:0}
-.sidebar.collapsed{width:52px;padding:20px 10px;overflow:hidden}
-.sidebar.collapsed>*:not(.sidebar-toggle){display:none}
-.sidebar-toggle{position:absolute;top:16px;left:16px;background:#161b22;border:1px solid var(--border);color:var(--blue);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:10}
-.sidebar.collapsed .sidebar-toggle{left:10px}
+:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--gold:#f59e0b;--green:#22c55e;--border:#30363d;--purple:#a855f7;--cyan:#06b6d4;--sidebar-w:380px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:#fff;display:flex;touch-action:manipulation}
+.sidebar{width:var(--sidebar-w);background:linear-gradient(180deg,#161b22,#0f141a);padding:20px;padding-top:calc(20px + var(--safe-top));border-left:3px solid var(--red);overflow-y:auto;z-index:100;transition:width .3s,transform .3s;position:relative;flex-shrink:0;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.sidebar-toggle{position:absolute;top:calc(16px + var(--safe-top));left:16px;background:#161b22;border:1px solid var(--border);color:var(--blue);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:10;transition:background .2s}
+.sidebar-toggle:active{background:#1f2630}
+@media (min-width:821px){.sidebar.collapsed{width:52px;padding:20px 10px;overflow:hidden}.sidebar.collapsed>*:not(.sidebar-toggle){display:none!important}.sidebar.collapsed .sidebar-toggle{left:10px}}
 .brand{text-align:center;margin-bottom:22px;margin-top:24px}
 .brand h1{font-size:22px;font-weight:900;letter-spacing:2px}
 .brand h1 span{color:var(--red)}
@@ -30,8 +33,9 @@ h3 .badge.gold{background:var(--gold);color:#000}
 h3 .badge.purple{background:var(--purple);color:#fff}
 h3 .badge.cyan{background:var(--cyan);color:#000}
 label{font-size:11px;color:#8b949e;display:block;margin-top:10px;font-weight:600}
-input,select{width:100%;padding:10px 12px;background:#0a0e13;color:#fff;border:1px solid var(--border);border-radius:8px;margin-top:5px;font-family:inherit;font-size:13px}
+input,select{width:100%;padding:11px 12px;background:#0a0e13;color:#fff;border:1px solid var(--border);border-radius:8px;margin-top:5px;font-family:inherit;font-size:16px;transition:border-color .2s,box-shadow .2s}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+input[type="checkbox"]{width:auto;min-width:20px;min-height:20px;margin:0;accent-color:var(--blue)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--border);border-radius:8px;padding:10px 6px;text-align:center}
@@ -40,33 +44,35 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .kpi.ok .v{color:var(--green)}
 .kpi.warn .v{color:var(--gold)}
 .kpi.bad .v{color:var(--red)}
-.btn{border:none;padding:13px;width:100%;border-radius:10px;font-weight:900;cursor:pointer;font-family:inherit;font-size:13px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn{border:none;padding:14px;width:100%;border-radius:10px;font-weight:900;cursor:pointer;font-family:inherit;font-size:14px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;transition:transform .1s,opacity .2s}
+.btn:active{transform:scale(.98)}
 .btn-smart{background:linear-gradient(135deg,#e60012,#ff2e40);color:#fff}
 .btn-report{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000}
-.btn-ghost{background:transparent;color:#8b949e;border:1px solid var(--border);font-size:11px;padding:9px;margin-top:0}
+.btn-ghost{background:transparent;color:#8b949e;border:1px solid var(--border);font-size:12px;padding:11px;margin-top:0;min-height:44px}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .tabs{display:flex;gap:4px;margin-bottom:12px;background:#0a0e13;padding:4px;border-radius:10px;border:1px solid var(--border)}
-.tab{flex:1;padding:8px 6px;text-align:center;cursor:pointer;border-radius:6px;font-size:11px;font-weight:700;color:#8b949e;user-select:none}
+.tab{flex:1;padding:11px 6px;text-align:center;cursor:pointer;border-radius:6px;font-size:11px;font-weight:700;color:#8b949e;user-select:none;min-height:42px;display:flex;align-items:center;justify-content:center}
 .tab.active{background:var(--red);color:#fff}
 .viewport{flex:1;position:relative;background:radial-gradient(circle at 50% 50%,#0f1a26,#040a12);overflow:hidden;min-width:0}
-canvas{display:block;width:100%;height:100%}
-.v-ctrl{position:absolute;background:rgba(22,27,34,.9);border:1px solid var(--border);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:10;flex-wrap:wrap;max-width:calc(100% - 32px)}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.v-ctrl{position:absolute;background:rgba(22,27,34,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:10;flex-wrap:wrap;max-width:calc(100% - 32px)}
 .v-ctrl.top-left{top:16px;left:16px}
 .v-ctrl.top-right{top:16px;right:16px;max-width:440px}
-.v-ctrl button{background:transparent;color:#ccc;border:none;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700}
+.v-ctrl button{background:transparent;color:#ccc;border:none;width:38px;height:38px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.v-ctrl button:active{background:rgba(56,189,248,.2)}
 .v-ctrl button.on{background:var(--blue);color:#000}
 .hint-bar{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.9);border:1px solid var(--border);border-radius:10px;padding:8px 16px;font-size:11.5px;color:#8b949e;z-index:10}
 .hint-bar b{color:var(--blue)}
 .cursor-info{position:absolute;bottom:16px;right:16px;background:rgba(22,27,34,.92);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:11.5px;color:#fff;z-index:10;display:flex;gap:16px}
 .cursor-info b{color:var(--blue);font-weight:700;font-family:'JetBrains Mono',monospace}
 .warnings{position:absolute;top:70px;left:16px;max-width:340px;display:flex;flex-direction:column;gap:6px;z-index:9;max-height:calc(100vh - 180px);overflow-y:auto}
-.warn-item{background:rgba(245,158,11,.15);border:1px solid var(--gold);color:#ffd97a;padding:8px 12px;border-radius:8px;font-size:11.5px;font-weight:600}
+.warn-item{background:rgba(245,158,11,.15);border:1px solid var(--gold);color:#ffd97a;padding:8px 12px;border-radius:8px;font-size:11.5px;font-weight:600;backdrop-filter:blur(6px)}
 .warn-item.critical{background:rgba(230,0,18,.15);border-color:var(--red);color:#ff8a95}
 .warn-item.ok{background:rgba(34,197,94,.12);border-color:var(--green);color:#7fe5a4}
 #errorBanner{display:none;position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,#c40010,#e60012);color:#fff;padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:12px;z-index:999}
 #errorBanner .title{font-weight:900;margin-bottom:4px;font-family:'Cairo',sans-serif;font-size:13px}
-#errorBanner .close{position:absolute;top:8px;left:12px;background:rgba(255,255,255,.2);border:none;color:#fff;width:24px;height:24px;border-radius:6px;cursor:pointer;font-weight:900}
-#reportModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:2000;padding:30px;overflow-y:auto}
+#errorBanner .close{position:absolute;top:8px;left:12px;background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-weight:900}
+#reportModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:2000;padding:30px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .report-paper{background:#fff;color:#333;max-width:1100px;margin:auto;padding:50px;border-radius:6px;line-height:1.7;position:relative}
 .report-paper::before{content:'';position:absolute;top:0;right:0;left:0;height:8px;background:linear-gradient(90deg,var(--red),var(--blue));border-radius:6px 6px 0 0}
 .rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid var(--red);margin-bottom:24px;flex-wrap:wrap;gap:20px}
@@ -99,15 +105,73 @@ canvas{display:block;width:100%;height:100%}
 .sys-card .row-item{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px dashed #e5e7eb}
 .sys-card .row-item:last-child{border:none}
 .sys-card .row-item b{color:#c40010}
-@media(max-width:900px){.sidebar{width:340px}.acoustic-summary{grid-template-columns:1fr 1fr}.sys-overview{grid-template-columns:1fr}.cursor-info{display:none}}
-@media print{@page{size:A4;margin:12mm 10mm}html,body{height:auto!important;overflow:visible!important;background:#fff!important;display:block!important;width:100%!important}.sidebar,.viewport,.no-print,.v-ctrl,.hint-bar,.cursor-info,.warnings,#errorBanner{display:none!important}#reportModal{display:block!important;position:static!important;inset:auto!important;padding:0!important;background:#fff!important;overflow:visible!important;width:100%!important}.report-paper{box-shadow:none!important;padding:0!important;max-width:100%!important;margin:0!important;color:#000!important}.report-paper::before{display:none!important}.rep-header{page-break-inside:avoid!important;page-break-after:avoid!important;border-bottom:2px solid #c40010!important;padding-bottom:6mm!important}.rep-header h1{font-size:18pt!important}.report-paper h3{font-size:13pt!important;page-break-after:avoid!important;page-break-inside:avoid!important;border-left:4px solid #c40010!important;border-right:none!important;padding:3mm 3mm 3mm 5mm!important;margin:8mm 0 4mm 0!important;background:#f5f5f5!important}#reportImg{max-width:100%!important;max-height:100mm!important;display:block!important;margin:0 auto!important;page-break-inside:avoid!important}.report-table{page-break-inside:auto!important;font-size:9pt!important}.report-table thead{display:table-header-group!important}.report-table tr{page-break-inside:avoid!important}.report-table .cat-row,.report-table .total-row{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.eng-note{page-break-inside:avoid!important;padding:3mm 4mm!important;font-size:9.5pt!important;background:#f9f9f9!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+.mobile-fab{display:none;position:fixed;top:calc(12px + var(--safe-top));right:12px;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#e60012,#ff2e40);color:#fff;border:none;font-size:22px;font-weight:900;cursor:pointer;z-index:1100;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(230,0,18,.5)}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1050;backdrop-filter:blur(2px)}
+@media(max-width:1100px){:root{--sidebar-w:340px}.sidebar{padding:16px}.kpi .v{font-size:15px}.v-ctrl.top-right{max-width:360px}.v-ctrl button{width:34px;height:34px}}
+@media(max-width:820px){
+  body{display:block}
+  .mobile-fab{display:flex}
+  .sidebar{position:fixed;top:0;right:0;bottom:0;width:min(92vw,400px);max-width:100vw;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:1080;border-left:3px solid var(--red);border-right:none;padding-top:calc(60px + var(--safe-top));padding-bottom:calc(20px + var(--safe-bottom));box-shadow:-10px 0 30px rgba(0,0,0,.5);height:auto}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar .sidebar-toggle{top:calc(12px + var(--safe-top));left:12px;width:42px;height:42px;font-size:20px;background:rgba(230,0,18,.15);border-color:var(--red);color:#ff8a95}
+  .sidebar-backdrop.show{display:block}
+  .brand{margin-top:0}
+  .viewport{position:fixed;top:0;left:0;right:0;bottom:0;width:100%;z-index:1;flex:none}
+  .v-ctrl{backdrop-filter:blur(12px)}
+  .v-ctrl.top-left{top:auto;bottom:calc(16px + var(--safe-bottom));left:16px;flex-direction:column}
+  .v-ctrl.top-right{top:calc(12px + var(--safe-top));right:70px;left:12px;max-width:none;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;padding:5px;scrollbar-width:none;-ms-overflow-style:none}
+  .v-ctrl.top-right::-webkit-scrollbar{display:none}
+  .v-ctrl button{width:42px;height:42px;flex-shrink:0;font-size:17px}
+  .v-ctrl.top-left button{width:44px;height:44px;font-size:20px}
+  .hint-bar{display:none}
+  .cursor-info{display:none}
+  .warnings{top:calc(72px + var(--safe-top));left:12px;right:12px;max-width:none;max-height:110px;overflow-y:auto}
+  .warn-item{font-size:11px;padding:7px 10px}
+  #reportModal{padding:0}
+  .report-paper{padding:22px 16px;border-radius:0;margin:0;min-height:100vh}
+  .report-paper::before{height:5px;border-radius:0}
+  .rep-header{flex-direction:column;gap:12px;padding-bottom:14px;margin-bottom:16px}
+  .rep-header h1{font-size:20px}
+  .rep-header .meta{text-align:right;width:100%}
+  .report-paper h3{font-size:14px;margin:18px 0 10px;padding-right:10px;border-right-width:4px}
+  .acoustic-summary{grid-template-columns:1fr 1fr;gap:8px}
+  .sys-overview{grid-template-columns:1fr;gap:8px}
+  .ac-box .v{font-size:17px}
+  .report-table{font-size:11px}
+  .report-table th,.report-table td{padding:6px 5px}
+  .eng-note{padding:12px;font-size:12px;line-height:1.8}
+  .report-paper .no-print{display:flex;gap:8px;flex-wrap:wrap}
+  .report-paper .no-print button{flex:1;padding:12px!important;font-size:13px!important}
+}
+@media(max-width:380px){.row{grid-template-columns:1fr}.btn-row{grid-template-columns:1fr}.kpi-row{grid-template-columns:1fr 1fr}.tab{font-size:10px;padding:9px 4px}}
+@media(max-width:820px) and (orientation:landscape) and (max-height:480px){.warnings{max-height:70px}.box{padding:12px;margin-bottom:10px}.brand{margin-bottom:12px}.brand h1{font-size:18px}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;display:block!important;width:100%!important}
+  .sidebar,.viewport,.no-print,.v-ctrl,.hint-bar,.cursor-info,.warnings,#errorBanner,.mobile-fab,.sidebar-backdrop{display:none!important}
+  #reportModal{display:block!important;position:static!important;inset:auto!important;padding:0!important;background:#fff!important;overflow:visible!important;width:100%!important}
+  .report-paper{box-shadow:none!important;padding:0!important;max-width:100%!important;margin:0!important;color:#000!important;min-height:auto!important;border-radius:0!important}
+  .report-paper::before{display:none!important}
+  .rep-header{page-break-inside:avoid!important;page-break-after:avoid!important;border-bottom:2px solid #c40010!important;padding-bottom:6mm!important;flex-direction:row!important}
+  .rep-header h1{font-size:18pt!important}
+  .report-paper h3{font-size:13pt!important;page-break-after:avoid!important;page-break-inside:avoid!important;border-left:4px solid #c40010!important;border-right:none!important;padding:3mm 3mm 3mm 5mm!important;margin:8mm 0 4mm 0!important;background:#f5f5f5!important}
+  #reportImg{max-width:100%!important;max-height:100mm!important;display:block!important;margin:0 auto!important;page-break-inside:avoid!important}
+  .report-table{page-break-inside:auto!important;font-size:9pt!important}
+  .report-table thead{display:table-header-group!important}
+  .report-table tr{page-break-inside:avoid!important}
+  .report-table .cat-row,.report-table .total-row{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .eng-note{page-break-inside:avoid!important;padding:3mm 4mm!important;font-size:9.5pt!important;background:#f9f9f9!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
 </style>
 </head>
 <body>
 
+<button class="mobile-fab" id="mobileFab" onclick="toggleSidebar()" aria-label="القائمة">☰</button>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
 <aside class="sidebar" id="sidebar">
-  <button class="sidebar-toggle" onclick="toggleSidebar()">◀</button>
-  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.4</div></div>
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="طي القائمة">◀</button>
+  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.7 · Conference Complete</div></div>
 
   <div class="tabs">
     <div class="tab active" data-tab="acoustic" onclick="switchTab('acoustic')">🔊 صوتيات</div>
@@ -143,22 +207,27 @@ canvas{display:block;width:100%;height:100%}
   <div id="tab-acoustic">
     <div class="box"><h3>القياسات الهندسية</h3>
       <div class="row">
-        <div><label>الطول (م)</label><input type="number" id="dim_l" value="25" step="0.5" min="3" max="80"></div>
-        <div><label>العرض (م)</label><input type="number" id="dim_w" value="15" step="0.5" min="3" max="60"></div>
+        <div><label>الطول (م)</label><input type="number" id="dim_l" value="25" step="0.5" min="3" max="80" inputmode="decimal"></div>
+        <div><label>العرض (م)</label><input type="number" id="dim_w" value="15" step="0.5" min="3" max="60" inputmode="decimal"></div>
       </div>
-      <label>ارتفاع السقف (م)</label><input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12">
-      <label>المسافة للأذن (م)</label><input type="number" id="earH" value="1.2" step="0.1" min="1" max="2">
+      <label>ارتفاع السقف (م)</label><input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12" inputmode="decimal">
+      <label>المسافة للأذن (م)</label><input type="number" id="earH" value="1.2" step="0.1" min="1" max="2" inputmode="decimal">
     </div>
 
     <div class="box"><h3>سماعات Motivity <span class="badge blue" id="modelBadge">At-08</span></h3>
       <select id="spkModel">
-        <option value="At-08">At-08 · 250W · 90°</option>
-        <option value="At-06">At-06 · 100W · 90°</option>
+        <option value="At-08">At-08 · 250W · 100°×60°</option>
+        <option value="At-06">At-06 · 100W · 90°×90°</option>
+        <option value="At-10">At-10 · 350W · 90°×70°</option>
+        <option value="At-12">At-12 · 450W · 90°×70°</option>
+        <option value="UT-06+">UT-06+ · 120W · 80°×80° (Coaxial)</option>
+        <option value="UT-08+">UT-08+ · 180W · 80°×80° (Coaxial)</option>
+        <option value="UT-10+">UT-10+ · 250W · 80°×80° (Coaxial)</option>
         <option value="At-265">At-265 · 250W · 100°</option>
         <option value="Cs-08">Cs-08 · 150W · 120°</option>
         <option value="Cs-06">Cs-06 · 100W · 120°</option>
       </select>
-      <label>عدد السماعات لكل جدار</label><input type="number" id="spkPerSide" value="4" min="1" max="20">
+      <label>عدد السماعات لكل جدار</label><input type="number" id="spkPerSide" value="4" min="1" max="20" inputmode="numeric">
       <div class="kpi-row">
         <div class="kpi"><div class="v" id="kpiTotalV">0</div><div class="l">السماعات</div></div>
         <div class="kpi"><div class="v" id="kpiWattV">0</div><div class="l">الواط</div></div>
@@ -170,34 +239,49 @@ canvas{display:block;width:100%;height:100%}
     </div>
 
     <div class="box"><h3>المنصة والسمعي البصري <span class="badge cyan">STAGE</span></h3>
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="showPodium" style="width:auto;margin:0;" checked>إضافة منصة</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="showPodium" checked>إضافة منصة</label>
       <div class="row">
-        <div><label>عرض المنصة (م)</label><input type="number" id="podiumW" value="1.2" step="0.1"></div>
-        <div><label>عمق المنصة (م)</label><input type="number" id="podiumD" value="0.7" step="0.1"></div>
+        <div><label>عرض المنصة (م)</label><input type="number" id="podiumW" value="1.2" step="0.1" inputmode="decimal"></div>
+        <div><label>عمق المنصة (م)</label><input type="number" id="podiumD" value="0.7" step="0.1" inputmode="decimal"></div>
       </div>
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showScreen" style="width:auto;margin:0;" checked>إضافة شاشة</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showScreen" checked>إضافة شاشة</label>
       <div class="row">
-        <div><label>عرض الشاشة (م)</label><input type="number" id="screenW" value="6" step="0.5"></div>
+        <div><label>عرض الشاشة (م)</label><input type="number" id="screenW" value="6" step="0.5" inputmode="decimal"></div>
         <div><label>نوع الشاشة</label>
           <select id="screenType"><option value="projection" selected>بروجكتر</option><option value="led">LED</option><option value="none">بدون</option></select>
         </div>
       </div>
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showCameras" style="width:auto;margin:0;" checked>إضافة كاميرات</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:12px;"><input type="checkbox" id="showCameras" checked>إضافة كاميرات</label>
       <div class="row">
-        <div><label>عدد الكاميرات</label><input type="number" id="camCount" value="2" min="0" max="4"></div>
-        <div><label>زاوية (°)</label><input type="number" id="camFOV" value="60" min="30" max="120"></div>
+        <div><label>عدد الكاميرات</label><input type="number" id="camCount" value="2" min="0" max="4" inputmode="numeric"></div>
+        <div><label>زاوية (°)</label><input type="number" id="camFOV" value="60" min="30" max="120" inputmode="numeric"></div>
       </div>
     </div>
 
     <div class="box"><h3>الميكسرات والمعالجة <span class="badge green">AUDIO</span></h3>
-      <label>الميكسر الرقمي</label>
-      <select id="confMixer"><option value="">— بدون —</option><option value="AMIX10 II" selected>AMIX10 II (8ch DSP)</option></select>
+      <label>الميكسر الذكي</label>
+      <select id="confMixer">
+        <option value="">— بدون —</option>
+        <option value="AMIX10 II" selected>AMIX10 II — 8ch DSP + شاشة 2"</option>
+      </select>
       <label>معالج DSP</label>
-      <select id="audioDSP"><option value="">— بدون —</option><option value="DP24">DP24</option><option value="DP36">DP36</option><option value="DP48">DP48</option></select>
-      <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;"><input type="checkbox" id="useFeedback" style="width:auto;margin:0;" checked>مانع صفير DF224</label>
-      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="useSeq" style="width:auto;margin:0;" checked>منظم قدرة SC-802</label>
-      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="useEq" style="width:auto;margin:0;">إيكولايزر GEQ231</label>
-      <label style="display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;"><input type="checkbox" id="showRack" style="width:auto;margin:0;" checked>إظهار رف الأجهزة</label>
+      <select id="audioDSP">
+        <option value="">— بدون —</option>
+        <option value="DP24">DP24 — 2in/4out 96kHz</option>
+        <option value="DP36">DP36 — 3in/6out 96kHz</option>
+        <option value="DP48">DP48 — 4in/8out 96kHz</option>
+      </select>
+      <label>منظّم القدرة</label>
+      <select id="powerSeq">
+        <option value="SC-802 II" selected>SC-802 II — 8ch / 8000W</option>
+        <option value="SC-902">SC-902 — لمسي 3.5"</option>
+        <option value="CP382">CP382 — 16ch / 9000W</option>
+        <option value="">— بدون —</option>
+      </select>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;"><input type="checkbox" id="useFeedback" checked>مانع صفير DF224</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="useEq">إيكولايزر GEQ231</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;"><input type="checkbox" id="confExtMicCheck">ميكروفون إضافي G-T43</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;"><input type="checkbox" id="showRack" checked>إظهار رف الأجهزة</label>
     </div>
   </div>
 
@@ -208,33 +292,33 @@ canvas{display:block;width:100%;height:100%}
         <option value="camera">تتبع كاميرا</option>
         <option value="voting">تصويت وتسجيل</option>
         <option value="premium">راقٍ 5" لمس</option>
-        <option value="wireless">لاسلكي 5G</option>
+        <option value="wireless">لاسلكي UHF</option>
         <option value="interpretation">ترجمة فورية</option>
       </select>
       <button class="btn btn-smart" style="margin-top:10px;padding:10px" onclick="autoRecommendConference()">🤖 اختيار تلقائي</button>
     </div>
 
     <div class="box"><h3>الوحدات الرقمية <span class="badge gold">UNITS</span></h3>
-      <label>الوحدة الرئيسية</label><select id="confHost" onchange="onHostChange()"></select>
-      <label>وحدة الرئيس</label><select id="confChair"></select>
-      <label>وحدة الأعضاء</label><select id="confDelegate"></select>
+      <label>الوحدة الرئيسية (المضيف)</label><select id="confHost" onchange="onHostChange()"></select>
+      <label>وحدة الرئيس (Chairman)</label><select id="confChair"></select>
+      <label>وحدة الأعضاء (Delegate)</label><select id="confDelegate"></select>
       <div class="row">
-        <div><label>عدد الرئيس</label><input type="number" id="cQty" value="1" min="0" max="10"></div>
-        <div><label>عدد الأعضاء</label><input type="number" id="dQty" value="20" min="0" max="500"></div>
+        <div><label>عدد الرئيس</label><input type="number" id="cQty" value="1" min="0" max="10" inputmode="numeric"></div>
+        <div><label>عدد الأعضاء</label><input type="number" id="dQty" value="20" min="0" max="500" inputmode="numeric"></div>
       </div>
       <label>ميكروفون إضافي</label>
-      <select id="confExtMic"><option value="">— بدون —</option><option value="G-T43">G-T43 (XLR)</option></select>
+      <select id="confExtMic"><option value="">— بدون —</option><option value="G-T43">G-T43 (XLR 48V)</option></select>
     </div>
 
     <div class="box"><h3>الشاحن اللاسلكي</h3>
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="useCharger" style="width:auto;margin:0;" checked>شاحن GW5020</label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="useCharger" checked>شاحن GW5020 (20 منفذ USB)</label>
     </div>
 
     <div class="box" id="interpBox" style="display:none"><h3>الترجمة <span class="badge purple">INTERP</span></h3>
-      <label>عدد اللغات</label><input type="number" id="interpLang" value="2" min="1" max="5">
-      <label>عدد المترجمين</label><input type="number" id="interpUnits" value="2" min="1" max="10">
-      <label>مستقبلات IR</label><input type="number" id="irReceivers" value="20" min="0" max="500">
-      <label>لوحات IR</label><input type="number" id="irEmitters" value="1" min="1" max="10">
+      <label>عدد اللغات</label><input type="number" id="interpLang" value="2" min="1" max="5" inputmode="numeric">
+      <label>عدد المترجمين</label><input type="number" id="interpUnits" value="2" min="1" max="10" inputmode="numeric">
+      <label>مستقبلات IR</label><input type="number" id="irReceivers" value="20" min="0" max="500" inputmode="numeric">
+      <label>لوحات IR</label><input type="number" id="irEmitters" value="1" min="1" max="10" inputmode="numeric">
     </div>
 
     <div class="box"><h3>الملخص <span class="badge blue">SUM</span></h3>
@@ -257,8 +341,8 @@ canvas{display:block;width:100%;height:100%}
 <main class="viewport" id="vArea">
   <div id="errorBanner"><button class="close" onclick="this.parentElement.style.display='none'">×</button><div class="title">⚠️ خطأ:</div><div class="msg" id="errorMsg">—</div></div>
   <canvas id="mainCanvas"></canvas>
-  <div class="v-ctrl top-left"><button onclick="zoomIn()">+</button><button onclick="zoomOut()">−</button><button onclick="resetView()">⌂</button></div>
-  <div class="v-ctrl top-right">
+  <div class="v-ctrl top-left"><button onclick="zoomIn()" aria-label="تكبير">+</button><button onclick="zoomOut()" aria-label="تصغير">−</button><button onclick="resetView()" aria-label="إعادة">⌂</button></div>
+  <div class="v-ctrl top-right" id="toggleBar">
     <button id="tgTile" class="on" onclick="toggle('tile')">▦</button>
     <button id="tgCover" class="on" onclick="toggle('cover')">🌐</button>
     <button id="tgHeat" onclick="toggle('heat')">🌡️</button>
@@ -272,7 +356,7 @@ canvas{display:block;width:100%;height:100%}
     <button id="tgTech" class="on" onclick="toggle('tech')">📐</button>
   </div>
   <div class="warnings" id="warningsPanel"></div>
-  <div class="hint-bar">🖱️ <b>عجلة</b> للتقريب · <b>اسحب</b> للتحريك</div>
+  <div class="hint-bar">🖱️ <b>عجلة</b> للتقريب · <b>اسحب</b> للتحريك · 📱 <b>قرّب بإصبعين</b></div>
   <div class="cursor-info">
     <span>SPL: <b id="cursorSPL">—</b></span>
     <span>STI: <b id="cursorSTI">—</b></span>
@@ -303,21 +387,21 @@ canvas{display:block;width:100%;height:100%}
 </div>
 
 <script>
-/* GLOBAL ERROR HANDLER */
 function showError(title, msg) {
-  console.error(title, msg);
+  console.error('[Motivity]', title, msg);
+  if (!msg || msg === 'Script error.' || String(msg).indexOf('ResizeObserver') !== -1) return;
   var banner = document.getElementById('errorBanner');
   var msgEl = document.getElementById('errorMsg');
   if (banner && msgEl) {
     msgEl.textContent = (title ? title + ' — ' : '') + msg;
     banner.style.display = 'block';
+    setTimeout(function(){ banner.style.display='none'; }, 6000);
   }
 }
 window.addEventListener('error', function(e) {
-  showError('خطأ عام', e.message + ' @ ' + (e.filename || '').split('/').pop() + ':' + e.lineno);
+  showError('خطأ', e.message + ' @ ' + (e.filename || '').split('/').pop() + ':' + e.lineno);
 });
 
-/* POLYFILL roundRect */
 if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
     if (typeof r === 'number') r = [r, r, r, r];
@@ -336,64 +420,87 @@ if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D
   };
 }
 
-/* SPEAKERS */
+/* ============ SPEAKERS ============ */
 var SPEAKERS = {
-  'At-08':  { name:'At-08',  pwr:250, angle:90,  sens:97, q:6.83 },
+  'At-08':  { name:'At-08',  pwr:250, angle:100, sens:97, q:5.60 },
   'At-06':  { name:'At-06',  pwr:100, angle:90,  sens:96, q:6.83 },
+  'At-10':  { name:'At-10',  pwr:350, angle:90,  sens:97, q:6.83 },
+  'At-12':  { name:'At-12',  pwr:450, angle:90,  sens:97, q:6.83 },
+  'UT-06+': { name:'UT-06+', pwr:120, angle:80,  sens:93, q:7.69 },
+  'UT-08+': { name:'UT-08+', pwr:180, angle:80,  sens:94, q:7.69 },
+  'UT-10+': { name:'UT-10+', pwr:250, angle:80,  sens:95, q:7.69 },
   'At-265': { name:'At-265', pwr:250, angle:100, sens:98, q:5.60 },
-  'Cs-08':  { name:'Cs-08',  pwr:150, angle:120, sens:92, q:4.00 },
-  'Cs-06':  { name:'Cs-06',  pwr:100, angle:120, sens:90, q:4.00 }
+  'Cs-08':  { name:'Cs-08',  pwr:150, angle:120, sens:97, q:4.00 },
+  'Cs-06':  { name:'Cs-06',  pwr:100, angle:80,  sens:96, q:7.69 }
 };
 
+/* ============ CONFERENCE HOSTS (from catalog) ============ */
 var CONF_HOSTS = {
-  'MT1000S': { name:'MT1000S', type:'basic', desc:'مناقشة أساسي', maxUnits:60, power:20, features:['7 أنماط كلام','ذاكرة انقطاع'] },
-  'MT2000S': { name:'MT2000S', type:'camera', desc:'تتبع كاميرا', maxUnits:60, power:25, features:['4 كاميرات','USB تسجيل'] },
-  'G-T40':   { name:'G-T40',   type:'hybrid', desc:'هجين', maxUnits:200, power:35, features:['لاسلكي','Dante'] },
-  'G-W40':   { name:'G-W40',   type:'wireless', desc:'لاسلكي', maxUnits:200, power:15, features:['UHF','50م'] },
-  'G-S40':   { name:'G-S40',   type:'premium', desc:'راقٍ', maxUnits:256, power:45, features:['تصويت','Dante'] },
-  'G-T50':   { name:'G-T50',   type:'premium', desc:'5G', maxUnits:999, power:60, features:['WiFi 5G','AES-128'] }
+  'MT1000S': { name:'MT1000S', type:'basic',    desc:'مناقشة أساسي (7 أنماط)', maxUnits:60,  power:20, features:['7 أنماط كلام','ذاكرة انقطاع','RS232'] },
+  'MT2000S': { name:'MT2000S', type:'camera',   desc:'تتبع كاميرا + USB',       maxUnits:60,  power:25, features:['4 كاميرات','USB تسجيل','شاشة 4.3"'] },
+  'G-S30':   { name:'G-S30',   type:'digital',  desc:'رقمي متقدم',              maxUnits:256, power:30, features:['RJ45','256 وحدة','Dante'] },
+  'G-S40':   { name:'G-S40',   type:'premium',  desc:'راقٍ + تصويت',            maxUnits:256, power:45, features:['تصويت/تسجيل','Dante','PELCO'] },
+  'G-T40':   { name:'G-T40',   type:'hybrid',   desc:'هجين سلكي/لاسلكي',        maxUnits:200, power:35, features:['UHF','20 قناة','Dante'] },
+  'G-W40':   { name:'G-W40',   type:'wireless', desc:'لاسلكي بالكامل',          maxUnits:200, power:15, features:['UHF','40م','بدون كابلات'] },
+  'G-T50':   { name:'G-T50',   type:'5g',       desc:'5G متكامل لا محدود',      maxUnits:999, power:60, features:['WiFi 5G','AES-128','مزدوج'] }
 };
 
+/* ============ CONFERENCE CHAIRS (from catalog) ============ */
 var CONF_CHAIRS = {
-  'MT380VC': { name:'MT380VC', type:'basic', power:0, display:'—' },
-  'MT880VC': { name:'MT880VC', type:'basic', power:2, display:'2.4"' },
-  'G-T31':   { name:'G-T31',   type:'premium', power:2, display:'LED' },
-  'G-T45':   { name:'G-T45',   type:'voting', power:2, display:'4" IPS' },
-  'G-T40C':  { name:'G-T40C',  type:'wireless', power:2, display:'2.4"' },
-  'G-T51':   { name:'G-T51',   type:'digital', power:2, display:'2.4"' },
-  'G-T51W':  { name:'G-T51W',  type:'wireless5g', power:2, display:'2.4"' },
-  'G-T53':   { name:'G-T53',   type:'premium', power:3, display:'5"' },
-  'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5"' }
+  'MT380VC': { name:'MT380VC', type:'basic',      power:0, display:'—',        desc:'مدمج أساسي' },
+  'MT880VC': { name:'MT880VC', type:'basic',      power:2, display:'2.4"',     desc:'سطح مكتب + سماعتين' },
+  'G-T31':   { name:'G-T31',   type:'digital',    power:2, display:'LED',      desc:'وحدة رئيس معدنية' },
+  'G-T45':   { name:'G-T45',   type:'voting',     power:2, display:'4" IPS',   desc:'مع تصويت' },
+  'G-T40C':  { name:'G-T40C',  type:'wireless',   power:2, display:'2.4" IPS', desc:'لاسلكي UHF' },
+  'G-T51':   { name:'G-T51',   type:'digital',    power:2, display:'2.4" TFT', desc:'توجيه أسماء + توقيت' },
+  'G-T51W':  { name:'G-T51W',  type:'wireless5g', power:2, display:'2.4" TFT', desc:'5G لاسلكي' },
+  'G-T53':   { name:'G-T53',   type:'premium',    power:3, display:'5" لمس',   desc:'تصويت + تسجيل + خدمة' },
+  'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5" لمس',   desc:'5G راقٍ متكامل' }
 };
 
+/* ============ CONFERENCE DELEGATES (from catalog) ============ */
 var CONF_DELEGATES = {
-  'MT380VD': { name:'MT380VD', power:0 }, 'MT880VD': { name:'MT880VD', power:2 },
-  'G-T32':   { name:'G-T32', power:2 },   'G-T46':   { name:'G-T46', power:2 },
-  'G-T40D':  { name:'G-T40D', power:2 },  'G-T52':   { name:'G-T52', power:2 },
-  'G-T52W':  { name:'G-T52W', power:2 },  'G-T54':   { name:'G-T54', power:3 },
-  'G-T54W':  { name:'G-T54W', power:3 }
+  'MT380VD': { name:'MT380VD', power:0, desc:'مدمج' },
+  'MT880VD': { name:'MT880VD', power:2, desc:'سطح مكتب 2.4"' },
+  'G-T32':   { name:'G-T32',   power:2, desc:'وحدة معدنية' },
+  'G-T46':   { name:'G-T46',   power:2, desc:'مع تصويت' },
+  'G-T40D':  { name:'G-T40D',  power:2, desc:'لاسلكي UHF' },
+  'G-T52':   { name:'G-T52',   power:2, desc:'رقمي كابل' },
+  'G-T52W':  { name:'G-T52W',  power:2, desc:'5G لاسلكي' },
+  'G-T54':   { name:'G-T54',   power:3, desc:'رقمي 5" لمس' },
+  'G-T54W':  { name:'G-T54W',  power:3, desc:'5G راقٍ' }
 };
 
+/* ============ ACCESSORIES ============ */
 var CONF_ACCESSORIES = {
-  'AMIX10 II': { name:'AMIX10 II', power:30, desc:'ميكسر رقمي 8 قنوات' },
-  'GW5020':    { name:'GW5020',    power:200, desc:'شاحن مركزي 20 منفذ' },
-  'DF224':     { name:'DF224',     power:10, desc:'مانع صفير DSP' },
-  'SC-802 II': { name:'SC-802 II', power:8000, desc:'منظم قدرة 8 قنوات' },
-  'G-T43':     { name:'G-T43',     power:0.5, desc:'ميكروفون مكثف XLR' },
-  'GEQ231':    { name:'GEQ231',    power:30, desc:'إيكولايزر 31-band' },
-  'DP24':      { name:'DP24',      power:15, desc:'DSP 2in/4out' },
-  'DP36':      { name:'DP36',      power:18, desc:'DSP 3in/6out' },
-  'DP48':      { name:'DP48',      power:20, desc:'DSP 4in/8out' }
+  'AMIX10 II': { name:'AMIX10 II', power:30,   desc:'ميكسر ذكي 8ch + DSP + شاشة 2"' },
+  'GW5020':    { name:'GW5020',    power:200,  desc:'شاحن مركزي 20 منفذ USB' },
+  'DF224':     { name:'DF224',     power:10,   desc:'مانع صفير DSP 24-notch' },
+  'SC-802 II': { name:'SC-802 II', power:8000, desc:'منظم قدرة 8ch + شاشة LCD' },
+  'SC-902':    { name:'SC-902',    power:8000, desc:'منظم قدرة لمسي 3.5"' },
+  'CP382':     { name:'CP382',     power:9000, desc:'منظم قدرة 16ch احترافي' },
+  'G-T43':     { name:'G-T43',     power:0.5,  desc:'ميكروفون مكثف XLR (48V)' },
+  'GEQ231':    { name:'GEQ231',    power:30,   desc:'إيكولايزر 31-band 2ch' },
+  'DP24':      { name:'DP24',      power:15,   desc:'DSP 2in/4out 96kHz' },
+  'DP36':      { name:'DP36',      power:18,   desc:'DSP 3in/6out 96kHz' },
+  'DP48':      { name:'DP48',      power:20,   desc:'DSP 4in/8out 96kHz' }
 };
 
 var INTERP_DB = {
-  'MT606Z': { name:'MT606Z', power:50, desc:'5+1 لغات' },
-  'MTO6Y':  { name:'MTO6Y',  power:5, desc:'وحدة مترجم' },
+  'MT606Z': { name:'MT606Z', power:50,  desc:'مضيف ترجمة 5+1' },
+  'MTO6Y':  { name:'MTO6Y',  power:5,   desc:'وحدة مترجم' },
   'MT606J': { name:'MT606J', power:0.5, desc:'مستقبل IR' },
-  'MT25F':  { name:'MT25F',  power:25, desc:'لوح IR' }
+  'MT25F':  { name:'MT25F',  power:25,  desc:'لوح IR 15W/25W' }
 };
 
-/* STATE */
+var KITS = {
+  'G8PS-10': { name:'G8PS-10', desc:'كابل 10م ذكر/أنثى' },
+  'G8PS-15': { name:'G8PS-15', desc:'كابل 15م' },
+  'G8PS-20': { name:'G8PS-20', desc:'كابل 20م' },
+  'G8PS-30': { name:'G8PS-30', desc:'كابل 30م' }
+};
+
+/* ============ STATE ============ */
 var canvas, ctx, vArea;
 var PX_PER_M = 25;
 var zoom = 1, offsetX = 0, offsetY = 0;
@@ -402,9 +509,10 @@ var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true
 var heatmapCache = null, heatmapKey = '';
 var needsRedraw = true;
 var animTime = 0, lastFrameTime = 0;
-/* ✅ FIX: renamed from 'history' to 'undoHistory' to avoid window.history conflict */
 var undoHistory = [], historyIndex = -1, suppressHistory = false;
+var isMobile = window.matchMedia('(max-width:820px)').matches;
 
+function isMobileNow() { return window.matchMedia('(max-width:820px)').matches; }
 function debounce(fn, ms) { var t; return function() { var a = arguments; clearTimeout(t); t = setTimeout(function() { fn.apply(null, a); }, ms); }; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 function $(id) { return document.getElementById(id); }
@@ -417,25 +525,28 @@ function switchTab(name) {
   $('tab-conference').style.display = name === 'conference' ? 'block' : 'none';
   $('tab-project').style.display = name === 'project' ? 'block' : 'none';
 }
+
 function toggleSidebar() {
   var sb = $('sidebar');
+  var bd = $('sidebarBackdrop');
+  var tog = sb.querySelector('.sidebar-toggle');
+  if (isMobileNow()) {
+    var opening = !sb.classList.contains('open');
+    sb.classList.toggle('open', opening);
+    if (bd) bd.classList.toggle('show', opening);
+    sb.classList.remove('collapsed');
+    if (tog) tog.textContent = opening ? '✕' : '◀';
+    return;
+  }
   sb.classList.toggle('collapsed');
-  sb.querySelector('.sidebar-toggle').textContent = sb.classList.contains('collapsed') ? '▶' : '◀';
+  if (tog) tog.textContent = sb.classList.contains('collapsed') ? '▶' : '◀';
   setTimeout(function(){ resizeCanvas(); markDirty(); }, 320);
 }
 
-/* ACOUSTIC ENGINE */
-function calcRT60(L, W, H, alpha) {
-  var V = L*W*H, S = 2*(L*W+L*H+W*H);
-  return 0.161 * V / Math.max(0.01, S*alpha + 4*0.001*V);
-}
-function calcCriticalDistance(Q, L, W, H, RT60) {
-  return 0.057 * Math.sqrt(Q * L * W * H / Math.max(0.01, RT60));
-}
-function calcRoomConstant(L, W, H, alpha) {
-  var S = 2*(L*W+L*H+W*H);
-  return S * alpha / Math.max(0.01, 1 - alpha);
-}
+/* ============ ACOUSTIC ENGINE ============ */
+function calcRT60(L, W, H, alpha) { var V = L*W*H, S = 2*(L*W+L*H+W*H); return 0.161 * V / Math.max(0.01, S*alpha + 4*0.001*V); }
+function calcCriticalDistance(Q, L, W, H, RT60) { return 0.057 * Math.sqrt(Q * L * W * H / Math.max(0.01, RT60)); }
+function calcRoomConstant(L, W, H, alpha) { var S = 2*(L*W+L*H+W*H); return S * alpha / Math.max(0.01, 1 - alpha); }
 function splFromSource(sens, pwr, Q, R, dx, dy, dz) {
   var r = Math.max(0.5, Math.sqrt(dx*dx+dy*dy+dz*dz));
   var spl1m = sens + 10*Math.log10(pwr);
@@ -468,6 +579,7 @@ function splAtPoint(x_m, y_m, cfg) {
 
 function readConfig() {
   var mk = $('spkModel').value;
+  var spk = SPEAKERS[mk] || SPEAKERS['At-08'];
   return {
     projName: $('projName').value, engName: $('engName').value,
     clientName: $('clientName').value, siteLoc: $('siteLoc').value,
@@ -476,7 +588,7 @@ function readConfig() {
     H: parseFloat($('dim_h').value) || 4, earH: parseFloat($('earH').value) || 1.2,
     mode: $('roomMode').value, alpha: parseFloat($('roomType').value) || 0.2,
     perSide: clamp(parseInt($('spkPerSide').value) || 4, 1, 20),
-    spk: SPEAKERS[mk], modelKey: mk,
+    spk: spk, modelKey: mk,
     showPodium: $('showPodium').checked, podiumW: parseFloat($('podiumW').value) || 1.2,
     podiumD: parseFloat($('podiumD').value) || 0.7,
     showScreen: $('showScreen').checked, screenW: parseFloat($('screenW').value) || 6,
@@ -489,8 +601,10 @@ function readConfig() {
     confExtMic: $('confExtMic').value,
     cQty: parseInt($('cQty').value) || 0, dQty: parseInt($('dQty').value) || 0,
     confMixer: $('confMixer').value, audioDSP: $('audioDSP').value,
+    powerSeq: $('powerSeq') ? $('powerSeq').value : 'SC-802 II',
+    confExtMicCheck: $('confExtMicCheck') ? $('confExtMicCheck').checked : false,
     useCharger: $('useCharger').checked, useFeedback: $('useFeedback').checked,
-    useSeq: $('useSeq').checked, useEq: $('useEq').checked,
+    useEq: $('useEq').checked,
     interpLang: parseInt($('interpLang').value) || 2, interpUnits: parseInt($('interpUnits').value) || 2,
     irReceivers: parseInt($('irReceivers').value) || 0, irEmitters: parseInt($('irEmitters').value) || 1
   };
@@ -499,18 +613,32 @@ function readConfig() {
 function populateHosts() {
   var mode = $('confMode').value, sel = $('confHost'), prev = sel.value;
   sel.innerHTML = '';
-  var filter = {'basic':['basic','camera'],'camera':['camera','hybrid'],'voting':['premium'],'premium':['premium'],'wireless':['wireless','hybrid','premium'],'interpretation':['basic','camera','hybrid','premium']};
+  var filter = {
+    'basic':          ['basic','camera','digital'],
+    'camera':         ['camera','digital','premium','hybrid'],
+    'voting':         ['premium','digital'],
+    'premium':        ['premium','digital','5g','hybrid'],
+    'wireless':       ['wireless','hybrid','5g','premium'],
+    'interpretation': ['basic','camera','digital','hybrid','premium','5g']
+  };
   var allowed = filter[mode] || Object.keys(CONF_HOSTS);
   for (var k in CONF_HOSTS) {
     var h = CONF_HOSTS[k];
-    if (allowed.indexOf(h.type) !== -1 || h.type === 'hybrid') {
+    if (allowed.indexOf(h.type) !== -1) {
       var opt = document.createElement('option');
       opt.value = k;
       opt.textContent = h.name + ' — ' + h.desc + ' (' + h.maxUnits + ' وحدة)';
       sel.appendChild(opt);
     }
   }
-  if (sel.options.length === 0) { var o = document.createElement('option'); o.value='MT1000S'; o.textContent='MT1000S'; sel.appendChild(o); }
+  if (sel.options.length === 0) {
+    for (var k2 in CONF_HOSTS) {
+      var o2 = document.createElement('option');
+      o2.value = k2;
+      o2.textContent = CONF_HOSTS[k2].name;
+      sel.appendChild(o2);
+    }
+  }
   var found = false;
   for (var i = 0; i < sel.options.length; i++) if (sel.options[i].value === prev) found = true;
   if (found) sel.value = prev;
@@ -520,53 +648,90 @@ function populateHosts() {
 function onHostChange() {
   var host = CONF_HOSTS[$('confHost').value];
   if (!host) return;
+
+  var hostChairMap = {
+    'basic':    ['basic','digital','voting'],
+    'camera':   ['basic','digital','voting','premium'],
+    'digital':  ['digital','voting','premium','wireless5g'],
+    'premium':  ['voting','premium','digital','wireless5g'],
+    'hybrid':   ['digital','wireless','wireless5g','voting','premium'],
+    'wireless': ['wireless','wireless5g','digital'],
+    '5g':       ['wireless5g','digital','premium','voting']
+  };
+  var allowedChairs = hostChairMap[host.type] || ['basic','digital','premium'];
+
   var chairSel = $('confChair'), prevChair = chairSel.value;
   chairSel.innerHTML = '';
-  var cf = {'wireless':['wireless'],'hybrid':['digital','wireless5g','premium','voting','wireless'],'premium':['premium','digital','voting','wireless5g'],'camera':['voting','digital','premium'],'basic':['basic','premium']};
-  var allowedChairs = cf[host.type] || ['premium'];
   for (var k in CONF_CHAIRS) {
     var c = CONF_CHAIRS[k];
-    if (allowedChairs.indexOf(c.type) !== -1 || host.type === 'premium') {
+    if (allowedChairs.indexOf(c.type) !== -1) {
       var opt = document.createElement('option');
       opt.value = k;
-      opt.textContent = c.name + (c.display !== '—' ? ' · ' + c.display : '');
+      opt.textContent = c.name + (c.display !== '—' ? ' · ' + c.display : '') + ' — ' + (c.desc || '');
       chairSel.appendChild(opt);
     }
   }
-  if (chairSel.options.length === 0) { var o = document.createElement('option'); o.value='MT380VC'; o.textContent='MT380VC'; chairSel.appendChild(o); }
+  if (chairSel.options.length === 0) {
+    for (var kk in CONF_CHAIRS) {
+      var ok = document.createElement('option');
+      ok.value = kk;
+      ok.textContent = CONF_CHAIRS[kk].name;
+      chairSel.appendChild(ok);
+    }
+  }
   var f1 = false;
   for (var i = 0; i < chairSel.options.length; i++) if (chairSel.options[i].value === prevChair) f1 = true;
   if (f1) chairSel.value = prevChair;
+  else chairSel.selectedIndex = 0;
 
   var delSel = $('confDelegate'), prevDel = delSel.value;
   delSel.innerHTML = '';
-  var familyMap = {'MT380VC':['MT380VD'],'MT880VC':['MT880VD'],'G-T31':['G-T32'],'G-T45':['G-T46'],'G-T40C':['G-T40D'],'G-T51':['G-T52'],'G-T51W':['G-T52W'],'G-T53':['G-T54'],'G-T53W':['G-T54W']};
+  var familyMap = {
+    'MT380VC':['MT380VD'], 'MT880VC':['MT880VD'],
+    'G-T31':['G-T32'],     'G-T45':['G-T46'],
+    'G-T40C':['G-T40D'],   'G-T51':['G-T52'],
+    'G-T51W':['G-T52W'],   'G-T53':['G-T54'],
+    'G-T53W':['G-T54W']
+  };
   var allowed = familyMap[chairSel.value] || Object.keys(CONF_DELEGATES);
-  for (var k2 in CONF_DELEGATES) {
-    if (allowed.indexOf(k2) !== -1) {
+  for (var k3 in CONF_DELEGATES) {
+    if (allowed.indexOf(k3) !== -1) {
       var opt3 = document.createElement('option');
-      opt3.value = k2;
-      opt3.textContent = CONF_DELEGATES[k2].name;
+      opt3.value = k3;
+      opt3.textContent = CONF_DELEGATES[k3].name + ' — ' + (CONF_DELEGATES[k3].desc || '');
       delSel.appendChild(opt3);
     }
   }
-  if (delSel.options.length === 0) { var o4 = document.createElement('option'); o4.value='MT380VD'; o4.textContent='MT380VD'; delSel.appendChild(o4); }
+  if (delSel.options.length === 0) {
+    for (var k4 in CONF_DELEGATES) {
+      var o4 = document.createElement('option');
+      o4.value = k4;
+      o4.textContent = CONF_DELEGATES[k4].name;
+      delSel.appendChild(o4);
+    }
+  }
   var f2 = false;
   for (var j = 0; j < delSel.options.length; j++) if (delSel.options[j].value === prevDel) f2 = true;
   if (f2) delSel.value = prevDel;
+  else delSel.selectedIndex = 0;
 
-  $('interpBox').style.display = (host.type === 'hybrid' || host.type === 'premium' || $('confMode').value === 'interpretation') ? 'block' : 'none';
+  $('interpBox').style.display = (host.type === 'hybrid' || host.type === 'premium' || host.type === '5g' || $('confMode').value === 'interpretation') ? 'block' : 'none';
   updateKPI();
 }
 
 function autoRecommendConference() {
   var cQty = parseInt($('cQty').value) || 0, dQty = parseInt($('dQty').value) || 0;
   var total = cQty + dQty, mode = $('confMode').value;
-  var hostKey = 'MT1000S', chairKey = 'MT380VC', delegateKey = 'MT380VD';
-  if (total <= 20) { hostKey='MT1000S'; chairKey='MT380VC'; delegateKey='MT380VD'; }
-  else if (total <= 60) { hostKey = mode==='camera'?'MT2000S':'MT1000S'; chairKey='MT880VC'; delegateKey='MT880VD'; }
-  else if (total <= 120) { hostKey = mode==='wireless'?'G-W40':'G-T40'; chairKey='G-T51'; delegateKey='G-T52'; }
-  else if (total <= 256) { hostKey = mode==='voting'?'G-S40':(mode==='wireless'?'G-W40':'G-S40'); chairKey = mode==='voting'?'G-T45':'G-T53'; delegateKey = mode==='voting'?'G-T46':'G-T54'; }
+  var hostKey='MT1000S', chairKey='MT380VC', delegateKey='MT380VD';
+  if (total <= 20 && mode !== 'wireless') { hostKey='MT1000S'; chairKey='MT380VC'; delegateKey='MT380VD'; }
+  else if (total <= 60 && mode === 'camera') { hostKey='MT2000S'; chairKey='MT880VC'; delegateKey='MT880VD'; }
+  else if (total <= 60) { hostKey='MT1000S'; chairKey='MT880VC'; delegateKey='MT880VD'; }
+  else if (total <= 120 && mode === 'wireless') { hostKey='G-W40'; chairKey='G-T40C'; delegateKey='G-T40D'; }
+  else if (total <= 120) { hostKey='G-T40'; chairKey='G-T51'; delegateKey='G-T52'; }
+  else if (total <= 256 && mode === 'voting') { hostKey='G-S40'; chairKey='G-T45'; delegateKey='G-T46'; }
+  else if (total <= 256 && mode === 'wireless') { hostKey='G-W40'; chairKey='G-T40C'; delegateKey='G-T40D'; }
+  else if (total <= 256 && mode === 'premium') { hostKey='G-S40'; chairKey='G-T53'; delegateKey='G-T54'; }
+  else if (total <= 256) { hostKey='G-S30'; chairKey='G-T53'; delegateKey='G-T54'; }
   else { hostKey='G-T50'; chairKey='G-T53W'; delegateKey='G-T54W'; }
   $('confHost').value = hostKey; onHostChange();
   $('confChair').value = chairKey; onHostChange();
@@ -617,10 +782,11 @@ function calculateWarnings() {
 }
 
 function resizeCanvas() {
+  if (!vArea || !canvas) return;
   var rect = vArea.getBoundingClientRect();
   var w = Math.max(100, Math.floor(rect.width));
   var h = Math.max(100, Math.floor(rect.height));
-  var dpr = window.devicePixelRatio || 1;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = Math.floor(w * dpr);
   canvas.height = Math.floor(h * dpr);
   canvas.style.width = w + 'px';
@@ -675,10 +841,12 @@ function updateKPI() {
   renderWarnings();
 }
 
+/* ============ RENDER ============ */
 function render() {
   var cfg = readConfig();
   var scale = PX_PER_M;
   var Lpx = cfg.L * scale, Wpx = cfg.W * scale;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.fillStyle = "#050e18";
@@ -687,8 +855,8 @@ function render() {
   ctx.restore();
 
   ctx.save();
-  var cw = canvas.clientWidth || canvas.width;
-  var ch = canvas.clientHeight || canvas.height;
+  var cw = canvas.clientWidth || (canvas.width / dpr);
+  var ch = canvas.clientHeight || (canvas.height / dpr);
   ctx.translate(cw/2 + offsetX, ch/2 + offsetY);
   ctx.scale(zoom, zoom);
   if (opts.tile) drawCeilingTiles(Lpx, Wpx, scale);
@@ -710,38 +878,29 @@ function render() {
 
 function drawBlueprintBg() {
   var w = canvas.width, h = canvas.height;
-  ctx.strokeStyle = "rgba(56,189,248,0.035)";
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(56,189,248,0.035)"; ctx.lineWidth = 1;
   for (var x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
   for (var y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
   ctx.strokeStyle = "rgba(56,189,248,0.07)";
   for (var x2 = 0; x2 < w; x2 += 200) { ctx.beginPath(); ctx.moveTo(x2, 0); ctx.lineTo(x2, h); ctx.stroke(); }
   for (var y2 = 0; y2 < h; y2 += 200) { ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke(); }
 }
-
 function drawCeilingTiles(L, W, scale) {
   var tile = 0.6 * scale, mainBar = 1.2 * scale;
-  ctx.fillStyle = "rgba(15, 30, 45, 0.5)";
-  ctx.fillRect(-L/2, -W/2, L, W);
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.10)";
-  ctx.lineWidth = 1 / zoom;
+  ctx.fillStyle = "rgba(15, 30, 45, 0.5)"; ctx.fillRect(-L/2, -W/2, L, W);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.10)"; ctx.lineWidth = 1 / zoom;
   for (var x = -L/2 + tile; x < L/2; x += tile) { ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke(); }
   for (var y = -W/2 + tile; y < W/2; y += tile) { ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke(); }
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.22)";
-  ctx.lineWidth = 1.5 / zoom;
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.22)"; ctx.lineWidth = 1.5 / zoom;
   for (var x2 = -L/2 + mainBar; x2 < L/2; x2 += mainBar) { ctx.beginPath(); ctx.moveTo(x2, -W/2); ctx.lineTo(x2, W/2); ctx.stroke(); }
   for (var y2 = -W/2 + mainBar; y2 < W/2; y2 += mainBar) { ctx.beginPath(); ctx.moveTo(-L/2, y2); ctx.lineTo(L/2, y2); ctx.stroke(); }
 }
-
 function drawMeterGrid(L, W, scale) {
-  ctx.strokeStyle = "rgba(251, 191, 36, 0.18)";
-  ctx.lineWidth = 1 / zoom;
-  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.18)"; ctx.lineWidth = 1 / zoom; ctx.setLineDash([4, 4]);
   for (var x = -L/2 + scale; x < L/2; x += scale) { ctx.beginPath(); ctx.moveTo(x, -W/2); ctx.lineTo(x, W/2); ctx.stroke(); }
   for (var y = -W/2 + scale; y < W/2; y += scale) { ctx.beginPath(); ctx.moveTo(-L/2, y); ctx.lineTo(L/2, y); ctx.stroke(); }
   ctx.setLineDash([]);
 }
-
 function drawRoomWalls(L, W) {
   var wallThk = 0.2 * PX_PER_M;
   ctx.fillStyle = "rgba(127, 184, 216, 0.15)";
@@ -756,8 +915,7 @@ function drawRoomWalls(L, W) {
   ctx.rect(-L/2 - wallThk, -W/2, wallThk, W);
   ctx.rect(L/2, -W/2, wallThk, W);
   ctx.clip();
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.35)";
-  ctx.lineWidth = 0.5 / zoom;
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.35)"; ctx.lineWidth = 0.5 / zoom;
   for (var i = -L - wallThk*2; i < L + wallThk*2; i += 5) {
     ctx.beginPath();
     ctx.moveTo(-L/2 - wallThk + i, -W/2 - wallThk);
@@ -765,23 +923,16 @@ function drawRoomWalls(L, W) {
     ctx.stroke();
   }
   ctx.restore();
-  ctx.strokeStyle = "#7fb8d8";
-  ctx.lineWidth = 1.5 / zoom;
+  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5 / zoom;
   ctx.strokeRect(-L/2, -W/2, L, W);
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.6)";
-  ctx.lineWidth = 1 / zoom;
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.6)"; ctx.lineWidth = 1 / zoom;
   ctx.strokeRect(-L/2 - wallThk, -W/2 - wallThk, L + wallThk*2, W + wallThk*2);
-  ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 2 / zoom;
-  ctx.shadowColor = "rgba(56,189,248,0.7)";
-  ctx.shadowBlur = 12 / zoom;
+  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2 / zoom;
+  ctx.shadowColor = "rgba(56,189,248,0.7)"; ctx.shadowBlur = 12 / zoom;
   ctx.strokeRect(-L/2, -W/2, L, W);
   ctx.shadowBlur = 0;
   var markers = [{ x: -L/2, y: -W/2, label: 'A' }, { x: L/2, y: -W/2, label: 'B' }, { x: L/2, y: W/2, label: 'C' }, { x: -L/2, y: W/2, label: 'D' }];
-  ctx.fillStyle = "#fbbf24";
-  ctx.font = "bold 12px Cairo";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#fbbf24"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   for (var m = 0; m < markers.length; m++) {
     var mk = markers[m];
     ctx.beginPath(); ctx.arc(mk.x, mk.y, 3, 0, Math.PI*2); ctx.fill();
@@ -789,29 +940,19 @@ function drawRoomWalls(L, W) {
   }
   var doorW = 1.0 * PX_PER_M;
   var doorX = L/2 - 2 * PX_PER_M;
-  ctx.strokeStyle = "#7fb8d8";
-  ctx.lineWidth = 1.5 / zoom;
+  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5 / zoom;
   ctx.beginPath(); ctx.moveTo(doorX - doorW/2, W/2); ctx.lineTo(doorX + doorW/2, W/2); ctx.stroke();
   ctx.beginPath(); ctx.arc(doorX - doorW/2, W/2, doorW, 0, -Math.PI/2, true);
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
-  ctx.setLineDash([3, 3]);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.5)"; ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
   ctx.beginPath(); ctx.moveTo(doorX - doorW/2, W/2); ctx.lineTo(doorX - doorW/2, W/2 + doorW * 0.9);
   ctx.strokeStyle = "#7fb8d8"; ctx.stroke();
-  ctx.fillStyle = "#7fb8d8";
-  ctx.font = "bold 9px Cairo";
-  ctx.textAlign = "center";
+  ctx.fillStyle = "#7fb8d8"; ctx.font = "bold 9px Cairo"; ctx.textAlign = "center";
   ctx.fillText("باب", doorX, W/2 + wallThk + 14);
 }
-
 function drawStageArea(L, W, cfg, scale) {
   var frontY = -W/2;
   if (cfg.showScreen && cfg.screenType !== 'none') {
-    var scrW = cfg.screenW * scale;
-    var scrDepth = 4;
-    var scrX = 0;
-    var scrY = frontY + scrDepth/2 + 5;
+    var scrW = cfg.screenW * scale, scrDepth = 4, scrX = 0, scrY = frontY + scrDepth/2 + 5;
     ctx.save();
     ctx.shadowColor = cfg.screenType === 'led' ? "rgba(56,189,248,0.8)" : "rgba(6,182,212,0.6)";
     ctx.shadowBlur = 15 / zoom;
@@ -825,80 +966,43 @@ function drawStageArea(L, W, cfg, scale) {
       scrGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.95)");
       scrGrad.addColorStop(1, "rgba(200, 220, 235, 0.9)");
     }
-    ctx.fillStyle = scrGrad;
-    ctx.fillRect(scrX - scrW/2, scrY - scrDepth/2, scrW, scrDepth);
+    ctx.fillStyle = scrGrad; ctx.fillRect(scrX - scrW/2, scrY - scrDepth/2, scrW, scrDepth);
     ctx.restore();
-    ctx.strokeStyle = "#0a1520";
-    ctx.lineWidth = 2 / zoom;
+    ctx.strokeStyle = "#0a1520"; ctx.lineWidth = 2 / zoom;
     ctx.strokeRect(scrX - scrW/2, scrY - scrDepth/2, scrW, scrDepth);
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 10px Cairo";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#fff"; ctx.font = "bold 10px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText((cfg.screenType === 'led' ? 'شاشة LED' : 'شاشة عرض') + ' · ' + cfg.screenW + 'م', scrX, scrY + 14);
     if (cfg.screenType === 'projection') {
       var projY = W/2 - 30;
       var coneGrad = ctx.createLinearGradient(0, projY, 0, scrY);
       coneGrad.addColorStop(0, "rgba(56, 189, 248, 0)");
       coneGrad.addColorStop(1, "rgba(255, 255, 255, 0.08)");
-      ctx.beginPath();
-      ctx.moveTo(0, projY);
-      ctx.lineTo(scrX - scrW/2, scrY);
-      ctx.lineTo(scrX + scrW/2, scrY);
-      ctx.closePath();
-      ctx.fillStyle = coneGrad;
-      ctx.fill();
-      ctx.beginPath(); ctx.arc(0, projY, 7, 0, Math.PI*2);
-      ctx.fillStyle = "#1a202c"; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(0, projY); ctx.lineTo(scrX - scrW/2, scrY); ctx.lineTo(scrX + scrW/2, scrY); ctx.closePath();
+      ctx.fillStyle = coneGrad; ctx.fill();
+      ctx.beginPath(); ctx.arc(0, projY, 7, 0, Math.PI*2); ctx.fillStyle = "#1a202c"; ctx.fill();
       ctx.strokeStyle = "#06b6d4"; ctx.lineWidth = 1.5 / zoom; ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, projY, 3, 0, Math.PI*2);
-      ctx.fillStyle = "#38bdf8";
-      ctx.shadowColor = "rgba(56,189,248,0.9)";
-      ctx.shadowBlur = 8 / zoom;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "#06b6d4";
-      ctx.font = "bold 8px Cairo";
-      ctx.textAlign = "center";
+      ctx.beginPath(); ctx.arc(0, projY, 3, 0, Math.PI*2); ctx.fillStyle = "#38bdf8";
+      ctx.shadowColor = "rgba(56,189,248,0.9)"; ctx.shadowBlur = 8 / zoom; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillStyle = "#06b6d4"; ctx.font = "bold 8px Cairo"; ctx.textAlign = "center";
       ctx.fillText("بروجكتر", 0, projY + 14);
     }
   }
   if (cfg.showPodium) {
-    var pw = cfg.podiumW * scale;
-    var pd = cfg.podiumD * scale;
-    var px = 0;
+    var pw = cfg.podiumW * scale, pd = cfg.podiumD * scale, px = 0;
     var py = frontY + pd/2 + 5 + (cfg.showScreen ? 12 : 0);
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(px - pw/2 + 3, py - pd/2 + 3, pw, pd);
+    ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(px - pw/2 + 3, py - pd/2 + 3, pw, pd);
     var podGrad = ctx.createLinearGradient(px - pw/2, py - pd/2, px + pw/2, py + pd/2);
     podGrad.addColorStop(0, "rgba(80, 20, 25, 0.95)");
     podGrad.addColorStop(0.5, "rgba(120, 25, 30, 0.95)");
     podGrad.addColorStop(1, "rgba(80, 20, 25, 0.95)");
-    ctx.fillStyle = podGrad;
-    ctx.fillRect(px - pw/2, py - pd/2, pw, pd);
-    ctx.strokeStyle = "#e60012";
-    ctx.lineWidth = 2 / zoom;
-    ctx.shadowColor = "rgba(230,0,18,0.7)";
-    ctx.shadowBlur = 8 / zoom;
-    ctx.strokeRect(px - pw/2, py - pd/2, pw, pd);
-    ctx.shadowBlur = 0;
-    ctx.beginPath(); ctx.arc(px, py - pd*0.15, 3, 0, Math.PI*2);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)"; ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(px - 5, py + pd*0.15);
-    ctx.lineTo(px + 5, py + pd*0.15);
-    ctx.lineTo(px + 7, py + pd*0.4);
-    ctx.lineTo(px - 7, py + pd*0.4);
-    ctx.closePath();
-    ctx.fillStyle = "rgba(255, 255, 255, 0.3)"; ctx.fill();
-    ctx.fillStyle = "#ff8a95";
-    ctx.font = "bold 9px Cairo";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.fillStyle = podGrad; ctx.fillRect(px - pw/2, py - pd/2, pw, pd);
+    ctx.strokeStyle = "#e60012"; ctx.lineWidth = 2 / zoom;
+    ctx.shadowColor = "rgba(230,0,18,0.7)"; ctx.shadowBlur = 8 / zoom;
+    ctx.strokeRect(px - pw/2, py - pd/2, pw, pd); ctx.shadowBlur = 0;
+    ctx.fillStyle = "#ff8a95"; ctx.font = "bold 9px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText("المنصة", px, py + pd/2 + 12);
   }
 }
-
 function drawCameras(L, W, cfg, scale) {
   if (!cfg.showCameras || cfg.camCount === 0) return;
   var camPositions = [];
@@ -916,137 +1020,88 @@ function drawCameras(L, W, cfg, scale) {
     grad.addColorStop(0, "rgba(34, 197, 94, " + (0.28 + pulse * 0.12) + ")");
     grad.addColorStop(0.6, "rgba(34, 197, 94, 0.06)");
     grad.addColorStop(1, "rgba(34, 197, 94, 0)");
-    ctx.beginPath();
-    ctx.moveTo(cam.x, cam.y);
-    ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2);
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-    ctx.strokeStyle = "rgba(34, 197, 94, 0.5)";
-    ctx.lineWidth = 1 / zoom;
-    ctx.setLineDash([4, 4]);
-    ctx.beginPath();
-    ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cam.x, cam.y); ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.5)"; ctx.lineWidth = 1 / zoom; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.arc(cam.x, cam.y, range, cam.angle - fov/2, cam.angle + fov/2); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.strokeStyle = "rgba(34, 197, 94, 0.7)";
-    ctx.beginPath();
-    ctx.moveTo(cam.x, cam.y);
-    ctx.lineTo(cam.x + Math.cos(cam.angle) * range, cam.y + Math.sin(cam.angle) * range);
-    ctx.stroke();
-    ctx.save();
-    ctx.translate(cam.x, cam.y);
-    ctx.rotate(cam.angle);
-    ctx.fillStyle = "#0a1520";
-    ctx.strokeStyle = "#22c55e";
-    ctx.lineWidth = 1.5 / zoom;
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.7)"; ctx.beginPath();
+    ctx.moveTo(cam.x, cam.y); ctx.lineTo(cam.x + Math.cos(cam.angle) * range, cam.y + Math.sin(cam.angle) * range); ctx.stroke();
+    ctx.save(); ctx.translate(cam.x, cam.y); ctx.rotate(cam.angle);
+    ctx.fillStyle = "#0a1520"; ctx.strokeStyle = "#22c55e"; ctx.lineWidth = 1.5 / zoom;
     ctx.beginPath(); ctx.rect(-8, -5, 12, 10); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.arc(6, 0, 3, 0, Math.PI*2);
-    ctx.fillStyle = "#0a1520"; ctx.fill();
+    ctx.beginPath(); ctx.arc(6, 0, 3, 0, Math.PI*2); ctx.fillStyle = "#0a1520"; ctx.fill();
     ctx.strokeStyle = "#22c55e"; ctx.stroke();
     ctx.beginPath(); ctx.arc(0, -3, 1, 0, Math.PI*2);
     ctx.fillStyle = pulse > 0.5 ? "#e60012" : "#22c55e";
     ctx.shadowColor = pulse > 0.5 ? "rgba(230,0,18,0.9)" : "rgba(34,197,94,0.9)";
-    ctx.shadowBlur = 6 / zoom;
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur = 6 / zoom; ctx.fill(); ctx.shadowBlur = 0;
     ctx.restore();
-    ctx.fillStyle = "#22c55e";
-    ctx.font = "bold 8px Cairo";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    var labelOffsetY = cam.y < 0 ? -14 : (cam.y > 0 ? 14 : 0);
-    var labelOffsetX = (cam.x < -L/4 || cam.x > L/4) ? (cam.x < 0 ? -22 : 22) : 0;
-    ctx.fillText(cam.label, cam.x + labelOffsetX, cam.y + labelOffsetY);
+    ctx.fillStyle = "#22c55e"; ctx.font = "bold 8px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    var ly = cam.y < 0 ? -14 : (cam.y > 0 ? 14 : 0);
+    var lx = (cam.x < -L/4 || cam.x > L/4) ? (cam.x < 0 ? -22 : 22) : 0;
+    ctx.fillText(cam.label, cam.x + lx, cam.y + ly);
   }
 }
-
 function drawEquipmentRack(L, W, cfg, scale) {
   if (!cfg.showRack) return;
   var rw = 0.6 * scale, rd = 0.9 * scale;
   var rx = -L/2 + rd/2 + 10, ry = W/2 - rd/2 - 10;
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
-  ctx.fillRect(rx - rw/2 + 2, ry - rd/2 + 2, rw, rd);
+  ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fillRect(rx - rw/2 + 2, ry - rd/2 + 2, rw, rd);
   var rackGrad = ctx.createLinearGradient(rx - rw/2, ry - rd/2, rx + rw/2, ry + rd/2);
-  rackGrad.addColorStop(0, "#1a202c");
-  rackGrad.addColorStop(0.5, "#2d3748");
-  rackGrad.addColorStop(1, "#1a202c");
-  ctx.fillStyle = rackGrad;
-  ctx.fillRect(rx - rw/2, ry - rd/2, rw, rd);
-  ctx.strokeStyle = "#fbbf24";
-  ctx.lineWidth = 1.5 / zoom;
+  rackGrad.addColorStop(0, "#1a202c"); rackGrad.addColorStop(0.5, "#2d3748"); rackGrad.addColorStop(1, "#1a202c");
+  ctx.fillStyle = rackGrad; ctx.fillRect(rx - rw/2, ry - rd/2, rw, rd);
+  ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1.5 / zoom;
   ctx.strokeRect(rx - rw/2, ry - rd/2, rw, rd);
   var units = 6, unitH = rd / units;
   for (var i = 1; i < units; i++) {
-    ctx.beginPath();
-    ctx.moveTo(rx - rw/2, ry - rd/2 + i * unitH);
-    ctx.lineTo(rx + rw/2, ry - rd/2 + i * unitH);
-    ctx.strokeStyle = "rgba(251, 191, 36, 0.3)";
-    ctx.lineWidth = 0.5 / zoom;
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(rx - rw/2, ry - rd/2 + i * unitH); ctx.lineTo(rx + rw/2, ry - rd/2 + i * unitH);
+    ctx.strokeStyle = "rgba(251, 191, 36, 0.3)"; ctx.lineWidth = 0.5 / zoom; ctx.stroke();
   }
   var ledColors = ['#22c55e', '#38bdf8', '#f59e0b', '#a855f7', '#22c55e', '#e60012'];
   for (var u = 0; u < units; u++) {
-    var lx = rx + rw/2 - 5;
-    var ly = ry - rd/2 + u * unitH + unitH/2;
+    var lx = rx + rw/2 - 5, ly = ry - rd/2 + u * unitH + unitH/2;
     var blink = (Math.floor(animTime * 3 + u * 0.5) % 2) === 0;
-    ctx.beginPath();
-    ctx.arc(lx, ly, 1.5, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(lx, ly, 1.5, 0, Math.PI*2);
     ctx.fillStyle = blink ? ledColors[u % ledColors.length] : "rgba(100, 100, 100, 0.3)";
     if (blink) { ctx.shadowColor = ledColors[u % ledColors.length]; ctx.shadowBlur = 4 / zoom; }
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    ctx.fill(); ctx.shadowBlur = 0;
   }
-  ctx.fillStyle = "#fbbf24";
-  ctx.font = "bold 8px Cairo";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#fbbf24"; ctx.font = "bold 8px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText("رف الأجهزة", rx, ry + rd/2 + 12);
 }
-
 function drawFurniture(L, W, cfg) {
   if (cfg.mode === 'meeting') drawOvalTableFurniture(L, W, cfg.cQty + cfg.dQty);
   else if (cfg.mode === 'boardroom') drawUShapeFurniture(L, W, cfg.cQty + cfg.dQty);
   else if (cfg.mode === 'rectangular') drawRectTableFurniture(L, W, cfg.cQty + cfg.dQty);
   else drawTheaterFurniture(L, W, cfg.cQty + cfg.dQty);
 }
-
 function drawRectTableFurniture(L, W, total) {
   var tableW = L * 0.55, tableD = W * 0.32;
-  ctx.fillStyle = "rgba(0,0,0,0.4)";
-  ctx.fillRect(-tableW/2 + 3, -tableD/2 + 3, tableW, tableD);
+  ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.fillRect(-tableW/2 + 3, -tableD/2 + 3, tableW, tableD);
   var grad = ctx.createLinearGradient(0, -tableD/2, 0, tableD/2);
-  grad.addColorStop(0, "rgba(65, 80, 100, 0.9)");
-  grad.addColorStop(1, "rgba(40, 55, 75, 0.9)");
-  ctx.fillStyle = grad;
-  ctx.fillRect(-tableW/2, -tableD/2, tableW, tableD);
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.75)";
-  ctx.lineWidth = 2 / zoom;
+  grad.addColorStop(0, "rgba(65, 80, 100, 0.9)"); grad.addColorStop(1, "rgba(40, 55, 75, 0.9)");
+  ctx.fillStyle = grad; ctx.fillRect(-tableW/2, -tableD/2, tableW, tableD);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.75)"; ctx.lineWidth = 2 / zoom;
   ctx.strokeRect(-tableW/2, -tableD/2, tableW, tableD);
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.3)";
-  ctx.lineWidth = 1 / zoom;
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.3)"; ctx.lineWidth = 1 / zoom;
   ctx.strokeRect(-tableW/2 + 5, -tableD/2 + 5, tableW - 10, tableD - 10);
-  var chairsTop = Math.ceil(total * 0.35), chairsBottom = Math.ceil(total * 0.35), chairsSide = Math.ceil((total - chairsTop - chairsBottom) / 2);
-  for (var i = 0; i < chairsTop; i++) drawChair(-tableW/2 + 20 + (i * (tableW - 40) / Math.max(1, chairsTop - 1)), -tableD/2 - 14, Math.PI);
-  for (var j = 0; j < chairsBottom; j++) drawChair(-tableW/2 + 20 + (j * (tableW - 40) / Math.max(1, chairsBottom - 1)), tableD/2 + 14, 0);
-  for (var k = 0; k < chairsSide; k++) drawChair(-tableW/2 - 14, -tableD/2 + 15 + (k * (tableD - 30) / Math.max(1, chairsSide - 1)), -Math.PI/2);
-  for (var m = 0; m < chairsSide; m++) drawChair(tableW/2 + 14, -tableD/2 + 15 + (m * (tableD - 30) / Math.max(1, chairsSide - 1)), Math.PI/2);
+  var ct = Math.ceil(total * 0.35), cb = Math.ceil(total * 0.35), cs = Math.ceil((total - ct - cb) / 2);
+  for (var i = 0; i < ct; i++) drawChair(-tableW/2 + 20 + (i * (tableW - 40) / Math.max(1, ct - 1)), -tableD/2 - 14, Math.PI);
+  for (var j = 0; j < cb; j++) drawChair(-tableW/2 + 20 + (j * (tableW - 40) / Math.max(1, cb - 1)), tableD/2 + 14, 0);
+  for (var k = 0; k < cs; k++) drawChair(-tableW/2 - 14, -tableD/2 + 15 + (k * (tableD - 30) / Math.max(1, cs - 1)), -Math.PI/2);
+  for (var m = 0; m < cs; m++) drawChair(tableW/2 + 14, -tableD/2 + 15 + (m * (tableD - 30) / Math.max(1, cs - 1)), Math.PI/2);
 }
-
 function drawOvalTableFurniture(L, W, total) {
   var tableRx = L * 0.36, tableRy = W * 0.30;
   ctx.fillStyle = "rgba(0,0,0,0.4)";
   ctx.beginPath(); ctx.ellipse(3, 3, tableRx, tableRy, 0, 0, Math.PI*2); ctx.fill();
   var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(tableRx, tableRy));
-  grad.addColorStop(0, "rgba(60, 75, 95, 0.85)");
-  grad.addColorStop(1, "rgba(35, 48, 65, 0.85)");
+  grad.addColorStop(0, "rgba(60, 75, 95, 0.85)"); grad.addColorStop(1, "rgba(35, 48, 65, 0.85)");
   ctx.fillStyle = grad;
   ctx.beginPath(); ctx.ellipse(0, 0, tableRx, tableRy, 0, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
-  ctx.lineWidth = 2 / zoom;
-  ctx.stroke();
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.3)";
-  ctx.lineWidth = 1 / zoom;
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.7)"; ctx.lineWidth = 2 / zoom; ctx.stroke();
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.3)"; ctx.lineWidth = 1 / zoom;
   ctx.beginPath(); ctx.ellipse(0, 0, tableRx - 8, tableRy - 6, 0, 0, Math.PI*2); ctx.stroke();
   var chairCount = Math.max(total, 8);
   for (var i = 0; i < chairCount; i++) {
@@ -1054,28 +1109,23 @@ function drawOvalTableFurniture(L, W, total) {
     drawChair(Math.cos(ang) * (tableRx + 18), Math.sin(ang) * (tableRy + 14), ang);
   }
 }
-
 function drawUShapeFurniture(L, W, total) {
   var w = L * 0.75, h = W * 0.55, t = 22;
-  ctx.fillStyle = "rgba(50, 65, 85, 0.85)";
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.7)";
-  ctx.lineWidth = 2 / zoom;
+  ctx.fillStyle = "rgba(50, 65, 85, 0.85)"; ctx.strokeStyle = "rgba(127, 184, 216, 0.7)"; ctx.lineWidth = 2 / zoom;
   ctx.beginPath(); ctx.rect(-w/2, -h/2, t, h); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.rect(w/2 - t, -h/2, t, h); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.rect(-w/2, h/2 - t, w, t); ctx.fill(); ctx.stroke();
   var perSide = Math.ceil(total / 3);
   for (var i = 0; i < perSide; i++) {
     var y = -h/2 + 15 + (i * (h - 30) / Math.max(1, perSide - 1));
-    drawChair(-w/2 - 14, y, Math.PI);
-    drawChair(w/2 + 14, y, 0);
+    drawChair(-w/2 - 14, y, Math.PI); drawChair(w/2 + 14, y, 0);
   }
-  var bottomCount = Math.ceil(total / 3);
-  for (var j = 0; j < bottomCount; j++) {
-    var x = -w/2 + 15 + (j * (w - 30) / Math.max(1, bottomCount - 1));
+  var bc = Math.ceil(total / 3);
+  for (var j = 0; j < bc; j++) {
+    var x = -w/2 + 15 + (j * (w - 30) / Math.max(1, bc - 1));
     drawChair(x, h/2 + 14, -Math.PI/2);
   }
 }
-
 function drawTheaterFurniture(L, W, total) {
   var cols = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(total))));
   var rows = Math.ceil(total / cols);
@@ -1090,20 +1140,13 @@ function drawTheaterFurniture(L, W, total) {
     }
   }
 }
-
 function drawChair(cx, cy, rotation) {
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(rotation);
-  ctx.fillStyle = "rgba(60, 80, 100, 0.6)";
-  ctx.strokeStyle = "rgba(127, 184, 216, 0.5)";
-  ctx.lineWidth = 0.8 / zoom;
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rotation);
+  ctx.fillStyle = "rgba(60, 80, 100, 0.6)"; ctx.strokeStyle = "rgba(127, 184, 216, 0.5)"; ctx.lineWidth = 0.8 / zoom;
   ctx.beginPath(); ctx.rect(-7, -7, 14, 14); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = "rgba(90, 110, 130, 0.7)";
-  ctx.beginPath(); ctx.rect(-7, -9, 14, 3); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "rgba(90, 110, 130, 0.7)"; ctx.beginPath(); ctx.rect(-7, -9, 14, 3); ctx.fill(); ctx.stroke();
   ctx.restore();
 }
-
 function drawCoverageCones(L, W, cfg, scale) {
   var half = (cfg.spk.angle / 2) * Math.PI / 180;
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
@@ -1119,28 +1162,15 @@ function drawCoverageCones(L, W, cfg, scale) {
       grad.addColorStop(0, "rgba(56,189,248,0.28)");
       grad.addColorStop(0.5, "rgba(56,189,248,0.12)");
       grad.addColorStop(1, "rgba(56,189,248,0.02)");
-      ctx.beginPath();
-      ctx.moveTo(px, py);
-      ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
-      ctx.closePath();
-      ctx.fillStyle = grad;
-      ctx.fill();
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
-      ctx.lineWidth = 1 / zoom;
-      ctx.setLineDash([5, 4]);
-      ctx.beginPath();
-      ctx.arc(px, py, coverR, centerAng - half, centerAng + half);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
-      ctx.beginPath();
-      ctx.moveTo(px, py);
-      ctx.lineTo(px + Math.cos(centerAng) * coverR, py + Math.sin(centerAng) * coverR);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.arc(px, py, coverR, centerAng - half, centerAng + half); ctx.closePath();
+      ctx.fillStyle = grad; ctx.fill();
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.45)"; ctx.lineWidth = 1 / zoom; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.arc(px, py, coverR, centerAng - half, centerAng + half); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.6)"; ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(centerAng) * coverR, py + Math.sin(centerAng) * coverR); ctx.stroke();
     }
   }
 }
-
 function drawSoundRays(L, W, cfg, scale) {
   var half = (cfg.spk.angle / 2) * Math.PI / 180;
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
@@ -1155,11 +1185,8 @@ function drawSoundRays(L, W, cfg, scale) {
       for (var w = 0; w < 3; w++) {
         var t = ((animTime * 0.8 + w * 0.33) % 1);
         var alpha = (1 - t) * 0.6;
-        ctx.strokeStyle = "rgba(56, 189, 248, " + alpha + ")";
-        ctx.lineWidth = 1.5 / zoom;
-        ctx.beginPath();
-        ctx.arc(px, py, coverR * t, centerAng - half * t, centerAng + half * t);
-        ctx.stroke();
+        ctx.strokeStyle = "rgba(56, 189, 248, " + alpha + ")"; ctx.lineWidth = 1.5 / zoom;
+        ctx.beginPath(); ctx.arc(px, py, coverR * t, centerAng - half * t, centerAng + half * t); ctx.stroke();
       }
       for (var r = 0; r < 5; r++) {
         var tr = r / 4;
@@ -1167,19 +1194,13 @@ function drawSoundRays(L, W, cfg, scale) {
         var pulse = (Math.sin(animTime * 2.5 + i * 0.5 + s) + 1) / 2;
         var len = coverR * (0.35 + pulse * 0.65);
         var grad2 = ctx.createLinearGradient(px, py, px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
-        grad2.addColorStop(0, "rgba(56,189,248,0.7)");
-        grad2.addColorStop(1, "rgba(56,189,248,0)");
-        ctx.beginPath();
-        ctx.moveTo(px, py);
-        ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
-        ctx.strokeStyle = grad2;
-        ctx.lineWidth = 1.2 / zoom;
-        ctx.stroke();
+        grad2.addColorStop(0, "rgba(56,189,248,0.7)"); grad2.addColorStop(1, "rgba(56,189,248,0)");
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(rayAng) * len, py + Math.sin(rayAng) * len);
+        ctx.strokeStyle = grad2; ctx.lineWidth = 1.2 / zoom; ctx.stroke();
       }
     }
   }
 }
-
 function drawSpeakers(L, W, cfg) {
   var spkIndex = 1;
   for (var s = 0; s < 2; s++) {
@@ -1190,19 +1211,14 @@ function drawSpeakers(L, W, cfg) {
     }
   }
 }
-
 function drawSpeakerIcon(x, y, isTop, index) {
   var R = 14, offsetY = isTop ? R + 6 : -(R + 6);
-  ctx.beginPath(); ctx.arc(x, y, R + 2, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, R + 2, 0, Math.PI*2); ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fill();
   var bezelGrad = ctx.createRadialGradient(x - 2, y - 2, 0, x, y, R);
-  bezelGrad.addColorStop(0, "#4a5568");
-  bezelGrad.addColorStop(1, "#1a202c");
-  ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI*2);
-  ctx.fillStyle = bezelGrad; ctx.fill();
+  bezelGrad.addColorStop(0, "#4a5568"); bezelGrad.addColorStop(1, "#1a202c");
+  ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI*2); ctx.fillStyle = bezelGrad; ctx.fill();
   ctx.strokeStyle = "#2d3748"; ctx.lineWidth = 1.5 / zoom; ctx.stroke();
-  ctx.strokeStyle = "rgba(200, 210, 220, 0.4)";
-  ctx.lineWidth = 0.6 / zoom;
+  ctx.strokeStyle = "rgba(200, 210, 220, 0.4)"; ctx.lineWidth = 0.6 / zoom;
   for (var r = 3; r <= R - 2; r += 2.5) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke(); }
   for (var a = 0; a < 12; a++) {
     var ang = (a * Math.PI / 6);
@@ -1211,21 +1227,11 @@ function drawSpeakerIcon(x, y, isTop, index) {
     ctx.lineTo(x + Math.cos(ang) * (R - 2), y + Math.sin(ang) * (R - 2));
     ctx.strokeStyle = "rgba(200, 210, 220, 0.25)"; ctx.stroke();
   }
-  ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2);
-  ctx.fillStyle = "#e60012";
-  ctx.shadowColor = "rgba(230,0,18,0.9)";
-  ctx.shadowBlur = 8 / zoom;
-  ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.beginPath(); ctx.arc(x - 2, y - 2, 1.2, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(255,255,255,0.8)"; ctx.fill();
-  ctx.fillStyle = "#fbbf24";
-  ctx.font = "bold 8px Cairo";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI*2); ctx.fillStyle = "#e60012";
+  ctx.shadowColor = "rgba(230,0,18,0.9)"; ctx.shadowBlur = 8 / zoom; ctx.fill(); ctx.shadowBlur = 0;
+  ctx.fillStyle = "#fbbf24"; ctx.font = "bold 8px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText('SP-' + (index < 10 ? '0' + index : index), x, y + offsetY);
 }
-
 function drawConferenceUnits(L, W, cfg) {
   var total = cfg.cQty + cfg.dQty;
   if (total === 0) return;
@@ -1278,67 +1284,49 @@ function drawConferenceUnits(L, W, cfg) {
     }
   }
   if (positions.length > 1) {
-    ctx.strokeStyle = "rgba(168, 85, 247, 0.35)";
-    ctx.lineWidth = 1 / zoom;
-    ctx.setLineDash([2, 3]);
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.35)"; ctx.lineWidth = 1 / zoom; ctx.setLineDash([2, 3]);
     ctx.beginPath();
     for (var p = 0; p < positions.length; p++) {
       if (p === 0) ctx.moveTo(positions[p].x, positions[p].y);
       else ctx.lineTo(positions[p].x, positions[p].y);
     }
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.stroke(); ctx.setLineDash([]);
   }
   for (var k = 0; k < positions.length; k++) {
     var pos = positions[k];
     drawConfMic(pos.x, pos.y, pos.rot, pos.isChair, pos.num, isWireless);
   }
 }
-
 function drawConfMic(x, y, rotation, isChair, num, isWireless) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(rotation);
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rotation);
   var baseColor = isChair ? "#e60012" : (isWireless ? "#a855f7" : "#38bdf8");
   if (isChair) { ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI*2); ctx.fillStyle = "rgba(230, 0, 18, 0.20)"; ctx.fill(); }
   if (isWireless) {
     ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2);
-    ctx.strokeStyle = "rgba(168, 85, 247, 0.55)";
-    ctx.lineWidth = 1.5 / zoom;
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.55)"; ctx.lineWidth = 1.5 / zoom;
     ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
   }
-  ctx.beginPath();
-  ctx.moveTo(-6, 5); ctx.lineTo(6, 5); ctx.lineTo(4, -3); ctx.lineTo(-4, -3);
-  ctx.closePath();
+  ctx.beginPath(); ctx.moveTo(-6, 5); ctx.lineTo(6, 5); ctx.lineTo(4, -3); ctx.lineTo(-4, -3); ctx.closePath();
   var baseGrad = ctx.createLinearGradient(0, -3, 0, 5);
   baseGrad.addColorStop(0, "#2d3748"); baseGrad.addColorStop(1, "#1a202c");
   ctx.fillStyle = baseGrad; ctx.fill();
   ctx.strokeStyle = baseColor; ctx.lineWidth = 1.2 / zoom; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(0, -3); ctx.lineTo(0, -12);
-  ctx.strokeStyle = baseColor; ctx.lineWidth = 2 / zoom; ctx.stroke();
-  ctx.beginPath(); ctx.arc(0, -12, 2.5, 0, Math.PI*2);
-  ctx.fillStyle = baseColor; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, -3); ctx.lineTo(0, -12); ctx.strokeStyle = baseColor; ctx.lineWidth = 2 / zoom; ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -12, 2.5, 0, Math.PI*2); ctx.fillStyle = baseColor; ctx.fill();
   ctx.strokeStyle = "#fff"; ctx.lineWidth = 0.8 / zoom; ctx.stroke();
-  ctx.beginPath(); ctx.arc(0, 2, 1.2, 0, Math.PI*2);
-  ctx.fillStyle = isChair ? "#22c55e" : "#fbbf24"; ctx.fill();
+  ctx.beginPath(); ctx.arc(0, 2, 1.2, 0, Math.PI*2); ctx.fillStyle = isChair ? "#22c55e" : "#fbbf24"; ctx.fill();
   ctx.restore();
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 7px Cairo";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#fff"; ctx.font = "bold 7px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText(String(num), x, y + 14);
 }
-
 function drawTechnicalAnnotations(L, W, cfg, scale) {
   drawDimensionLine(-L/2, -W/2 - 40, L/2, -W/2 - 40, cfg.L.toFixed(1) + ' م', 'h');
   drawDimensionLine(-L/2 - 40, -W/2, -L/2 - 40, W/2, cfg.W.toFixed(1) + ' م', 'v');
   drawScaleBar(L/2 + 20, W/2 + 40, scale);
   drawNorthArrow(L/2 + 40, -W/2 - 30);
 }
-
 function drawDimensionLine(x1, y1, x2, y2, label, dir) {
-  ctx.strokeStyle = "rgba(251, 191, 36, 0.4)";
-  ctx.lineWidth = 1 / zoom;
+  ctx.strokeStyle = "rgba(251, 191, 36, 0.4)"; ctx.lineWidth = 1 / zoom;
   if (dir === 'h') {
     ctx.beginPath(); ctx.moveTo(x1, y1 + 5); ctx.lineTo(x1, y1 - 5); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x2, y2 + 5); ctx.lineTo(x2, y2 - 5); ctx.stroke();
@@ -1346,157 +1334,125 @@ function drawDimensionLine(x1, y1, x2, y2, label, dir) {
     ctx.beginPath(); ctx.moveTo(x1 - 5, y1); ctx.lineTo(x1 + 5, y1); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x2 - 5, y2); ctx.lineTo(x2 + 5, y2); ctx.stroke();
   }
-  ctx.strokeStyle = "#fbbf24";
-  ctx.lineWidth = 1.2 / zoom;
+  ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1.2 / zoom;
   ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
   var ang = Math.atan2(y2 - y1, x2 - x1);
   drawArrow(x1, y1, ang + Math.PI, 6); drawArrow(x2, y2, ang, 6);
   var mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
   ctx.font = "bold 11px Cairo";
   var tw = ctx.measureText(label).width + 10;
-  ctx.fillStyle = "#0a1520";
-  ctx.fillRect(mx - tw/2, my - 7, tw, 14);
-  ctx.fillStyle = "#fbbf24";
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#0a1520"; ctx.fillRect(mx - tw/2, my - 7, tw, 14);
+  ctx.fillStyle = "#fbbf24"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText(label, mx, my);
 }
-
 function drawArrow(x, y, ang, size) {
-  ctx.beginPath();
-  ctx.moveTo(x, y);
+  ctx.beginPath(); ctx.moveTo(x, y);
   ctx.lineTo(x + Math.cos(ang - 0.4) * size, y + Math.sin(ang - 0.4) * size);
   ctx.lineTo(x + Math.cos(ang + 0.4) * size, y + Math.sin(ang + 0.4) * size);
-  ctx.closePath();
-  ctx.fillStyle = "#fbbf24"; ctx.fill();
+  ctx.closePath(); ctx.fillStyle = "#fbbf24"; ctx.fill();
 }
-
 function drawScaleBar(x, y, scale) {
   var totalPx = 5 * scale, segPx = totalPx / 5;
-  ctx.fillStyle = "#7fb8d8";
-  ctx.font = "bold 9px Cairo";
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#7fb8d8"; ctx.font = "bold 9px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText("مقياس الرسم", x + totalPx/2, y - 12);
   for (var i = 0; i < 5; i++) {
     ctx.fillStyle = i % 2 === 0 ? "#7fb8d8" : "#0a1520";
     ctx.fillRect(x + i * segPx, y, segPx, 8);
-    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 0.8 / zoom;
-    ctx.strokeRect(x + i * segPx, y, segPx, 8);
+    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 0.8 / zoom; ctx.strokeRect(x + i * segPx, y, segPx, 8);
   }
-  ctx.fillStyle = "#7fb8d8";
-  ctx.font = "bold 8px Cairo";
-  ctx.textAlign = "center";
+  ctx.fillStyle = "#7fb8d8"; ctx.font = "bold 8px Cairo"; ctx.textAlign = "center";
   ctx.fillText("0", x, y + 18); ctx.fillText("5م", x + totalPx, y + 18);
 }
-
 function drawNorthArrow(x, y) {
   var size = 20;
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.beginPath(); ctx.arc(0, 0, size + 4, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(10, 21, 32, 0.85)"; ctx.fill();
+  ctx.save(); ctx.translate(x, y);
+  ctx.beginPath(); ctx.arc(0, 0, size + 4, 0, Math.PI*2); ctx.fillStyle = "rgba(10, 21, 32, 0.85)"; ctx.fill();
   ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1 / zoom; ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(0, -size); ctx.lineTo(-6, 4); ctx.lineTo(0, 0); ctx.lineTo(6, 4);
-  ctx.closePath();
+  ctx.beginPath(); ctx.moveTo(0, -size); ctx.lineTo(-6, 4); ctx.lineTo(0, 0); ctx.lineTo(6, 4); ctx.closePath();
   ctx.fillStyle = "#e60012"; ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(0, size * 0.5); ctx.lineTo(-4, 2); ctx.lineTo(4, 2);
-  ctx.closePath();
+  ctx.beginPath(); ctx.moveTo(0, size * 0.5); ctx.lineTo(-4, 2); ctx.lineTo(4, 2); ctx.closePath();
   ctx.fillStyle = "#7fb8d8"; ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 11px Cairo";
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#fff"; ctx.font = "bold 11px Cairo"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
   ctx.fillText("ش", 0, -size - 8);
   ctx.restore();
 }
-
 function drawScreenOverlays(cfg) {
-  var h = canvas.clientHeight || canvas.height;
-  var tbW = 260, tbH = 95, tbX = 20, tbY = h - tbH - 20;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = canvas.width / dpr, h = canvas.height / dpr;
+  var isMob = isMobileNow();
+  var tbW = isMob ? 200 : 260;
+  var tbH = isMob ? 78 : 95;
+  var tbX = 12, tbY = h - tbH - (isMob ? 72 : 20);
   ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  var dpr = window.devicePixelRatio || 1;
-  ctx.scale(dpr, dpr);
-  ctx.fillStyle = "rgba(10, 21, 32, 0.92)";
-  ctx.fillRect(tbX, tbY, tbW, tbH);
-  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5;
-  ctx.strokeRect(tbX, tbY, tbW, tbH);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(dpr, dpr);
+  ctx.fillStyle = "rgba(10, 21, 32, 0.92)"; ctx.fillRect(tbX, tbY, tbW, tbH);
+  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5; ctx.strokeRect(tbX, tbY, tbW, tbH);
   var barGrad = ctx.createLinearGradient(tbX, 0, tbX + tbW, 0);
   barGrad.addColorStop(0, "#e60012"); barGrad.addColorStop(1, "#38bdf8");
   ctx.fillStyle = barGrad; ctx.fillRect(tbX, tbY, tbW, 4);
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 11px Cairo";
+  ctx.fillStyle = "#fff"; ctx.font = "bold " + (isMob ? 9 : 11) + "px Cairo";
   ctx.textAlign = "right"; ctx.textBaseline = "top";
-  ctx.fillText("MOTIVITY · ELITE ENGINEERING", tbX + tbW - 10, tbY + 12);
-  ctx.fillStyle = "#7fb8d8"; ctx.font = "10px Cairo";
-  ctx.fillText("المشروع: " + cfg.projName, tbX + tbW - 10, tbY + 32);
-  ctx.fillText("المهندس: " + cfg.engName, tbX + tbW - 10, tbY + 48);
-  ctx.fillText("القاعة: " + cfg.L + "×" + cfg.W + "م", tbX + tbW - 10, tbY + 64);
-  ctx.fillStyle = "#fbbf24"; ctx.font = "bold 10px Cairo";
-  ctx.fillText("المقياس 1:" + Math.round(1000/PX_PER_M) + " · " + cfg.projRef, tbX + tbW - 10, tbY + 78);
-
-  var lgW = 200;
-  var items = [
-    { sym: 'spk', label: 'سماعة سقف' }, { sym: 'chair', label: 'وحدة رئيس' },
-    { sym: 'del', label: 'وحدة عضو' }, { sym: 'wl', label: 'وحدة لاسلكية' },
-    { sym: 'podium', label: 'منصة / شاشة' }, { sym: 'cam', label: 'كاميرا' }, { sym: 'rack', label: 'رف' }
-  ];
-  var lgH = 30 + items.length * 22, lgX = 20, lgY = 90;
-  ctx.fillStyle = "rgba(10, 21, 32, 0.92)";
-  ctx.fillRect(lgX, lgY, lgW, lgH);
-  ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5;
-  ctx.strokeRect(lgX, lgY, lgW, lgH);
-  ctx.fillStyle = "#38bdf8"; ctx.font = "bold 10px Cairo";
-  ctx.textAlign = "right"; ctx.textBaseline = "middle";
-  ctx.fillText("مفاتيح الرسم", lgX + lgW - 10, lgY + 15);
-  var iconX = lgX + lgW - 25;
-  for (var i = 0; i < items.length; i++) {
-    var iy = lgY + 30 + i * 22 + 11;
-    drawLegendIcon(iconX, iy, items[i].sym);
-    ctx.fillStyle = "#cbd5e1"; ctx.font = "10px Cairo";
+  ctx.fillText("MOTIVITY · ELITE", tbX + tbW - 8, tbY + 10);
+  ctx.fillStyle = "#7fb8d8"; ctx.font = (isMob ? "9px" : "10px") + " Cairo";
+  ctx.fillText(String(cfg.projName).substring(0, 22), tbX + tbW - 8, tbY + 28);
+  if (!isMob) {
+    ctx.fillText("المهندس: " + cfg.engName, tbX + tbW - 8, tbY + 44);
+    ctx.fillText("القاعة: " + cfg.L + "×" + cfg.W + "م", tbX + tbW - 8, tbY + 60);
+  } else {
+    ctx.fillText(cfg.L + "×" + cfg.W + "م · " + String(cfg.engName).substring(0,12), tbX + tbW - 8, tbY + 44);
+  }
+  ctx.fillStyle = "#fbbf24"; ctx.font = "bold " + (isMob ? 9 : 10) + "px Cairo";
+  ctx.fillText("1:" + Math.round(1000/PX_PER_M), tbX + tbW - 8, tbY + tbH - 16);
+  if (!isMob) {
+    var lgW = 200;
+    var items = [
+      { sym: 'spk', label: 'سماعة سقف' }, { sym: 'chair', label: 'وحدة رئيس' },
+      { sym: 'del', label: 'وحدة عضو' }, { sym: 'wl', label: 'وحدة لاسلكية' },
+      { sym: 'podium', label: 'منصة / شاشة' }, { sym: 'cam', label: 'كاميرا' }, { sym: 'rack', label: 'رف' }
+    ];
+    var lgH = 30 + items.length * 22, lgX = 20, lgY = 90;
+    ctx.fillStyle = "rgba(10, 21, 32, 0.92)"; ctx.fillRect(lgX, lgY, lgW, lgH);
+    ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1.5; ctx.strokeRect(lgX, lgY, lgW, lgH);
+    ctx.fillStyle = "#38bdf8"; ctx.font = "bold 10px Cairo";
     ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    ctx.fillText(items[i].label, iconX - 22, iy);
+    ctx.fillText("مفاتيح الرسم", lgX + lgW - 10, lgY + 15);
+    var iconX = lgX + lgW - 25;
+    for (var i = 0; i < items.length; i++) {
+      var iy = lgY + 30 + i * 22 + 11;
+      drawLegendIcon(iconX, iy, items[i].sym);
+      ctx.fillStyle = "#cbd5e1"; ctx.font = "10px Cairo";
+      ctx.textAlign = "right"; ctx.textBaseline = "middle";
+      ctx.fillText(items[i].label, iconX - 22, iy);
+    }
   }
   ctx.restore();
 }
-
 function drawLegendIcon(x, y, type) {
-  ctx.save();
-  ctx.translate(x, y);
+  ctx.save(); ctx.translate(x, y);
   if (type === 'spk') {
-    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2);
-    ctx.fillStyle = "#1a202c"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2); ctx.fillStyle = "#1a202c"; ctx.fill();
     ctx.strokeStyle = "#7fb8d8"; ctx.lineWidth = 1; ctx.stroke();
-    ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI*2);
-    ctx.fillStyle = "#e60012"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI*2); ctx.fillStyle = "#e60012"; ctx.fill();
   } else if (type === 'chair') {
-    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
-    ctx.fillStyle = "#e60012"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fillStyle = "#e60012"; ctx.fill();
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
   } else if (type === 'del') {
-    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
-    ctx.fillStyle = "#38bdf8"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fillStyle = "#38bdf8"; ctx.fill();
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
   } else if (type === 'wl') {
-    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2);
-    ctx.fillStyle = "#a855f7"; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fillStyle = "#a855f7"; ctx.fill();
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
-    ctx.setLineDash([2, 2]);
-    ctx.beginPath(); ctx.arc(0, 0, 7, 0, Math.PI*2);
-    ctx.strokeStyle = "#a855f7"; ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.arc(0, 0, 7, 0, Math.PI*2);
+    ctx.strokeStyle = "#a855f7"; ctx.stroke(); ctx.setLineDash([]);
   } else if (type === 'podium') {
-    ctx.fillStyle = "rgba(120, 25, 30, 0.9)";
-    ctx.fillRect(-6, -4, 12, 8);
+    ctx.fillStyle = "rgba(120, 25, 30, 0.9)"; ctx.fillRect(-6, -4, 12, 8);
     ctx.strokeStyle = "#e60012"; ctx.lineWidth = 1; ctx.stroke();
   } else if (type === 'cam') {
     ctx.fillStyle = "#0a1520"; ctx.strokeStyle = "#22c55e"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.rect(-5, -3, 8, 6); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.arc(4, 0, 2, 0, Math.PI*2);
-    ctx.fillStyle = "#22c55e"; ctx.fill();
+    ctx.beginPath(); ctx.arc(4, 0, 2, 0, Math.PI*2); ctx.fillStyle = "#22c55e"; ctx.fill();
   } else if (type === 'rack') {
-    ctx.fillStyle = "#2d3748";
-    ctx.fillRect(-4, -6, 8, 12);
+    ctx.fillStyle = "#2d3748"; ctx.fillRect(-4, -6, 8, 12);
     ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1; ctx.strokeRect(-4, -6, 8, 12);
     ctx.beginPath(); ctx.arc(2, -3, 1, 0, Math.PI*2); ctx.fillStyle = "#22c55e"; ctx.fill();
     ctx.beginPath(); ctx.arc(2, 0, 1, 0, Math.PI*2); ctx.fillStyle = "#38bdf8"; ctx.fill();
@@ -1504,13 +1460,13 @@ function drawLegendIcon(x, y, type) {
   }
   ctx.restore();
 }
-
 function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
   var key = cfg.L + '|' + cfg.W + '|' + cfg.H + '|' + cfg.earH + '|' + cfg.perSide + '|' + cfg.modelKey + '|' + cfg.alpha;
   if (key !== heatmapKey || !heatmapCache) {
     heatmapCache = document.createElement('canvas');
-    heatmapCache.width = Math.ceil(Lpx);
-    heatmapCache.height = Math.ceil(Wpx);
+    var step = isMobile ? 3 : 1;
+    heatmapCache.width = Math.ceil(Lpx / step);
+    heatmapCache.height = Math.ceil(Wpx / step);
     var hctx = heatmapCache.getContext('2d');
     var R = calcRoomConstant(cfg.L, cfg.W, cfg.H, cfg.alpha);
     var throwH = Math.max(0.5, cfg.H - cfg.earH);
@@ -1521,10 +1477,11 @@ function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
     }
     var img = hctx.createImageData(heatmapCache.width, heatmapCache.height);
     var data = img.data;
+    var effectiveScale = scale / step;
     for (var py = 0; py < heatmapCache.height; py++) {
-      var y_m = (py / scale) - cfg.W/2;
+      var y_m = (py / effectiveScale) - cfg.W/2;
       for (var px = 0; px < heatmapCache.width; px++) {
-        var x_m = (px / scale) - cfg.L/2;
+        var x_m = (px / effectiveScale) - cfg.L/2;
         var pTotal = 0;
         for (var k = 0; k < positions.length; k++) pTotal += splFromSource(cfg.spk.sens, cfg.spk.pwr, cfg.spk.q, R, x_m - positions[k][0], y_m - positions[k][1], throwH);
         var spl = pTotal > 0 ? 10 * Math.log10(pTotal) : 0;
@@ -1536,9 +1493,8 @@ function drawHeatmapCached(Lpx, Wpx, cfg, scale) {
     hctx.putImageData(img, 0, 0);
     heatmapKey = key;
   }
-  ctx.drawImage(heatmapCache, -Lpx/2, -Wpx/2);
+  ctx.drawImage(heatmapCache, -Lpx/2, -Wpx/2, Lpx, Wpx);
 }
-
 function splColorRGBA(spl) {
   var stops = [
     { v: 60, c: [10, 20, 40, 140] }, { v: 70, c: [30, 60, 120, 130] },
@@ -1556,17 +1512,11 @@ function splColorRGBA(spl) {
   }
   return stops[0].c;
 }
-
 var __renderErrorCount = 0;
 function safeRender() {
   try { render(); __renderErrorCount = 0; }
-  catch (err) {
-    __renderErrorCount++;
-    console.error('❌ خطأ في الرسم:', err);
-    if (__renderErrorCount <= 3) showError('خطأ في الرسم', err.message);
-  }
+  catch (err) { __renderErrorCount++; console.error('❌ خطأ في الرسم:', err); if (__renderErrorCount <= 3) showError('خطأ في الرسم', err.message); }
 }
-
 function loop(now) {
   var dt = (now - lastFrameTime) / 1000;
   lastFrameTime = now;
@@ -1577,7 +1527,6 @@ function loop(now) {
   }
   requestAnimationFrame(loop);
 }
-
 function printReport() {
   var img = $('reportImg');
   var doPrint = function() { setTimeout(function() { window.print(); }, 200); };
@@ -1586,10 +1535,11 @@ function printReport() {
   else doPrint();
 }
 
+/* ============ EVENTS ============ */
 var debouncedUpdate = debounce(function() { updateKPI(); markDirty(); pushHistory(); }, 150);
 var inputIds = ['dim_l','dim_w','dim_h','earH','spkPerSide','cQty','dQty','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','camCount','camFOV'];
 for (var i = 0; i < inputIds.length; i++) { (function(id) { var el = $(id); if (el) el.addEventListener('input', debouncedUpdate); })(inputIds[i]); }
-var changeIds = ['spkModel','roomMode','roomType','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','screenType'];
+var changeIds = ['spkModel','roomMode','roomType','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','powerSeq','screenType'];
 for (var j = 0; j < changeIds.length; j++) {
   (function(id) {
     var el = $(id);
@@ -1602,7 +1552,7 @@ for (var j = 0; j < changeIds.length; j++) {
 }
 var textIds = ['projName','engName','clientName','siteLoc','projRef'];
 for (var k = 0; k < textIds.length; k++) { (function(id) { var el = $(id); if (el) el.addEventListener('input', debounce(function() { pushHistory(); }, 400)); })(textIds[k]); }
-var checkIds = ['useCharger','useFeedback','useSeq','useEq','showPodium','showScreen','showCameras','showRack'];
+var checkIds = ['useCharger','useFeedback','useEq','confExtMicCheck','showPodium','showScreen','showCameras','showRack'];
 for (var m = 0; m < checkIds.length; m++) { (function(id) { var el = $(id); if (el) el.addEventListener('change', function() { updateKPI(); markDirty(); pushHistory(); }); })(checkIds[m]); }
 
 function zoomIn()  { zoom = clamp(zoom * 1.2, 0.3, 4); markDirty(); }
@@ -1615,7 +1565,6 @@ function toggle(key) {
   if (key === 'heat') heatmapKey = '';
   markDirty();
 }
-
 function updateCursorInfo(e) {
   var rect = canvas.getBoundingClientRect();
   var mx = e.clientX - rect.left, my = e.clientY - rect.top;
@@ -1633,11 +1582,12 @@ function updateCursorInfo(e) {
   $('cursorDist').textContent = d.toFixed(1) + ' م';
 }
 
+/* ============ UNDO / SAVE / LOAD ============ */
 function getState() {
-  var ids = ['projName','engName','clientName','siteLoc','projRef','roomMode','roomType','dim_l','dim_w','dim_h','earH','spkModel','spkPerSide','cQty','dQty','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','screenType','camCount','camFOV'];
+  var ids = ['projName','engName','clientName','siteLoc','projRef','roomMode','roomType','dim_l','dim_w','dim_h','earH','spkModel','spkPerSide','cQty','dQty','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','powerSeq','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','screenType','camCount','camFOV'];
   var s = {};
   for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) s[ids[i]] = el.value; }
-  var checks = ['useCharger','useFeedback','useSeq','useEq','showPodium','showScreen','showCameras','showRack'];
+  var checks = ['useCharger','useFeedback','useEq','confExtMicCheck','showPodium','showScreen','showCameras','showRack'];
   for (var c = 0; c < checks.length; c++) { var el2 = $(checks[c]); if (el2) s[checks[c]] = el2.checked; }
   return s;
 }
@@ -1650,7 +1600,6 @@ function applyState(s) {
   }
   onHostChange(); updateKPI(); markDirty();
 }
-/* ✅ FIX: use undoHistory instead of history */
 function pushHistory() {
   if (suppressHistory) return;
   var s = getState();
@@ -1668,15 +1617,14 @@ document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
   if (e.key === 'Escape') $('reportModal').style.display = 'none';
 });
-
 function saveProject() {
   try {
-    localStorage.setItem('motivity_v54_ar', JSON.stringify({ state: getState(), opts: opts }));
+    localStorage.setItem('motivity_v57_ar', JSON.stringify({ state: getState(), opts: opts }));
     pushWarning('ok', '✅ تم الحفظ', 3000);
   } catch (e) { pushWarning('critical', 'فشل الحفظ', 3000); }
 }
 function loadProject() {
-  var raw = localStorage.getItem('motivity_v54_ar') || localStorage.getItem('motivity_v53_ar');
+  var raw = localStorage.getItem('motivity_v57_ar') || localStorage.getItem('motivity_v56_ar') || localStorage.getItem('motivity_v55_ar') || localStorage.getItem('motivity_v54_ar') || localStorage.getItem('motivity_v53_ar');
   if (!raw) { pushWarning('warn', 'لا يوجد مشروع محفوظ', 3000); return; }
   try {
     var data = JSON.parse(raw);
@@ -1687,6 +1635,7 @@ function loadProject() {
   } catch (err) { pushWarning('critical', 'خطأ في القراءة', 3000); }
 }
 
+/* ============ REPORT ============ */
 function generateReport() {
   var cfg = readConfig();
   var total = cfg.perSide * 2, totalW = cfg.spk.pwr * total, totalMic = cfg.cQty + cfg.dQty;
@@ -1694,7 +1643,6 @@ function generateReport() {
   var Dc = calcCriticalDistance(cfg.spk.q, cfg.L, cfg.W, cfg.H, RT60);
   var throwH = Math.max(0.5, cfg.H - cfg.earH);
   var coverR = throwH * Math.tan((cfg.spk.angle/2) * Math.PI/180);
-  var maxDist = Math.sqrt((cfg.L/2)*(cfg.L/2) + (cfg.W/2)*(cfg.W/2) + throwH*throwH);
   var minSpl = Infinity, minSti = 1, S = 20;
   for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
     var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
@@ -1708,7 +1656,7 @@ function generateReport() {
   $('repLoc').textContent = cfg.siteLoc;
   $('repRef').textContent = cfg.projRef;
   $('repDate').textContent = new Date().toLocaleDateString('ar-EG');
-  $('reportImg').src = canvas.toDataURL('image/png');
+  try { $('reportImg').src = canvas.toDataURL('image/png'); } catch (e) {}
 
   var host = CONF_HOSTS[cfg.confHost] || {};
   var chair = CONF_CHAIRS[cfg.confChair] || {};
@@ -1748,11 +1696,11 @@ function generateReport() {
   else if (totalW <= 1500) { ampModel = "MA-1500C"; ampPower = 1500; }
   else { ampModel = "MA-41300C"; ampPower = 1300; ampQty = Math.ceil(totalW / (ampPower * 4)); }
   addRow('مضخم Class-H', 'Motivity ' + ampModel, ampQty, 'حمل ' + totalW + 'W');
-  if (cfg.confMixer) addRow('ميكسر رقمي', 'Motivity ' + cfg.confMixer, 1, CONF_ACCESSORIES[cfg.confMixer].desc);
+  if (cfg.confMixer) addRow('ميكسر ذكي', 'Motivity ' + cfg.confMixer, 1, CONF_ACCESSORIES[cfg.confMixer].desc);
   if (cfg.audioDSP) addRow('معالج DSP', 'Motivity ' + cfg.audioDSP, 1, CONF_ACCESSORIES[cfg.audioDSP].desc);
   if (cfg.useFeedback) addRow('مانع صفير', 'Motivity DF224', 1, CONF_ACCESSORIES['DF224'].desc);
   if (cfg.useEq) addRow('إيكولايزر', 'Motivity GEQ231', 1, CONF_ACCESSORIES['GEQ231'].desc);
-  if (cfg.useSeq) addRow('منظم قدرة', 'Motivity SC-802 II', 1, CONF_ACCESSORIES['SC-802 II'].desc);
+  if (cfg.powerSeq && CONF_ACCESSORIES[cfg.powerSeq]) addRow('منظّم قدرة', 'Motivity ' + cfg.powerSeq, 1, CONF_ACCESSORIES[cfg.powerSeq].desc);
 
   addCat('🎬 ثانياً: المنصة والسمعي البصري');
   if (cfg.showPodium) addRow('منصة', 'مخصصة ' + cfg.podiumW + '×' + cfg.podiumD + 'م', 1, 'أثاث');
@@ -1760,26 +1708,30 @@ function generateReport() {
   if (cfg.showCameras) addRow('كاميرات', 'SD/HD PTZ', cfg.camCount, cfg.camFOV + '°');
 
   addCat('🎤 ثالثاً: نظام الاجتماعات');
-  addRow('المضيف', 'Motivity ' + host.name, 1, (host.features || []).slice(0, 2).join(' · '));
-  addRow('وحدة رئيس', 'Motivity ' + chair.name, cfg.cQty, chair.display || '');
-  addRow('وحدة عضو', 'Motivity ' + delegate.name, cfg.dQty, 'Daisy-Chain');
+  addRow('المضيف', 'Motivity ' + (host.name || '—'), 1, (host.features || []).slice(0, 2).join(' · '));
+  addRow('وحدة رئيس', 'Motivity ' + (chair.name || '—'), cfg.cQty, chair.desc || chair.display || '');
+  addRow('وحدة عضو', 'Motivity ' + (delegate.name || '—'), cfg.dQty, delegate.desc || 'Daisy-Chain');
   if (cfg.useCharger && (cfg.confMode === 'wireless' || host.type === 'wireless')) addRow('شاحن', 'Motivity GW5020', Math.ceil(totalMic / 20), CONF_ACCESSORIES['GW5020'].desc);
+  if (cfg.confExtMicCheck || cfg.confExtMic === 'G-T43') addRow('ميكروفون إضافي', 'Motivity G-T43', 1, CONF_ACCESSORIES['G-T43'].desc);
 
-  if (cfg.confMode === 'interpretation' || (cfg.interpLang > 1 && (host.type === 'hybrid' || host.type === 'premium'))) {
-    addCat('🌐 رابعاً: الترجمة');
+  if (cfg.confMode === 'interpretation' || (cfg.interpLang > 1 && (host.type === 'hybrid' || host.type === 'premium' || host.type === '5g'))) {
+    addCat('🌐 رابعاً: الترجمة الفورية');
     addRow('مضيف الترجمة', 'Motivity MT606Z', 1, INTERP_DB['MT606Z'].desc);
     addRow('وحدة مترجم', 'Motivity MTO6Y', cfg.interpUnits, INTERP_DB['MTO6Y'].desc);
     if (cfg.irReceivers > 0) addRow('مستقبل IR', 'Motivity MT606J', cfg.irReceivers, INTERP_DB['MT606J'].desc);
     if (cfg.irEmitters > 0) addRow('لوح IR', 'Motivity MT25F', cfg.irEmitters, INTERP_DB['MT25F'].desc);
   }
 
-  addCat('🔌 خامساً: الكابلات');
+  addCat('🔌 خامساً: الكابلات والموصلات');
+  var cableLen = Math.max(10, Math.ceil(totalMic * 2.5 / 10) * 10);
+  var cableModel = cableLen <= 10 ? 'G8PS-10' : cableLen <= 15 ? 'G8PS-15' : cableLen <= 20 ? 'G8PS-20' : 'G8PS-30';
+  addRow('كابل اجتماعات', 'Motivity ' + cableModel, Math.ceil(totalMic / 5), (KITS[cableModel] ? KITS[cableModel].desc : cableLen + 'م') + ' · Shielded');
   addRow('كيبل صوت', 'Twin Core 2×1.5mm', '~' + Math.round(total*(cfg.L+cfg.W)*0.4) + 'م', 'Fire Rated');
-  addRow('كيبل مؤتمرات', 'Motivity G8PS-10', '~' + Math.round(totalMic*2.5+20) + 'م', 'CAT6 Shielded');
-  addRow('موصلات', 'Motivity Kit', 1, 'Rack · Patch');
+  addRow('موصلات', 'Motivity Kit', 1, 'Rack · Patch · T3M');
 
   var totalPowerFinal = (host.power || 0) + (chair.power || 0)*cfg.cQty + (delegate.power || 0)*cfg.dQty;
-  boq.push('<tr class="total-row"><td colspan="3">إجمالي الاستهلاك</td><td>~' + Math.round(totalPowerFinal) + 'W</td><td>40A</td></tr>');
+  if (cfg.powerSeq && CONF_ACCESSORIES[cfg.powerSeq]) totalPowerFinal += CONF_ACCESSORIES[cfg.powerSeq].power;
+  boq.push('<tr class="total-row"><td colspan="3">إجمالي الاستهلاك</td><td>~' + Math.round(totalPowerFinal) + 'W</td><td>' + (totalPowerFinal > 4000 ? '40A+' : '20A') + '</td></tr>');
   $('boqBody').innerHTML = boq.join('');
 
   $('justificationBody').innerHTML =
@@ -1788,7 +1740,7 @@ function generateReport() {
     '<strong>ثانياً: التغطية</strong><br>زاوية ' + cfg.spk.angle + '° → نصف قطر ' + coverR.toFixed(2) + 'م.<br><br>' +
     '<strong>ثالثاً: الخصائص الصوتية</strong><br>حجم ' + (cfg.L*cfg.W*cfg.H).toFixed(0) + 'م³ · RT60 = <b>' + RT60.toFixed(2) + 'ث</b>.<br><br>' +
     '<strong>رابعاً: STI = ' + minSti.toFixed(2) + '</strong><br><br>' +
-    '<strong>خامساً: نظام الاجتماعات</strong><br>' + host.name + ' (حتى ' + host.maxUnits + ' وحدة) · ' + chair.name + ' × ' + cfg.cQty + ' · ' + delegate.name + ' × ' + cfg.dQty + '.' +
+    '<strong>خامساً: نظام الاجتماعات</strong><br>' + (host.name||'—') + ' (حتى ' + (host.maxUnits||0) + ' وحدة) · ' + (chair.name||'—') + ' × ' + cfg.cQty + ' · ' + (delegate.name||'—') + ' × ' + cfg.dQty + '.' +
     '</div>';
 
   var allW = calculateWarnings().concat(tempWarnings);
@@ -1807,17 +1759,100 @@ function generateReport() {
   $('reportModal').style.display = 'block';
 }
 
+/* ============ TOUCH ============ */
+var touchState = { mode:null, startX:0, startY:0, startDist:0, startZoom:1, startOffsetX:0, startOffsetY:0 };
+function handleTouchStart(e) {
+  if (e.touches.length === 1) {
+    touchState.mode = 'pan';
+    var t = e.touches[0];
+    touchState.startX = t.clientX; touchState.startY = t.clientY;
+    touchState.startOffsetX = offsetX; touchState.startOffsetY = offsetY;
+    touchState.startDist = 0;
+  } else if (e.touches.length === 2) {
+    touchState.mode = 'pinch';
+    var t1 = e.touches[0], t2 = e.touches[1];
+    var dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+    touchState.startDist = Math.sqrt(dx*dx + dy*dy);
+    touchState.startZoom = zoom;
+    touchState.startOffsetX = offsetX; touchState.startOffsetY = offsetY;
+  }
+}
+function handleTouchMove(e) {
+  if (touchState.mode === 'pan' && e.touches.length === 1) {
+    var t = e.touches[0];
+    offsetX = touchState.startOffsetX + (t.clientX - touchState.startX);
+    offsetY = touchState.startOffsetY + (t.clientY - touchState.startY);
+    markDirty(); e.preventDefault();
+  } else if (touchState.mode === 'pinch' && e.touches.length === 2) {
+    var t1 = e.touches[0], t2 = e.touches[1];
+    var dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+    var dist = Math.sqrt(dx*dx + dy*dy);
+    if (touchState.startDist > 0) {
+      var scale = dist / touchState.startDist;
+      var newZoom = clamp(touchState.startZoom * scale, 0.3, 4);
+      var rect = vArea.getBoundingClientRect();
+      var cx = rect.width / 2 + offsetX, cy = rect.height / 2 + offsetY;
+      var mx = (t1.clientX + t2.clientX) / 2 - rect.left;
+      var my = (t1.clientY + t2.clientY) / 2 - rect.top;
+      var fx = (mx - cx) / touchState.startZoom, fy = (my - cy) / touchState.startZoom;
+      zoom = newZoom;
+      offsetX = mx - fx * zoom - rect.width / 2;
+      offsetY = my - fy * zoom - rect.height / 2;
+      markDirty();
+    }
+    e.preventDefault();
+  }
+}
+function handleTouchEnd(e) {
+  if (e.touches.length === 0) touchState.mode = null;
+  else if (e.touches.length === 1) {
+    touchState.mode = 'pan';
+    var t = e.touches[0];
+    touchState.startX = t.clientX; touchState.startY = t.clientY;
+    touchState.startOffsetX = offsetX; touchState.startOffsetY = offsetY;
+  }
+}
+
+function handleResize() {
+  if (!canvas) return;
+  var nowMob = isMobileNow();
+  if (nowMob !== isMobile) {
+    isMobile = nowMob;
+    var sb = $('sidebar'), bd = $('sidebarBackdrop');
+    if (!isMobile) {
+      sb.classList.remove('open');
+      if (bd) bd.classList.remove('show');
+      sb.classList.remove('collapsed');
+      var tog = sb.querySelector('.sidebar-toggle');
+      if (tog) tog.textContent = '◀';
+    } else {
+      sb.classList.remove('collapsed');
+    }
+  }
+  resizeCanvas(); markDirty();
+}
+
 function bootApp() {
   try {
     canvas = document.getElementById('mainCanvas');
     ctx = canvas.getContext('2d');
     vArea = document.getElementById('vArea');
     if (!canvas || !ctx || !vArea) { showError('تهيئة', 'لم يتم العثور على Canvas'); return; }
-    console.log('🚀 Motivity v5.4 boot');
+    console.log('🚀 Motivity v5.7 boot · mobile:', isMobile);
+
     populateHosts();
-    if ($('confChair').options.length) $('confChair').value = 'MT380VC';
+    if ($('confChair').options.length) {
+      var found = false;
+      for (var i = 0; i < $('confChair').options.length; i++) if ($('confChair').options[i].value === 'MT880VC') found = true;
+      $('confChair').value = found ? 'MT880VC' : $('confChair').options[0].value;
+    }
     onHostChange();
-    if ($('confDelegate').options.length) $('confDelegate').value = 'MT380VD';
+    if ($('confDelegate').options.length) {
+      var found2 = false;
+      for (var j = 0; j < $('confDelegate').options.length; j++) if ($('confDelegate').options[j].value === 'MT880VD') found2 = true;
+      $('confDelegate').value = found2 ? 'MT880VD' : $('confDelegate').options[0].value;
+    }
+
     vArea.addEventListener('mousedown', function(e) {
       if (e.button === 0 || e.button === 1) { isPanning = true; startX = e.clientX - offsetX; startY = e.clientY - offsetY; vArea.style.cursor = 'grabbing'; }
     });
@@ -1826,14 +1861,31 @@ function bootApp() {
       updateCursorInfo(e);
     });
     vArea.addEventListener('mouseup', function() { isPanning = false; vArea.style.cursor = ''; });
-    vArea.addEventListener('mouseleave', function() { isPanning = false; vArea.style.cursor = ''; $('cursorSPL').textContent = '—'; $('cursorSTI').textContent = '—'; $('cursorDist').textContent = '—'; });
+    vArea.addEventListener('mouseleave', function() { isPanning = false; vArea.style.cursor = ''; var ci = $('cursorSPL'); if (ci) { ci.textContent = '—'; $('cursorSTI').textContent = '—'; $('cursorDist').textContent = '—'; } });
     vArea.addEventListener('wheel', function(e) { e.preventDefault(); zoom = clamp(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), 0.3, 4); markDirty(); }, { passive: false });
+    vArea.addEventListener('touchstart', handleTouchStart, { passive: true });
+    vArea.addEventListener('touchmove', handleTouchMove, { passive: false });
+    vArea.addEventListener('touchend', handleTouchEnd, { passive: true });
+    vArea.addEventListener('touchcancel', function() { touchState.mode = null; }, { passive: true });
+
+    document.addEventListener('click', function(e) {
+      if (!isMobileNow()) return;
+      var sb = $('sidebar');
+      if (!sb.classList.contains('open')) return;
+      if (e.target.closest && (e.target.closest('.sidebar') || e.target.closest('.mobile-fab'))) return;
+      toggleSidebar();
+    });
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', debounce(function() { resizeCanvas(); markDirty(); }, 150));
+    }
+    window.addEventListener('orientationchange', function() { setTimeout(handleResize, 350); });
+    window.addEventListener('resize', debounce(handleResize, 200));
   } catch (e) { showError('تهيئة', e.message); return; }
+
   setTimeout(function() {
     try {
-      resizeCanvas();
-      updateKPI();
-      markDirty();
+      resizeCanvas(); updateKPI(); markDirty();
       lastFrameTime = performance.now();
       safeRender();
       requestAnimationFrame(loop);
@@ -1848,12 +1900,11 @@ if (window.ResizeObserver) {
     var ro = new ResizeObserver(function() {
       if (!canvas) return;
       clearTimeout(window.__roT);
-      window.__roT = setTimeout(function() { resizeCanvas(); markDirty(); }, 100);
+      window.__roT = setTimeout(handleResize, 100);
     });
     ro.observe(document.body);
   } catch (e) {}
 }
-window.addEventListener('resize', debounce(function() { if (canvas) { resizeCanvas(); markDirty(); } }, 200));
 if (document.readyState === 'complete' || document.readyState === 'interactive') setTimeout(bootApp, 50);
 else document.addEventListener('DOMContentLoaded', bootApp);
 </script>
