@@ -2,155 +2,459 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<title>Motivity Master AI - Outdoor Spaces 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Motivity Master AI · Outdoor Spaces 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --red:#e60012;
-  --blue:#38bdf8;
-  --green:#22c55e;
-  --yellow:#e5c07b;
-  --purple:#a855f7;
-  --bg:#0d1117;
-  --panel:#161b22;
-  --card:#21262d;
-  --bd:#30363d;
-  --mu:#8b949e;
+  --red:#e60012; --blue:#38bdf8; --green:#22c55e; --yellow:#e5c07b;
+  --purple:#a855f7; --orange:#f59e0b; --bg:#0d1117; --panel:#161b22;
+  --card:#21262d; --bd:#30363d; --mu:#8b949e;
 }
-*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:#fff;display:flex;height:100vh;overflow:hidden}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+
+html,body{
+  height:100%;overflow:hidden;overscroll-behavior:none;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+body{background:var(--bg);color:#fff;display:flex;height:100dvh}
 
 /* ═══ SIDEBAR ═══ */
-.sidebar{width:420px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);padding:16px;overflow-y:auto;border-right:3px solid var(--red);flex-shrink:0;box-shadow:8px 0 32px rgba(0,0,0,.5)}
+.sidebar{
+  width:420px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
+  padding:16px;overflow-y:auto;border-right:3px solid var(--red);
+  flex-shrink:0;box-shadow:8px 0 32px rgba(0,0,0,.5);
+  transition:max-height .3s ease;-webkit-overflow-scrolling:touch;
+}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
 .brand{text-align:center;padding-bottom:12px;border-bottom:1px solid #222;margin-bottom:14px}
 .brand h2{font-size:19px;font-weight:900;color:var(--red);letter-spacing:1px}
 .brand p{font-size:10px;color:#666;letter-spacing:2px;margin-top:3px}
+.brand .mode-badge{
+  display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;
+  background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);
+  color:var(--green);font-size:9px;font-weight:800;letter-spacing:1.5px;
+}
 
 .box{background:rgba(33,38,45,.75);padding:13px;border-radius:10px;margin-bottom:11px;border:1px solid rgba(56,189,248,.1)}
-.box h3{font-size:12px;color:var(--blue);margin-bottom:10px;font-weight:800;display:flex;align-items:center;gap:6px}
+.box h3{
+  font-size:12px;color:var(--blue);margin-bottom:10px;font-weight:800;
+  display:flex;align-items:center;gap:6px;
+}
 .box h3::before{content:'';width:3px;height:12px;background:var(--red);border-radius:2px}
 label{font-size:11px;color:var(--mu);display:block;margin-top:8px;font-weight:600}
-input,select{width:100%;padding:8px 10px;background:#0a0e13;color:#fff;border:1px solid var(--bd);border-radius:6px;margin-top:4px;font-family:inherit;font-size:12.5px;transition:.2s}
+input,select{
+  width:100%;padding:8px 10px;background:#0a0e13;color:#fff;
+  border:1px solid var(--bd);border-radius:6px;margin-top:4px;
+  font-family:inherit;font-size:12.5px;transition:.2s;
+}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
 
-.btn{width:100%;padding:12px;border:none;border-radius:8px;font-weight:800;cursor:pointer;transition:.25s;font-family:inherit;font-size:12.5px;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn{
+  width:100%;padding:12px;border:none;border-radius:8px;
+  font-weight:800;cursor:pointer;transition:.25s;
+  font-family:inherit;font-size:12.5px;margin-top:6px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:44px;touch-action:manipulation;
+}
+.btn:active{transform:scale(.97)}
 .btn-smart{background:linear-gradient(135deg,#e60012,#99000d);color:#fff;box-shadow:0 4px 12px rgba(230,0,18,.3)}
-.btn-smart:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(230,0,18,.5)}
 .btn-blue{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 12px rgba(56,189,248,.3)}
-.btn-blue:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(56,189,248,.5)}
 .btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
-.btn-green:hover{transform:translateY(-2px)}
 .btn-reset{background:#2a2f36;color:#ff4d4d;border:1px solid #444}
-.btn-reset:hover{background:#ff4d4d;color:#fff}
 
-.tool-btn{background:#0a0e13;color:#8b949e;border:1px solid var(--bd);padding:9px 6px;font-size:11px;font-weight:700;cursor:pointer;border-radius:6px;flex:1;transition:.2s;font-family:inherit}
+.tool-btn{
+  background:#0a0e13;color:#8b949e;border:1px solid var(--bd);
+  padding:9px 6px;font-size:11px;font-weight:700;cursor:pointer;
+  border-radius:6px;flex:1;transition:.2s;font-family:inherit;min-height:44px;
+}
 .tool-btn.active{background:var(--blue);color:#000;border-color:var(--blue);box-shadow:0 0 12px rgba(56,189,248,.4)}
 
 .tool-grid{display:flex;gap:6px;margin-top:8px}
 
-/* ═══ KPI ROW ═══ */
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
 .kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center}
 .kpi .v{font-size:14px;font-weight:900;color:var(--blue)}
 .kpi .l{font-size:9px;color:var(--mu);margin-top:2px}
 .kpi.ok .v{color:var(--green)}
 .kpi.warn .v{color:#f59e0b}
+.kpi.bad .v{color:#ef4444}
+
+.info-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0;border-bottom:1px solid rgba(48,54,61,.5);font-size:11px;
+}
+.info-row:last-child{border-bottom:none}
+.info-row span:first-child{color:var(--mu)}
+.info-row span:last-child{color:var(--blue);font-weight:800}
+.info-row.warn span:last-child{color:#f59e0b}
+.info-row.bad span:last-child{color:#ef4444}
 
 /* ═══ MAIN VIEW ═══ */
-.main-view{flex:1;display:flex;flex-direction:column;background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);position:relative;overflow:hidden}
-.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden}
-canvas{background:#050505;border-radius:12px;border:1px solid #222;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.04);max-width:100%;max-height:100%;display:block;cursor:crosshair}
+.main-view{
+  flex:1;display:flex;flex-direction:column;
+  background:radial-gradient(circle at 50% 30%,#0f1a1c 0%,#05080c 100%);
+  position:relative;overflow:hidden;min-width:0;min-height:0;
+}
+.canvas-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:14px;overflow:hidden;min-height:0;
+}
+canvas{
+  background:#0a0e0a;border-radius:12px;border:1px solid #1a3a1a;
+  box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(34,197,94,.05);
+  display:block;touch-action:none;user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;cursor:crosshair;max-width:100%;max-height:100%;
+}
 
-.toolbar{position:absolute;top:14px;right:14px;display:flex;gap:4px;background:rgba(22,27,34,.9);border:1px solid var(--bd);border-radius:10px;padding:5px;z-index:10}
-.toolbar button{background:transparent;color:#ccc;border:none;width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;transition:.2s;font-family:inherit}
-.toolbar button:hover{background:#30363d;color:#fff}
+.toolbar{
+  position:absolute;top:14px;left:14px;display:flex;gap:4px;flex-wrap:wrap;
+  max-width:calc(100% - 28px);background:rgba(22,27,34,.9);
+  border:1px solid var(--bd);border-radius:10px;padding:5px;z-index:10;
+}
+.toolbar button{
+  background:transparent;color:#ccc;border:none;width:36px;height:36px;
+  border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;
+  transition:.2s;font-family:inherit;touch-action:manipulation;
+}
 .toolbar button.on{background:var(--blue);color:#000}
+#tgSidebar{display:none}
 
-.hint-bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.9);border:1px solid var(--bd);border-radius:10px;padding:6px 14px;font-size:11px;color:var(--mu);z-index:10;display:flex;gap:14px;align-items:center}
+.hint-bar{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  background:rgba(22,27,34,.9);border:1px solid var(--bd);
+  border-radius:10px;padding:6px 14px;font-size:11px;color:var(--mu);
+  z-index:10;display:flex;gap:14px;align-items:center;
+  max-width:calc(100% - 28px);flex-wrap:wrap;justify-content:center;
+}
 .hint-bar b{color:var(--blue)}
 
-.cursor-info{position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.9);border:1px solid var(--bd);border-radius:10px;padding:7px 14px;font-size:11.5px;color:#fff;z-index:10}
+.cursor-info{
+  position:absolute;bottom:14px;left:14px;background:rgba(22,27,34,.9);
+  border:1px solid var(--bd);border-radius:10px;padding:7px 14px;
+  font-size:11.5px;color:#fff;z-index:10;
+}
 .cursor-info b{color:var(--blue);font-weight:900}
 
-.beam-controls{position:absolute;bottom:14px;left:14px;background:rgba(22,27,34,.9);padding:10px;border-radius:10px;border:1px solid var(--bd);display:none;gap:14px;align-items:center;z-index:10}
+.beam-controls{
+  position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.95);
+  padding:10px;border-radius:10px;border:1px solid var(--bd);
+  display:none;gap:14px;align-items:center;z-index:10;
+  flex-wrap:wrap;max-width:calc(100% - 28px);
+}
 .beam-controls.on{display:flex}
+.beam-controls > div{min-width:100px}
 .beam-controls label{margin:0;font-size:10px;color:var(--blue)}
-.beam-controls input[type=range]{width:110px;padding:0;height:4px;background:#30363d;border-radius:2px;margin:0}
-.beam-controls .name{font-weight:900;font-size:11px;color:var(--red);min-width:130px;text-align:center}
+.beam-controls input[type=range]{
+  width:110px;padding:0;height:6px;background:#30363d;
+  border-radius:3px;margin:0;-webkit-appearance:none;appearance:none;
+}
+.beam-controls input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--blue);cursor:pointer;
+}
+.beam-controls .name{
+  font-weight:900;font-size:11px;color:var(--red);min-width:110px;text-align:center;
+}
+.beam-controls .del-btn{
+  background:#e60012;color:#fff;border:none;padding:8px 12px;
+  border-radius:6px;cursor:pointer;font-weight:800;font-family:inherit;
+  font-size:11px;min-height:36px;
+}
+
+.legend{
+  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.9);
+  border:1px solid var(--bd);border-radius:10px;padding:10px 12px;
+  font-size:10.5px;z-index:10;color:#ddd;display:none;
+}
+.legend.on{display:block}
+.legend .row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.legend .sw{width:16px;height:10px;border-radius:2px;display:inline-block}
+
+/* Wind indicator */
+.wind-indicator{
+  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.9);
+  border:1px solid var(--bd);border-radius:10px;padding:8px 10px;
+  font-size:10px;color:#ddd;z-index:10;display:none;
+  align-items:center;gap:8px;
+}
+.wind-indicator.on{display:flex}
+.wind-compass{
+  width:40px;height:40px;border-radius:50%;position:relative;
+  background:radial-gradient(circle,#1a1f26 0%,#0a0e13 100%);
+  border:1px solid var(--bd);
+}
+.wind-arrow{
+  position:absolute;top:50%;left:50%;
+  transform-origin:0 0;
+  width:2px;height:18px;background:var(--blue);
+  transition:transform .3s;
+}
 
 /* ═══ REPORT ═══ */
-#reportPage{display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;color:#222;overflow-y:auto;padding:30px;text-align:left}
-.report-content{max-width:1150px;margin:auto;padding:40px;background:#fff;border-radius:10px;box-shadow:0 0 50px rgba(0,0,0,.1);position:relative;border-top:10px solid var(--red)}
+#reportPage{
+  display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;
+  color:#222;overflow-y:auto;padding:30px;direction:ltr;text-align:left;
+  -webkit-overflow-scrolling:touch;
+}
+.report-content{
+  max-width:1150px;margin:auto;padding:40px;background:#fff;
+  border-radius:10px;box-shadow:0 0 50px rgba(0,0,0,.1);
+  position:relative;border-top:10px solid var(--red);
+}
 
-.rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:18px;border-bottom:3px solid var(--red);margin-bottom:22px}
+.rep-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding-bottom:18px;border-bottom:3px solid var(--red);
+  margin-bottom:22px;gap:14px;flex-wrap:wrap;
+}
 .rep-header h1{color:var(--red);font-size:25px;font-weight:900}
 .rep-header p{font-size:12px;color:#888;margin-top:4px}
 .rep-header .meta{text-align:right;font-size:12px;color:#555;line-height:1.9}
 .rep-header .meta b{color:var(--red)}
 
-.analysis-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
-.analysis-card{background:#f8f9fa;padding:16px;border-radius:10px;border-top:4px solid var(--red);text-align:center}
+.analysis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.analysis-card{
+  background:#f8f9fa;padding:16px;border-radius:10px;
+  border-top:4px solid var(--red);text-align:center;
+}
 .analysis-card h4{color:var(--red);font-size:12px;margin-bottom:6px;font-weight:700}
 .analysis-card .val{font-size:22px;font-weight:900;color:#111;margin:5px 0}
 .analysis-card small{font-size:10.5px;color:#888}
+.analysis-card.env{border-top-color:var(--green)}
+.analysis-card.env h4{color:var(--green)}
+.analysis-card.comp{border-top-color:var(--purple)}
+.analysis-card.comp h4{color:var(--purple)}
 
 .kpi-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
-.kpi-card{background:#fff;padding:18px;border-radius:10px;text-align:center;border-top:4px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.kpi-card{
+  background:#fff;padding:18px;border-radius:10px;text-align:center;
+  border-top:4px solid var(--red);box-shadow:0 4px 20px rgba(0,0,0,.06);
+}
 .kpi-card h4{font-size:11px;color:#888;margin-bottom:6px;font-weight:700}
 .kpi-card span{font-size:20px;font-weight:900;color:#111}
 .kpi-card.ok span{color:var(--green)}
+.kpi-card.warn span{color:#f59e0b}
+.kpi-card.bad span{color:#ef4444}
 
-.decision-box{background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);border-left:5px solid var(--blue);padding:20px;border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9}
+.decision-box{
+  background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);
+  border-left:5px solid var(--blue);padding:20px;
+  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+}
 .decision-box strong{color:#0c4a6e}
 .decision-box p{margin-bottom:6px}
 
-.rep-table{width:100%;border-collapse:collapse;margin:16px 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.env-box{
+  background:linear-gradient(135deg,#f0fdf4 0%,#fff 100%);
+  border-left:5px solid var(--green);padding:20px;
+  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+}
+.env-box strong{color:#166534}
+
+.comp-box{
+  background:linear-gradient(135deg,#f5f0ff 0%,#fff 100%);
+  border-left:5px solid var(--purple);padding:20px;
+  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+}
+.comp-box strong{color:#5b21b6}
+
+.rep-table{
+  width:100%;border-collapse:collapse;margin:16px 0;background:#fff;
+  border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05);
+}
 .rep-table th{background:#1a1a1a;color:#fff;padding:12px;text-align:left;font-size:12.5px;font-weight:800}
-.rep-table td{padding:12px;border-bottom:1px solid #eee;font-size:13px;text-align:left}
+.rep-table td{padding:10px 12px;border-bottom:1px solid #eee;font-size:12.5px;text-align:left}
 .rep-table tr:last-child td{border-bottom:none}
 .rep-table tr:nth-child(even) td{background:#fafbfc}
 
 .rep-img{width:100%;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.15);border:1px solid #e5e7eb;margin-top:10px}
 
 .rep-controls{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.rep-controls button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:800;font-family:inherit;font-size:12.5px;transition:.2s}
+.rep-controls button{
+  padding:10px 20px;border:none;border-radius:8px;cursor:pointer;
+  font-weight:800;font-family:inherit;font-size:12.5px;
+  transition:.2s;min-height:44px;
+}
 .rep-controls .close{background:#e5e7eb;color:#333}
-.rep-controls .close:hover{background:#d1d5db}
 .rep-controls .print{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
-.rep-controls .print:hover{transform:translateY(-2px)}
 
-@media print{.no-print{display:none!important}#reportPage{position:static;padding:0;background:#fff}.report-content{box-shadow:none;padding:0;border-radius:0}body{background:#fff}}
+@media print{
+  .no-print{display:none!important}
+  #reportPage{position:static;padding:0;background:#fff;overflow:visible}
+  .report-content{box-shadow:none;padding:0;border-radius:0}
+  body{background:#fff;display:block;height:auto;overflow:visible}
+  html{overflow:visible}
+}
+
+/* ═══ TABLET ═══ */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .sidebar{width:340px;padding:12px}
+  .brand h2{font-size:17px}
+  .analysis-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 900px) {
+  body{flex-direction:column;height:100dvh}
+  .sidebar{
+    width:100%;border-right:none;border-top:3px solid var(--red);
+    order:2;max-height:48dvh;padding:12px;
+    border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.5);
+  }
+  .sidebar.collapsed{max-height:0;padding:0;overflow:hidden;border-top-width:0}
+  .main-view{order:1;flex:1;min-height:52dvh}
+  .canvas-wrap{padding:6px}
+  .brand h2{font-size:16px}
+  .brand p{font-size:9px;letter-spacing:1px}
+  .box{padding:10px}
+  .box h3{font-size:13px}
+  label{font-size:12px;margin-top:6px}
+  input,select{font-size:14px;padding:10px 12px;min-height:40px}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:6px}
+  .kpi .v{font-size:15px}
+  .kpi .l{font-size:9.5px}
+  .toolbar{top:8px;left:8px;padding:4px;gap:3px}
+  .toolbar button{width:40px;height:40px;font-size:16px}
+  #tgSidebar{display:block}
+  .hint-bar{font-size:9.5px;padding:5px 10px;gap:8px;bottom:8px;max-width:calc(100% - 16px)}
+  .hint-bar span:nth-child(2){display:none}
+  .cursor-info{bottom:auto;top:8px;left:8px;font-size:11px;padding:6px 10px}
+  .beam-controls{left:8px;right:8px;bottom:8px;flex-wrap:wrap;justify-content:center;gap:8px;padding:8px}
+  .beam-controls > div{flex:1 1 40%;min-width:0}
+  .beam-controls input[type=range]{width:100%;height:8px}
+  .beam-controls input[type=range]::-webkit-slider-thumb{width:22px;height:22px}
+  .beam-controls .name{font-size:11px;min-width:auto}
+  .beam-controls .del-btn{padding:10px 14px;min-height:40px;flex:1 1 100%}
+  .legend,.wind-indicator{top:58px;right:8px;font-size:9.5px;padding:6px 8px}
+  .legend .sw{width:12px;height:8px}
+  #reportPage{padding:10px}
+  .report-content{padding:16px;border-top-width:6px}
+  .rep-header{flex-direction:column;gap:10px;margin-bottom:14px;padding-bottom:12px}
+  .rep-header h1{font-size:18px}
+  .rep-header .meta{text-align:left;font-size:11px;line-height:1.7}
+  .analysis-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+  .analysis-card{padding:12px}
+  .analysis-card .val{font-size:16px}
+  .kpi-cards{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+  .kpi-card{padding:12px}
+  .kpi-card span{font-size:16px}
+  .decision-box,.env-box,.comp-box{padding:14px;font-size:12.5px;line-height:1.85}
+  .rep-controls{gap:6px}
+  .rep-controls button{flex:1;padding:12px 10px;font-size:12px}
+  .rep-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .rep-table{margin:0;min-width:520px;font-size:11px}
+  .rep-table th,.rep-table td{padding:8px 6px;font-size:11px}
+}
+
+@media (max-width: 380px) {
+  .brand h2{font-size:14px}
+  .toolbar button{width:36px;height:36px;font-size:14px}
+  .hint-bar{font-size:9px}
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  body{flex-direction:row}
+  .sidebar{
+    order:2;width:320px;max-height:100dvh;
+    border-top:none;border-right:3px solid var(--red);border-radius:0;
+  }
+  .main-view{order:1;min-height:auto}
+  .hint-bar{display:none}
+}
 </style>
 </head>
 <body>
 
-<div class="sidebar no-print">
+<div class="sidebar no-print" id="sidebar">
   <div class="brand">
     <h2>MOTIVITY MASTER AI</h2>
     <p>OUTDOOR SPACES 2026</p>
+    <div class="mode-badge">🌳 Free Field · Outdoor</div>
   </div>
 
-  <!-- Room Setup -->
+  <!-- Site & Stage Dimensions -->
   <div class="box">
-    <h3>📏 Room & Stage Setup</h3>
+    <h3>📏 Site &amp; Stage Dimensions</h3>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Length (m)</label><input type="number" id="room_l" value="120" oninput="draw()"></div>
-      <div style="flex:1"><label>Width (m)</label><input type="number" id="room_w" value="70" oninput="draw()"></div>
-      <div style="flex:1"><label>Height (m)</label><input type="number" id="room_h" value="15" oninput="draw()"></div>
+      <div style="flex:1"><label>Audience Depth (m)</label><input type="number" id="field_depth" value="120" min="10" max="500" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>Audience Width (m)</label><input type="number" id="audience_width" value="70" min="10" max="400" oninput="debouncedUpdate()"></div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Stage Width (m)</label><input type="number" id="stage_w" value="25" oninput="draw()"></div>
-      <div style="flex:1"><label>Stage Depth (m)</label><input type="number" id="stage_d" value="12" oninput="draw()"></div>
+      <div style="flex:1"><label>Stage Width (m)</label><input type="number" id="stage_w" value="25" min="2" max="100" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>Stage Depth (m)</label><input type="number" id="stage_d" value="12" min="2" max="40" oninput="debouncedUpdate()"></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <div style="flex:1"><label>SPL Target (dB)</label><input type="number" id="spl_target" value="100" min="70" max="140" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>Hang Height (m)</label><input type="number" id="hang_height" value="12" min="2" max="30" oninput="debouncedUpdate()"></div>
+    </div>
+  </div>
+
+  <!-- Environmental Conditions -->
+  <div class="box">
+    <h3>🌤️ Environmental Conditions</h3>
+    <div style="display:flex;gap:6px">
+      <div style="flex:1">
+        <label>Ground Type</label>
+        <select id="ground_type" onchange="debouncedUpdate()">
+          <option value="grass">Grass (0 dB)</option>
+          <option value="concrete">Concrete (+3 dB)</option>
+          <option value="water">Water (+4 dB)</option>
+          <option value="sand" selected>Sand / Dirt (0 dB)</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label>Temperature (°C)</label>
+        <input type="number" id="temperature" value="28" min="-10" max="50" oninput="debouncedUpdate()">
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <div style="flex:1"><label>Wind Speed (km/h)</label><input type="number" id="wind_speed" value="8" min="0" max="60" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>Wind Direction (°)</label><input type="number" id="wind_dir" value="180" min="0" max="360" oninput="debouncedUpdate()"></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <div style="flex:1"><label>Humidity (%)</label><input type="number" id="humidity" value="50" min="10" max="100" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>Ambient Noise (dB)</label><input type="number" id="ambient" value="55" min="30" max="90" oninput="updateKPI()"></div>
+    </div>
+  </div>
+
+  <!-- Legal Noise Compliance -->
+  <div class="box">
+    <h3>⚖️ Legal Noise Compliance</h3>
+    <div style="display:flex;gap:6px">
+      <div style="flex:1"><label>Nearest Neighbor (m)</label><input type="number" id="neighbor_dist" value="300" min="10" max="2000" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>Noise Limit (dB)</label><input type="number" id="neighbor_limit" value="65" min="40" max="90" oninput="updateKPI()"></div>
     </div>
 
+    <div style="margin-top:10px">
+      <div class="info-row" id="rowNeighbor">
+        <span>SPL at Neighbor</span>
+        <span id="infoNeighborSPL">—</span>
+      </div>
+      <div class="info-row" id="rowCompliance">
+        <span>Legal Compliance</span>
+        <span id="infoCompliance">—</span>
+      </div>
+      <div class="info-row"><span>Ground Reflection</span><span id="infoGroundRefl">—</span></div>
+      <div class="info-row"><span>Air Loss</span><span id="infoAirLoss">—</span></div>
+      <div class="info-row"><span>Wind Effect</span><span id="infoWind">—</span></div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="box">
+    <h3>📊 Key Performance Indicators</h3>
     <div class="kpi-row">
       <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">Speakers</div></div>
       <div class="kpi" id="kpiPwr"><div class="v" id="kpiPwrV">0</div><div class="l">Total Watts</div></div>
       <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">Coverage</div></div>
       <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">Max SPL</div></div>
+      <div class="kpi" id="kpiDelay"><div class="v" id="kpiDelayV">0</div><div class="l">Delay Towers</div></div>
+      <div class="kpi" id="kpiGen"><div class="v" id="kpiGenV">—</div><div class="l">Generator kVA</div></div>
     </div>
   </div>
 
@@ -158,137 +462,182 @@ canvas{background:#050505;border-radius:12px;border:1px solid #222;box-shadow:0 
   <div class="box">
     <h3>🎯 Event Type</h3>
     <select id="event_type" onchange="applySmartLayout()">
-      <option value="auto">Auto Detect (by area)</option>
+      <option value="auto">Auto Detect (by depth)</option>
       <option value="wedding">Wedding (Point Source)</option>
-      <option value="concert">Concert (Line Array)</option>
-      <option value="conference">Conference (Distributed)</option>
+      <option value="concert">Concert (Line Array + Delay)</option>
+      <option value="festival">Open Festival</option>
+      <option value="conference">Outdoor Conference</option>
     </select>
   </div>
 
   <!-- Catalog -->
   <div class="box">
-    <h3>🔊 Full 2026 Catalog</h3>
-    <label>1. Main & Side Systems</label>
+    <h3>🔊 Full Catalog 2026</h3>
+    <label>1. Main &amp; Side Systems</label>
     <select id="sel_main">
       <optgroup label="Point Source">
-        <option value="DB-25 NW" data-spl="133" data-h="100" data-v="70" data-watt="1000">DB-25 NW (1000W / 133dB)</option>
-        <option value="DB-25 3G" data-spl="130" data-h="100" data-v="60" data-watt="1000">DB-25 3G (1000W / 130dB)</option>
-        <option value="MTL-700 3G" data-spl="126" data-h="90" data-v="60" data-watt="500">MTL-700 3G (500W)</option>
+        <option value="DB-25 NW">DB-25 NW (1000W / 133dB)</option>
+        <option value="DB-25 3G">DB-25 3G (1000W / 130dB)</option>
+        <option value="MTL-700 3G">MTL-700 3G (500W)</option>
       </optgroup>
       <optgroup label="Line Array Series">
-        <option value="MLA212" data-spl="138" data-h="90" data-v="10" data-watt="900">MLA212 (Dual 12" - 900W)</option>
-        <option value="MLA210" data-spl="135" data-h="90" data-v="10" data-watt="700">MLA210 (Dual 10" - 700W)</option>
-        <option value="M10-LA" data-spl="132" data-h="100" data-v="10" data-watt="700">M10-LA (Compact 700W)</option>
-        <option value="MLA208" data-spl="130" data-h="100" data-v="10" data-watt="500">MLA208 (Dual 8")</option>
+        <option value="MLA212">MLA212 (Dual 12" - 900W)</option>
+        <option value="MLA210">MLA210 (Dual 10" - 700W)</option>
+        <option value="M10-LA">M10-LA (Compact 700W)</option>
+        <option value="MLA208">MLA208 (Dual 8")</option>
       </optgroup>
       <optgroup label="Active Series">
-        <option value="HD315A" data-spl="131" data-h="90" data-v="60" data-watt="1000">HD315A (1000W Active)</option>
-        <option value="HD312A" data-spl="128" data-h="90" data-v="60" data-watt="1000">HD312A (1000W Active)</option>
+        <option value="HD315A">HD315A (1000W Active)</option>
+        <option value="HD312A">HD312A (1000W Active)</option>
       </optgroup>
     </select>
 
-    <label>2. Subs & Monitors</label>
+    <label>2. Subs &amp; Monitors</label>
     <select id="sel_extra">
-      <option value="DB-218 3G" data-spl="140" data-h="180" data-v="60" data-watt="1400">DB-218 3G (Dual 18" - 1400W)</option>
-      <option value="QX-218" data-spl="140" data-h="180" data-v="60" data-watt="2000">QX-218 (Dual 18" Touring)</option>
-      <option value="HD-SUB-18A" data-spl="136" data-h="180" data-v="60" data-watt="1200">HD-SUB-18A (Active Sub)</option>
-      <option value="DB-15M 3G" data-spl="128" data-h="90" data-v="60" data-watt="500">DB-15M 3G (Stage Monitor)</option>
-      <option value="MTL-152" data-spl="125" data-h="90" data-v="60" data-watt="400">MTL-152 (KTV/Monitor)</option>
+      <option value="DB-218 3G">DB-218 3G (Dual 18" - 1400W)</option>
+      <option value="QX-218">QX-218 (Dual 18" Touring)</option>
+      <option value="HD-SUB-18A">HD-SUB-18A (Active Sub)</option>
+      <option value="DB-15M 3G">DB-15M 3G (Stage Monitor)</option>
+      <option value="MTL-152">MTL-152 (KTV/Monitor)</option>
     </select>
 
     <div class="tool-grid">
       <button class="tool-btn active" id="btn_main" onclick="setMode('main')">➕ Main</button>
-      <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ Sub/Mon</button>
+      <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ Sub</button>
       <button class="tool-btn" id="btn_side" onclick="setMode('side')">➕ Side</button>
+      <button class="tool-btn" id="btn_delay" onclick="setMode('delay')">🗼 Delay</button>
     </div>
   </div>
 
-  <!-- Actions -->
-  <button class="btn btn-smart" onclick="applySmartLayout()">🚀 SMART AUTO LAYOUT</button>
-  <button class="btn btn-blue" onclick="generateReport()">📄 GENERATE TECH REPORT</button>
-  <button class="btn btn-green" onclick="saveMapPNG()">🖼️ SAVE MAP AS PNG</button>
-  <button class="btn btn-blue" onclick="saveProjectJSON()">💾 SAVE PROJECT JSON</button>
-  <button class="btn btn-reset" onclick="resetCanvas()">🔄 RESET CANVAS</button>
+  <button class="btn btn-smart" onclick="applySmartLayout()">🚀 Auto Smart Layout</button>
+  <button class="btn btn-blue" onclick="generateReport()">📄 Generate Engineering Report</button>
+  <button class="btn btn-green" onclick="saveMapPNG()">🖼️ Save Map PNG</button>
+  <button class="btn btn-blue" onclick="saveProjectJSON()">💾 Save Project JSON</button>
+  <button class="btn btn-blue" onclick="document.getElementById('loadFile').click()">📂 Open Project JSON</button>
+  <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadProjectJSON(event)">
+  <button class="btn btn-reset" onclick="resetCanvas()">🔄 Reset Layout</button>
 </div>
 
-<!-- MAIN VIEW -->
 <div class="main-view no-print">
-  <div class="canvas-wrap">
-    <canvas id="mainCanvas" width="1200" height="680"></canvas>
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="mainCanvas"></canvas>
   </div>
 
   <div class="toolbar">
-    <button id="tgWaves" class="on" onclick="toggle('waves')" title="Sound Waves">🔊</button>
-    <button id="tgHeat" onclick="toggle('heat')" title="SPL Heatmap">🌡️</button>
+    <button id="tgSidebar" onclick="toggleSidebar()" title="Menu">☰</button>
+    <button id="tgWaves" class="on" onclick="toggle('waves')" title="Waves">🔊</button>
+    <button id="tgHeat" onclick="toggle('heat')" title="SPL Map">🌡️</button>
     <button id="tgBeams" class="on" onclick="toggle('beams')" title="Coverage Beams">🌐</button>
     <button id="tgGrid" class="on" onclick="toggle('grid')" title="Grid">▦</button>
     <button id="tgLabels" class="on" onclick="toggle('labels')" title="Labels">🏷️</button>
-    <button onclick="undo()" title="Undo (Ctrl+Z)">↶</button>
+    <button id="tgBoundary" onclick="toggle('boundary')" title="Site Boundary">⭕</button>
+    <button onclick="undo()" title="Undo">↶</button>
+    <button onclick="redo()" title="Redo">↷</button>
+  </div>
+
+  <div class="legend" id="legend">
+    <div style="font-weight:800;color:var(--blue);margin-bottom:6px">SPL Scale (dB)</div>
+    <div class="row"><span class="sw" style="background:rgba(15,25,45,0.55);border:1px solid #333"></span>&lt; 60</div>
+    <div class="row"><span class="sw" style="background:rgba(30,80,140,0.7)"></span>60 – 75</div>
+    <div class="row"><span class="sw" style="background:rgba(34,197,94,0.7)"></span>75 – 85</div>
+    <div class="row"><span class="sw" style="background:rgba(132,204,22,0.7)"></span>85 – 95</div>
+    <div class="row"><span class="sw" style="background:rgba(245,158,11,0.7)"></span>95 – 105</div>
+    <div class="row"><span class="sw" style="background:rgba(239,68,68,0.75)"></span>≥ 105</div>
+  </div>
+
+  <div class="wind-indicator" id="windIndicator">
+    <div class="wind-compass"><div class="wind-arrow" id="windArrow"></div></div>
+    <div>
+      <div style="color:var(--blue);font-weight:800">Wind</div>
+      <div id="windLabel">— km/h</div>
+    </div>
   </div>
 
   <div class="beam-controls" id="beamControls">
     <div>
-      <label>Orientation</label>
+      <label>Direction</label>
       <input type="range" id="beam_angle" min="0" max="360" value="90" oninput="updateSelected()">
     </div>
     <div>
       <label>Range (m)</label>
-      <input type="range" id="beam_range" min="10" max="200" value="60" oninput="updateSelected()">
+      <input type="range" id="beam_range" min="10" max="300" value="100" oninput="updateSelected()">
+    </div>
+    <div id="laCtrl" style="display:none">
+      <label>LA Elements</label>
+      <input type="range" id="la_elements" min="4" max="24" step="2" value="8" oninput="updateSelected()">
+    </div>
+    <div id="delayCtrl" style="display:none">
+      <label>Delay (ms)</label>
+      <input type="number" id="delay_ms" value="0" min="0" max="1000" oninput="updateSelected()" style="width:80px;padding:4px 6px;font-size:11px">
     </div>
     <div class="name" id="sel_name">-- Select --</div>
-    <button style="background:#e60012;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:800;font-family:inherit;font-size:11px" onclick="deleteSelected()">🗑️ Delete</button>
+    <button class="del-btn" onclick="deleteSelected()">🗑️ Delete</button>
   </div>
 
   <div class="hint-bar">
-    <span>🖱️ <b>Click</b> to add · <b>Drag</b> to move · <b>Right-click</b> to delete</span>
-    <span>⌨️ <b>Ctrl+Z</b> undo · <b>Delete</b> remove selected</span>
+    <span>👆 <b>Click</b> to add · <b>Drag</b> to move · <b>Long press</b> to delete</span>
+    <span>⌨️ <b>Ctrl+Z</b> · <b>Ctrl+Y</b> · <b>Delete</b></span>
   </div>
 
   <div class="cursor-info">
-    <span>SPL at cursor: <b id="cursorSPL">—</b></span>
+    <span>SPL at Cursor: <b id="cursorSPL">—</b></span>
   </div>
 </div>
 
-<!-- REPORT -->
 <div id="reportPage">
   <div class="report-content">
     <div class="rep-controls no-print">
       <button class="close" onclick="closeReport()">← Back to Design</button>
-      <button class="print" onclick="window.print()">🖨️ Print Report</button>
+      <button class="print" onclick="window.print()">🖨️ Print</button>
     </div>
 
     <div class="rep-header">
       <div>
-        <h1>Acoustic Engineering Report 2026</h1>
-        <p>MOTIVITY MASTER AI · OUTDOOR SPACES</p>
+        <h1>Acoustic Engineering Analysis Report 2026</h1>
+        <p>Motivity Master AI · Outdoor Spaces · Free Field</p>
       </div>
       <div class="meta">
-        <b>Project ID:</b> MOT-2026-OUT<br>
+        <b>Project No:</b> MOT-2026-OUT<br>
         <b>Date:</b> <span id="repDate">—</span><br>
-        <b>Standard:</b> IEC 60268-5
+        <b>Standard:</b> ISO 9613-2 · IEC 60268-5
       </div>
     </div>
 
     <div class="analysis-grid">
-      <div class="analysis-card">
-        <h4>🔊 Max SPL</h4>
-        <div class="val" id="rep_spl_val">— dB</div>
-        <small>at farthest coverage point</small>
+      <div class="analysis-card env">
+        <h4>🌡️ Ground Reflection</h4>
+        <div class="val" id="rep_ground_val">— dB</div>
+        <small>Ground Reflection</small>
+      </div>
+      <div class="analysis-card env">
+        <h4>💨 Wind Effect</h4>
+        <div class="val" id="rep_wind_val">— dB</div>
+        <small>Wind Gradient Effect</small>
+      </div>
+      <div class="analysis-card comp">
+        <h4>⚖️ SPL at Neighbor</h4>
+        <div class="val" id="rep_neighbor_val">— dB</div>
+        <small>Neighbor Boundary</small>
       </div>
       <div class="analysis-card">
-        <h4>⏳ Delay</h4>
-        <div class="val" id="rep_delay_val">— ms</div>
-        <small>for rear-zone sync</small>
-      </div>
-      <div class="analysis-card">
-        <h4>📐 Dispersion (H/V)</h4>
-        <div class="val" id="rep_angle_val">— / —</div>
-        <small>horizontal / vertical</small>
+        <h4>🗼 Delay Towers</h4>
+        <div class="val" id="rep_towers_val">—</div>
+        <small>Delay Towers</small>
       </div>
     </div>
 
     <div class="kpi-cards" id="repKPI"></div>
+
+    <h3 style="border-left:5px solid var(--green);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">🌳 Outdoor Environmental Analysis</h3>
+    <div id="envSection"></div>
+
+    <h3 style="border-left:5px solid var(--purple);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">⚖️ Legal Noise Compliance</h3>
+    <div id="complianceSection"></div>
+
     <div id="boqSection"></div>
+
+    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">📋 Detailed Placement Table</h3>
+    <div class="rep-table-wrap" id="detailSection"></div>
 
     <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ Acoustic Simulation Map</h3>
     <img id="reportImg" class="rep-img">
@@ -297,7 +646,7 @@ canvas{background:#050505;border-radius:12px;border:1px solid #222;box-shadow:0 
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   STATE
+   Global State
    ═══════════════════════════════════════════════════════════ */
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
@@ -309,33 +658,72 @@ let selectedPoint = null;
 let dragTarget = null;
 let dragOffset = { x: 0, y: 0 };
 let history = [];
+let redoStack = [];
 let animT = 0;
 let cursorSPL = null, cursorX = null, cursorY = null;
-let layers = { waves: true, heat: false, beams: true, grid: true, labels: true };
-let worldBox = { x0: 0, y0: 0, W: 0, H: 0, scale: 1 };
+let layers = { waves: true, heat: false, beams: true, grid: true, labels: true, boundary: true };
+let worldBox = { cx: 0, cy: 0, scale: 1, width: 0, height: 0 };
+
+let heatCanvas = null;
+let heatDirty = true;
+let lastKpiT = 0;
+
+const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
 /* ═══════════════════════════════════════════════════════════
-   CATALOG (SPL / H / V / Watt)
+   Product Catalog
    ═══════════════════════════════════════════════════════════ */
-const CATALOG = {
-  "DB-25 NW":    { spl: 133, hAngle: 100, vAngle: 70, watt: 1000 },
-  "DB-25 3G":    { spl: 130, hAngle: 100, vAngle: 60, watt: 1000 },
-  "MTL-700 3G":  { spl: 126, hAngle: 90,  vAngle: 60, watt: 500 },
-  "MLA212":      { spl: 138, hAngle: 90,  vAngle: 10, watt: 900 },
-  "MLA210":      { spl: 135, hAngle: 90,  vAngle: 10, watt: 700 },
-  "M10-LA":      { spl: 132, hAngle: 100, vAngle: 10, watt: 700 },
-  "MLA208":      { spl: 130, hAngle: 100, vAngle: 10, watt: 500 },
-  "HD315A":      { spl: 131, hAngle: 90,  vAngle: 60, watt: 1000 },
-  "HD312A":      { spl: 128, hAngle: 90,  vAngle: 60, watt: 1000 },
-  "DB-218 3G":   { spl: 140, hAngle: 180, vAngle: 60, watt: 1400 },
-  "QX-218":      { spl: 140, hAngle: 180, vAngle: 60, watt: 2000 },
-  "HD-SUB-18A":  { spl: 136, hAngle: 180, vAngle: 60, watt: 1200 },
-  "DB-15M 3G":   { spl: 128, hAngle: 90,  vAngle: 60, watt: 500 },
-  "MTL-152":     { spl: 125, hAngle: 90,  vAngle: 60, watt: 400 }
-};
+const CATALOG = Object.freeze({
+  "DB-25 NW":    Object.freeze({ spl: 133, hAngle: 100, vAngle: 70, watt: 1000 }),
+  "DB-25 3G":    Object.freeze({ spl: 130, hAngle: 100, vAngle: 60, watt: 1000 }),
+  "MTL-700 3G":  Object.freeze({ spl: 126, hAngle: 90,  vAngle: 60, watt: 500 }),
+  "MLA212":      Object.freeze({ spl: 138, hAngle: 90,  vAngle: 10, watt: 900 }),
+  "MLA210":      Object.freeze({ spl: 135, hAngle: 90,  vAngle: 10, watt: 700 }),
+  "M10-LA":      Object.freeze({ spl: 132, hAngle: 100, vAngle: 10, watt: 700 }),
+  "MLA208":      Object.freeze({ spl: 130, hAngle: 100, vAngle: 10, watt: 500 }),
+  "HD315A":      Object.freeze({ spl: 131, hAngle: 90,  vAngle: 60, watt: 1000 }),
+  "HD312A":      Object.freeze({ spl: 128, hAngle: 90,  vAngle: 60, watt: 1000 }),
+  "DB-218 3G":   Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 1400 }),
+  "QX-218":      Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 2000 }),
+  "HD-SUB-18A":  Object.freeze({ spl: 136, hAngle: 180, vAngle: 60, watt: 1200 }),
+  "DB-15M 3G":   Object.freeze({ spl: 128, hAngle: 90,  vAngle: 60, watt: 500 }),
+  "MTL-152":     Object.freeze({ spl: 125, hAngle: 90,  vAngle: 60, watt: 400 })
+});
 
 /* ═══════════════════════════════════════════════════════════
-   HELPERS
+   Free-Field Physics Constants
+   ═══════════════════════════════════════════════════════════ */
+const GROUND_REFLECT = Object.freeze({ grass: 0, concrete: 3, water: 4, sand: 0 });
+
+/* ═══════════════════════════════════════════════════════════
+   Read Environmental Conditions
+   ═══════════════════════════════════════════════════════════ */
+function getOutdoorConditions() {
+  const ground = $('ground_type').value;
+  return {
+    ground,
+    groundRefl: GROUND_REFLECT[ground] ?? 0,
+    windSpeed: +$('wind_speed').value || 0,
+    windDir: +$('wind_dir').value || 0,
+    temperature: +$('temperature').value || 20,
+    humidity: +$('humidity').value || 50,
+    ambient: +$('ambient').value || 55,
+    neighborDist: +$('neighbor_dist').value || 300,
+    neighborLimit: +$('neighbor_limit').value || 65,
+    hangHeight: +$('hang_height').value || 12
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Sidebar toggle
+   ═══════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  $('sidebar').classList.toggle('collapsed');
+  setTimeout(() => { setupCanvasSize(); draw(); }, 320);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Utilities
    ═══════════════════════════════════════════════════════════ */
 function setMode(m) {
   currentMode = m;
@@ -347,20 +735,35 @@ function toggle(key) {
   layers[key] = !layers[key];
   const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
   if (btn) btn.classList.toggle('on', layers[key]);
+  if (key === 'heat') $('legend').classList.toggle('on', layers.heat);
+  if (key === 'boundary') updateWindIndicator();
   draw();
 }
 
+function invalidateHeat() { heatDirty = true; }
+
 function pushHistory() {
-  history.push(JSON.stringify(points.map(p => ({ ...p }))));
-  if (history.length > 50) history.shift();
+  history.push(JSON.stringify(points));
+  if (history.length > 60) history.shift();
+  redoStack = [];
 }
 
 function undo() {
-  if (history.length === 0) return;
+  if (!history.length) return;
+  redoStack.push(JSON.stringify(points));
   points = JSON.parse(history.pop());
   selectedPoint = null;
   $('beamControls').classList.remove('on');
-  draw();
+  invalidateHeat(); draw(); updateKPI();
+}
+
+function redo() {
+  if (!redoStack.length) return;
+  history.push(JSON.stringify(points));
+  points = JSON.parse(redoStack.pop());
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  invalidateHeat(); draw(); updateKPI();
 }
 
 function deleteSelected() {
@@ -370,75 +773,120 @@ function deleteSelected() {
   selectedPoint = null;
   $('sel_name').innerText = '-- Select --';
   $('beamControls').classList.remove('on');
-  draw();
-  updateKPI();
+  invalidateHeat(); draw(); updateKPI(); autosave();
 }
 
 function resetCanvas() {
-  if (!confirm('Reset the entire canvas? All speakers will be removed.')) return;
+  if (!confirm('Reset the entire layout?')) return;
   pushHistory();
   points = [];
   selectedPoint = null;
   $('sel_name').innerText = '-- Select --';
   $('beamControls').classList.remove('on');
-  draw();
-  updateKPI();
+  invalidateHeat(); draw(); updateKPI(); autosave();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   KEYBOARD
+   Keyboard
    ═══════════════════════════════════════════════════════════ */
 window.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-  if (e.key === 'Delete' && selectedPoint) deleteSelected();
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+    e.preventDefault(); undo();
+  } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
+    e.preventDefault(); redo();
+  } else if (e.key === 'Delete' && selectedPoint) {
+    deleteSelected();
+  }
 });
 
 /* ═══════════════════════════════════════════════════════════
-   UPDATE SELECTED
+   Update Selected Speaker
    ═══════════════════════════════════════════════════════════ */
 function updateSelected() {
   if (!selectedPoint) return;
   selectedPoint.angle = parseInt($('beam_angle').value);
-  selectedPoint.range = parseInt($('beam_range').value) * worldBox.scale;
-  selectedPoint.rangeM = parseInt($('beam_range').value);
+  const rangeM = parseInt($('beam_range').value);
+  selectedPoint.rangeM = rangeM;
+  selectedPoint.range = rangeM * worldBox.scale;
+  if (selectedPoint.isLineArray) {
+    selectedPoint.elements = parseInt($('la_elements').value);
+  }
+  if (selectedPoint.isDelay) {
+    selectedPoint.delayMs = parseInt($('delay_ms').value) || 0;
+  }
   $('sel_name').innerText = selectedPoint.name + ' · ' + selectedPoint.angle + '°';
-  draw();
+  invalidateHeat(); draw(); updateKPI(); autosave();
+}
+
+function showBeamControls(p) {
+  $('sel_name').innerText = p.name + ' · ' + p.angle + '°';
+  $('beam_angle').value = p.angle;
+  $('beam_range').value = Math.round(p.rangeM ?? (p.range / worldBox.scale));
+  $('laCtrl').style.display = p.isLineArray ? 'block' : 'none';
+  if (p.isLineArray) $('la_elements').value = p.elements;
+  $('delayCtrl').style.display = p.isDelay ? 'block' : 'none';
+  if (p.isDelay) $('delay_ms').value = p.delayMs || 0;
+  $('beamControls').classList.add('on');
 }
 
 /* ═══════════════════════════════════════════════════════════
-   WORLD BOX
+   World Box for Open Field
    ═══════════════════════════════════════════════════════════ */
 function getWorldBox() {
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const pad = 60;
-  const scale = Math.min((canvas.width - pad * 2) / L, (canvas.height - pad * 2) / W);
-  const roomW = L * scale, roomH = W * scale;
+  const depth = +$('field_depth').value || 120;
+  const width = +$('audience_width').value || 70;
+  const stageD = +$('stage_d').value || 12;
+
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+
+  const padX = 60;
+  const padTop = 60;
+  const padBottom = 40;
+
+  const availW = Wc - padX * 2;
+  const availH = Hc - padTop - padBottom;
+
+  const scale = Math.min(availW / width, availH / (depth + stageD));
+
+  const depthPx = depth * scale;
+  const widthPx = width * scale;
+  const stageDPx = stageD * scale;
+
+  const cx = Wc / 2;
+  const cy = padTop + stageDPx;
+
   return {
-    x0: (canvas.width - roomW) / 2,
-    y0: (canvas.height - roomH) / 2,
-    W: roomW, H: roomH, scale
+    cx, cy,
+    scale,
+    width: widthPx,
+    height: depthPx,
+    stageDepthPx: stageDPx
   };
 }
 
 /* ═══════════════════════════════════════════════════════════
-   EVENT PROFILE
+   Event Profile Detection
    ═══════════════════════════════════════════════════════════ */
 function getEventProfile() {
   const type = $('event_type').value;
-  const L = +$('room_l').value;
+  const depth = +$('field_depth').value;
   let load = 'light';
-  if (L > 40) load = 'heavy';
-  else if (L > 25) load = 'medium';
+  if (depth > 60) load = 'heavy';
+  else if (depth > 30) load = 'medium';
 
   if (type === 'auto') {
-    if (L > 40) return { type: 'concert', load };
+    if (depth > 60) return { type: 'concert', load };
+    if (depth > 35) return { type: 'festival', load };
     return { type: 'wedding', load };
   }
   return { type, load };
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SMART LAYOUT
+   Outdoor Smart Layout
    ═══════════════════════════════════════════════════════════ */
 function applySmartLayout() {
   pushHistory();
@@ -447,74 +895,101 @@ function applySmartLayout() {
   $('beamControls').classList.remove('on');
 
   const profile = getEventProfile();
-  if (profile.type === 'concert') deployLineArraySystem(profile);
+  if (profile.type === 'concert' || profile.type === 'festival') deployLineArraySystem(profile);
   else if (profile.type === 'conference') deployConferenceSystem(profile);
   else deployPointSourceSystem(profile);
 
-  draw();
-  updateKPI();
+  invalidateHeat(); draw(); updateKPI(); autosave();
+  updateWindIndicator();
 }
 
 function deployLineArraySystem(profile) {
   const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
+  const depth = +$('field_depth').value;
   const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
+  const hangH = +$('hang_height').value;
+  const stageHalfW = (sW * b.scale) / 2;
 
-  const elementsPerSide = Math.max(6, Math.ceil(L / 15) * 2);
-  const finalElements = elementsPerSide % 2 === 0 ? elementsPerSide : elementsPerSide + 1;
-  const toeIn = 10;
+  let elementsPerSide = Math.max(8, Math.ceil(depth / 8) * 2);
+  if (elementsPerSide % 2 !== 0) elementsPerSide++;
+  const toeIn = 12;
 
-  // Line Arrays L + R
   points.push({
-    x: stX - 30, y: b.y0 + sD * b.scale / 2,
+    x: b.cx - stageHalfW - 25, y: b.cy + 30,
     type: 'main', name: 'MLA212 Left',
-    angle: 90 + toeIn, range: L * b.scale * 0.9, rangeM: L * 0.9,
+    angle: 90 + toeIn, range: depth * b.scale * 0.95, rangeM: depth * 0.95,
     spl: 138, hAngle: 90, vAngle: 10, watt: 900,
-    isLineArray: true, elements: finalElements / 2
+    isLineArray: true, elements: elementsPerSide / 2,
+    hangHeight: hangH
   });
   points.push({
-    x: stX + sW * b.scale + 30, y: b.y0 + sD * b.scale / 2,
+    x: b.cx + stageHalfW + 25, y: b.cy + 30,
     type: 'main', name: 'MLA212 Right',
-    angle: 90 - toeIn, range: L * b.scale * 0.9, rangeM: L * 0.9,
+    angle: 90 - toeIn, range: depth * b.scale * 0.95, rangeM: depth * 0.95,
     spl: 138, hAngle: 90, vAngle: 10, watt: 900,
-    isLineArray: true, elements: finalElements / 2
+    isLineArray: true, elements: elementsPerSide / 2,
+    hangHeight: hangH
   });
 
-  // Subwoofers
-  const subCount = profile.load === 'heavy' ? 6 : 4;
+  const subCount = profile.load === 'heavy' ? 8 : profile.load === 'medium' ? 6 : 4;
+  const subSpacing = (sW * b.scale * 0.9) / Math.max(1, subCount - 1);
+  const subStartX = b.cx - (subSpacing * (subCount - 1)) / 2;
   for (let i = 0; i < subCount; i++) {
     points.push({
-      x: stX + (sW * b.scale / (subCount - 1)) * i,
-      y: b.y0 + sD * b.scale + 25,
+      x: subStartX + subSpacing * i,
+      y: b.cy + 15,
       type: 'sub', name: 'DB-218 3G',
-      angle: 90, range: 200 * b.scale, rangeM: 200,
-      spl: 140, hAngle: 180, vAngle: 60, watt: 1400
+      angle: 90, range: 250 * b.scale, rangeM: 250,
+      spl: 140, hAngle: 180, vAngle: 60, watt: 1400,
+      isCardioid: true
     });
   }
 
-  // Side Fills
-  const sideCount = profile.load === 'heavy' ? 3 : 2;
+  const sideCount = profile.load === 'heavy' ? 4 : 3;
   for (let i = 0; i < sideCount; i++) {
-    const yPos = b.y0 + (W * b.scale / (sideCount + 1)) * (i + 1);
+    const yPos = b.cy + 40 + ((depth * b.scale * 0.5) / sideCount) * i;
     points.push({
-      x: b.x0 + 15, y: yPos, type: 'side', name: 'HD315A Left',
-      angle: 0, range: W * b.scale * 0.4, rangeM: W * 0.4,
+      x: b.cx - stageHalfW - 60, y: yPos, type: 'side', name: 'HD315A Left',
+      angle: 45, range: 60 * b.scale, rangeM: 60,
       spl: 131, hAngle: 90, vAngle: 60, watt: 1000
     });
     points.push({
-      x: b.x0 + L * b.scale - 15, y: yPos, type: 'side', name: 'HD315A Right',
-      angle: 180, range: W * b.scale * 0.4, rangeM: W * 0.4,
+      x: b.cx + stageHalfW + 60, y: yPos, type: 'side', name: 'HD315A Right',
+      angle: 135, range: 60 * b.scale, rangeM: 60,
       spl: 131, hAngle: 90, vAngle: 60, watt: 1000
     });
   }
 
-  // Monitors
-  const monCount = sW > 16 ? 8 : sW > 10 ? 6 : 4;
+  const delayInterval = 30;
+  const firstDelay = 30;
+  let towerIdx = 0;
+  for (let d = firstDelay; d <= depth - 15; d += delayInterval) {
+    towerIdx++;
+    const delayMs = (d / 343) * 1000;
+    const towerCount = profile.load === 'heavy' ? 3 : 2;
+    for (let t = 0; t < towerCount; t++) {
+      const lateralOffset = (t - (towerCount - 1) / 2) * (40 * b.scale);
+      points.push({
+        x: b.cx + lateralOffset,
+        y: b.cy + d * b.scale,
+        type: 'delay', name: 'Delay Tower #' + towerIdx,
+        angle: 90, range: 60 * b.scale, rangeM: 60,
+        spl: 133, hAngle: 90, vAngle: 60, watt: 1000,
+        isDelay: true,
+        delayMs: Math.round(delayMs),
+        towerIndex: towerIdx,
+        distanceFromStage: d
+      });
+    }
+  }
+
+  const monCount = sW > 16 ? 8 : 6;
+  const monSpacing = (sW * b.scale * 0.85) / Math.max(1, monCount - 1);
+  const monStartX = b.cx - (monSpacing * (monCount - 1)) / 2;
   for (let i = 0; i < monCount; i++) {
     points.push({
-      x: stX + (sW * b.scale / (monCount - 1)) * i,
-      y: b.y0 + sD * b.scale - 10,
+      x: monStartX + monSpacing * i,
+      y: b.cy - 8,
       type: 'sub', name: 'DB-15M 3G',
       angle: 270, range: 120 * b.scale, rangeM: 120,
       spl: 128, hAngle: 90, vAngle: 60, watt: 500
@@ -524,37 +999,57 @@ function deployLineArraySystem(profile) {
 
 function deployPointSourceSystem(profile) {
   const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
+  const depth = +$('field_depth').value;
+  const sW = +$('stage_w').value;
+  const stageHalfW = (sW * b.scale) / 2;
 
   points.push({
-    x: stX - 20, y: b.y0 + sD * b.scale / 2,
+    x: b.cx - stageHalfW - 20, y: b.cy + 30,
     type: 'main', name: 'DB-25 NW Left',
-    angle: 75, range: L * b.scale * 0.85, rangeM: L * 0.85,
+    angle: 75, range: depth * b.scale * 0.9, rangeM: depth * 0.9,
     spl: 133, hAngle: 100, vAngle: 70, watt: 1000
   });
   points.push({
-    x: stX + sW * b.scale + 20, y: b.y0 + sD * b.scale / 2,
+    x: b.cx + stageHalfW + 20, y: b.cy + 30,
     type: 'main', name: 'DB-25 NW Right',
-    angle: 105, range: L * b.scale * 0.85, rangeM: L * 0.85,
+    angle: 105, range: depth * b.scale * 0.9, rangeM: depth * 0.9,
     spl: 133, hAngle: 100, vAngle: 70, watt: 1000
   });
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 4; i++) {
+    const offset = (i - 1.5) * (sW * b.scale * 0.25);
     points.push({
-      x: stX + (sW * b.scale / 1) * i,
-      y: b.y0 + sD * b.scale + 25,
+      x: b.cx + offset,
+      y: b.cy + 15,
       type: 'sub', name: 'DB-218 3G',
       angle: 90, range: 150 * b.scale, rangeM: 150,
       spl: 140, hAngle: 180, vAngle: 60, watt: 1400
     });
   }
 
+  if (depth > 40) {
+    let idx = 0;
+    for (let d = 30; d <= depth - 15; d += 30) {
+      idx++;
+      const delayMs = (d / 343) * 1000;
+      points.push({
+        x: b.cx, y: b.cy + d * b.scale,
+        type: 'delay', name: 'Delay Tower #' + idx,
+        angle: 90, range: 50 * b.scale, rangeM: 50,
+        spl: 130, hAngle: 100, vAngle: 60, watt: 700,
+        isDelay: true,
+        delayMs: Math.round(delayMs),
+        towerIndex: idx,
+        distanceFromStage: d
+      });
+    }
+  }
+
   for (let i = 0; i < 4; i++) {
+    const spacing = (sW * b.scale * 0.8) / 3;
     points.push({
-      x: stX + (sW * b.scale / 3) * i,
-      y: b.y0 + sD * b.scale - 10,
+      x: b.cx - (sW * b.scale * 0.4) + spacing * i,
+      y: b.cy - 8,
       type: 'sub', name: 'DB-15M 3G',
       angle: 270, range: 100 * b.scale, rangeM: 100,
       spl: 128, hAngle: 90, vAngle: 60, watt: 500
@@ -564,16 +1059,17 @@ function deployPointSourceSystem(profile) {
 
 function deployConferenceSystem(profile) {
   const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
+  const depth = +$('field_depth').value;
+  const width = +$('audience_width').value;
   const rows = 3, cols = 5;
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       points.push({
-        x: b.x0 + (L * b.scale / (cols + 1)) * (c + 1),
-        y: b.y0 + 100 + (W * b.scale - 150) / (rows - 1) * r,
+        x: b.cx - (width * b.scale * 0.4) + (width * b.scale * 0.8 / (cols - 1)) * c,
+        y: b.cy + 60 + (depth * b.scale * 0.5 / Math.max(1, rows - 1)) * r,
         type: 'main', name: 'MTL-700 3G',
-        angle: 90, range: 220 * b.scale, rangeM: 220,
+        angle: 90, range: 120 * b.scale, rangeM: 120,
         spl: 126, hAngle: 90, vAngle: 60, watt: 500
       });
     }
@@ -581,132 +1077,222 @@ function deployConferenceSystem(profile) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   RENDER LOOP
+   Render Loop
    ═══════════════════════════════════════════════════════════ */
-function loop() {
+function loop(t) {
   animT += 0.02;
   draw();
+  if (t - lastKpiT > 400) { updateKPI(); lastKpiT = t; }
   requestAnimationFrame(loop);
 }
 
 function draw() {
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+  const depth = +$('field_depth').value;
+  const width = +$('audience_width').value;
+  const sW = +$('stage_w').value;
+  const sD = +$('stage_d').value;
 
   ctx.fillStyle = '#050505';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, Wc, Hc);
 
   const b = getWorldBox();
   worldBox = b;
 
-  // Ground
-  ctx.fillStyle = '#0e1a24';
-  ctx.fillRect(b.x0, b.y0, b.W, b.H);
+  drawFieldGround(b, width, depth);
 
-  for (let i = 0; i < 300; i++) {
-    ctx.fillStyle = `rgba(56,189,248,${Math.random() * 0.03})`;
-    ctx.fillRect(b.x0 + Math.random() * b.W, b.y0 + Math.random() * b.H, 1, 1);
-  }
+  if (layers.grid) drawRadialGrid(b, depth, width);
 
-  // Grid
-  if (layers.grid) {
-    ctx.strokeStyle = 'rgba(56,189,248,0.09)';
-    ctx.lineWidth = 1;
-    const gridM = 10;
-    for (let x = 0; x <= L; x += gridM) {
-      ctx.beginPath();
-      ctx.moveTo(b.x0 + x * b.scale, b.y0);
-      ctx.lineTo(b.x0 + x * b.scale, b.y0 + b.H);
-      ctx.stroke();
-    }
-    for (let y = 0; y <= W; y += gridM) {
-      ctx.beginPath();
-      ctx.moveTo(b.x0, b.y0 + y * b.scale);
-      ctx.lineTo(b.x0 + b.W, b.y0 + y * b.scale);
-      ctx.stroke();
-    }
-  }
-
-  // Heatmap
   if (layers.heat && points.length) drawHeatmap(b);
 
-  // Stage
+  if (layers.boundary) drawBoundary(b);
+
   drawStage(b, sW, sD);
 
-  // Waves
-  if (layers.waves) drawWaves(b);
+  if (layers.waves) drawWaves();
 
-  // Beams
-  if (layers.beams) points.forEach(p => drawBeam(p, b));
+  if (layers.beams) points.forEach(p => drawBeam(p));
 
-  // Speakers
-  points.forEach(p => drawSpeaker(p, b));
+  drawWindArrowOnGround(b);
 
-  // Room outline
-  ctx.strokeStyle = '#38bdf8';
-  ctx.lineWidth = 2.5;
-  ctx.strokeRect(b.x0, b.y0, b.W, b.H);
+  points.forEach(p => drawSpeaker(p));
 
-  // Dimensions
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 12px Inter';
-  ctx.textAlign = 'center';
-  ctx.fillText(L + ' m', b.x0 + b.W / 2, b.y0 - 12);
-  ctx.save();
-  ctx.translate(b.x0 - 18, b.y0 + b.H / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText(W + ' m', 0, 0);
-  ctx.restore();
+  drawDimensions(b, width, depth);
 
-  // Cursor crosshair
   if (cursorSPL !== null) {
     ctx.strokeStyle = 'rgba(56,189,248,0.3)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, canvas.height);
-    ctx.moveTo(0, cursorY); ctx.lineTo(canvas.width, cursorY);
+    ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, Hc);
+    ctx.moveTo(0, cursorY); ctx.lineTo(Wc, cursorY);
     ctx.stroke();
     ctx.setLineDash([]);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   STAGE
+   Field Ground (semi-elliptical audience area)
    ═══════════════════════════════════════════════════════════ */
-function drawStage(b, sW, sD) {
-  const stX = b.x0 + (b.W - sW * b.scale) / 2;
-  const stY = b.y0;
+function drawFieldGround(b, width, depth) {
+  ctx.beginPath();
+  ctx.ellipse(b.cx, b.cy, width * b.scale / 2, depth * b.scale, 0, 0, Math.PI, false);
+  ctx.closePath();
 
-  const g = ctx.createLinearGradient(0, stY, 0, stY + sD * b.scale);
-  g.addColorStop(0, 'rgba(230,0,18,0.20)');
-  g.addColorStop(1, 'rgba(230,0,18,0.05)');
-  ctx.fillStyle = g;
-  ctx.fillRect(stX, stY, sW * b.scale, sD * b.scale);
+  const grad = ctx.createRadialGradient(b.cx, b.cy, 10, b.cx, b.cy, depth * b.scale);
+  grad.addColorStop(0, '#12241a');
+  grad.addColorStop(1, '#0a1208');
+  ctx.fillStyle = grad;
+  ctx.fill();
 
-  ctx.strokeStyle = '#e60012';
+  const noiseCount = isTouch ? 200 : 500;
+  ctx.save();
+  ctx.clip();
+  for (let i = 0; i < noiseCount; i++) {
+    ctx.fillStyle = `rgba(${34 + Math.random() * 30},${100 + Math.random() * 60},${40 + Math.random() * 40},${Math.random() * 0.15})`;
+    const angle = Math.random() * Math.PI;
+    const r = Math.random() * depth * b.scale;
+    const x = b.cx + Math.cos(angle) * (r * (width / 2) / depth);
+    const y = b.cy + Math.sin(angle) * r;
+    ctx.fillRect(x, y, 1.5, 1.5);
+  }
+  ctx.restore();
+
+  ctx.strokeStyle = 'rgba(34,197,94,0.3)';
   ctx.lineWidth = 2;
-  ctx.strokeRect(stX, stY, sW * b.scale, sD * b.scale);
-
-  ctx.fillStyle = 'rgba(230,0,18,0.65)';
-  ctx.font = 'bold 14px Inter';
-  ctx.textAlign = 'center';
-  ctx.fillText('STAGE', stX + sW * b.scale / 2, stY + sD * b.scale / 2 + 5);
+  ctx.beginPath();
+  ctx.ellipse(b.cx, b.cy, width * b.scale / 2, depth * b.scale, 0, 0, Math.PI, false);
+  ctx.stroke();
 }
 
 /* ═══════════════════════════════════════════════════════════
-   BEAM
+   Radial Grid (rings every 10m)
    ═══════════════════════════════════════════════════════════ */
-function drawBeam(p, b) {
+function drawRadialGrid(b, depth, width) {
+  ctx.strokeStyle = 'rgba(56,189,248,0.08)';
+  ctx.lineWidth = 1;
+
+  const ringStep = 10;
+  const aspectRatio = (width / 2) / depth;
+
+  for (let d = ringStep; d <= depth; d += ringStep) {
+    const rY = d * b.scale;
+    const rX = rY * aspectRatio;
+    ctx.beginPath();
+    ctx.ellipse(b.cx, b.cy, rX, rY, 0, 0, Math.PI, false);
+    ctx.stroke();
+  }
+
+  for (let a = -75; a <= 75; a += 15) {
+    const rad = (90 + a) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(b.cx, b.cy);
+    ctx.lineTo(
+      b.cx + Math.cos(rad) * width * b.scale / 2 * 1.02,
+      b.cy + Math.sin(rad) * depth * b.scale * 1.02
+    );
+    ctx.stroke();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Site Boundary (compliance circle)
+   ═══════════════════════════════════════════════════════════ */
+function drawBoundary(b) {
+  const nd = +$('neighbor_dist').value || 300;
+  const depth = +$('field_depth').value;
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+
+  const maxRadius = Math.min(Wc, Hc) * 0.48;
+  const radiusPx = Math.min(nd * b.scale, maxRadius);
+  const truncated = nd * b.scale > maxRadius;
+
+  ctx.strokeStyle = 'rgba(168,85,247,0.35)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath();
+  ctx.arc(b.cx, b.cy, radiusPx, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  const cond = getOutdoorConditions();
+  const nbAngle = cond.windDir;
+  const rad = (nbAngle + 180) * Math.PI / 180;
+  const nx = b.cx + Math.cos(rad) * radiusPx;
+  const ny = b.cy + Math.sin(rad) * radiusPx;
+
+  if (nx > 20 && nx < Wc - 20 && ny > 20 && ny < Hc - 20) {
+    ctx.fillStyle = '#a855f7';
+    ctx.beginPath();
+    ctx.arc(nx, ny, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'center';
+    ctx.fillText('Neighbor', nx, ny - 14);
+  }
+
+  if (truncated) {
+    ctx.fillStyle = 'rgba(168,85,247,0.6)';
+    ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'left';
+    ctx.fillText('⭕ Neighbor boundary simplified (' + nd + 'm)', 20, Hc - 12);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Stage
+   ═══════════════════════════════════════════════════════════ */
+function drawStage(b, sW, sD) {
+  const stageW = sW * b.scale;
+  const stageH = sD * b.scale;
+  const stX = b.cx - stageW / 2;
+  const stY = b.cy - stageH;
+
+  const g = ctx.createLinearGradient(0, stY, 0, stY + stageH);
+  g.addColorStop(0, 'rgba(230,0,18,0.35)');
+  g.addColorStop(1, 'rgba(230,0,18,0.15)');
+  ctx.fillStyle = g;
+  ctx.fillRect(stX, stY, stageW, stageH);
+
+  ctx.strokeStyle = '#e60012';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(stX, stY, stageW, stageH);
+
+  ctx.fillStyle = 'rgba(230,0,18,0.85)';
+  ctx.font = 'bold 14px Cairo';
+  ctx.textAlign = 'center';
+  ctx.fillText('STAGE', stX + stageW / 2, stY + stageH / 2 + 5);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.beginPath();
+  ctx.arc(stX - 20, stY + 20, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(stX + stageW + 20, stY + 20, 3, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Beam
+   ═══════════════════════════════════════════════════════════ */
+function drawBeam(p) {
   if (!p.range) return;
   const ang = p.angle * Math.PI / 180;
   const spread = (p.hAngle || 100) * Math.PI / 180;
   const range = p.range;
 
   let c0, c1;
-  if (p.type === 'main') { c0 = 'rgba(56,189,248,0.5)'; c1 = 'rgba(56,189,248,0)'; }
-  else if (p.type === 'sub') { c0 = 'rgba(229,192,123,0.5)'; c1 = 'rgba(229,192,123,0)'; }
-  else { c0 = 'rgba(34,197,94,0.5)'; c1 = 'rgba(34,197,94,0)'; }
+  if (p.type === 'main') { c0 = 'rgba(56,189,248,0.45)'; c1 = 'rgba(56,189,248,0)'; }
+  else if (p.type === 'sub') { c0 = 'rgba(229,192,123,0.45)'; c1 = 'rgba(229,192,123,0)'; }
+  else if (p.type === 'delay') { c0 = 'rgba(168,85,247,0.5)'; c1 = 'rgba(168,85,247,0)'; }
+  else { c0 = 'rgba(34,197,94,0.45)'; c1 = 'rgba(34,197,94,0)'; }
 
   const g = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, range);
   g.addColorStop(0, c0);
@@ -728,16 +1314,19 @@ function drawBeam(p, b) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   WAVES
+   Waves
    ═══════════════════════════════════════════════════════════ */
-function drawWaves(b) {
+function drawWaves() {
   points.forEach((p, i) => {
-    const maxR = p.type === 'main' ? 70 : p.type === 'sub' ? 50 : 60;
-    const c = p.type === 'main' ? '56,189,248' : p.type === 'sub' ? '229,192,123' : '34,197,94';
+    const maxR = p.type === 'main' ? 80 : p.type === 'sub' ? 55 : p.type === 'delay' ? 70 : 60;
+    const c = p.type === 'main' ? '56,189,248'
+            : p.type === 'sub' ? '229,192,123'
+            : p.type === 'delay' ? '168,85,247'
+            : '34,197,94';
     for (let r = 0; r < 3; r++) {
       const off = (animT + r * 0.33 + i * 0.07) % 1;
       const radius = off * maxR;
-      const alpha = (1 - off) * 0.45;
+      const alpha = (1 - off) * 0.4;
       ctx.beginPath();
       ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(${c},${alpha})`;
@@ -751,61 +1340,165 @@ function drawWaves(b) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SPL HEATMAP
+   Wind Arrow on Ground
    ═══════════════════════════════════════════════════════════ */
-function drawHeatmap(b) {
-  const step = 14;
-  for (let py = 0; py < b.H; py += step) {
-    for (let px = 0; px < b.W; px += step) {
-      const spl = computeSPLAt(b.x0 + px, b.y0 + py);
-      ctx.fillStyle = splColor(spl);
-      ctx.fillRect(b.x0 + px, b.y0 + py, step, step);
-    }
-  }
+function drawWindArrowOnGround(b) {
+  const cond = getOutdoorConditions();
+  if (cond.windSpeed < 3) return;
+
+  const arrowLen = 60;
+  const rad = (cond.windDir + 180) * Math.PI / 180;
+  const x0 = b.cx + Math.cos(rad + Math.PI) * 100;
+  const y0 = b.cy + 40 + Math.sin(rad + Math.PI) * 100;
+  const x1 = x0 + Math.cos(rad) * arrowLen;
+  const y1 = y0 + Math.sin(rad) * arrowLen;
+
+  ctx.strokeStyle = `rgba(56,189,248,${Math.min(0.6, cond.windSpeed / 40)})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - Math.cos(rad - 0.4) * 12, y1 - Math.sin(rad - 0.4) * 12);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - Math.cos(rad + 0.4) * 12, y1 - Math.sin(rad + 0.4) * 12);
+  ctx.stroke();
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SPL Heatmap (Offscreen Cache)
+   ═══════════════════════════════════════════════════════════ */
+function drawHeatmap(b) {
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+
+  if (!heatCanvas || heatCanvas.width !== Wc || heatCanvas.height !== Hc || heatDirty) {
+    if (!heatCanvas) heatCanvas = document.createElement('canvas');
+    heatCanvas.width = Wc;
+    heatCanvas.height = Hc;
+    const hctx = heatCanvas.getContext('2d');
+    hctx.clearRect(0, 0, Wc, Hc);
+
+    const step = isTouch ? 18 : 14;
+    for (let py = 0; py < Hc; py += step) {
+      for (let px = 0; px < Wc; px += step) {
+        const dx = px - b.cx, dy = py - b.cy;
+        if (dy < 0) continue;
+        const rx = b.width / 2, ry = b.height;
+        if (rx > 0 && ry > 0) {
+          if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
+        }
+        const spl = computeSPLAt(px, py);
+        hctx.fillStyle = splColor(spl);
+        hctx.fillRect(px, py, step, step);
+      }
+    }
+    heatDirty = false;
+  }
+  ctx.drawImage(heatCanvas, 0, 0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SPL Calculation — Outdoor Free-Field Physics
+   ═══════════════════════════════════════════════════════════ */
 function computeSPLAt(px, py) {
   if (!points.length) return 0;
-  let total = 0;
+  const cond = getOutdoorConditions();
+  let totalPower = 0;
+
   points.forEach(p => {
-    const dPx = Math.hypot(px - p.x, py - p.y);
-    const dM = dPx / (worldBox.scale || 1);
-    const spl = (p.spl || 120) - 20 * Math.log10(Math.max(1, dM));
-    total += Math.pow(10, spl / 10);
+    const dx = px - p.x, dy = py - p.y;
+    const dPx = Math.hypot(dx, dy);
+    const dM = Math.max(1, dPx / (worldBox.scale || 1));
+
+    const angleTo = Math.atan2(dy, dx) * 180 / Math.PI;
+    let delta = Math.abs(angleTo - p.angle);
+    if (delta > 180) delta = 360 - delta;
+
+    const halfH = (p.hAngle || 100) / 2;
+    let directivityGain = 1;
+    if (delta > halfH) {
+      const over = delta - halfH;
+      directivityGain = Math.max(0, 1 - over / 60);
+      if (directivityGain <= 0.001) return;
+    }
+
+    const atten = p.isLineArray
+      ? -10 * Math.log10(dM)
+      : -20 * Math.log10(dM);
+
+    const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
+    const airLoss = Math.max(0, airCoeff) * dM;
+
+    const groundBoost = cond.groundRefl;
+
+    const windEffect = computeWindEffect(p, px, py, cond);
+
+    const laBonus = p.isLineArray ? 10 * Math.log10(Math.max(1, p.elements / 4)) : 0;
+
+    const spl = (p.spl || 120) + atten - airLoss + groundBoost + windEffect + laBonus +
+                10 * Math.log10(Math.max(0.0001, directivityGain));
+    totalPower += Math.pow(10, spl / 10);
   });
-  return 10 * Math.log10(total);
+
+  const total = totalPower > 0 ? 10 * Math.log10(totalPower) : 0;
+
+  return Math.max(total, cond.ambient - 3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Wind Effect
+   ═══════════════════════════════════════════════════════════ */
+function computeWindEffect(p, px, py, cond) {
+  if (cond.windSpeed < 3) return 0;
+
+  const dx = px - p.x, dy = py - p.y;
+  const distanceM = Math.hypot(dx, dy) / (worldBox.scale || 1);
+  const soundAngle = Math.atan2(dy, dx);
+
+  const windToRad = (cond.windDir + 180) * Math.PI / 180;
+
+  const proj = Math.cos(soundAngle - windToRad);
+
+  const coeff = (cond.windSpeed - 3) * 0.0005;
+  return proj * coeff * distanceM;
 }
 
 function splColor(spl) {
   if (spl < 60) return 'rgba(15,25,45,0.55)';
-  if (spl < 70) return 'rgba(30,80,140,0.5)';
-  if (spl < 80) return 'rgba(34,197,94,0.4)';
-  if (spl < 90) return 'rgba(132,204,22,0.4)';
-  if (spl < 100) return 'rgba(245,158,11,0.42)';
+  if (spl < 75) return 'rgba(30,80,140,0.5)';
+  if (spl < 85) return 'rgba(34,197,94,0.42)';
+  if (spl < 95) return 'rgba(132,204,22,0.42)';
+  if (spl < 105) return 'rgba(245,158,11,0.45)';
   return 'rgba(239,68,68,0.5)';
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SPEAKERS
+   Speaker Rendering
    ═══════════════════════════════════════════════════════════ */
-function drawSpeaker(p, b) {
+function drawSpeaker(p) {
   if (p.isLineArray) drawLineArrayIcon(p);
+  else if (p.isDelay) drawDelayTowerIcon(p);
   else drawRegularSpeakerIcon(p);
 }
 
 function drawRegularSpeakerIcon(p) {
   const sel = p === selectedPoint;
   const color = p.type === 'main' ? '#38bdf8' : p.type === 'sub' ? '#e5c07b' : '#22c55e';
+  const r = isTouch ? 12 : 9;
 
   if (sel) {
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 16, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, r + 8, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(255,255,255,0.15)';
     ctx.fill();
   }
 
   ctx.beginPath();
-  ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+  ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
   ctx.fillStyle = sel ? '#fff' : color;
   ctx.fill();
   ctx.strokeStyle = '#fff';
@@ -817,11 +1510,11 @@ function drawRegularSpeakerIcon(p) {
   ctx.fillStyle = '#000';
   ctx.fill();
 
-  if (layers.labels && p.name) {
+  if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Inter';
+    ctx.font = 'bold 10px Cairo';
     ctx.textAlign = 'left';
-    ctx.fillText(p.name, p.x + 13, p.y + 3);
+    ctx.fillText(p.name, p.x + 15, p.y + 3);
   }
 }
 
@@ -830,6 +1523,21 @@ function drawLineArrayIcon(p) {
   const unitW = 12, unitH = 7, spacing = 2;
   const ang = p.angle * Math.PI / 180;
   const totalH = p.elements * (unitH + spacing);
+
+  if (p.hangHeight && !isTouch) {
+    ctx.strokeStyle = 'rgba(56,189,248,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x, p.y - 40);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(56,189,248,0.7)';
+    ctx.font = 'bold 9px Cairo';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.hangHeight + 'm', p.x, p.y - 45);
+  }
 
   ctx.save();
   ctx.translate(p.x, p.y);
@@ -844,252 +1552,646 @@ function drawLineArrayIcon(p) {
   }
   ctx.restore();
 
-  if (layers.labels && p.name) {
+  if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#38bdf8';
-    ctx.font = 'bold 10px Inter';
+    ctx.font = 'bold 10px Cairo';
     ctx.textAlign = 'left';
-    ctx.fillText(p.name + ' (' + p.elements + ')', p.x + 14, p.y - totalH / 2 + 4);
+    ctx.fillText(p.name + ' (' + p.elements + ')', p.x + 16, p.y - totalH / 2 + 4);
+  }
+}
+
+function drawDelayTowerIcon(p) {
+  const sel = p === selectedPoint;
+  const size = isTouch ? 14 : 11;
+
+  if (sel) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, size + 8, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fill();
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y - size);
+  ctx.lineTo(p.x - size * 0.87, p.y + size * 0.5);
+  ctx.lineTo(p.x + size * 0.87, p.y + size * 0.5);
+  ctx.closePath();
+  ctx.fillStyle = sel ? '#fff' : '#a855f7';
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  if (layers.labels && !isTouch) {
+    ctx.fillStyle = '#a855f7';
+    ctx.font = 'bold 9px Cairo';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.delayMs + 'ms', p.x, p.y + size + 14);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = 'bold 9px Cairo';
+    ctx.fillText(p.name, p.x, p.y - size - 6);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MOUSE INTERACTION
+   Dimensions
+   ═══════════════════════════════════════════════════════════ */
+function drawDimensions(b, width, depth) {
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Cairo';
+  ctx.textAlign = 'center';
+  ctx.fillText(depth + ' m depth', b.cx, b.cy + depth * b.scale + 24);
+  ctx.fillText(width + ' m width', b.cx, b.cy - b.stageDepthPx - 14);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Side Wind Indicator
+   ═══════════════════════════════════════════════════════════ */
+function updateWindIndicator() {
+  const cond = getOutdoorConditions();
+  const ind = $('windIndicator');
+  if (cond.windSpeed < 3) { ind.classList.remove('on'); return; }
+  ind.classList.add('on');
+  const arrow = $('windArrow');
+  arrow.style.transform = `rotate(${cond.windDir}deg)`;
+  $('windLabel').textContent = cond.windSpeed + ' km/h · ' + cond.windDir + '°';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Unified Pointer Events
    ═══════════════════════════════════════════════════════════ */
 function getPos(e) {
   const r = canvas.getBoundingClientRect();
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
   return {
-    x: (e.clientX - r.left) * (canvas.width / r.width),
-    y: (e.clientY - r.top) * (canvas.height / r.height)
+    x: (e.clientX - r.left) * (Wc / r.width),
+    y: (e.clientY - r.top) * (Hc / r.height)
   };
 }
 
-canvas.addEventListener('mousedown', e => {
-  if (e.button === 2) return;
+function clampToField(x, y) {
+  const b = worldBox;
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+  return {
+    x: Math.max(20, Math.min(Wc - 20, x)),
+    y: Math.max(b.cy - b.stageDepthPx + 8, Math.min(b.cy + b.height + 20, y))
+  };
+}
+
+const pointerState = {
+  isDown: false, isDragging: false,
+  startX: 0, startY: 0, startTime: 0,
+  longPressTimer: null, activeId: null
+};
+
+function hitRadius() { return isTouch ? 26 : 16; }
+
+function findHit(pos) {
+  let best = null, bestDist = hitRadius();
+  for (const p of points) {
+    const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+    if (d < bestDist) { bestDist = d; best = p; }
+  }
+  return best;
+}
+
+function addNewSpeaker(pos) {
+  pushHistory();
+  let sel;
+  if (currentMode === 'main' || currentMode === 'side') sel = $('sel_main');
+  else if (currentMode === 'delay') sel = $('sel_main');
+  else sel = $('sel_extra');
+
+  const val = sel.value;
+  const cat = CATALOG[val] || { spl: 120, hAngle: 100, vAngle: 60, watt: 500 };
+  const newP = {
+    x: pos.x, y: pos.y,
+    type: currentMode,
+    name: (currentMode === 'side' ? 'Side: ' : currentMode === 'delay' ? 'Delay: ' : '') + val,
+    angle: 90,
+    range: 100 * worldBox.scale, rangeM: 100,
+    spl: cat.spl, hAngle: cat.hAngle, vAngle: cat.vAngle, watt: cat.watt,
+    isLineArray: val.startsWith('MLA') || val.startsWith('M10')
+  };
+  if (newP.isLineArray) newP.elements = 8;
+  if (currentMode === 'delay') {
+    newP.isDelay = true;
+    const distFromStage = Math.max(1, (pos.y - worldBox.cy) / worldBox.scale);
+    newP.distanceFromStage = distFromStage;
+    newP.delayMs = Math.round((distFromStage / 343) * 1000);
+  }
+  points.push(newP);
+  selectedPoint = newP;
+  showBeamControls(newP);
+  invalidateHeat(); draw(); updateKPI(); autosave();
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+
+function beginLongPress(p) {
+  if (pointerState.longPressTimer) clearTimeout(pointerState.longPressTimer);
+  pointerState.longPressTimer = setTimeout(() => {
+    pointerState.longPressTimer = null;
+    if (pointerState.isDragging || !p) return;
+    if (confirm('Delete ' + p.name + '?')) {
+      pushHistory();
+      points = points.filter(q => q !== p);
+      selectedPoint = null;
+      $('beamControls').classList.remove('on');
+      invalidateHeat(); draw(); updateKPI(); autosave();
+      if (navigator.vibrate) navigator.vibrate(50);
+    }
+  }, 700);
+}
+
+function cancelLongPress() {
+  if (pointerState.longPressTimer) {
+    clearTimeout(pointerState.longPressTimer);
+    pointerState.longPressTimer = null;
+  }
+}
+
+canvas.addEventListener('pointerdown', e => {
+  if (e.button !== undefined && e.button !== 0) return;
+  e.preventDefault();
+  try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+  pointerState.activeId = e.pointerId;
+
   const pos = getPos(e);
-  const hit = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
+  const hit = findHit(pos);
+
+  pointerState.isDown = true;
+  pointerState.isDragging = false;
+  pointerState.startX = pos.x;
+  pointerState.startY = pos.y;
+  pointerState.startTime = Date.now();
 
   if (hit) {
     selectedPoint = hit;
     dragTarget = hit;
     dragOffset = { x: pos.x - hit.x, y: pos.y - hit.y };
-    $('sel_name').innerText = hit.name + ' · ' + hit.angle + '°';
-    $('beam_angle').value = hit.angle;
-    $('beam_range').value = Math.round(hit.range / worldBox.scale);
-    $('beamControls').classList.add('on');
-    draw();
+    showBeamControls(hit);
+    beginLongPress(hit);
   } else {
-    pushHistory();
-    let sel;
-    if (currentMode === 'main') sel = $('sel_main');
-    else if (currentMode === 'side') sel = $('sel_main');
-    else sel = $('sel_extra');
+    beginLongPress(null);
+  }
+  draw();
+});
 
-    const val = sel.value;
-    const cat = CATALOG[val] || { spl: 120, hAngle: 100, vAngle: 60, watt: 500 };
-    const newP = {
-      x: pos.x, y: pos.y,
-      type: currentMode,
-      name: (currentMode === 'side' ? 'Side: ' : '') + val,
-      angle: 90,
-      range: 60 * worldBox.scale,
-      rangeM: 60,
-      spl: cat.spl, hAngle: cat.hAngle, vAngle: cat.vAngle, watt: cat.watt,
-      isLineArray: val.startsWith('MLA') || val.startsWith('M10')
-    };
-    if (newP.isLineArray) newP.elements = 6;
-    points.push(newP);
-    selectedPoint = newP;
-    $('sel_name').innerText = newP.name + ' · 90°';
-    $('beam_angle').value = 90;
-    $('beam_range').value = 60;
-    $('beamControls').classList.add('on');
-    draw();
-    updateKPI();
+canvas.addEventListener('pointermove', e => {
+  const pos = getPos(e);
+
+  if (pointerState.isDown) {
+    const moved = Math.hypot(pos.x - pointerState.startX, pos.y - pointerState.startY);
+    if (moved > 8) {
+      pointerState.isDragging = true;
+      cancelLongPress();
+    }
+  }
+
+  if (dragTarget && pointerState.isDown) {
+    const c = clampToField(pos.x - dragOffset.x, pos.y - dragOffset.y);
+    dragTarget.x = c.x;
+    dragTarget.y = c.y;
+    if (dragTarget.isDelay) {
+      const distFromStage = Math.max(1, (dragTarget.y - worldBox.cy) / worldBox.scale);
+      dragTarget.distanceFromStage = distFromStage;
+      dragTarget.delayMs = Math.round((distFromStage / 343) * 1000);
+      if (selectedPoint === dragTarget) $('delay_ms').value = dragTarget.delayMs;
+    }
+    invalidateHeat(); draw();
+  } else if (!pointerState.isDown && !isTouch) {
+    cursorSPL = computeSPLAt(pos.x, pos.y);
+    cursorX = pos.x; cursorY = pos.y;
+    $('cursorSPL').textContent = cursorSPL.toFixed(1) + ' dB';
   }
 });
 
-canvas.addEventListener('mousemove', e => {
-  const pos = getPos(e);
+canvas.addEventListener('pointerup', e => {
+  try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+  const wasDown = pointerState.isDown;
+  const wasDrag = pointerState.isDragging;
+  const hadDragTarget = !!dragTarget;
+
+  cancelLongPress();
+
+  if (wasDown && !wasDrag && !hadDragTarget) {
+    const dt = Date.now() - pointerState.startTime;
+    if (dt < 500) {
+      const pos = getPos(e);
+      const hit = findHit(pos);
+      if (!hit) addNewSpeaker(pos);
+    }
+  }
+
   if (dragTarget) {
-    dragTarget.x = pos.x - dragOffset.x;
-    dragTarget.y = pos.y - dragOffset.y;
-    draw();
-  } else {
-    const b = worldBox;
-    if (pos.x >= b.x0 && pos.x <= b.x0 + b.W && pos.y >= b.y0 && pos.y <= b.y0 + b.H) {
-      cursorSPL = computeSPLAt(pos.x, pos.y);
-      cursorX = pos.x; cursorY = pos.y;
-      $('cursorSPL').textContent = cursorSPL.toFixed(1) + ' dB';
-    } else {
-      cursorSPL = null;
-      $('cursorSPL').textContent = '—';
+    dragTarget = null;
+    updateKPI(); autosave();
+  }
+
+  pointerState.isDown = false;
+  pointerState.isDragging = false;
+  pointerState.activeId = null;
+  draw();
+});
+
+canvas.addEventListener('pointercancel', () => {
+  cancelLongPress();
+  dragTarget = null;
+  pointerState.isDown = false;
+  pointerState.isDragging = false;
+  pointerState.activeId = null;
+});
+
+canvas.addEventListener('pointerleave', () => {
+  if (!isTouch) { cursorSPL = null; $('cursorSPL').textContent = '—'; }
+});
+
+canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+canvas.addEventListener('mousedown', e => {
+  if (e.button === 2) {
+    e.preventDefault();
+    const pos = getPos(e);
+    const hit = findHit(pos);
+    if (hit) {
+      pushHistory();
+      points = points.filter(p => p !== hit);
+      selectedPoint = null;
+      $('beamControls').classList.remove('on');
+      invalidateHeat(); draw(); updateKPI(); autosave();
     }
   }
 });
 
-window.addEventListener('mouseup', () => {
-  if (dragTarget) { dragTarget = null; updateKPI(); }
-});
-
-canvas.addEventListener('mouseleave', () => {
-  cursorSPL = null;
-  $('cursorSPL').textContent = '—';
-});
-
-canvas.addEventListener('contextmenu', e => {
-  e.preventDefault();
-  const pos = getPos(e);
-  const idx = points.findIndex(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
-  if (idx >= 0) {
-    pushHistory();
-    points.splice(idx, 1);
-    selectedPoint = null;
-    $('beamControls').classList.remove('on');
-    draw();
-    updateKPI();
-  }
-});
-
 /* ═══════════════════════════════════════════════════════════
-   KPI
+   KPI + Compliance
    ═══════════════════════════════════════════════════════════ */
+function computeUniformity() {
+  if (!points.length) return null;
+  const b = worldBox;
+  const samples = [];
+  const step = isTouch ? 70 : 50;
+  for (let py = b.cy + 20; py < b.cy + b.height - 20; py += step) {
+    for (let px = b.cx - b.width / 2 + 20; px < b.cx + b.width / 2 - 20; px += step) {
+      const dx = px - b.cx, dy = py - b.cy;
+      const rx = b.width / 2, ry = b.height;
+      if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
+      samples.push(computeSPLAt(px, py));
+    }
+  }
+  if (!samples.length) return null;
+  return Math.max(...samples) - Math.min(...samples);
+}
+
+function computeAmpChannels() {
+  let ch = 0;
+  points.forEach(p => {
+    if (p.isLineArray) ch += Math.ceil(p.elements / 3);
+    else if (p.watt >= 1000) ch += 1;
+    else ch += 0.5;
+  });
+  return Math.ceil(ch);
+}
+
+function computeGenerator() {
+  let totalW = 0;
+  points.forEach(p => {
+    totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
+  });
+  const kVA = (totalW / 0.7 * 1.3) / 1000;
+  const kVA_withStage = kVA * 1.5;
+  return Math.ceil(kVA_withStage * 1.1);
+}
+
+function updateEnvironmentalInfo() {
+  const cond = getOutdoorConditions();
+  const groundName = { grass: 'Grass', concrete: 'Concrete', water: 'Water', sand: 'Sand' }[cond.ground] || cond.ground;
+
+  $('infoGroundRefl').textContent = '+' + cond.groundRefl + ' dB (' + groundName + ')';
+
+  const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
+  const loss100 = Math.max(0, airCoeff) * 100;
+  $('infoAirLoss').textContent = loss100.toFixed(2) + ' dB @ 100m';
+
+  const maxWind = Math.max(0, (cond.windSpeed - 3) * 0.0005 * 100);
+  $('infoWind').textContent = cond.windSpeed < 3
+    ? 'Disabled (low wind)'
+    : '± ' + maxWind.toFixed(2) + ' dB @ 100m';
+}
+
+function computeNeighborSPL() {
+  if (!points.length) return 0;
+  const cond = getOutdoorConditions();
+  const b = worldBox;
+  const nx = b.cx;
+  const ny = b.cy + cond.neighborDist * b.scale;
+
+  let totalPower = 0;
+  points.forEach(p => {
+    const dx = nx - p.x, dy = ny - p.y;
+    const dM = Math.max(1, Math.hypot(dx, dy) / (worldBox.scale || 1));
+    const angleTo = Math.atan2(dy, dx) * 180 / Math.PI;
+    let delta = Math.abs(angleTo - p.angle);
+    if (delta > 180) delta = 360 - delta;
+    const halfH = (p.hAngle || 100) / 2;
+    let directivityGain = delta > halfH ? Math.max(0, 1 - (delta - halfH) / 60) : 1;
+
+    const atten = p.isLineArray ? -10 * Math.log10(dM) : -20 * Math.log10(dM);
+    const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
+    const airLoss = Math.max(0, airCoeff) * dM;
+    const groundBoost = cond.groundRefl;
+    const windEffect = computeWindEffect(p, nx, ny, cond);
+    const laBonus = p.isLineArray ? 10 * Math.log10(Math.max(1, p.elements / 4)) : 0;
+
+    const spl = (p.spl || 120) + atten - airLoss + groundBoost + windEffect + laBonus +
+                10 * Math.log10(Math.max(0.0001, directivityGain));
+    totalPower += Math.pow(10, spl / 10);
+  });
+
+  return totalPower > 0 ? 10 * Math.log10(totalPower) : 0;
+}
+
 function updateKPI() {
+  updateEnvironmentalInfo();
+  updateWindIndicator();
+
   let totalW = 0, maxSpl = 0;
   points.forEach(p => {
     totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
     maxSpl = Math.max(maxSpl, p.spl || 0);
   });
 
+  const target = +$('spl_target').value || 100;
   let coverage = 0;
   if (points.length) {
     const b = worldBox;
-    const target = 90;
     let good = 0, total = 0;
-    for (let py = 30; py < b.H - 30; py += 40) {
-      for (let px = 30; px < b.W - 30; px += 40) {
-        const spl = computeSPLAt(b.x0 + px, b.y0 + py);
+    const step = isTouch ? 55 : 40;
+    for (let py = b.cy + 20; py < b.cy + b.height - 20; py += step) {
+      for (let px = b.cx - b.width / 2 + 20; px < b.cx + b.width / 2 - 20; px += step) {
+        const dx = px - b.cx, dy = py - b.cy;
+        const rx = b.width / 2, ry = b.height;
+        if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
+        const spl = computeSPLAt(px, py);
         total++;
-        if (spl >= target - 10 && spl <= target + 15) good++;
+        if (spl >= target - 5 && spl <= target + 10) good++;
       }
     }
     coverage = total ? (good / total) * 100 : 0;
   }
 
+  const towersCount = points.filter(p => p.isDelay).length;
+  const gen = computeGenerator();
+  const neighborSPL = computeNeighborSPL();
+  const cond = getOutdoorConditions();
+
   $('kpiSpkV').textContent = points.length;
   $('kpiPwrV').textContent = totalW.toLocaleString();
   $('kpiCovV').textContent = points.length ? coverage.toFixed(0) + '%' : '—';
   $('kpiSplV').textContent = points.length ? maxSpl + ' dB' : '—';
+  $('kpiDelayV').textContent = towersCount;
+  $('kpiGenV').textContent = points.length ? gen : '—';
 
-  $('kpiCov').className = 'kpi ' + (!points.length ? '' : coverage >= 75 ? 'ok' : 'warn');
+  $('kpiCov').className = 'kpi ' + (!points.length ? '' : coverage >= 70 ? 'ok' : 'warn');
   $('kpiSpl').className = 'kpi ' + (!points.length ? '' : maxSpl >= 130 ? 'ok' : 'warn');
+  $('kpiGen').className = 'kpi ' + (!points.length ? '' : 'ok');
+
+  $('infoNeighborSPL').textContent = points.length ? neighborSPL.toFixed(1) + ' dB' : '—';
+  const overLimit = neighborSPL > cond.neighborLimit;
+  const rowCompliance = $('rowCompliance');
+  $('infoCompliance').textContent = points.length
+    ? (overLimit ? '❌ Over by ' + (neighborSPL - cond.neighborLimit).toFixed(1) + ' dB' : '✅ Compliant')
+    : '—';
+  rowCompliance.className = 'info-row ' + (overLimit ? 'bad' : 'ok');
+
+  const rowNeighbor = $('rowNeighbor');
+  rowNeighbor.className = 'info-row ' + (overLimit ? 'bad' : 'ok');
 }
 
 /* ═══════════════════════════════════════════════════════════
-   REPORT — with real calculations
+   Engineering Decision Builder
    ═══════════════════════════════════════════════════════════ */
 function buildEngineeringDecision() {
   const profile = getEventProfile();
-  const L = +$('room_l').value, W = +$('room_w').value, H = +$('room_h').value;
+  const depth = +$('field_depth').value;
+  const width = +$('audience_width').value;
   const sW = +$('stage_w').value;
+  const cond = getOutdoorConditions();
 
   const mainCount = points.filter(p => p.type === 'main').length;
   const sideCount = points.filter(p => p.type === 'side').length;
   const subCount = points.filter(p => p.type === 'sub' && p.name.includes('218')).length;
   const monitorCount = points.filter(p => p.name.includes('15M') || p.name.includes('152')).length;
+  const delayCount = points.filter(p => p.isDelay).length;
   const hasLineArray = points.some(p => p.isLineArray);
+  const maxDelay = Math.max(0, ...points.filter(p => p.isDelay).map(p => p.delayMs || 0));
 
   let totalW = 0;
   points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
   const ampRec = Math.ceil(totalW * 1.3);
+  const gen = computeGenerator();
 
-  // SPL at farthest coverage point
-  const farX = worldBox.x0 + 30;
-  const farY = worldBox.y0 + worldBox.H - 30;
+  const farX = worldBox.cx;
+  const farY = worldBox.cy + worldBox.height - 30;
   const splFar = points.length ? computeSPLAt(farX, farY) : 0;
 
-  // Delay calculation — farthest distance / speed of sound
-  const farDistM = Math.hypot(L - sW / 2, W);
-  const delayMs = (farDistM / 343) * 1000;
+  const neighborSPL = computeNeighborSPL();
+  const complianceOK = neighborSPL <= cond.neighborLimit;
 
-  // Dispersion of dominant model
   const mainSpk = points.find(p => p.type === 'main') || points[0];
   const hAngle = mainSpk ? mainSpk.hAngle : 90;
   const vAngle = mainSpk ? mainSpk.vAngle : 60;
 
-  const eventName = profile.type === 'concert' ? 'Concert' : profile.type === 'conference' ? 'Conference' : 'Wedding';
+  const eventName = profile.type === 'concert' ? 'Concert'
+                  : profile.type === 'festival' ? 'Open Festival'
+                  : profile.type === 'conference' ? 'Outdoor Conference'
+                  : 'Wedding';
+
+  const windDeviation = cond.windSpeed >= 3
+    ? ((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2)
+    : '0.00';
 
   return {
-    eventText: `System designed for a <b>${eventName}</b> event in a room of <b>${L}m × ${W}m × ${H}m</b>.`,
+    eventText: `System designed for a (<b>${eventName}</b>) event in an open space with audience depth <b>${depth}m</b>, width <b>${width}m</b>, and hang height <b>${cond.hangHeight}m</b>.`,
     systemText: hasLineArray
-      ? `<b>Line Array</b> architecture with <b>${mainCount}</b> main clusters and <b>${sideCount}</b> side fills.`
-      : `<b>Point Source</b> architecture with <b>${mainCount}</b> main cabinets and <b>${sideCount}</b> side fills.`,
-    subText: `<b>${subCount}</b> high-power subwoofers for low-frequency extension.`,
-    monitorText: `<b>${monitorCount}</b> stage monitors for performers.`,
-    powerText: `Total system power: <b>${totalW.toLocaleString()} W</b>. Recommended amplifier: <b>${ampRec.toLocaleString()} W</b> (Class-D, 30% headroom).`,
+      ? `<b>Line Array</b> architecture with <b>${mainCount}</b> main clusters and <b>${sideCount}</b> side fills${delayCount ? ` plus <b>${delayCount}</b> delay elements` : ''}.`
+      : `<b>Point Source</b> architecture with <b>${mainCount}</b> main speakers${delayCount ? ` and <b>${delayCount}</b> delay elements` : ''}.`,
+    subText: `<b>${subCount}</b> high-power subwoofers${points.some(p => p.isCardioid) ? ' in <b>Cardioid</b> configuration to reduce rear energy' : ''}.`,
+    monitorText: `<b>${monitorCount}</b> stage monitors.`,
+    delayText: delayCount
+      ? `<b>${delayCount}</b> delay tower/element with max delay <b>${maxDelay}ms</b> (distance ${(maxDelay / 1000 * 343).toFixed(0)}m from stage).`
+      : 'No delay towers required (depth under 40m).',
+    powerText: `Total power: <b>${totalW.toLocaleString()} W</b> · Recommended amplification: <b>${ampRec.toLocaleString()} W</b> (30% headroom).`,
+    generatorText: `Recommended generator: <b>${gen} kVA</b> (covers audio + lighting + FOH with safety margin).`,
+    envText: `Ground: <b>${{grass:'Grass',concrete:'Concrete',water:'Water',sand:'Sand'}[cond.ground]}</b> (+${cond.groundRefl} dB reflection) · Wind: <b>${cond.windSpeed} km/h</b> · Temperature: <b>${cond.temperature}°C</b> · Humidity: <b>${cond.humidity}%</b>.`,
+    windText: cond.windSpeed < 3
+      ? 'Wind is weak — negligible effect.'
+      : `Predicted sound deviation: <b>${windDeviation} dB</b> at max distance.`,
+    complianceText: complianceOK
+      ? `✅ SPL at neighbor (${cond.neighborDist}m): <b>${neighborSPL.toFixed(1)} dB</b> — compliant with ${cond.neighborLimit} dB limit.`
+      : `❌ SPL at neighbor (${cond.neighborDist}m): <b>${neighborSPL.toFixed(1)} dB</b> — exceeds ${cond.neighborLimit} dB limit by <b>${(neighborSPL - cond.neighborLimit).toFixed(1)} dB</b>. Recommendations: reduce SPL, redirect speakers, or use Cardioid Subs.`,
     alternativeText: hasLineArray
-      ? `Point Source could be used as an alternative with delay towers for rear zone coverage.`
-      : `Line Array could reduce cabinet count while increasing vertical SPL.`,
+      ? 'Point Source + Delays can be used for smaller events.'
+      : 'Line Array can be used to reduce cabinet count and improve uniformity.',
+    ipText: `Recommended <b>IP54+</b> for speakers and <b>IP65</b> for connectors and amplifiers against dust and moisture.`,
     spl: splFar,
-    delay: delayMs,
-    hAngle, vAngle
+    neighborSPL,
+    complianceOK,
+    maxDelay,
+    delayCount,
+    hAngle, vAngle,
+    totalW, ampRec, gen,
+    cond
   };
 }
 
+/* ═══════════════════════════════════════════════════════════
+   Report Generation
+   ═══════════════════════════════════════════════════════════ */
 function generateReport() {
   if (!points.length) { alert('Add speakers first'); return; }
 
   const decision = buildEngineeringDecision();
+  const cond = decision.cond;
+  const depth = +$('field_depth').value;
+  const width = +$('audience_width').value;
+
   const counts = {};
   points.forEach(p => {
     const key = p.isLineArray ? p.name + ' (' + p.elements + ' units)' : p.name;
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  let totalW = 0;
-  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
+  $('rep_ground_val').textContent = '+' + cond.groundRefl + ' dB';
+  $('rep_wind_val').textContent = cond.windSpeed >= 3
+    ? '± ' + ((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2) + ' dB'
+    : 'Disabled';
+  $('rep_neighbor_val').textContent = decision.neighborSPL.toFixed(1) + ' dB';
+  $('rep_towers_val').textContent = decision.delayCount;
+  $('repDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const L = +$('room_l').value, W = +$('room_w').value;
-
-  // Fill analysis cards
-  $('rep_spl_val').textContent = decision.spl.toFixed(1) + ' dB';
-  $('rep_delay_val').textContent = decision.delay.toFixed(1) + ' ms';
-  $('rep_angle_val').textContent = decision.hAngle + '° / ' + decision.vAngle + '°';
-  $('repDate').textContent = new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-
-  // KPI cards
+  const uni = computeUniformity();
   $('repKPI').innerHTML = `
-    <div class="kpi-card"><h4>Area</h4><span>${(L * W).toLocaleString()} m²</span></div>
-    <div class="kpi-card"><h4>Speakers</h4><span>${points.length}</span></div>
-    <div class="kpi-card ok"><h4>Total Power</h4><span>${totalW.toLocaleString()} W</span></div>
-    <div class="kpi-card"><h4>Computed SPL</h4><span>${decision.spl.toFixed(0)} dB</span></div>
+    <div class="kpi-card"><h4>Area (half-ellipse)</h4><span>${(Math.PI * depth * width / 4).toFixed(0)} m²</span></div>
+    <div class="kpi-card"><h4>Speaker Count</h4><span>${points.length}</span></div>
+    <div class="kpi-card ok"><h4>Total Power</h4><span>${decision.totalW.toLocaleString()} W</span></div>
+    <div class="kpi-card ${decision.complianceOK ? 'ok' : 'bad'}"><h4>Noise Compliance</h4><span>${decision.complianceOK ? 'Compliant' : 'Exceeded'}</span></div>
   `;
 
-  // BOQ
+  const groundName = { grass: 'Grass', concrete: 'Concrete', water: 'Water', sand: 'Sand' }[cond.ground] || cond.ground;
+  const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
+  const airLoss = Math.max(0, airCoeff).toFixed(4);
+  $('envSection').innerHTML = `
+    <div class="env-box">
+      <p><strong>🌱 Ground Type:</strong> ${groundName} — reflection <b>+${cond.groundRefl} dB</b>
+         ${cond.ground === 'concrete' || cond.ground === 'water' ? '(hard surface: full reflection)' : '(absorptive surface: negligible reflection)'}</p>
+      <p><strong>💨 Wind:</strong> <b>${cond.windSpeed} km/h</b> at <b>${cond.windDir}°</b> —
+         ${cond.windSpeed < 3 ? 'negligible effect' : `max gain/loss <b>${((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2)} dB</b> at ${depth}m`}</p>
+      <p><strong>🌡️ Temperature:</strong> ${cond.temperature}°C —
+         ${cond.temperature > 30 ? 'rising thermal layers may refract sound' : cond.temperature < 10 ? 'cold air improves propagation' : 'moderate'}</p>
+      <p><strong>💧 Humidity:</strong> ${cond.humidity}% — air absorption coefficient <b>${airLoss} dB/m</b></p>
+      <p><strong>🔊 Ambient Noise:</strong> ${cond.ambient} dB — minimum audible threshold for audience</p>
+      <p><strong>📏 Total Air Loss:</strong> <b>${(Math.max(0, airCoeff) * depth).toFixed(2)} dB</b> at max distance (${depth}m)</p>
+      <p><strong>⛰️ Hang Height:</strong> ${cond.hangHeight}m — ${
+        cond.hangHeight < 8 ? '⚠️ relatively low, may cause sightline obstruction'
+        : cond.hangHeight > 16 ? '✅ high, excellent distribution'
+        : '✅ suitable'
+      }</p>
+    </div>
+  `;
+
+  const overBy = decision.neighborSPL - cond.neighborLimit;
+  $('complianceSection').innerHTML = `
+    <div class="comp-box">
+      <p><strong>🎯 Neighbor Distance:</strong> ${cond.neighborDist} m</p>
+      <p><strong>📊 SPL at Neighbor:</strong>
+         <span style="font-size:16px;font-weight:900;color:${decision.complianceOK ? '#16a34a' : '#dc2626'}">${decision.neighborSPL.toFixed(1)} dB</span></p>
+      <p><strong>⚖️ Legal Limit:</strong> ${cond.neighborLimit} dB</p>
+      <p><strong>${decision.complianceOK ? '✅ Status:' : '❌ Status:'}</strong>
+         ${decision.complianceOK
+           ? `Compliant — safety margin ${(-overBy).toFixed(1)} dB`
+           : `Exceeded by ${overBy.toFixed(1)} dB`}</p>
+      ${!decision.complianceOK ? `
+        <p style="margin-top:10px;padding:10px;background:#fee2e2;border-radius:8px;color:#991b1b">
+          <strong>⚠️ Recommendations:</strong>
+          Reduce overall SPL by ${overBy.toFixed(1)} dB ·
+          Use Cardioid Subs to cut rear energy ·
+          Redirect Line Arrays away from neighbor ·
+          Or reduce active sub count after midnight.
+        </p>` : ''}
+    </div>
+  `;
+
   $('boqSection').innerHTML = `
     <div class="decision-box">
       <h3 style="border:none;padding:0;color:#0c4a6e;font-size:15px;margin-bottom:10px">📘 Engineering Decision Summary</h3>
       <p>${decision.eventText}</p>
       <p><strong>System Architecture:</strong> ${decision.systemText}</p>
-      <p><strong>Low-Frequency Design:</strong> ${decision.subText}</p>
+      <p><strong>Low Frequencies:</strong> ${decision.subText}</p>
       <p><strong>Stage Monitoring:</strong> ${decision.monitorText}</p>
-      <p><strong>Power & Amplification:</strong> ${decision.powerText}</p>
+      <p><strong>🗼 Delay System:</strong> ${decision.delayText}</p>
+      <p><strong>Power &amp; Amplification:</strong> ${decision.powerText}</p>
+      <p><strong>⚡ Electrical Power:</strong> ${decision.generatorText}</p>
+      <p><strong>🌤️ Environmental Conditions:</strong> ${decision.envText}</p>
+      <p><strong>💨 Wind Effect:</strong> ${decision.windText}</p>
+      <p><strong>⚖️ Compliance:</strong> ${decision.complianceText}</p>
+      <p><strong>💧 Protection:</strong> ${decision.ipText}</p>
       <p><strong>Alternative Scenario:</strong> ${decision.alternativeText}</p>
     </div>
 
     <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">📦 Bill of Quantities (BOQ)</h3>
+    <div class="rep-table-wrap">
+      <table class="rep-table">
+        <thead><tr><th>Product</th><th>Qty</th><th>Category</th></tr></thead>
+        <tbody>
+          ${Object.entries(counts).map(([name, qty]) => {
+            const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' units)' : p.name) === name);
+            const cat = sample.type === 'main' ? 'Main System'
+                      : sample.type === 'delay' ? 'Delay'
+                      : sample.type === 'sub' ? (sample.name.includes('218') ? 'Subwoofer' : 'Monitor')
+                      : 'Side Fill';
+            return `<tr><td><b>${name}</b></td><td>${qty}</td><td>${cat}</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  $('detailSection').innerHTML = `
     <table class="rep-table">
-      <thead><tr><th>Product</th><th>Quantity</th><th>Category</th></tr></thead>
+      <thead>
+        <tr>
+          <th>#</th><th>Product</th><th>X (m)</th><th>Y (m)</th>
+          <th>Angle</th><th>Range (m)</th><th>SPL</th><th>Watt</th><th>Notes</th>
+        </tr>
+      </thead>
       <tbody>
-        ${Object.entries(counts).map(([name, qty]) => {
-          const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' units)' : p.name) === name);
-          const cat = sample.type === 'main' ? 'Main System' : sample.type === 'sub' ? (sample.name.includes('218') ? 'Subwoofer' : 'Monitor') : 'Side Fill';
-          return `<tr><td><b>${name}</b></td><td>${qty}</td><td>${cat}</td></tr>`;
+        ${points.map((p, i) => {
+          const xM = ((p.x - worldBox.cx) / worldBox.scale).toFixed(1);
+          const yM = ((p.y - worldBox.cy) / worldBox.scale).toFixed(1);
+          const watt = p.isLineArray ? (p.watt * p.elements) : p.watt;
+          const note = p.isDelay ? `Delay ${p.delayMs}ms`
+                     : p.isLineArray ? `${p.elements} elements`
+                     : p.isCardioid ? 'Cardioid'
+                     : '—';
+          return `<tr>
+            <td>${i + 1}</td>
+            <td>${p.name}</td>
+            <td>${xM}</td><td>${yM}</td>
+            <td>${p.angle}°</td>
+            <td>${p.rangeM ?? (p.range / worldBox.scale).toFixed(0)}</td>
+            <td>${p.spl} dB</td>
+            <td>${watt}</td>
+            <td>${note}</td>
+          </tr>`;
         }).join('')}
       </tbody>
     </table>
   `;
 
-  $('reportImg').src = canvas.toDataURL();
+  $('reportImg').src = canvas.toDataURL('image/png');
   $('reportPage').style.display = 'block';
   window.scrollTo(0, 0);
 }
@@ -1097,39 +2199,202 @@ function generateReport() {
 function closeReport() { $('reportPage').style.display = 'none'; }
 
 /* ═══════════════════════════════════════════════════════════
-   SAVE
+   Save / Load / Draft
    ═══════════════════════════════════════════════════════════ */
 function saveMapPNG() {
   const link = document.createElement('a');
   link.href = canvas.toDataURL('image/png');
-  link.download = 'Motivity_Design_' + Date.now() + '.png';
+  link.download = 'Motivity_Outdoor_' + Date.now() + '.png';
   link.click();
+}
+
+function getSettings() {
+  return {
+    field_depth: $('field_depth').value,
+    audience_width: $('audience_width').value,
+    stage_w: $('stage_w').value,
+    stage_d: $('stage_d').value,
+    spl_target: $('spl_target').value,
+    hang_height: $('hang_height').value,
+    ground_type: $('ground_type').value,
+    temperature: $('temperature').value,
+    humidity: $('humidity').value,
+    wind_speed: $('wind_speed').value,
+    wind_dir: $('wind_dir').value,
+    ambient: $('ambient').value,
+    neighbor_dist: $('neighbor_dist').value,
+    neighbor_limit: $('neighbor_limit').value,
+    event: $('event_type').value
+  };
+}
+
+function applySettings(s) {
+  if (!s) return;
+  $('field_depth').value = s.field_depth ?? 120;
+  $('audience_width').value = s.audience_width ?? 70;
+  $('stage_w').value = s.stage_w ?? 25;
+  $('stage_d').value = s.stage_d ?? 12;
+  if (s.spl_target) $('spl_target').value = s.spl_target;
+  if (s.hang_height) $('hang_height').value = s.hang_height;
+  if (s.ground_type) $('ground_type').value = s.ground_type;
+  if (s.temperature) $('temperature').value = s.temperature;
+  if (s.humidity) $('humidity').value = s.humidity;
+  if (s.wind_speed) $('wind_speed').value = s.wind_speed;
+  if (s.wind_dir) $('wind_dir').value = s.wind_dir;
+  if (s.ambient) $('ambient').value = s.ambient;
+  if (s.neighbor_dist) $('neighbor_dist').value = s.neighbor_dist;
+  if (s.neighbor_limit) $('neighbor_limit').value = s.neighbor_limit;
+  if (s.event) $('event_type').value = s.event;
 }
 
 function saveProjectJSON() {
-  const data = {
-    points,
-    settings: {
-      L: $('room_l').value, W: $('room_w').value, H: $('room_h').value,
-      sW: $('stage_w').value, sD: $('stage_d').value,
-      event: $('event_type').value
-    }
-  };
+  const data = { points, settings: getSettings(), version: '2026.1-outdoor' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'Motivity_Project_' + Date.now() + '.json';
+  link.download = 'Motivity_Outdoor_' + Date.now() + '.json';
   link.click();
 }
 
+function loadProjectJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try {
+      const data = JSON.parse(evt.target.result);
+      points = Array.isArray(data.points) ? data.points : [];
+      applySettings(data.settings);
+      selectedPoint = null;
+      $('beamControls').classList.remove('on');
+      setupCanvasSize();
+      invalidateHeat(); draw(); updateKPI(); autosave();
+    } catch (err) { alert('Invalid file'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function autosave() {
+  try {
+    localStorage.setItem('motivity_outdoor_draft', JSON.stringify({
+      points, settings: getSettings(), ts: Date.now()
+    }));
+  } catch (_) {}
+}
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem('motivity_outdoor_draft');
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data.points || !data.points.length) return false;
+    points = data.points;
+    applySettings(data.settings);
+    return true;
+  } catch (_) { return false; }
+}
+
 /* ═══════════════════════════════════════════════════════════
-   BOOT
+   Debounce
+   ═══════════════════════════════════════════════════════════ */
+const debouncedUpdate = (() => {
+  let t;
+  return () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      setupCanvasSize();
+      invalidateHeat(); draw(); updateKPI(); autosave();
+    }, 150);
+  };
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   Auto Canvas Sizing (responsive + HiDPI)
+   ═══════════════════════════════════════════════════════════ */
+function setupCanvasSize() {
+  const wrap = $('canvasWrap');
+  const rect = wrap.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  const depth = +$('field_depth').value || 120;
+  const width = +$('audience_width').value || 70;
+  const stageD = +$('stage_d').value || 12;
+
+  const ratio = width / (depth + stageD);
+
+  const pad = 16;
+  const availW = Math.max(200, rect.width - pad);
+  const availH = Math.max(150, rect.height - pad);
+
+  let logicalW, logicalH;
+  if (availW / availH > ratio) {
+    logicalH = availH;
+    logicalW = logicalH * ratio;
+  } else {
+    logicalW = availW;
+    logicalH = logicalW / ratio;
+  }
+
+  logicalW = Math.floor(Math.max(300, logicalW));
+  logicalH = Math.floor(Math.max(220, logicalH));
+
+  canvas.style.width = logicalW + 'px';
+  canvas.style.height = logicalH + 'px';
+  canvas.width = Math.floor(logicalW * dpr);
+  canvas.height = Math.floor(logicalH * dpr);
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  canvas._logicalW = logicalW;
+  canvas._logicalH = logicalH;
+  canvas._dpr = dpr;
+
+  heatCanvas = null;
+  heatDirty = true;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Resize
+   ═══════════════════════════════════════════════════════════ */
+let resizeTimer = null;
+function handleResize() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    setupCanvasSize();
+    invalidateHeat();
+    draw();
+  }, 120);
+}
+window.addEventListener('resize', handleResize);
+window.addEventListener('orientationchange', () => setTimeout(handleResize, 250));
+
+/* ═══════════════════════════════════════════════════════════
+   Boot
    ═══════════════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
-  applySmartLayout();
-  loop();
-  setInterval(updateKPI, 500);
+  setupCanvasSize();
+
+  const restored = restoreDraft();
+  if (restored) { invalidateHeat(); draw(); updateKPI(); }
+  else applySmartLayout();
+
+  setTimeout(() => {
+    setupCanvasSize();
+    invalidateHeat(); draw(); updateKPI();
+  }, 100);
+
+  requestAnimationFrame(loop);
+  document.addEventListener('gesturestart', e => e.preventDefault());
+  updateWindIndicator();
 });
+
+window.addEventListener('beforeunload', autosave);
+
+if (isTouch) {
+  const hb = document.querySelector('.hint-bar');
+  if (hb) setTimeout(() => { hb.style.opacity = '0.6'; }, 4000);
+}
 </script>
 </body>
 </html>
