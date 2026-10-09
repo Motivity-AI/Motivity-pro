@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0d1117">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Motivity Master AI · Outdoor Spaces 2026</title>
+<title>Motivity Master AI · المساحات الخارجية 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -24,8 +23,8 @@ body{background:var(--bg);color:#fff;display:flex;height:100dvh}
 /* ═══ SIDEBAR ═══ */
 .sidebar{
   width:420px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
-  padding:16px;overflow-y:auto;border-right:3px solid var(--red);
-  flex-shrink:0;box-shadow:8px 0 32px rgba(0,0,0,.5);
+  padding:16px;overflow-y:auto;border-left:3px solid var(--red);
+  flex-shrink:0;box-shadow:-8px 0 32px rgba(0,0,0,.5);
   transition:max-height .3s ease;-webkit-overflow-scrolling:touch;
 }
 .sidebar::-webkit-scrollbar{width:8px}
@@ -43,7 +42,7 @@ body{background:var(--bg);color:#fff;display:flex;height:100dvh}
 .box{background:rgba(33,38,45,.75);padding:13px;border-radius:10px;margin-bottom:11px;border:1px solid rgba(56,189,248,.1)}
 .box h3{
   font-size:12px;color:var(--blue);margin-bottom:10px;font-weight:800;
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;gap:6px;flex-direction:row-reverse;justify-content:flex-end;
 }
 .box h3::before{content:'';width:3px;height:12px;background:var(--red);border-radius:2px}
 label{font-size:11px;color:var(--mu);display:block;margin-top:8px;font-weight:600}
@@ -71,10 +70,13 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
   background:#0a0e13;color:#8b949e;border:1px solid var(--bd);
   padding:9px 6px;font-size:11px;font-weight:700;cursor:pointer;
   border-radius:6px;flex:1;transition:.2s;font-family:inherit;min-height:44px;
+  min-width:0;
 }
 .tool-btn.active{background:var(--blue);color:#000;border-color:var(--blue);box-shadow:0 0 12px rgba(56,189,248,.4)}
+.tool-btn.active.mon{background:#f59e0b;border-color:#f59e0b;color:#000}
 
-.tool-grid{display:flex;gap:6px;margin-top:8px}
+.tool-grid{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.tool-grid .tool-btn{flex:1 1 calc(50% - 3px);min-width:0}
 
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
 .kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center}
@@ -83,6 +85,8 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .kpi.ok .v{color:var(--green)}
 .kpi.warn .v{color:#f59e0b}
 .kpi.bad .v{color:#ef4444}
+.kpi.mon .v{color:#fbbf24}
+.kpi.mon{border-color:rgba(245,158,11,0.4);background:linear-gradient(135deg,#1a1204,#161b22)}
 
 .info-row{
   display:flex;justify-content:space-between;align-items:center;
@@ -94,6 +98,42 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 .info-row.warn span:last-child{color:#f59e0b}
 .info-row.bad span:last-child{color:#ef4444}
 
+/* مؤشر الرياح داخل الشريط الجانبي */
+.wind-box{
+  margin-top:8px;padding:8px;border-radius:8px;
+  background:rgba(56,189,248,.06);
+  border:1px solid rgba(56,189,248,.15);
+  display:flex;align-items:center;gap:10px;
+}
+.wind-compass{
+  width:44px;height:44px;border-radius:50%;
+  position:relative;flex-shrink:0;
+  background:radial-gradient(circle,#1a1f26 0%,#0a0e13 100%);
+  border:1px solid var(--bd);
+}
+.wind-arrow{
+  position:absolute;top:50%;left:50%;
+  transform-origin:0 0;
+  width:2px;height:20px;background:var(--blue);
+  transition:transform .3s;
+}
+.wind-compass::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--red);transform:translate(-50%,-50%);
+}
+
+/* مفتاح SPL داخل الشريط الجانبي */
+.mini-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.mini-legend .sw{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;color:var(--mu);font-weight:700;
+}
+.mini-legend .sw i{
+  width:14px;height:8px;border-radius:2px;
+  display:inline-block;font-style:normal;
+}
+
 /* ═══ MAIN VIEW ═══ */
 .main-view{
   flex:1;display:flex;flex-direction:column;
@@ -102,26 +142,47 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
 }
 .canvas-wrap{
   flex:1;display:flex;align-items:center;justify-content:center;
-  padding:14px;overflow:hidden;min-height:0;
+  padding:14px;overflow:hidden;min-height:0;position:relative;
 }
 canvas{
   background:#0a0e0a;border-radius:12px;border:1px solid #1a3a1a;
   box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(34,197,94,.05);
   display:block;touch-action:none;user-select:none;-webkit-user-select:none;
-  -webkit-touch-callout:none;cursor:crosshair;max-width:100%;max-height:100%;
+  -webkit-touch-callout:none;max-width:100%;max-height:100%;
+  transition:none;
 }
+canvas.tool-select{cursor:crosshair}
+canvas.tool-pan{cursor:grab}
+canvas.tool-pan:active{cursor:grabbing}
 
+/* ═══ TOOLBAR — لوحة واحدة موحّدة ═══ */
 .toolbar{
-  position:absolute;top:14px;left:14px;display:flex;gap:4px;flex-wrap:wrap;
-  max-width:calc(100% - 28px);background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:5px;z-index:10;
+  position:absolute;top:14px;left:14px;
+  display:flex;gap:4px;flex-wrap:wrap;align-items:center;
+  background:rgba(22,27,34,.95);border:1px solid var(--bd);
+  border-radius:10px;padding:5px;z-index:30;
+  max-width:calc(100% - 28px);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
 }
 .toolbar button{
-  background:transparent;color:#ccc;border:none;width:36px;height:36px;
-  border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;
-  transition:.2s;font-family:inherit;touch-action:manipulation;
+  background:transparent;color:#ccc;border:none;
+  width:36px;height:36px;flex-shrink:0;
+  border-radius:6px;cursor:pointer;font-size:14px;
+  font-weight:700;transition:.15s;font-family:inherit;
+  touch-action:manipulation;
 }
+.toolbar button:hover{background:#30363d;color:#fff}
 .toolbar button.on{background:var(--blue);color:#000}
+.toolbar button.active-mode{background:var(--green);color:#000}
+.toolbar .sep{
+  width:1px;height:22px;background:#30363d;
+  flex-shrink:0;margin:0 2px;
+}
+.toolbar .zoom-label{
+  font-size:11px;font-weight:900;color:var(--blue);
+  padding:0 8px;min-width:44px;text-align:center;
+  flex-shrink:0;
+}
 #tgSidebar{display:none}
 
 .hint-bar{
@@ -139,6 +200,9 @@ canvas{
   font-size:11.5px;color:#fff;z-index:10;
 }
 .cursor-info b{color:var(--blue);font-weight:900}
+.cursor-info .zoom-tag{
+  color:var(--green);font-weight:800;margin-right:8px;
+}
 
 .beam-controls{
   position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.95);
@@ -166,39 +230,10 @@ canvas{
   font-size:11px;min-height:36px;
 }
 
-.legend{
-  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:10px 12px;
-  font-size:10.5px;z-index:10;color:#ddd;display:none;
-}
-.legend.on{display:block}
-.legend .row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.legend .sw{width:16px;height:10px;border-radius:2px;display:inline-block}
-
-/* Wind indicator */
-.wind-indicator{
-  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:8px 10px;
-  font-size:10px;color:#ddd;z-index:10;display:none;
-  align-items:center;gap:8px;
-}
-.wind-indicator.on{display:flex}
-.wind-compass{
-  width:40px;height:40px;border-radius:50%;position:relative;
-  background:radial-gradient(circle,#1a1f26 0%,#0a0e13 100%);
-  border:1px solid var(--bd);
-}
-.wind-arrow{
-  position:absolute;top:50%;left:50%;
-  transform-origin:0 0;
-  width:2px;height:18px;background:var(--blue);
-  transition:transform .3s;
-}
-
 /* ═══ REPORT ═══ */
 #reportPage{
   display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;
-  color:#222;overflow-y:auto;padding:30px;direction:ltr;text-align:left;
+  color:#222;overflow-y:auto;padding:30px;direction:rtl;text-align:right;
   -webkit-overflow-scrolling:touch;
 }
 .report-content{
@@ -206,7 +241,6 @@ canvas{
   border-radius:10px;box-shadow:0 0 50px rgba(0,0,0,.1);
   position:relative;border-top:10px solid var(--red);
 }
-
 .rep-header{
   display:flex;justify-content:space-between;align-items:flex-start;
   padding-bottom:18px;border-bottom:3px solid var(--red);
@@ -214,7 +248,7 @@ canvas{
 }
 .rep-header h1{color:var(--red);font-size:25px;font-weight:900}
 .rep-header p{font-size:12px;color:#888;margin-top:4px}
-.rep-header .meta{text-align:right;font-size:12px;color:#555;line-height:1.9}
+.rep-header .meta{text-align:left;font-size:12px;color:#555;line-height:1.9}
 .rep-header .meta b{color:var(--red)}
 
 .analysis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
@@ -229,6 +263,8 @@ canvas{
 .analysis-card.env h4{color:var(--green)}
 .analysis-card.comp{border-top-color:var(--purple)}
 .analysis-card.comp h4{color:var(--purple)}
+.analysis-card.mon{border-top-color:#f59e0b}
+.analysis-card.mon h4{color:#f59e0b}
 
 .kpi-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
 .kpi-card{
@@ -240,35 +276,41 @@ canvas{
 .kpi-card.ok span{color:var(--green)}
 .kpi-card.warn span{color:#f59e0b}
 .kpi-card.bad span{color:#ef4444}
+.kpi-card.mon{border-top-color:#f59e0b}
+.kpi-card.mon span{color:#f59e0b}
 
 .decision-box{
   background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);
-  border-left:5px solid var(--blue);padding:20px;
-  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+  border-right:5px solid var(--blue);padding:20px;
+  border-radius:10px 0 0 10px;margin:20px 0;font-size:13px;line-height:1.9;
 }
 .decision-box strong{color:#0c4a6e}
 .decision-box p{margin-bottom:6px}
-
 .env-box{
   background:linear-gradient(135deg,#f0fdf4 0%,#fff 100%);
-  border-left:5px solid var(--green);padding:20px;
-  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+  border-right:5px solid var(--green);padding:20px;
+  border-radius:10px 0 0 10px;margin:20px 0;font-size:13px;line-height:1.9;
 }
 .env-box strong{color:#166534}
-
 .comp-box{
   background:linear-gradient(135deg,#f5f0ff 0%,#fff 100%);
-  border-left:5px solid var(--purple);padding:20px;
-  border-radius:0 10px 10px 0;margin:20px 0;font-size:13px;line-height:1.9;
+  border-right:5px solid var(--purple);padding:20px;
+  border-radius:10px 0 0 10px;margin:20px 0;font-size:13px;line-height:1.9;
 }
 .comp-box strong{color:#5b21b6}
+.mon-box{
+  background:linear-gradient(135deg,#fffbeb 0%,#fff 100%);
+  border-right:5px solid #f59e0b;padding:20px;
+  border-radius:10px 0 0 10px;margin:20px 0;font-size:13px;line-height:1.9;
+}
+.mon-box strong{color:#92400e}
 
 .rep-table{
   width:100%;border-collapse:collapse;margin:16px 0;background:#fff;
   border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05);
 }
-.rep-table th{background:#1a1a1a;color:#fff;padding:12px;text-align:left;font-size:12.5px;font-weight:800}
-.rep-table td{padding:10px 12px;border-bottom:1px solid #eee;font-size:12.5px;text-align:left}
+.rep-table th{background:#1a1a1a;color:#fff;padding:12px;text-align:right;font-size:12.5px;font-weight:800}
+.rep-table td{padding:10px 12px;border-bottom:1px solid #eee;font-size:12.5px;text-align:right}
 .rep-table tr:last-child td{border-bottom:none}
 .rep-table tr:nth-child(even) td{background:#fafbfc}
 
@@ -302,7 +344,7 @@ canvas{
 @media (max-width: 900px) {
   body{flex-direction:column;height:100dvh}
   .sidebar{
-    width:100%;border-right:none;border-top:3px solid var(--red);
+    width:100%;border-left:none;border-top:3px solid var(--red);
     order:2;max-height:48dvh;padding:12px;
     border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.5);
   }
@@ -318,32 +360,36 @@ canvas{
   .kpi-row{grid-template-columns:repeat(2,1fr);gap:6px}
   .kpi .v{font-size:15px}
   .kpi .l{font-size:9.5px}
-  .toolbar{top:8px;left:8px;padding:4px;gap:3px}
-  .toolbar button{width:40px;height:40px;font-size:16px}
-  #tgSidebar{display:block}
+  .toolbar{
+    top:8px;left:8px;
+    max-width:calc(100% - 16px);
+    padding:4px;gap:3px;
+  }
+  .toolbar button{width:38px;height:38px;font-size:15px}
+  .toolbar .sep{height:20px}
+  .toolbar .zoom-label{min-width:38px;font-size:10px;padding:0 4px}
+  #tgSidebar{display:inline-flex;align-items:center;justify-content:center}
   .hint-bar{font-size:9.5px;padding:5px 10px;gap:8px;bottom:8px;max-width:calc(100% - 16px)}
   .hint-bar span:nth-child(2){display:none}
-  .cursor-info{bottom:auto;top:8px;left:8px;font-size:11px;padding:6px 10px}
+  .cursor-info{bottom:auto;top:64px;left:8px;font-size:11px;padding:6px 10px}
   .beam-controls{left:8px;right:8px;bottom:8px;flex-wrap:wrap;justify-content:center;gap:8px;padding:8px}
   .beam-controls > div{flex:1 1 40%;min-width:0}
   .beam-controls input[type=range]{width:100%;height:8px}
   .beam-controls input[type=range]::-webkit-slider-thumb{width:22px;height:22px}
   .beam-controls .name{font-size:11px;min-width:auto}
   .beam-controls .del-btn{padding:10px 14px;min-height:40px;flex:1 1 100%}
-  .legend,.wind-indicator{top:58px;right:8px;font-size:9.5px;padding:6px 8px}
-  .legend .sw{width:12px;height:8px}
   #reportPage{padding:10px}
   .report-content{padding:16px;border-top-width:6px}
   .rep-header{flex-direction:column;gap:10px;margin-bottom:14px;padding-bottom:12px}
   .rep-header h1{font-size:18px}
-  .rep-header .meta{text-align:left;font-size:11px;line-height:1.7}
+  .rep-header .meta{text-align:right;font-size:11px;line-height:1.7}
   .analysis-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
   .analysis-card{padding:12px}
   .analysis-card .val{font-size:16px}
   .kpi-cards{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
   .kpi-card{padding:12px}
   .kpi-card span{font-size:16px}
-  .decision-box,.env-box,.comp-box{padding:14px;font-size:12.5px;line-height:1.85}
+  .decision-box,.env-box,.comp-box,.mon-box{padding:14px;font-size:12.5px;line-height:1.85}
   .rep-controls{gap:6px}
   .rep-controls button{flex:1;padding:12px 10px;font-size:12px}
   .rep-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
@@ -353,7 +399,7 @@ canvas{
 
 @media (max-width: 380px) {
   .brand h2{font-size:14px}
-  .toolbar button{width:36px;height:36px;font-size:14px}
+  .toolbar button{width:34px;height:34px;font-size:14px}
   .hint-bar{font-size:9px}
 }
 
@@ -361,7 +407,7 @@ canvas{
   body{flex-direction:row}
   .sidebar{
     order:2;width:320px;max-height:100dvh;
-    border-top:none;border-right:3px solid var(--red);border-radius:0;
+    border-top:none;border-left:3px solid var(--red);border-radius:0;
   }
   .main-view{order:1;min-height:auto}
   .hint-bar{display:none}
@@ -374,106 +420,117 @@ canvas{
   <div class="brand">
     <h2>MOTIVITY MASTER AI</h2>
     <p>OUTDOOR SPACES 2026</p>
-    <div class="mode-badge">🌳 Free Field · Outdoor</div>
+    <div class="mode-badge">🌳 الحقل الحر · Free Field</div>
   </div>
 
-  <!-- Site & Stage Dimensions -->
   <div class="box">
-    <h3>📏 Site &amp; Stage Dimensions</h3>
+    <h3>📏 أبعاد الموقع والمسرح</h3>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Audience Depth (m)</label><input type="number" id="field_depth" value="120" min="10" max="500" oninput="debouncedUpdate()"></div>
-      <div style="flex:1"><label>Audience Width (m)</label><input type="number" id="audience_width" value="70" min="10" max="400" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>عمق الجمهور (م)</label><input type="number" id="field_depth" value="120" min="10" max="500" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>عرض الجمهور (م)</label><input type="number" id="audience_width" value="70" min="10" max="400" oninput="debouncedUpdate()"></div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Stage Width (m)</label><input type="number" id="stage_w" value="25" min="2" max="100" oninput="debouncedUpdate()"></div>
-      <div style="flex:1"><label>Stage Depth (m)</label><input type="number" id="stage_d" value="12" min="2" max="40" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>عرض المسرح (م)</label><input type="number" id="stage_w" value="25" min="2" max="100" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>عمق المسرح (م)</label><input type="number" id="stage_d" value="12" min="2" max="40" oninput="debouncedUpdate()"></div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>SPL Target (dB)</label><input type="number" id="spl_target" value="100" min="70" max="140" oninput="updateKPI()"></div>
-      <div style="flex:1"><label>Hang Height (m)</label><input type="number" id="hang_height" value="12" min="2" max="30" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>هدف SPL (dB)</label><input type="number" id="spl_target" value="100" min="70" max="140" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>ارتفاع التعليق (م)</label><input type="number" id="hang_height" value="12" min="2" max="30" oninput="debouncedUpdate()"></div>
     </div>
   </div>
 
-  <!-- Environmental Conditions -->
   <div class="box">
-    <h3>🌤️ Environmental Conditions</h3>
+    <h3>🌤️ الظروف البيئية</h3>
     <div style="display:flex;gap:6px">
       <div style="flex:1">
-        <label>Ground Type</label>
+        <label>نوع الأرض</label>
         <select id="ground_type" onchange="debouncedUpdate()">
-          <option value="grass">Grass (0 dB)</option>
-          <option value="concrete">Concrete (+3 dB)</option>
-          <option value="water">Water (+4 dB)</option>
-          <option value="sand" selected>Sand / Dirt (0 dB)</option>
+          <option value="grass">عشب (0 dB)</option>
+          <option value="concrete">خرسانة (+3 dB)</option>
+          <option value="water">ماء (+4 dB)</option>
+          <option value="sand" selected>رمل / تراب (0 dB)</option>
         </select>
       </div>
       <div style="flex:1">
-        <label>Temperature (°C)</label>
+        <label>الحرارة (°C)</label>
         <input type="number" id="temperature" value="28" min="-10" max="50" oninput="debouncedUpdate()">
       </div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Wind Speed (km/h)</label><input type="number" id="wind_speed" value="8" min="0" max="60" oninput="debouncedUpdate()"></div>
-      <div style="flex:1"><label>Wind Direction (°)</label><input type="number" id="wind_dir" value="180" min="0" max="360" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>سرعة الرياح (km/h)</label><input type="number" id="wind_speed" value="8" min="0" max="60" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>اتجاه الرياح (°)</label><input type="number" id="wind_dir" value="180" min="0" max="360" oninput="debouncedUpdate()"></div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Humidity (%)</label><input type="number" id="humidity" value="50" min="10" max="100" oninput="debouncedUpdate()"></div>
-      <div style="flex:1"><label>Ambient Noise (dB)</label><input type="number" id="ambient" value="55" min="30" max="90" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>الرطوبة (%)</label><input type="number" id="humidity" value="50" min="10" max="100" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>الضجيج المحيط (dB)</label><input type="number" id="ambient" value="55" min="30" max="90" oninput="updateKPI()"></div>
+    </div>
+
+    <div class="wind-box" id="windBox" style="display:none">
+      <div class="wind-compass">
+        <div class="wind-arrow" id="windArrow"></div>
+      </div>
+      <div>
+        <div style="color:var(--blue);font-weight:800;font-size:11px">الرياح</div>
+        <div id="windLabel" style="font-size:12px;font-weight:900">— km/h</div>
+      </div>
     </div>
   </div>
 
-  <!-- Legal Noise Compliance -->
   <div class="box">
-    <h3>⚖️ Legal Noise Compliance</h3>
+    <h3>⚖️ امتثال الضجيج القانوني</h3>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>Nearest Neighbor (m)</label><input type="number" id="neighbor_dist" value="300" min="10" max="2000" oninput="updateKPI()"></div>
-      <div style="flex:1"><label>Noise Limit (dB)</label><input type="number" id="neighbor_limit" value="65" min="40" max="90" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>أقرب جار (م)</label><input type="number" id="neighbor_dist" value="300" min="10" max="2000" oninput="updateKPI()"></div>
+      <div style="flex:1"><label>حد الضجيج (dB)</label><input type="number" id="neighbor_limit" value="65" min="40" max="90" oninput="updateKPI()"></div>
     </div>
-
     <div style="margin-top:10px">
-      <div class="info-row" id="rowNeighbor">
-        <span>SPL at Neighbor</span>
-        <span id="infoNeighborSPL">—</span>
-      </div>
-      <div class="info-row" id="rowCompliance">
-        <span>Legal Compliance</span>
-        <span id="infoCompliance">—</span>
-      </div>
-      <div class="info-row"><span>Ground Reflection</span><span id="infoGroundRefl">—</span></div>
-      <div class="info-row"><span>Air Loss</span><span id="infoAirLoss">—</span></div>
-      <div class="info-row"><span>Wind Effect</span><span id="infoWind">—</span></div>
+      <div class="info-row" id="rowNeighbor"><span>SPL عند الجار</span><span id="infoNeighborSPL">—</span></div>
+      <div class="info-row" id="rowCompliance"><span>الامتثال القانوني</span><span id="infoCompliance">—</span></div>
+      <div class="info-row"><span>انعكاس الأرض</span><span id="infoGroundRefl">—</span></div>
+      <div class="info-row"><span>خسارة الهواء</span><span id="infoAirLoss">—</span></div>
+      <div class="info-row"><span>تأثير الرياح</span><span id="infoWind">—</span></div>
     </div>
   </div>
 
-  <!-- KPIs -->
   <div class="box">
-    <h3>📊 Key Performance Indicators</h3>
+    <h3>📊 مؤشرات الأداء</h3>
     <div class="kpi-row">
-      <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">Speakers</div></div>
-      <div class="kpi" id="kpiPwr"><div class="v" id="kpiPwrV">0</div><div class="l">Total Watts</div></div>
-      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">Coverage</div></div>
-      <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">Max SPL</div></div>
-      <div class="kpi" id="kpiDelay"><div class="v" id="kpiDelayV">0</div><div class="l">Delay Towers</div></div>
-      <div class="kpi" id="kpiGen"><div class="v" id="kpiGenV">—</div><div class="l">Generator kVA</div></div>
+      <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">السماعات</div></div>
+      <div class="kpi" id="kpiMon"><div class="v" id="kpiMonV">0</div><div class="l">🎤 مونيتورات</div></div>
+      <div class="kpi" id="kpiPwr"><div class="v" id="kpiPwrV">0</div><div class="l">إجمالي الواط</div></div>
+      <div class="kpi" id="kpiDelay"><div class="v" id="kpiDelayV">0</div><div class="l">🗼 أبراج تأخير</div></div>
+      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">نسبة التغطية</div></div>
+      <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">أقصى SPL</div></div>
+      <div class="kpi" id="kpiGen"><div class="v" id="kpiGenV">—</div><div class="l">المولد kVA</div></div>
+      <div class="kpi" id="kpiAmp"><div class="v" id="kpiAmpV">—</div><div class="l">قنوات المضخم</div></div>
     </div>
   </div>
 
-  <!-- Event Type -->
+  <div class="box" id="legendBox" style="display:none">
+    <h3>🎨 مقياس SPL (dB)</h3>
+    <div class="mini-legend">
+      <span class="sw"><i style="background:rgba(15,25,45,0.7);border:1px solid #333"></i>&lt;60</span>
+      <span class="sw"><i style="background:rgba(30,80,140,0.7)"></i>60-75</span>
+      <span class="sw"><i style="background:rgba(34,197,94,0.7)"></i>75-85</span>
+      <span class="sw"><i style="background:rgba(132,204,22,0.7)"></i>85-95</span>
+      <span class="sw"><i style="background:rgba(245,158,11,0.7)"></i>95-105</span>
+      <span class="sw"><i style="background:rgba(239,68,68,0.75)"></i>≥105</span>
+    </div>
+  </div>
+
   <div class="box">
-    <h3>🎯 Event Type</h3>
+    <h3>🎯 نوع الفعالية</h3>
     <select id="event_type" onchange="applySmartLayout()">
-      <option value="auto">Auto Detect (by depth)</option>
-      <option value="wedding">Wedding (Point Source)</option>
-      <option value="concert">Concert (Line Array + Delay)</option>
-      <option value="festival">Open Festival</option>
-      <option value="conference">Outdoor Conference</option>
+      <option value="auto">كشف تلقائي (حسب العمق)</option>
+      <option value="wedding">حفل زفاف (نظام نقطي)</option>
+      <option value="concert">حفل جماهيري (لاين أراي + تأخير)</option>
+      <option value="festival">مهرجان مفتوح</option>
+      <option value="conference">مؤتمر صوتي خارجي</option>
     </select>
   </div>
 
-  <!-- Catalog -->
   <div class="box">
-    <h3>🔊 Full Catalog 2026</h3>
-    <label>1. Main &amp; Side Systems</label>
+    <h3>🔊 الكتالوج الكامل 2026</h3>
+    <label>1. الأنظمة الرئيسية والجانبية</label>
     <select id="sel_main">
       <optgroup label="Point Source">
         <option value="DB-25 NW">DB-25 NW (1000W / 133dB)</option>
@@ -492,161 +549,179 @@ canvas{
       </optgroup>
     </select>
 
-    <label>2. Subs &amp; Monitors</label>
+    <label>2. الصبات والمراقبات</label>
     <select id="sel_extra">
-      <option value="DB-218 3G">DB-218 3G (Dual 18" - 1400W)</option>
-      <option value="QX-218">QX-218 (Dual 18" Touring)</option>
-      <option value="HD-SUB-18A">HD-SUB-18A (Active Sub)</option>
-      <option value="DB-15M 3G">DB-15M 3G (Stage Monitor)</option>
-      <option value="MTL-152">MTL-152 (KTV/Monitor)</option>
+      <optgroup label="──── Subwoofers ────">
+        <option value="DB-218 3G">DB-218 3G (Dual 18" - 1400W)</option>
+        <option value="QX-218">QX-218 (Dual 18" Touring)</option>
+        <option value="HD-SUB-18A">HD-SUB-18A (Active Sub)</option>
+      </optgroup>
+      <optgroup label="──── Stage Monitors ────">
+        <option value="DB-15M 3G" selected>DB-15M 3G (Stage Monitor - 500W)</option>
+        <option value="MTL-152">MTL-152 (KTV/Monitor - 400W)</option>
+      </optgroup>
     </select>
 
     <div class="tool-grid">
-      <button class="tool-btn active" id="btn_main" onclick="setMode('main')">➕ Main</button>
-      <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ Sub</button>
-      <button class="tool-btn" id="btn_side" onclick="setMode('side')">➕ Side</button>
-      <button class="tool-btn" id="btn_delay" onclick="setMode('delay')">🗼 Delay</button>
+      <button class="tool-btn active" id="btn_main" onclick="setMode('main')">➕ رئيسية</button>
+      <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ صب</button>
+      <button class="tool-btn" id="btn_side" onclick="setMode('side')">➕ جانبية</button>
+      <button class="tool-btn" id="btn_delay" onclick="setMode('delay')">🗼 تأخير</button>
+      <button class="tool-btn" id="btn_monitor" onclick="setMode('monitor')" style="flex:1 1 100%">🎤 مونيتور مسرح</button>
     </div>
   </div>
 
-  <button class="btn btn-smart" onclick="applySmartLayout()">🚀 Auto Smart Layout</button>
-  <button class="btn btn-blue" onclick="generateReport()">📄 Generate Engineering Report</button>
-  <button class="btn btn-green" onclick="saveMapPNG()">🖼️ Save Map PNG</button>
-  <button class="btn btn-blue" onclick="saveProjectJSON()">💾 Save Project JSON</button>
-  <button class="btn btn-blue" onclick="document.getElementById('loadFile').click()">📂 Open Project JSON</button>
+  <button class="btn btn-smart" onclick="applySmartLayout()">🚀 توزيع ذكي تلقائي</button>
+  <button class="btn btn-blue" onclick="generateReport()">📄 توليد التقرير الهندسي</button>
+  <button class="btn btn-green" onclick="saveMapPNG()">🖼️ حفظ الخريطة PNG</button>
+  <button class="btn btn-blue" onclick="saveProjectJSON()">💾 حفظ المشروع JSON</button>
+  <button class="btn btn-blue" onclick="document.getElementById('loadFile').click()">📂 فتح مشروع JSON</button>
   <input type="file" id="loadFile" accept=".json" style="display:none" onchange="loadProjectJSON(event)">
-  <button class="btn btn-reset" onclick="resetCanvas()">🔄 Reset Layout</button>
+  <button class="btn btn-blue" onclick="fitView()">🎯 ضبط العرض 100%</button>
+  <button class="btn btn-reset" onclick="resetCanvas()">🔄 تصفير المخطط</button>
 </div>
 
 <div class="main-view no-print">
   <div class="canvas-wrap" id="canvasWrap">
-    <canvas id="mainCanvas"></canvas>
+    <canvas id="mainCanvas" class="tool-select"></canvas>
   </div>
 
-  <div class="toolbar">
-    <button id="tgSidebar" onclick="toggleSidebar()" title="Menu">☰</button>
-    <button id="tgWaves" class="on" onclick="toggle('waves')" title="Waves">🔊</button>
-    <button id="tgHeat" onclick="toggle('heat')" title="SPL Map">🌡️</button>
-    <button id="tgBeams" class="on" onclick="toggle('beams')" title="Coverage Beams">🌐</button>
-    <button id="tgGrid" class="on" onclick="toggle('grid')" title="Grid">▦</button>
-    <button id="tgLabels" class="on" onclick="toggle('labels')" title="Labels">🏷️</button>
-    <button id="tgBoundary" onclick="toggle('boundary')" title="Site Boundary">⭕</button>
-    <button onclick="undo()" title="Undo">↶</button>
-    <button onclick="redo()" title="Redo">↷</button>
-  </div>
+  <div class="toolbar" id="toolbar">
+    <button id="tgSidebar" onclick="toggleSidebar()" title="القائمة">☰</button>
 
-  <div class="legend" id="legend">
-    <div style="font-weight:800;color:var(--blue);margin-bottom:6px">SPL Scale (dB)</div>
-    <div class="row"><span class="sw" style="background:rgba(15,25,45,0.55);border:1px solid #333"></span>&lt; 60</div>
-    <div class="row"><span class="sw" style="background:rgba(30,80,140,0.7)"></span>60 – 75</div>
-    <div class="row"><span class="sw" style="background:rgba(34,197,94,0.7)"></span>75 – 85</div>
-    <div class="row"><span class="sw" style="background:rgba(132,204,22,0.7)"></span>85 – 95</div>
-    <div class="row"><span class="sw" style="background:rgba(245,158,11,0.7)"></span>95 – 105</div>
-    <div class="row"><span class="sw" style="background:rgba(239,68,68,0.75)"></span>≥ 105</div>
-  </div>
+    <button id="toolSelect" class="active-mode" onclick="setTool('select')" title="وضع الإضافة">🎯</button>
+    <button id="toolPan" onclick="setTool('pan')" title="وضع التحريك">✋</button>
 
-  <div class="wind-indicator" id="windIndicator">
-    <div class="wind-compass"><div class="wind-arrow" id="windArrow"></div></div>
-    <div>
-      <div style="color:var(--blue);font-weight:800">Wind</div>
-      <div id="windLabel">— km/h</div>
-    </div>
+    <div class="sep"></div>
+
+    <button id="tgWaves" class="on" onclick="toggle('waves')" title="الموجات">🔊</button>
+    <button id="tgHeat" onclick="toggle('heat')" title="خريطة SPL">🌡️</button>
+    <button id="tgBeams" class="on" onclick="toggle('beams')" title="الأشعة">🌐</button>
+    <button id="tgGrid" class="on" onclick="toggle('grid')" title="الشبكة">▦</button>
+    <button id="tgLabels" class="on" onclick="toggle('labels')" title="التسميات">🏷️</button>
+    <button id="tgBoundary" onclick="toggle('boundary')" title="حدود الجار">⭕</button>
+
+    <div class="sep"></div>
+
+    <button onclick="zoomOut()" title="تصغير (−)">➖</button>
+    <button onclick="fitView()" title="ملء الشاشة (0)">⛶</button>
+    <button onclick="zoomIn()" title="تكبير (+)">➕</button>
+    <span class="zoom-label" id="zoomLabel">100%</span>
+
+    <div class="sep"></div>
+
+    <button onclick="undo()" title="تراجع (Ctrl+Z)">↶</button>
+    <button onclick="redo()" title="إعادة (Ctrl+Y)">↷</button>
   </div>
 
   <div class="beam-controls" id="beamControls">
     <div>
-      <label>Direction</label>
+      <label>الاتجاه</label>
       <input type="range" id="beam_angle" min="0" max="360" value="90" oninput="updateSelected()">
     </div>
     <div>
-      <label>Range (m)</label>
-      <input type="range" id="beam_range" min="10" max="300" value="100" oninput="updateSelected()">
+      <label>المدى (م)</label>
+      <input type="range" id="beam_range" min="5" max="300" value="100" oninput="updateSelected()">
     </div>
     <div id="laCtrl" style="display:none">
-      <label>LA Elements</label>
+      <label>عناصر LA</label>
       <input type="range" id="la_elements" min="4" max="24" step="2" value="8" oninput="updateSelected()">
     </div>
     <div id="delayCtrl" style="display:none">
-      <label>Delay (ms)</label>
+      <label>تأخير (ms)</label>
       <input type="number" id="delay_ms" value="0" min="0" max="1000" oninput="updateSelected()" style="width:80px;padding:4px 6px;font-size:11px">
     </div>
-    <div class="name" id="sel_name">-- Select --</div>
-    <button class="del-btn" onclick="deleteSelected()">🗑️ Delete</button>
+    <div id="monitorCtrl" style="display:none">
+      <label>وضع المونيتور</label>
+      <select id="monitor_mode" onchange="updateSelected()" style="padding:4px;font-size:11px;width:130px">
+        <option value="270">👤 على المؤدي (270°)</option>
+        <option value="315">↖ يميل يساراً (315°)</option>
+        <option value="225">↗ يميل يميناً (225°)</option>
+        <option value="90">🎯 على الجمهور (90°)</option>
+        <option value="0">← يمين (0°)</option>
+        <option value="180">→ يسار (180°)</option>
+      </select>
+    </div>
+    <div class="name" id="sel_name">-- اختر --</div>
+    <button class="del-btn" onclick="deleteSelected()">🗑️ حذف</button>
   </div>
 
   <div class="hint-bar">
-    <span>👆 <b>Click</b> to add · <b>Drag</b> to move · <b>Long press</b> to delete</span>
-    <span>⌨️ <b>Ctrl+Z</b> · <b>Ctrl+Y</b> · <b>Delete</b></span>
+    <span>👆 <b>انقر</b> لإضافة · <b>اسحب</b> للتحريك · <b>عجلة الفأرة</b> للزوم</span>
+    <span>⌨️ <b>Space</b> تحريك · <b>Ctrl+Z</b> · <b>Delete</b></span>
   </div>
 
   <div class="cursor-info">
-    <span>SPL at Cursor: <b id="cursorSPL">—</b></span>
+    <span>SPL: <b id="cursorSPL">—</b></span>
+    <span class="zoom-tag" id="zoomTag">🔍 100%</span>
   </div>
 </div>
 
 <div id="reportPage">
   <div class="report-content">
     <div class="rep-controls no-print">
-      <button class="close" onclick="closeReport()">← Back to Design</button>
-      <button class="print" onclick="window.print()">🖨️ Print</button>
+      <button class="close" onclick="closeReport()">← العودة للتصميم</button>
+      <button class="print" onclick="window.print()">🖨️ طباعة</button>
     </div>
 
     <div class="rep-header">
       <div>
-        <h1>Acoustic Engineering Analysis Report 2026</h1>
-        <p>Motivity Master AI · Outdoor Spaces · Free Field</p>
+        <h1>تقرير التحليل الصوتي الهندسي 2026</h1>
+        <p>موتيفيتي ماستر AI · المساحات الخارجية · حقل حر</p>
       </div>
       <div class="meta">
-        <b>Project No:</b> MOT-2026-OUT<br>
-        <b>Date:</b> <span id="repDate">—</span><br>
-        <b>Standard:</b> ISO 9613-2 · IEC 60268-5
+        <b>رقم المشروع:</b> MOT-2026-OUT<br>
+        <b>التاريخ:</b> <span id="repDate">—</span><br>
+        <b>المعيار:</b> ISO 9613-2 · IEC 60268-5
       </div>
     </div>
 
     <div class="analysis-grid">
       <div class="analysis-card env">
-        <h4>🌡️ Ground Reflection</h4>
+        <h4>🌡️ انعكاس الأرض</h4>
         <div class="val" id="rep_ground_val">— dB</div>
         <small>Ground Reflection</small>
       </div>
       <div class="analysis-card env">
-        <h4>💨 Wind Effect</h4>
+        <h4>💨 تأثير الرياح</h4>
         <div class="val" id="rep_wind_val">— dB</div>
-        <small>Wind Gradient Effect</small>
+        <small>Wind Gradient</small>
       </div>
       <div class="analysis-card comp">
-        <h4>⚖️ SPL at Neighbor</h4>
+        <h4>⚖️ SPL عند الجار</h4>
         <div class="val" id="rep_neighbor_val">— dB</div>
         <small>Neighbor Boundary</small>
       </div>
-      <div class="analysis-card">
-        <h4>🗼 Delay Towers</h4>
-        <div class="val" id="rep_towers_val">—</div>
-        <small>Delay Towers</small>
+      <div class="analysis-card mon">
+        <h4>🎤 مونيتورات المسرح</h4>
+        <div class="val" id="rep_mon_val">—</div>
+        <small>DB-15M 3G</small>
       </div>
     </div>
 
     <div class="kpi-cards" id="repKPI"></div>
 
-    <h3 style="border-left:5px solid var(--green);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">🌳 Outdoor Environmental Analysis</h3>
+    <h3 style="border-right:5px solid var(--green);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🌳 التحليل البيئي الخارجي</h3>
     <div id="envSection"></div>
 
-    <h3 style="border-left:5px solid var(--purple);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">⚖️ Legal Noise Compliance</h3>
+    <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">⚖️ امتثال الضجيج القانوني</h3>
     <div id="complianceSection"></div>
+
+    <div id="monitorSection"></div>
 
     <div id="boqSection"></div>
 
-    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">📋 Detailed Placement Table</h3>
+    <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">📋 جدول التوزيع التفصيلي</h3>
     <div class="rep-table-wrap" id="detailSection"></div>
 
-    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ Acoustic Simulation Map</h3>
+    <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ خريطة المحاكاة الصوتية</h3>
     <img id="reportImg" class="rep-img">
   </div>
 </div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════
-   Global State
+   الحالة العامة
    ═══════════════════════════════════════════════════════════ */
 const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
@@ -662,7 +737,23 @@ let redoStack = [];
 let animT = 0;
 let cursorSPL = null, cursorX = null, cursorY = null;
 let layers = { waves: true, heat: false, beams: true, grid: true, labels: true, boundary: true };
-let worldBox = { cx: 0, cy: 0, scale: 1, width: 0, height: 0 };
+let worldBox = { cx: 0, cy: 0, scale: 1, width: 0, height: 0, stageDepthPx: 0, x0: 0, y0: 0, W: 0, H: 0 };
+
+/* نظام العرض (Zoom/Pan) */
+let view = { zoom: 1, panX: 0, panY: 0 };
+const MIN_ZOOM = 0.25;
+const MAX_ZOOM = 6;
+
+/* أداة التحريك / التحديد */
+let currentTool = 'select';
+let spacePressed = false;
+
+/* panning يدوي */
+let panning = { active: false, startX: 0, startY: 0, startPanX: 0, startPanY: 0 };
+
+/* pinch (إصبعين) */
+let pinchState = { active: false, startDist: 0, startZoom: 1, startCenterScreen: { x: 0, y: 0 }, startPan: { x: 0, y: 0 } };
+const activePointers = new Map();
 
 let heatCanvas = null;
 let heatDirty = true;
@@ -671,7 +762,7 @@ let lastKpiT = 0;
 const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
 /* ═══════════════════════════════════════════════════════════
-   Product Catalog
+   كتالوج المنتجات
    ═══════════════════════════════════════════════════════════ */
 const CATALOG = Object.freeze({
   "DB-25 NW":    Object.freeze({ spl: 133, hAngle: 100, vAngle: 70, watt: 1000 }),
@@ -686,17 +777,73 @@ const CATALOG = Object.freeze({
   "DB-218 3G":   Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 1400 }),
   "QX-218":      Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 2000 }),
   "HD-SUB-18A":  Object.freeze({ spl: 136, hAngle: 180, vAngle: 60, watt: 1200 }),
-  "DB-15M 3G":   Object.freeze({ spl: 128, hAngle: 90,  vAngle: 60, watt: 500 }),
-  "MTL-152":     Object.freeze({ spl: 125, hAngle: 90,  vAngle: 60, watt: 400 })
+  "DB-15M 3G":   Object.freeze({ spl: 128, hAngle: 90,  vAngle: 40, watt: 500, isMonitor: true }),
+  "MTL-152":     Object.freeze({ spl: 125, hAngle: 90,  vAngle: 40, watt: 400, isMonitor: true })
 });
 
-/* ═══════════════════════════════════════════════════════════
-   Free-Field Physics Constants
-   ═══════════════════════════════════════════════════════════ */
 const GROUND_REFLECT = Object.freeze({ grass: 0, concrete: 3, water: 4, sand: 0 });
 
 /* ═══════════════════════════════════════════════════════════
-   Read Environmental Conditions
+   نظام Transform
+   ═══════════════════════════════════════════════════════════ */
+function screenToWorld(sx, sy) {
+  return {
+    x: (sx - view.panX) / view.zoom,
+    y: (sy - view.panY) / view.zoom
+  };
+}
+
+function zoomAt(screenX, screenY, newZoom) {
+  newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, newZoom));
+  const z0 = view.zoom;
+  const z1 = newZoom;
+  if (z0 === z1) return;
+  view.panX = screenX - ((screenX - view.panX) / z0) * z1;
+  view.panY = screenY - ((screenY - view.panY) / z0) * z1;
+  view.zoom = z1;
+  updateZoomLabel();
+  draw();
+}
+
+function zoomIn() {
+  const Wc = canvas._logicalW || 800;
+  const Hc = canvas._logicalH || 600;
+  zoomAt(Wc / 2, Hc / 2, view.zoom * 1.25);
+}
+
+function zoomOut() {
+  const Wc = canvas._logicalW || 800;
+  const Hc = canvas._logicalH || 600;
+  zoomAt(Wc / 2, Hc / 2, view.zoom / 1.25);
+}
+
+function fitView() {
+  view.zoom = 1;
+  view.panX = 0;
+  view.panY = 0;
+  updateZoomLabel();
+  heatDirty = true;
+  draw();
+}
+
+function updateZoomLabel() {
+  const pct = Math.round(view.zoom * 100);
+  const el = $('zoomLabel');
+  if (el) el.textContent = pct + '%';
+  const tg = $('zoomTag');
+  if (tg) tg.textContent = '🔍 ' + pct + '%';
+}
+
+function setTool(t) {
+  currentTool = t;
+  $('toolSelect').classList.toggle('active-mode', t === 'select');
+  $('toolPan').classList.toggle('active-mode', t === 'pan');
+  canvas.classList.toggle('tool-select', t === 'select');
+  canvas.classList.toggle('tool-pan', t === 'pan');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   الظروف البيئية
    ═══════════════════════════════════════════════════════════ */
 function getOutdoorConditions() {
   const ground = $('ground_type').value;
@@ -714,29 +861,32 @@ function getOutdoorConditions() {
   };
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Sidebar toggle
-   ═══════════════════════════════════════════════════════════ */
 function toggleSidebar() {
   $('sidebar').classList.toggle('collapsed');
   setTimeout(() => { setupCanvasSize(); draw(); }, 320);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Utilities
-   ═══════════════════════════════════════════════════════════ */
 function setMode(m) {
   currentMode = m;
-  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  $('btn_' + m).classList.add('active');
+  document.querySelectorAll('.tool-btn').forEach(b => {
+    b.classList.remove('active');
+    b.classList.remove('mon');
+  });
+  const btn = $('btn_' + m);
+  if (btn) {
+    btn.classList.add('active');
+    if (m === 'monitor') btn.classList.add('mon');
+  }
 }
 
 function toggle(key) {
   layers[key] = !layers[key];
   const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
   if (btn) btn.classList.toggle('on', layers[key]);
-  if (key === 'heat') $('legend').classList.toggle('on', layers.heat);
-  if (key === 'boundary') updateWindIndicator();
+  if (key === 'heat') {
+    const lb = $('legendBox');
+    if (lb) lb.style.display = layers.heat ? 'block' : 'none';
+  }
   draw();
 }
 
@@ -771,38 +921,58 @@ function deleteSelected() {
   pushHistory();
   points = points.filter(p => p !== selectedPoint);
   selectedPoint = null;
-  $('sel_name').innerText = '-- Select --';
+  $('sel_name').innerText = '-- اختر --';
   $('beamControls').classList.remove('on');
   invalidateHeat(); draw(); updateKPI(); autosave();
 }
 
 function resetCanvas() {
-  if (!confirm('Reset the entire layout?')) return;
+  if (!confirm('تصفير المخطط بالكامل؟')) return;
   pushHistory();
   points = [];
   selectedPoint = null;
-  $('sel_name').innerText = '-- Select --';
+  $('sel_name').innerText = '-- اختر --';
   $('beamControls').classList.remove('on');
   invalidateHeat(); draw(); updateKPI(); autosave();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Keyboard
-   ═══════════════════════════════════════════════════════════ */
 window.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+
+  if (e.code === 'Space' && !spacePressed) {
+    e.preventDefault();
+    spacePressed = true;
+    canvas.classList.add('tool-pan');
+    canvas.classList.remove('tool-select');
+  }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
     e.preventDefault(); undo();
   } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
     e.preventDefault(); redo();
   } else if (e.key === 'Delete' && selectedPoint) {
     deleteSelected();
+  } else if (e.key === '+' || e.key === '=') {
+    zoomIn();
+  } else if (e.key === '-' || e.key === '_') {
+    zoomOut();
+  } else if (e.key === '0') {
+    fitView();
+  }
+});
+
+window.addEventListener('keyup', e => {
+  if (e.code === 'Space') {
+    spacePressed = false;
+    if (currentTool === 'select') {
+      canvas.classList.add('tool-select');
+      canvas.classList.remove('tool-pan');
+    }
   }
 });
 
 /* ═══════════════════════════════════════════════════════════
-   Update Selected Speaker
+   تحديث السماعة المحددة
    ═══════════════════════════════════════════════════════════ */
 function updateSelected() {
   if (!selectedPoint) return;
@@ -816,6 +986,13 @@ function updateSelected() {
   if (selectedPoint.isDelay) {
     selectedPoint.delayMs = parseInt($('delay_ms').value) || 0;
   }
+  if (selectedPoint.isMonitor) {
+    const mode = parseInt($('monitor_mode').value);
+    if (!isNaN(mode) && mode !== selectedPoint.angle) {
+      selectedPoint.angle = mode;
+      $('beam_angle').value = mode;
+    }
+  }
   $('sel_name').innerText = selectedPoint.name + ' · ' + selectedPoint.angle + '°';
   invalidateHeat(); draw(); updateKPI(); autosave();
 }
@@ -828,11 +1005,13 @@ function showBeamControls(p) {
   if (p.isLineArray) $('la_elements').value = p.elements;
   $('delayCtrl').style.display = p.isDelay ? 'block' : 'none';
   if (p.isDelay) $('delay_ms').value = p.delayMs || 0;
+  $('monitorCtrl').style.display = p.isMonitor ? 'block' : 'none';
+  if (p.isMonitor) $('monitor_mode').value = p.angle;
   $('beamControls').classList.add('on');
 }
 
 /* ═══════════════════════════════════════════════════════════
-   World Box for Open Field
+   World Box
    ═══════════════════════════════════════════════════════════ */
 function getWorldBox() {
   const depth = +$('field_depth').value || 120;
@@ -863,13 +1042,14 @@ function getWorldBox() {
     scale,
     width: widthPx,
     height: depthPx,
-    stageDepthPx: stageDPx
+    stageDepthPx: stageDPx,
+    x0: cx - widthPx / 2,
+    y0: cy - stageDPx,
+    W: widthPx,
+    H: stageDPx + depthPx
   };
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Event Profile Detection
-   ═══════════════════════════════════════════════════════════ */
 function getEventProfile() {
   const type = $('event_type').value;
   const depth = +$('field_depth').value;
@@ -886,7 +1066,7 @@ function getEventProfile() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Outdoor Smart Layout
+   التوزيع الذكي
    ═══════════════════════════════════════════════════════════ */
 function applySmartLayout() {
   pushHistory();
@@ -906,7 +1086,7 @@ function applySmartLayout() {
 function deployLineArraySystem(profile) {
   const b = getWorldBox();
   const depth = +$('field_depth').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const sW = +$('stage_w').value;
   const hangH = +$('hang_height').value;
   const stageHalfW = (sW * b.scale) / 2;
 
@@ -916,7 +1096,7 @@ function deployLineArraySystem(profile) {
 
   points.push({
     x: b.cx - stageHalfW - 25, y: b.cy + 30,
-    type: 'main', name: 'MLA212 Left',
+    type: 'main', name: 'MLA212 يسار',
     angle: 90 + toeIn, range: depth * b.scale * 0.95, rangeM: depth * 0.95,
     spl: 138, hAngle: 90, vAngle: 10, watt: 900,
     isLineArray: true, elements: elementsPerSide / 2,
@@ -924,7 +1104,7 @@ function deployLineArraySystem(profile) {
   });
   points.push({
     x: b.cx + stageHalfW + 25, y: b.cy + 30,
-    type: 'main', name: 'MLA212 Right',
+    type: 'main', name: 'MLA212 يمين',
     angle: 90 - toeIn, range: depth * b.scale * 0.95, rangeM: depth * 0.95,
     spl: 138, hAngle: 90, vAngle: 10, watt: 900,
     isLineArray: true, elements: elementsPerSide / 2,
@@ -949,12 +1129,12 @@ function deployLineArraySystem(profile) {
   for (let i = 0; i < sideCount; i++) {
     const yPos = b.cy + 40 + ((depth * b.scale * 0.5) / sideCount) * i;
     points.push({
-      x: b.cx - stageHalfW - 60, y: yPos, type: 'side', name: 'HD315A Left',
+      x: b.cx - stageHalfW - 60, y: yPos, type: 'side', name: 'HD315A يسار',
       angle: 45, range: 60 * b.scale, rangeM: 60,
       spl: 131, hAngle: 90, vAngle: 60, watt: 1000
     });
     points.push({
-      x: b.cx + stageHalfW + 60, y: yPos, type: 'side', name: 'HD315A Right',
+      x: b.cx + stageHalfW + 60, y: yPos, type: 'side', name: 'HD315A يمين',
       angle: 135, range: 60 * b.scale, rangeM: 60,
       spl: 131, hAngle: 90, vAngle: 60, watt: 1000
     });
@@ -972,7 +1152,7 @@ function deployLineArraySystem(profile) {
       points.push({
         x: b.cx + lateralOffset,
         y: b.cy + d * b.scale,
-        type: 'delay', name: 'Delay Tower #' + towerIdx,
+        type: 'delay', name: '🗼 برج تأخير #' + towerIdx,
         angle: 90, range: 60 * b.scale, rangeM: 60,
         spl: 133, hAngle: 90, vAngle: 60, watt: 1000,
         isDelay: true,
@@ -983,16 +1163,40 @@ function deployLineArraySystem(profile) {
     }
   }
 
-  const monCount = sW > 16 ? 8 : 6;
+  const monCount = sW > 16 ? 8 : sW > 10 ? 6 : 4;
   const monSpacing = (sW * b.scale * 0.85) / Math.max(1, monCount - 1);
   const monStartX = b.cx - (monSpacing * (monCount - 1)) / 2;
+  const monY = b.cy - b.stageDepthPx * 0.4;
+
   for (let i = 0; i < monCount; i++) {
     points.push({
       x: monStartX + monSpacing * i,
-      y: b.cy - 8,
-      type: 'sub', name: 'DB-15M 3G',
-      angle: 270, range: 120 * b.scale, rangeM: 120,
-      spl: 128, hAngle: 90, vAngle: 60, watt: 500
+      y: monY,
+      type: 'monitor',
+      name: '🎤 DB-15M 3G',
+      angle: 270,
+      range: 25 * b.scale, rangeM: 25,
+      spl: 128, hAngle: 90, vAngle: 40, watt: 500,
+      isMonitor: true,
+      monitorIndex: i + 1,
+      position: i < monCount / 2 ? 'downstage-left' : 'downstage-right'
+    });
+  }
+
+  if (monCount >= 6) {
+    points.push({
+      x: b.cx - sW * b.scale * 0.2, y: b.cy - b.stageDepthPx * 0.75,
+      type: 'monitor', name: '🎤 DB-15M 3G (وسط-يسار)',
+      angle: 270, range: 25 * b.scale, rangeM: 25,
+      spl: 128, hAngle: 90, vAngle: 40, watt: 500,
+      isMonitor: true, position: 'mid-left'
+    });
+    points.push({
+      x: b.cx + sW * b.scale * 0.2, y: b.cy - b.stageDepthPx * 0.75,
+      type: 'monitor', name: '🎤 DB-15M 3G (وسط-يمين)',
+      angle: 270, range: 25 * b.scale, rangeM: 25,
+      spl: 128, hAngle: 90, vAngle: 40, watt: 500,
+      isMonitor: true, position: 'mid-right'
     });
   }
 }
@@ -1005,13 +1209,13 @@ function deployPointSourceSystem(profile) {
 
   points.push({
     x: b.cx - stageHalfW - 20, y: b.cy + 30,
-    type: 'main', name: 'DB-25 NW Left',
+    type: 'main', name: 'DB-25 NW يسار',
     angle: 75, range: depth * b.scale * 0.9, rangeM: depth * 0.9,
     spl: 133, hAngle: 100, vAngle: 70, watt: 1000
   });
   points.push({
     x: b.cx + stageHalfW + 20, y: b.cy + 30,
-    type: 'main', name: 'DB-25 NW Right',
+    type: 'main', name: 'DB-25 NW يمين',
     angle: 105, range: depth * b.scale * 0.9, rangeM: depth * 0.9,
     spl: 133, hAngle: 100, vAngle: 70, watt: 1000
   });
@@ -1034,7 +1238,7 @@ function deployPointSourceSystem(profile) {
       const delayMs = (d / 343) * 1000;
       points.push({
         x: b.cx, y: b.cy + d * b.scale,
-        type: 'delay', name: 'Delay Tower #' + idx,
+        type: 'delay', name: '🗼 برج تأخير #' + idx,
         angle: 90, range: 50 * b.scale, rangeM: 50,
         spl: 130, hAngle: 100, vAngle: 60, watt: 700,
         isDelay: true,
@@ -1045,14 +1249,19 @@ function deployPointSourceSystem(profile) {
     }
   }
 
-  for (let i = 0; i < 4; i++) {
-    const spacing = (sW * b.scale * 0.8) / 3;
+  const monCount = 4;
+  for (let i = 0; i < monCount; i++) {
+    const spacing = (sW * b.scale * 0.8) / (monCount - 1);
     points.push({
       x: b.cx - (sW * b.scale * 0.4) + spacing * i,
-      y: b.cy - 8,
-      type: 'sub', name: 'DB-15M 3G',
-      angle: 270, range: 100 * b.scale, rangeM: 100,
-      spl: 128, hAngle: 90, vAngle: 60, watt: 500
+      y: b.cy - b.stageDepthPx * 0.4,
+      type: 'monitor',
+      name: '🎤 DB-15M 3G',
+      angle: 270,
+      range: 25 * b.scale, rangeM: 25,
+      spl: 128, hAngle: 90, vAngle: 40, watt: 500,
+      isMonitor: true,
+      monitorIndex: i + 1
     });
   }
 }
@@ -1074,10 +1283,22 @@ function deployConferenceSystem(profile) {
       });
     }
   }
+
+  for (let i = 0; i < 4; i++) {
+    const spacing = (width * b.scale * 0.3) / 3;
+    points.push({
+      x: b.cx - (width * b.scale * 0.15) + spacing * i,
+      y: b.cy - b.stageDepthPx * 0.4,
+      type: 'monitor', name: '🎤 DB-15M 3G',
+      angle: 270, range: 25 * b.scale, rangeM: 25,
+      spl: 128, hAngle: 90, vAngle: 40, watt: 500,
+      isMonitor: true, monitorIndex: i + 1
+    });
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Render Loop
+   حلقة الرسم
    ═══════════════════════════════════════════════════════════ */
 function loop(t) {
   animT += 0.02;
@@ -1089,55 +1310,65 @@ function loop(t) {
 function draw() {
   const Wc = canvas._logicalW || canvas.width;
   const Hc = canvas._logicalH || canvas.height;
+  const dpr = canvas._dpr || 1;
   const depth = +$('field_depth').value;
   const width = +$('audience_width').value;
   const sW = +$('stage_w').value;
   const sD = +$('stage_d').value;
 
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, Wc, Hc);
+
+  ctx.save();
+  ctx.translate(view.panX, view.panY);
+  ctx.scale(view.zoom, view.zoom);
 
   const b = getWorldBox();
   worldBox = b;
 
   drawFieldGround(b, width, depth);
-
   if (layers.grid) drawRadialGrid(b, depth, width);
-
   if (layers.heat && points.length) drawHeatmap(b);
-
   if (layers.boundary) drawBoundary(b);
 
   drawStage(b, sW, sD);
-
   if (layers.waves) drawWaves();
-
   if (layers.beams) points.forEach(p => drawBeam(p));
-
   drawWindArrowOnGround(b);
-
   points.forEach(p => drawSpeaker(p));
-
   drawDimensions(b, width, depth);
 
   if (cursorSPL !== null) {
+    const wTL = screenToWorld(0, 0);
+    const wBR = screenToWorld(Wc, Hc);
     ctx.strokeStyle = 'rgba(56,189,248,0.3)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1 / view.zoom;
+    ctx.setLineDash([4 / view.zoom, 4 / view.zoom]);
     ctx.beginPath();
-    ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, Hc);
-    ctx.moveTo(0, cursorY); ctx.lineTo(Wc, cursorY);
+    ctx.moveTo(cursorX, wTL.y); ctx.lineTo(cursorX, wBR.y);
+    ctx.moveTo(wTL.x, cursorY); ctx.lineTo(wBR.x, cursorY);
     ctx.stroke();
     ctx.setLineDash([]);
   }
+
+  ctx.restore();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Field Ground (semi-elliptical audience area)
-   ═══════════════════════════════════════════════════════════ */
 function drawFieldGround(b, width, depth) {
+  const r = 30;
+  const left = b.cx - b.width / 2;
+  const right = b.cx + b.width / 2;
+  const top = b.cy;
+  const bottom = b.cy + b.height;
+
   ctx.beginPath();
-  ctx.ellipse(b.cx, b.cy, width * b.scale / 2, depth * b.scale, 0, 0, Math.PI, false);
+  ctx.moveTo(left, top);
+  ctx.lineTo(right, top);
+  ctx.lineTo(right, bottom - r);
+  ctx.quadraticCurveTo(right, bottom, right - r, bottom);
+  ctx.lineTo(left + r, bottom);
+  ctx.quadraticCurveTo(left, bottom, left, bottom - r);
   ctx.closePath();
 
   const grad = ctx.createRadialGradient(b.cx, b.cy, 10, b.cx, b.cy, depth * b.scale);
@@ -1151,24 +1382,17 @@ function drawFieldGround(b, width, depth) {
   ctx.clip();
   for (let i = 0; i < noiseCount; i++) {
     ctx.fillStyle = `rgba(${34 + Math.random() * 30},${100 + Math.random() * 60},${40 + Math.random() * 40},${Math.random() * 0.15})`;
-    const angle = Math.random() * Math.PI;
-    const r = Math.random() * depth * b.scale;
-    const x = b.cx + Math.cos(angle) * (r * (width / 2) / depth);
-    const y = b.cy + Math.sin(angle) * r;
+    const x = left + Math.random() * b.width;
+    const y = top + Math.random() * b.height;
     ctx.fillRect(x, y, 1.5, 1.5);
   }
   ctx.restore();
 
   ctx.strokeStyle = 'rgba(34,197,94,0.3)';
   ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.ellipse(b.cx, b.cy, width * b.scale / 2, depth * b.scale, 0, 0, Math.PI, false);
   ctx.stroke();
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Radial Grid (rings every 10m)
-   ═══════════════════════════════════════════════════════════ */
 function drawRadialGrid(b, depth, width) {
   ctx.strokeStyle = 'rgba(56,189,248,0.08)';
   ctx.lineWidth = 1;
@@ -1196,18 +1420,9 @@ function drawRadialGrid(b, depth, width) {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Site Boundary (compliance circle)
-   ═══════════════════════════════════════════════════════════ */
 function drawBoundary(b) {
   const nd = +$('neighbor_dist').value || 300;
-  const depth = +$('field_depth').value;
-  const Wc = canvas._logicalW || canvas.width;
-  const Hc = canvas._logicalH || canvas.height;
-
-  const maxRadius = Math.min(Wc, Hc) * 0.48;
-  const radiusPx = Math.min(nd * b.scale, maxRadius);
-  const truncated = nd * b.scale > maxRadius;
+  const radiusPx = nd * b.scale;
 
   ctx.strokeStyle = 'rgba(168,85,247,0.35)';
   ctx.lineWidth = 2;
@@ -1218,37 +1433,24 @@ function drawBoundary(b) {
   ctx.setLineDash([]);
 
   const cond = getOutdoorConditions();
-  const nbAngle = cond.windDir;
-  const rad = (nbAngle + 180) * Math.PI / 180;
+  const rad = (cond.windDir + 180) * Math.PI / 180;
   const nx = b.cx + Math.cos(rad) * radiusPx;
   const ny = b.cy + Math.sin(rad) * radiusPx;
 
-  if (nx > 20 && nx < Wc - 20 && ny > 20 && ny < Hc - 20) {
-    ctx.fillStyle = '#a855f7';
-    ctx.beginPath();
-    ctx.arc(nx, ny, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
+  ctx.fillStyle = '#a855f7';
+  ctx.beginPath();
+  ctx.arc(nx, ny, 8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'center';
-    ctx.fillText('Neighbor', nx, ny - 14);
-  }
-
-  if (truncated) {
-    ctx.fillStyle = 'rgba(168,85,247,0.6)';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'left';
-    ctx.fillText('⭕ Neighbor boundary simplified (' + nd + 'm)', 20, Hc - 12);
-  }
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px Cairo';
+  ctx.textAlign = 'center';
+  ctx.fillText('جار · ' + nd + 'م', nx, ny - 14);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Stage
-   ═══════════════════════════════════════════════════════════ */
 function drawStage(b, sW, sD) {
   const stageW = sW * b.scale;
   const stageH = sD * b.scale;
@@ -1268,20 +1470,9 @@ function drawStage(b, sW, sD) {
   ctx.fillStyle = 'rgba(230,0,18,0.85)';
   ctx.font = 'bold 14px Cairo';
   ctx.textAlign = 'center';
-  ctx.fillText('STAGE', stX + stageW / 2, stY + stageH / 2 + 5);
-
-  ctx.fillStyle = '#38bdf8';
-  ctx.beginPath();
-  ctx.arc(stX - 20, stY + 20, 3, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(stX + stageW + 20, stY + 20, 3, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.fillText('المرحلة', stX + stageW / 2, stY + stageH / 2 + 5);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Beam
-   ═══════════════════════════════════════════════════════════ */
 function drawBeam(p) {
   if (!p.range) return;
   const ang = p.angle * Math.PI / 180;
@@ -1292,6 +1483,7 @@ function drawBeam(p) {
   if (p.type === 'main') { c0 = 'rgba(56,189,248,0.45)'; c1 = 'rgba(56,189,248,0)'; }
   else if (p.type === 'sub') { c0 = 'rgba(229,192,123,0.45)'; c1 = 'rgba(229,192,123,0)'; }
   else if (p.type === 'delay') { c0 = 'rgba(168,85,247,0.5)'; c1 = 'rgba(168,85,247,0)'; }
+  else if (p.type === 'monitor' || p.isMonitor) { c0 = 'rgba(245,158,11,0.35)'; c1 = 'rgba(245,158,11,0)'; }
   else { c0 = 'rgba(34,197,94,0.45)'; c1 = 'rgba(34,197,94,0)'; }
 
   const g = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, range);
@@ -1306,22 +1498,20 @@ function drawBeam(p) {
 
   if (p === selectedPoint) {
     ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([6, 4]);
+    ctx.lineWidth = 1.5 / view.zoom;
+    ctx.setLineDash([6 / view.zoom, 4 / view.zoom]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Waves
-   ═══════════════════════════════════════════════════════════ */
 function drawWaves() {
   points.forEach((p, i) => {
-    const maxR = p.type === 'main' ? 80 : p.type === 'sub' ? 55 : p.type === 'delay' ? 70 : 60;
+    const maxR = p.isMonitor ? 30 : p.type === 'main' ? 80 : p.type === 'sub' ? 55 : p.type === 'delay' ? 70 : 60;
     const c = p.type === 'main' ? '56,189,248'
             : p.type === 'sub' ? '229,192,123'
             : p.type === 'delay' ? '168,85,247'
+            : (p.type === 'monitor' || p.isMonitor) ? '245,158,11'
             : '34,197,94';
     for (let r = 0; r < 3; r++) {
       const off = (animT + r * 0.33 + i * 0.07) % 1;
@@ -1330,7 +1520,7 @@ function drawWaves() {
       ctx.beginPath();
       ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(${c},${alpha})`;
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.5 / view.zoom;
       ctx.shadowColor = `rgba(${c},${alpha * 0.7})`;
       ctx.shadowBlur = 8;
       ctx.stroke();
@@ -1339,9 +1529,6 @@ function drawWaves() {
   });
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Wind Arrow on Ground
-   ═══════════════════════════════════════════════════════════ */
 function drawWindArrowOnGround(b) {
   const cond = getOutdoorConditions();
   if (cond.windSpeed < 3) return;
@@ -1354,7 +1541,7 @@ function drawWindArrowOnGround(b) {
   const y1 = y0 + Math.sin(rad) * arrowLen;
 
   ctx.strokeStyle = `rgba(56,189,248,${Math.min(0.6, cond.windSpeed / 40)})`;
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2 / view.zoom;
   ctx.beginPath();
   ctx.moveTo(x0, y0);
   ctx.lineTo(x1, y1);
@@ -1369,7 +1556,7 @@ function drawWindArrowOnGround(b) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SPL Heatmap (Offscreen Cache)
+   خريطة SPL
    ═══════════════════════════════════════════════════════════ */
 function drawHeatmap(b) {
   const Wc = canvas._logicalW || canvas.width;
@@ -1382,15 +1569,14 @@ function drawHeatmap(b) {
     const hctx = heatCanvas.getContext('2d');
     hctx.clearRect(0, 0, Wc, Hc);
 
-    const step = isTouch ? 18 : 14;
-    for (let py = 0; py < Hc; py += step) {
-      for (let px = 0; px < Wc; px += step) {
-        const dx = px - b.cx, dy = py - b.cy;
-        if (dy < 0) continue;
-        const rx = b.width / 2, ry = b.height;
-        if (rx > 0 && ry > 0) {
-          if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
-        }
+    const step = isTouch ? 14 : 10;
+    const left = b.cx - b.width / 2;
+    const right = b.cx + b.width / 2;
+    const top = b.cy;
+    const bottom = b.cy + b.height;
+
+    for (let py = top; py < bottom; py += step) {
+      for (let px = left; px < right; px += step) {
         const spl = computeSPLAt(px, py);
         hctx.fillStyle = splColor(spl);
         hctx.fillRect(px, py, step, step);
@@ -1401,15 +1587,14 @@ function drawHeatmap(b) {
   ctx.drawImage(heatCanvas, 0, 0);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SPL Calculation — Outdoor Free-Field Physics
-   ═══════════════════════════════════════════════════════════ */
 function computeSPLAt(px, py) {
   if (!points.length) return 0;
   const cond = getOutdoorConditions();
   let totalPower = 0;
 
   points.forEach(p => {
+    if (p.isMonitor) return;
+
     const dx = px - p.x, dy = py - p.y;
     const dPx = Math.hypot(dx, dy);
     const dM = Math.max(1, dPx / (worldBox.scale || 1));
@@ -1432,11 +1617,8 @@ function computeSPLAt(px, py) {
 
     const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
     const airLoss = Math.max(0, airCoeff) * dM;
-
     const groundBoost = cond.groundRefl;
-
     const windEffect = computeWindEffect(p, px, py, cond);
-
     const laBonus = p.isLineArray ? 10 * Math.log10(Math.max(1, p.elements / 4)) : 0;
 
     const spl = (p.spl || 120) + atten - airLoss + groundBoost + windEffect + laBonus +
@@ -1445,13 +1627,9 @@ function computeSPLAt(px, py) {
   });
 
   const total = totalPower > 0 ? 10 * Math.log10(totalPower) : 0;
-
   return Math.max(total, cond.ambient - 3);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Wind Effect
-   ═══════════════════════════════════════════════════════════ */
 function computeWindEffect(p, px, py, cond) {
   if (cond.windSpeed < 3) return 0;
 
@@ -1460,7 +1638,6 @@ function computeWindEffect(p, px, py, cond) {
   const soundAngle = Math.atan2(dy, dx);
 
   const windToRad = (cond.windDir + 180) * Math.PI / 180;
-
   const proj = Math.cos(soundAngle - windToRad);
 
   const coeff = (cond.windSpeed - 3) * 0.0005;
@@ -1477,11 +1654,12 @@ function splColor(spl) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Speaker Rendering
+   رسم السماعات
    ═══════════════════════════════════════════════════════════ */
 function drawSpeaker(p) {
   if (p.isLineArray) drawLineArrayIcon(p);
   else if (p.isDelay) drawDelayTowerIcon(p);
+  else if (p.isMonitor) drawMonitorIcon(p);
   else drawRegularSpeakerIcon(p);
 }
 
@@ -1502,7 +1680,7 @@ function drawRegularSpeakerIcon(p) {
   ctx.fillStyle = sel ? '#fff' : color;
   ctx.fill();
   ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2 / view.zoom;
   ctx.stroke();
 
   ctx.beginPath();
@@ -1513,8 +1691,8 @@ function drawRegularSpeakerIcon(p) {
   if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'left';
-    ctx.fillText(p.name, p.x + 15, p.y + 3);
+    ctx.textAlign = 'right';
+    ctx.fillText(p.name, p.x - 15, p.y + 3);
   }
 }
 
@@ -1526,8 +1704,8 @@ function drawLineArrayIcon(p) {
 
   if (p.hangHeight && !isTouch) {
     ctx.strokeStyle = 'rgba(56,189,248,0.3)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 3]);
+    ctx.lineWidth = 1 / view.zoom;
+    ctx.setLineDash([3 / view.zoom, 3 / view.zoom]);
     ctx.beginPath();
     ctx.moveTo(p.x, p.y);
     ctx.lineTo(p.x, p.y - 40);
@@ -1536,7 +1714,7 @@ function drawLineArrayIcon(p) {
     ctx.fillStyle = 'rgba(56,189,248,0.7)';
     ctx.font = 'bold 9px Cairo';
     ctx.textAlign = 'center';
-    ctx.fillText(p.hangHeight + 'm', p.x, p.y - 45);
+    ctx.fillText(p.hangHeight + 'م', p.x, p.y - 45);
   }
 
   ctx.save();
@@ -1547,7 +1725,7 @@ function drawLineArrayIcon(p) {
     ctx.fillStyle = sel ? '#fff' : 'rgba(56,189,248,0.9)';
     ctx.fillRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
     ctx.strokeStyle = '#0d1117';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1 / view.zoom;
     ctx.strokeRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
   }
   ctx.restore();
@@ -1555,8 +1733,8 @@ function drawLineArrayIcon(p) {
   if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'left';
-    ctx.fillText(p.name + ' (' + p.elements + ')', p.x + 16, p.y - totalH / 2 + 4);
+    ctx.textAlign = 'right';
+    ctx.fillText(p.name + ' (' + p.elements + ')', p.x - 16, p.y - totalH / 2 + 4);
   }
 }
 
@@ -1579,7 +1757,7 @@ function drawDelayTowerIcon(p) {
   ctx.fillStyle = sel ? '#fff' : '#a855f7';
   ctx.fill();
   ctx.strokeStyle = '#fff';
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2 / view.zoom;
   ctx.stroke();
 
   if (layers.labels && !isTouch) {
@@ -1593,34 +1771,105 @@ function drawDelayTowerIcon(p) {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Dimensions
-   ═══════════════════════════════════════════════════════════ */
+function drawMonitorIcon(p) {
+  const sel = p === selectedPoint;
+  const size = isTouch ? 14 : 11;
+
+  if (sel) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, size + 8, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(245,158,11,0.2)';
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate((p.angle - 270) * Math.PI / 180);
+
+  ctx.beginPath();
+  ctx.moveTo(-size, -size * 0.6);
+  ctx.lineTo(size, -size * 0.9);
+  ctx.lineTo(size, size * 0.4);
+  ctx.lineTo(-size, size * 0.7);
+  ctx.closePath();
+
+  const grad = ctx.createLinearGradient(-size, -size, size, size);
+  grad.addColorStop(0, sel ? '#fff' : '#fbbf24');
+  grad.addColorStop(1, sel ? '#fff' : '#d97706');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = sel ? '#fff' : '#000';
+  ctx.lineWidth = 1.5 / view.zoom;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(0, -size * 0.15, size * 0.35, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 1 / view.zoom;
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 1.5 / view.zoom;
+  ctx.beginPath();
+  ctx.moveTo(0, size * 0.75);
+  ctx.lineTo(0, -size * 0.9);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, -size * 1.1);
+  ctx.lineTo(-2, -size * 0.75);
+  ctx.moveTo(0, -size * 1.1);
+  ctx.lineTo(2, -size * 0.75);
+  ctx.stroke();
+
+  ctx.restore();
+
+  if (sel) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 25 * worldBox.scale, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(245,158,11,0.4)';
+    ctx.lineWidth = 1.5 / view.zoom;
+    ctx.setLineDash([4 / view.zoom, 4 / view.zoom]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  if (layers.labels && !isTouch) {
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = 'bold 9px Cairo';
+    ctx.textAlign = 'center';
+    ctx.fillText('🎤 M' + (p.monitorIndex || ''), p.x, p.y - size - 4);
+  }
+}
+
 function drawDimensions(b, width, depth) {
   ctx.fillStyle = '#fff';
   ctx.font = 'bold 12px Cairo';
   ctx.textAlign = 'center';
-  ctx.fillText(depth + ' m depth', b.cx, b.cy + depth * b.scale + 24);
-  ctx.fillText(width + ' m width', b.cx, b.cy - b.stageDepthPx - 14);
+  ctx.fillText(depth + ' م عمق', b.cx, b.cy + depth * b.scale + 24);
+  ctx.fillText(width + ' م عرض', b.cx, b.cy - b.stageDepthPx - 14);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Side Wind Indicator
-   ═══════════════════════════════════════════════════════════ */
 function updateWindIndicator() {
   const cond = getOutdoorConditions();
-  const ind = $('windIndicator');
-  if (cond.windSpeed < 3) { ind.classList.remove('on'); return; }
-  ind.classList.add('on');
+  const box = $('windBox');
+  const label = $('windLabel');
   const arrow = $('windArrow');
+  if (!box || !label || !arrow) return;
+  if (cond.windSpeed < 3) {
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = 'flex';
   arrow.style.transform = `rotate(${cond.windDir}deg)`;
-  $('windLabel').textContent = cond.windSpeed + ' km/h · ' + cond.windDir + '°';
+  label.textContent = cond.windSpeed + ' km/h · ' + cond.windDir + '°';
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Unified Pointer Events
+   Pointer Events
    ═══════════════════════════════════════════════════════════ */
-function getPos(e) {
+function getScreenPos(e) {
   const r = canvas.getBoundingClientRect();
   const Wc = canvas._logicalW || canvas.width;
   const Hc = canvas._logicalH || canvas.height;
@@ -1630,26 +1879,16 @@ function getPos(e) {
   };
 }
 
-function clampToField(x, y) {
-  const b = worldBox;
-  const Wc = canvas._logicalW || canvas.width;
-  const Hc = canvas._logicalH || canvas.height;
-  return {
-    x: Math.max(20, Math.min(Wc - 20, x)),
-    y: Math.max(b.cy - b.stageDepthPx + 8, Math.min(b.cy + b.height + 20, y))
-  };
-}
-
 const pointerState = {
   isDown: false, isDragging: false,
   startX: 0, startY: 0, startTime: 0,
   longPressTimer: null, activeId: null
 };
 
-function hitRadius() { return isTouch ? 26 : 16; }
+function hitRadiusWorld() { return (isTouch ? 26 : 16) / view.zoom; }
 
 function findHit(pos) {
-  let best = null, bestDist = hitRadius();
+  let best = null, bestDist = hitRadiusWorld();
   for (const p of points) {
     const d = Math.hypot(p.x - pos.x, p.y - pos.y);
     if (d < bestDist) { bestDist = d; best = p; }
@@ -1657,31 +1896,43 @@ function findHit(pos) {
   return best;
 }
 
-function addNewSpeaker(pos) {
+function isPanMode() {
+  return currentTool === 'pan' || spacePressed || panning.active;
+}
+
+function addNewSpeaker(worldPos) {
   pushHistory();
   let sel;
-  if (currentMode === 'main' || currentMode === 'side') sel = $('sel_main');
-  else if (currentMode === 'delay') sel = $('sel_main');
-  else sel = $('sel_extra');
+  if (currentMode === 'monitor' || currentMode === 'sub') sel = $('sel_extra');
+  else sel = $('sel_main');
 
   const val = sel.value;
   const cat = CATALOG[val] || { spl: 120, hAngle: 100, vAngle: 60, watt: 500 };
+
+  const isMonitorProduct = (val === 'DB-15M 3G' || val === 'MTL-152') || currentMode === 'monitor';
+  const actualType = isMonitorProduct ? 'monitor' : currentMode;
+
   const newP = {
-    x: pos.x, y: pos.y,
-    type: currentMode,
-    name: (currentMode === 'side' ? 'Side: ' : currentMode === 'delay' ? 'Delay: ' : '') + val,
-    angle: 90,
-    range: 100 * worldBox.scale, rangeM: 100,
+    x: worldPos.x, y: worldPos.y,
+    type: actualType,
+    name: (currentMode === 'side' ? 'جانبي: ' : currentMode === 'delay' ? '🗼 تأخير: ' : isMonitorProduct ? '🎤 مونيتور: ' : '') + val,
+    angle: isMonitorProduct ? 270 : 90,
+    range: isMonitorProduct ? 25 * worldBox.scale : 100 * worldBox.scale,
+    rangeM: isMonitorProduct ? 25 : 100,
     spl: cat.spl, hAngle: cat.hAngle, vAngle: cat.vAngle, watt: cat.watt,
-    isLineArray: val.startsWith('MLA') || val.startsWith('M10')
+    isLineArray: val.startsWith('MLA') || val.startsWith('M10'),
+    isMonitor: isMonitorProduct
   };
+
   if (newP.isLineArray) newP.elements = 8;
+
   if (currentMode === 'delay') {
     newP.isDelay = true;
-    const distFromStage = Math.max(1, (pos.y - worldBox.cy) / worldBox.scale);
+    const distFromStage = Math.max(1, (worldPos.y - worldBox.cy) / worldBox.scale);
     newP.distanceFromStage = distFromStage;
     newP.delayMs = Math.round((distFromStage / 343) * 1000);
   }
+
   points.push(newP);
   selectedPoint = newP;
   showBeamControls(newP);
@@ -1694,7 +1945,7 @@ function beginLongPress(p) {
   pointerState.longPressTimer = setTimeout(() => {
     pointerState.longPressTimer = null;
     if (pointerState.isDragging || !p) return;
-    if (confirm('Delete ' + p.name + '?')) {
+    if (confirm('حذف ' + p.name + '؟')) {
       pushHistory();
       points = points.filter(q => q !== p);
       selectedPoint = null;
@@ -1713,24 +1964,56 @@ function cancelLongPress() {
 }
 
 canvas.addEventListener('pointerdown', e => {
-  if (e.button !== undefined && e.button !== 0) return;
+  if (e.button !== undefined && e.button === 2) return;
   e.preventDefault();
+
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (activePointers.size === 2) {
+    dragTarget = null;
+    cancelLongPress();
+    const pts = Array.from(activePointers.values());
+    const r = canvas.getBoundingClientRect();
+    pinchState.active = true;
+    pinchState.startDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    pinchState.startZoom = view.zoom;
+    pinchState.startCenterScreen = {
+      x: ((pts[0].x + pts[1].x) / 2 - r.left) * ((canvas._logicalW || canvas.width) / r.width),
+      y: ((pts[0].y + pts[1].y) / 2 - r.top) * ((canvas._logicalH || canvas.height) / r.height)
+    };
+    pinchState.startPan = { x: view.panX, y: view.panY };
+    return;
+  }
+
   try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
   pointerState.activeId = e.pointerId;
 
-  const pos = getPos(e);
-  const hit = findHit(pos);
+  const s = getScreenPos(e);
+  const w = screenToWorld(s.x, s.y);
 
   pointerState.isDown = true;
   pointerState.isDragging = false;
-  pointerState.startX = pos.x;
-  pointerState.startY = pos.y;
+  pointerState.startX = s.x;
+  pointerState.startY = s.y;
   pointerState.startTime = Date.now();
+
+  const middleButton = e.button === 1;
+  if (middleButton || isPanMode()) {
+    panning.active = true;
+    panning.startX = s.x;
+    panning.startY = s.y;
+    panning.startPanX = view.panX;
+    panning.startPanY = view.panY;
+    canvas.classList.add('tool-pan');
+    return;
+  }
+
+  const hit = findHit(w);
 
   if (hit) {
     selectedPoint = hit;
     dragTarget = hit;
-    dragOffset = { x: pos.x - hit.x, y: pos.y - hit.y };
+    dragOffset = { x: w.x - hit.x, y: w.y - hit.y };
     showBeamControls(hit);
     beginLongPress(hit);
   } else {
@@ -1740,10 +2023,47 @@ canvas.addEventListener('pointerdown', e => {
 });
 
 canvas.addEventListener('pointermove', e => {
-  const pos = getPos(e);
+  if (activePointers.has(e.pointerId)) {
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }
+
+  if (activePointers.size === 2 && pinchState.active) {
+    const pts = Array.from(activePointers.values());
+    const r = canvas.getBoundingClientRect();
+    const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, pinchState.startZoom * (dist / pinchState.startDist)));
+
+    const centerScreen = {
+      x: ((pts[0].x + pts[1].x) / 2 - r.left) * ((canvas._logicalW || canvas.width) / r.width),
+      y: ((pts[0].y + pts[1].y) / 2 - r.top) * ((canvas._logicalH || canvas.height) / r.height)
+    };
+
+    const startWorld = {
+      x: (pinchState.startCenterScreen.x - pinchState.startPan.x) / pinchState.startZoom,
+      y: (pinchState.startCenterScreen.y - pinchState.startPan.y) / pinchState.startZoom
+    };
+
+    view.zoom = newZoom;
+    view.panX = centerScreen.x - startWorld.x * view.zoom;
+    view.panY = centerScreen.y - startWorld.y * view.zoom;
+
+    updateZoomLabel();
+    heatDirty = true;
+    draw();
+    return;
+  }
+
+  const s = getScreenPos(e);
+
+  if (panning.active) {
+    view.panX = panning.startPanX + (s.x - panning.startX);
+    view.panY = panning.startPanY + (s.y - panning.startY);
+    draw();
+    return;
+  }
 
   if (pointerState.isDown) {
-    const moved = Math.hypot(pos.x - pointerState.startX, pos.y - pointerState.startY);
+    const moved = Math.hypot(s.x - pointerState.startX, s.y - pointerState.startY);
     if (moved > 8) {
       pointerState.isDragging = true;
       cancelLongPress();
@@ -1751,9 +2071,9 @@ canvas.addEventListener('pointermove', e => {
   }
 
   if (dragTarget && pointerState.isDown) {
-    const c = clampToField(pos.x - dragOffset.x, pos.y - dragOffset.y);
-    dragTarget.x = c.x;
-    dragTarget.y = c.y;
+    const w = screenToWorld(s.x, s.y);
+    dragTarget.x = w.x - dragOffset.x;
+    dragTarget.y = w.y - dragOffset.y;
     if (dragTarget.isDelay) {
       const distFromStage = Math.max(1, (dragTarget.y - worldBox.cy) / worldBox.scale);
       dragTarget.distanceFromStage = distFromStage;
@@ -1761,15 +2081,31 @@ canvas.addEventListener('pointermove', e => {
       if (selectedPoint === dragTarget) $('delay_ms').value = dragTarget.delayMs;
     }
     invalidateHeat(); draw();
-  } else if (!pointerState.isDown && !isTouch) {
-    cursorSPL = computeSPLAt(pos.x, pos.y);
-    cursorX = pos.x; cursorY = pos.y;
+  } else if (!pointerState.isDown && !isTouch && !isPanMode()) {
+    const w = screenToWorld(s.x, s.y);
+    cursorSPL = computeSPLAt(w.x, w.y);
+    cursorX = w.x; cursorY = w.y;
     $('cursorSPL').textContent = cursorSPL.toFixed(1) + ' dB';
   }
 });
 
 canvas.addEventListener('pointerup', e => {
+  activePointers.delete(e.pointerId);
+
+  if (activePointers.size < 2) pinchState.active = false;
+
   try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+
+  if (panning.active) {
+    panning.active = false;
+    if (currentTool === 'select' && !spacePressed) {
+      canvas.classList.add('tool-select');
+      canvas.classList.remove('tool-pan');
+    }
+    draw();
+    return;
+  }
+
   const wasDown = pointerState.isDown;
   const wasDrag = pointerState.isDragging;
   const hadDragTarget = !!dragTarget;
@@ -1779,9 +2115,10 @@ canvas.addEventListener('pointerup', e => {
   if (wasDown && !wasDrag && !hadDragTarget) {
     const dt = Date.now() - pointerState.startTime;
     if (dt < 500) {
-      const pos = getPos(e);
-      const hit = findHit(pos);
-      if (!hit) addNewSpeaker(pos);
+      const s = getScreenPos(e);
+      const w = screenToWorld(s.x, s.y);
+      const hit = findHit(w);
+      if (!hit) addNewSpeaker(w);
     }
   }
 
@@ -1796,9 +2133,12 @@ canvas.addEventListener('pointerup', e => {
   draw();
 });
 
-canvas.addEventListener('pointercancel', () => {
+canvas.addEventListener('pointercancel', e => {
+  activePointers.delete(e.pointerId);
+  if (activePointers.size < 2) pinchState.active = false;
   cancelLongPress();
   dragTarget = null;
+  panning.active = false;
   pointerState.isDown = false;
   pointerState.isDragging = false;
   pointerState.activeId = null;
@@ -1813,8 +2153,9 @@ canvas.addEventListener('contextmenu', e => e.preventDefault());
 canvas.addEventListener('mousedown', e => {
   if (e.button === 2) {
     e.preventDefault();
-    const pos = getPos(e);
-    const hit = findHit(pos);
+    const s = getScreenPos(e);
+    const w = screenToWorld(s.x, s.y);
+    const hit = findHit(w);
     if (hit) {
       pushHistory();
       points = points.filter(p => p !== hit);
@@ -1825,8 +2166,15 @@ canvas.addEventListener('mousedown', e => {
   }
 });
 
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const s = getScreenPos(e);
+  const factor = e.deltaY > 0 ? 0.88 : 1.14;
+  zoomAt(s.x, s.y, view.zoom * factor);
+}, { passive: false });
+
 /* ═══════════════════════════════════════════════════════════
-   KPI + Compliance
+   KPI
    ═══════════════════════════════════════════════════════════ */
 function computeUniformity() {
   if (!points.length) return null;
@@ -1835,9 +2183,6 @@ function computeUniformity() {
   const step = isTouch ? 70 : 50;
   for (let py = b.cy + 20; py < b.cy + b.height - 20; py += step) {
     for (let px = b.cx - b.width / 2 + 20; px < b.cx + b.width / 2 - 20; px += step) {
-      const dx = px - b.cx, dy = py - b.cy;
-      const rx = b.width / 2, ry = b.height;
-      if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
       samples.push(computeSPLAt(px, py));
     }
   }
@@ -1846,39 +2191,34 @@ function computeUniformity() {
 }
 
 function computeAmpChannels() {
-  let ch = 0;
+  let mainCh = 0, monitorCh = 0;
   points.forEach(p => {
-    if (p.isLineArray) ch += Math.ceil(p.elements / 3);
-    else if (p.watt >= 1000) ch += 1;
-    else ch += 0.5;
+    if (p.isMonitor) monitorCh += 0.5;
+    else if (p.isLineArray) mainCh += Math.ceil(p.elements / 3);
+    else if (p.watt >= 1000) mainCh += 1;
+    else mainCh += 0.5;
   });
-  return Math.ceil(ch);
+  const m = Math.ceil(mainCh);
+  const mo = Math.ceil(monitorCh);
+  return { main: m, monitor: mo, total: m + mo };
 }
 
 function computeGenerator() {
   let totalW = 0;
-  points.forEach(p => {
-    totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
-  });
+  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
   const kVA = (totalW / 0.7 * 1.3) / 1000;
-  const kVA_withStage = kVA * 1.5;
-  return Math.ceil(kVA_withStage * 1.1);
+  return Math.ceil(kVA * 1.5 * 1.1);
 }
 
 function updateEnvironmentalInfo() {
   const cond = getOutdoorConditions();
-  const groundName = { grass: 'Grass', concrete: 'Concrete', water: 'Water', sand: 'Sand' }[cond.ground] || cond.ground;
-
+  const groundName = { grass: 'عشب', concrete: 'خرسانة', water: 'ماء', sand: 'رمل' }[cond.ground] || cond.ground;
   $('infoGroundRefl').textContent = '+' + cond.groundRefl + ' dB (' + groundName + ')';
-
   const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
-  const loss100 = Math.max(0, airCoeff) * 100;
-  $('infoAirLoss').textContent = loss100.toFixed(2) + ' dB @ 100m';
-
-  const maxWind = Math.max(0, (cond.windSpeed - 3) * 0.0005 * 100);
+  $('infoAirLoss').textContent = (Math.max(0, airCoeff) * 100).toFixed(2) + ' dB @ 100م';
   $('infoWind').textContent = cond.windSpeed < 3
-    ? 'Disabled (low wind)'
-    : '± ' + maxWind.toFixed(2) + ' dB @ 100m';
+    ? 'معطّل (رياح ضعيفة)'
+    : '± ' + Math.max(0, (cond.windSpeed - 3) * 0.0005 * 100).toFixed(2) + ' dB @ 100م';
 }
 
 function computeNeighborSPL() {
@@ -1890,6 +2230,7 @@ function computeNeighborSPL() {
 
   let totalPower = 0;
   points.forEach(p => {
+    if (p.isMonitor) return;
     const dx = nx - p.x, dy = ny - p.y;
     const dM = Math.max(1, Math.hypot(dx, dy) / (worldBox.scale || 1));
     const angleTo = Math.atan2(dy, dx) * 180 / Math.PI;
@@ -1909,7 +2250,6 @@ function computeNeighborSPL() {
                 10 * Math.log10(Math.max(0.0001, directivityGain));
     totalPower += Math.pow(10, spl / 10);
   });
-
   return totalPower > 0 ? 10 * Math.log10(totalPower) : 0;
 }
 
@@ -1917,8 +2257,12 @@ function updateKPI() {
   updateEnvironmentalInfo();
   updateWindIndicator();
 
+  const monitorCount = points.filter(p => p.isMonitor).length;
+  $('kpiMonV').textContent = monitorCount;
+
   let totalW = 0, maxSpl = 0;
   points.forEach(p => {
+    if (p.isMonitor) return;
     totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
     maxSpl = Math.max(maxSpl, p.spl || 0);
   });
@@ -1931,9 +2275,6 @@ function updateKPI() {
     const step = isTouch ? 55 : 40;
     for (let py = b.cy + 20; py < b.cy + b.height - 20; py += step) {
       for (let px = b.cx - b.width / 2 + 20; px < b.cx + b.width / 2 - 20; px += step) {
-        const dx = px - b.cx, dy = py - b.cy;
-        const rx = b.width / 2, ry = b.height;
-        if ((dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) > 1) continue;
         const spl = computeSPLAt(px, py);
         total++;
         if (spl >= target - 5 && spl <= target + 10) good++;
@@ -1946,50 +2287,50 @@ function updateKPI() {
   const gen = computeGenerator();
   const neighborSPL = computeNeighborSPL();
   const cond = getOutdoorConditions();
+  const ampData = computeAmpChannels();
 
-  $('kpiSpkV').textContent = points.length;
+  $('kpiSpkV').textContent = points.filter(p => !p.isMonitor).length;
   $('kpiPwrV').textContent = totalW.toLocaleString();
   $('kpiCovV').textContent = points.length ? coverage.toFixed(0) + '%' : '—';
   $('kpiSplV').textContent = points.length ? maxSpl + ' dB' : '—';
   $('kpiDelayV').textContent = towersCount;
   $('kpiGenV').textContent = points.length ? gen : '—';
+  $('kpiAmpV').textContent = points.length ? ampData.total : '—';
 
   $('kpiCov').className = 'kpi ' + (!points.length ? '' : coverage >= 70 ? 'ok' : 'warn');
   $('kpiSpl').className = 'kpi ' + (!points.length ? '' : maxSpl >= 130 ? 'ok' : 'warn');
   $('kpiGen').className = 'kpi ' + (!points.length ? '' : 'ok');
+  $('kpiAmp').className = 'kpi ' + (!points.length ? '' : 'ok');
+  $('kpiMon').className = 'kpi ' + (monitorCount === 0 ? 'warn' : 'mon');
 
   $('infoNeighborSPL').textContent = points.length ? neighborSPL.toFixed(1) + ' dB' : '—';
   const overLimit = neighborSPL > cond.neighborLimit;
-  const rowCompliance = $('rowCompliance');
   $('infoCompliance').textContent = points.length
-    ? (overLimit ? '❌ Over by ' + (neighborSPL - cond.neighborLimit).toFixed(1) + ' dB' : '✅ Compliant')
+    ? (overLimit ? '❌ تجاوز بـ ' + (neighborSPL - cond.neighborLimit).toFixed(1) + ' dB' : '✅ مطابق')
     : '—';
-  rowCompliance.className = 'info-row ' + (overLimit ? 'bad' : 'ok');
-
-  const rowNeighbor = $('rowNeighbor');
-  rowNeighbor.className = 'info-row ' + (overLimit ? 'bad' : 'ok');
+  $('rowCompliance').className = 'info-row ' + (overLimit ? 'bad' : 'ok');
+  $('rowNeighbor').className = 'info-row ' + (overLimit ? 'bad' : 'ok');
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Engineering Decision Builder
+   القرار الهندسي
    ═══════════════════════════════════════════════════════════ */
 function buildEngineeringDecision() {
   const profile = getEventProfile();
   const depth = +$('field_depth').value;
   const width = +$('audience_width').value;
-  const sW = +$('stage_w').value;
   const cond = getOutdoorConditions();
 
   const mainCount = points.filter(p => p.type === 'main').length;
   const sideCount = points.filter(p => p.type === 'side').length;
   const subCount = points.filter(p => p.type === 'sub' && p.name.includes('218')).length;
-  const monitorCount = points.filter(p => p.name.includes('15M') || p.name.includes('152')).length;
+  const monitorCount = points.filter(p => p.isMonitor).length;
   const delayCount = points.filter(p => p.isDelay).length;
   const hasLineArray = points.some(p => p.isLineArray);
   const maxDelay = Math.max(0, ...points.filter(p => p.isDelay).map(p => p.delayMs || 0));
 
   let totalW = 0;
-  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
+  points.forEach(p => { if (!p.isMonitor) totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
   const ampRec = Math.ceil(totalW * 1.3);
   const gen = computeGenerator();
 
@@ -2004,43 +2345,46 @@ function buildEngineeringDecision() {
   const hAngle = mainSpk ? mainSpk.hAngle : 90;
   const vAngle = mainSpk ? mainSpk.vAngle : 60;
 
-  const eventName = profile.type === 'concert' ? 'Concert'
-                  : profile.type === 'festival' ? 'Open Festival'
-                  : profile.type === 'conference' ? 'Outdoor Conference'
-                  : 'Wedding';
+  const eventName = profile.type === 'concert' ? 'حفل جماهيري'
+                  : profile.type === 'festival' ? 'مهرجان مفتوح'
+                  : profile.type === 'conference' ? 'مؤتمر صوتي'
+                  : 'حفل زفاف';
 
   const windDeviation = cond.windSpeed >= 3
     ? ((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2)
     : '0.00';
 
   return {
-    eventText: `System designed for a (<b>${eventName}</b>) event in an open space with audience depth <b>${depth}m</b>, width <b>${width}m</b>, and hang height <b>${cond.hangHeight}m</b>.`,
+    eventText: `تم تصميم النظام لفعالية (<b>${eventName}</b>) في مساحة مفتوحة بعمق جمهور <b>${depth}م</b> وعرض <b>${width}م</b>، وارتفاع تعليق <b>${cond.hangHeight}م</b>.`,
     systemText: hasLineArray
-      ? `<b>Line Array</b> architecture with <b>${mainCount}</b> main clusters and <b>${sideCount}</b> side fills${delayCount ? ` plus <b>${delayCount}</b> delay elements` : ''}.`
-      : `<b>Point Source</b> architecture with <b>${mainCount}</b> main speakers${delayCount ? ` and <b>${delayCount}</b> delay elements` : ''}.`,
-    subText: `<b>${subCount}</b> high-power subwoofers${points.some(p => p.isCardioid) ? ' in <b>Cardioid</b> configuration to reduce rear energy' : ''}.`,
-    monitorText: `<b>${monitorCount}</b> stage monitors.`,
+      ? `بنية <b>Line Array</b> مع <b>${mainCount}</b> عنقود رئيسي و<b>${sideCount}</b> حشو جانبي${delayCount ? ` و<b>${delayCount}</b> عنصر تأخير` : ''}.`
+      : `بنية <b>Point Source</b> مع <b>${mainCount}</b> سماعة رئيسية${delayCount ? ` و<b>${delayCount}</b> عنصر تأخير` : ''}.`,
+    subText: `<b>${subCount}</b> صبة بقدرة عالية${points.some(p => p.isCardioid) ? ' بترتيب <b>Cardioid</b> لتقليل الطاقة خلف المسرح' : ''}.`,
+    monitorText: monitorCount > 0
+      ? `<b>${monitorCount}</b> مونيتور مسرح من نوع <b>DB-15M 3G</b> (500W، SPL 128 dB) موزّعة على ${monitorCount >= 6 ? '3 مناطق' : 'منطقة أمامية واحدة'}، باتجاه المؤدين (270°).`
+      : '<b>⚠️ لم يتم توزيع مونيتورات المسرح — يوصى بإضافة 4–8 وحدات DB-15M 3G.</b>',
     delayText: delayCount
-      ? `<b>${delayCount}</b> delay tower/element with max delay <b>${maxDelay}ms</b> (distance ${(maxDelay / 1000 * 343).toFixed(0)}m from stage).`
-      : 'No delay towers required (depth under 40m).',
-    powerText: `Total power: <b>${totalW.toLocaleString()} W</b> · Recommended amplification: <b>${ampRec.toLocaleString()} W</b> (30% headroom).`,
-    generatorText: `Recommended generator: <b>${gen} kVA</b> (covers audio + lighting + FOH with safety margin).`,
-    envText: `Ground: <b>${{grass:'Grass',concrete:'Concrete',water:'Water',sand:'Sand'}[cond.ground]}</b> (+${cond.groundRefl} dB reflection) · Wind: <b>${cond.windSpeed} km/h</b> · Temperature: <b>${cond.temperature}°C</b> · Humidity: <b>${cond.humidity}%</b>.`,
+      ? `<b>${delayCount}</b> برج/عنصر تأخير بزمن أقصى <b>${maxDelay}ms</b> (مسافة ${(maxDelay / 1000 * 343).toFixed(0)}م من المسرح).`
+      : 'لا حاجة لأبراج تأخير (العمق أقل من 40م).',
+    powerText: `القدرة الإجمالية (FOH): <b>${totalW.toLocaleString()} واط</b> · المضخم الموصى به: <b>${ampRec.toLocaleString()} واط</b> (هامش 30%).`,
+    generatorText: `المولد الموصى به: <b>${gen} kVA</b> (يغطي الصوت + المونيتورات + الإضاءة + FOH بهامش أمان).`,
+    envText: `الأرض: <b>${{grass:'عشب',concrete:'خرسانة',water:'ماء',sand:'رمل'}[cond.ground]}</b> (+${cond.groundRefl} dB انعكاس) · الرياح: <b>${cond.windSpeed} km/h</b> · الحرارة: <b>${cond.temperature}°C</b> · الرطوبة: <b>${cond.humidity}%</b>.`,
     windText: cond.windSpeed < 3
-      ? 'Wind is weak — negligible effect.'
-      : `Predicted sound deviation: <b>${windDeviation} dB</b> at max distance.`,
+      ? 'الرياح ضعيفة — لا تأثير يُذكر.'
+      : `انحراف الصوت المتوقع: <b>${windDeviation} dB</b> عند أقصى مسافة.`,
     complianceText: complianceOK
-      ? `✅ SPL at neighbor (${cond.neighborDist}m): <b>${neighborSPL.toFixed(1)} dB</b> — compliant with ${cond.neighborLimit} dB limit.`
-      : `❌ SPL at neighbor (${cond.neighborDist}m): <b>${neighborSPL.toFixed(1)} dB</b> — exceeds ${cond.neighborLimit} dB limit by <b>${(neighborSPL - cond.neighborLimit).toFixed(1)} dB</b>. Recommendations: reduce SPL, redirect speakers, or use Cardioid Subs.`,
+      ? `✅ SPL عند الجار (${cond.neighborDist}م): <b>${neighborSPL.toFixed(1)} dB</b> — مطابق للحد ${cond.neighborLimit} dB.`
+      : `❌ SPL عند الجار (${cond.neighborDist}م): <b>${neighborSPL.toFixed(1)} dB</b> — يتجاوز الحد ${cond.neighborLimit} dB بمقدار <b>${(neighborSPL - cond.neighborLimit).toFixed(1)} dB</b>. يوصى بـ: تقليل SPL، توجيه السماعات بعيداً، أو استخدام Cardioid Subs.`,
     alternativeText: hasLineArray
-      ? 'Point Source + Delays can be used for smaller events.'
-      : 'Line Array can be used to reduce cabinet count and improve uniformity.',
-    ipText: `Recommended <b>IP54+</b> for speakers and <b>IP65</b> for connectors and amplifiers against dust and moisture.`,
+      ? 'يمكن استخدام Point Source + Delays للفعاليات الأصغر.'
+      : 'يمكن استخدام Line Array لتقليل عدد الكبائن وتحسين التوحيد.',
+    ipText: `يوصى بـ <b>IP54+</b> للسماعات و<b>IP65</b> للوصلات والمضخمات.`,
     spl: splFar,
     neighborSPL,
     complianceOK,
     maxDelay,
     delayCount,
+    monitorCount,
     hAngle, vAngle,
     totalW, ampRec, gen,
     cond
@@ -2048,10 +2392,10 @@ function buildEngineeringDecision() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Report Generation
+   التقرير
    ═══════════════════════════════════════════════════════════ */
 function generateReport() {
-  if (!points.length) { alert('Add speakers first'); return; }
+  if (!points.length) { alert('أضف سماعات أولاً'); return; }
 
   const decision = buildEngineeringDecision();
   const cond = decision.cond;
@@ -2060,98 +2404,108 @@ function generateReport() {
 
   const counts = {};
   points.forEach(p => {
-    const key = p.isLineArray ? p.name + ' (' + p.elements + ' units)' : p.name;
+    const key = p.isLineArray ? p.name + ' (' + p.elements + ' وحدات)' : p.name;
     counts[key] = (counts[key] || 0) + 1;
   });
 
   $('rep_ground_val').textContent = '+' + cond.groundRefl + ' dB';
   $('rep_wind_val').textContent = cond.windSpeed >= 3
     ? '± ' + ((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2) + ' dB'
-    : 'Disabled';
+    : 'معطّل';
   $('rep_neighbor_val').textContent = decision.neighborSPL.toFixed(1) + ' dB';
-  $('rep_towers_val').textContent = decision.delayCount;
-  $('repDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  $('rep_mon_val').textContent = decision.monitorCount;
+  $('repDate').textContent = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const uni = computeUniformity();
+  const ampData = computeAmpChannels();
+
   $('repKPI').innerHTML = `
-    <div class="kpi-card"><h4>Area (half-ellipse)</h4><span>${(Math.PI * depth * width / 4).toFixed(0)} m²</span></div>
-    <div class="kpi-card"><h4>Speaker Count</h4><span>${points.length}</span></div>
-    <div class="kpi-card ok"><h4>Total Power</h4><span>${decision.totalW.toLocaleString()} W</span></div>
-    <div class="kpi-card ${decision.complianceOK ? 'ok' : 'bad'}"><h4>Noise Compliance</h4><span>${decision.complianceOK ? 'Compliant' : 'Exceeded'}</span></div>
+    <div class="kpi-card"><h4>المساحة (نصف بيضاوي)</h4><span>${(Math.PI * depth * width / 4).toFixed(0)} م²</span></div>
+    <div class="kpi-card"><h4>عدد السماعات</h4><span>${points.filter(p => !p.isMonitor).length}</span></div>
+    <div class="kpi-card mon"><h4>🎤 مونيتورات</h4><span>${decision.monitorCount} DB-15M 3G</span></div>
+    <div class="kpi-card ${decision.complianceOK ? 'ok' : 'bad'}"><h4>امتثال الضجيج</h4><span>${decision.complianceOK ? 'مطابق' : 'متجاوز'}</span></div>
   `;
 
-  const groundName = { grass: 'Grass', concrete: 'Concrete', water: 'Water', sand: 'Sand' }[cond.ground] || cond.ground;
+  const groundName = { grass: 'عشب', concrete: 'خرسانة', water: 'ماء', sand: 'رمل' }[cond.ground] || cond.ground;
   const airCoeff = 0.004 + (cond.temperature / 100) * 0.003 - (cond.humidity / 100) * 0.001;
-  const airLoss = Math.max(0, airCoeff).toFixed(4);
   $('envSection').innerHTML = `
     <div class="env-box">
-      <p><strong>🌱 Ground Type:</strong> ${groundName} — reflection <b>+${cond.groundRefl} dB</b>
-         ${cond.ground === 'concrete' || cond.ground === 'water' ? '(hard surface: full reflection)' : '(absorptive surface: negligible reflection)'}</p>
-      <p><strong>💨 Wind:</strong> <b>${cond.windSpeed} km/h</b> at <b>${cond.windDir}°</b> —
-         ${cond.windSpeed < 3 ? 'negligible effect' : `max gain/loss <b>${((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2)} dB</b> at ${depth}m`}</p>
-      <p><strong>🌡️ Temperature:</strong> ${cond.temperature}°C —
-         ${cond.temperature > 30 ? 'rising thermal layers may refract sound' : cond.temperature < 10 ? 'cold air improves propagation' : 'moderate'}</p>
-      <p><strong>💧 Humidity:</strong> ${cond.humidity}% — air absorption coefficient <b>${airLoss} dB/m</b></p>
-      <p><strong>🔊 Ambient Noise:</strong> ${cond.ambient} dB — minimum audible threshold for audience</p>
-      <p><strong>📏 Total Air Loss:</strong> <b>${(Math.max(0, airCoeff) * depth).toFixed(2)} dB</b> at max distance (${depth}m)</p>
-      <p><strong>⛰️ Hang Height:</strong> ${cond.hangHeight}m — ${
-        cond.hangHeight < 8 ? '⚠️ relatively low, may cause sightline obstruction'
-        : cond.hangHeight > 16 ? '✅ high, excellent distribution'
-        : '✅ suitable'
-      }</p>
+      <p><strong>🌱 نوع الأرض:</strong> ${groundName} — انعكاس <b>+${cond.groundRefl} dB</b></p>
+      <p><strong>💨 الرياح:</strong> <b>${cond.windSpeed} km/h</b> باتجاه <b>${cond.windDir}°</b> —
+         ${cond.windSpeed < 3 ? 'لا تأثير' : `خسارة/كسب أقصى <b>${((cond.windSpeed - 3) * 0.0005 * depth).toFixed(2)} dB</b> عند ${depth}م`}</p>
+      <p><strong>🌡️ الحرارة:</strong> ${cond.temperature}°C · <strong>💧 الرطوبة:</strong> ${cond.humidity}%</p>
+      <p><strong>📏 خسارة الهواء الإجمالية:</strong> <b>${(Math.max(0, airCoeff) * depth).toFixed(2)} dB</b> عند ${depth}م</p>
+      <p><strong>⛰️ ارتفاع التعليق:</strong> ${cond.hangHeight}م</p>
     </div>
   `;
 
   const overBy = decision.neighborSPL - cond.neighborLimit;
   $('complianceSection').innerHTML = `
     <div class="comp-box">
-      <p><strong>🎯 Neighbor Distance:</strong> ${cond.neighborDist} m</p>
-      <p><strong>📊 SPL at Neighbor:</strong>
+      <p><strong>🎯 مسافة الجار:</strong> ${cond.neighborDist} م</p>
+      <p><strong>📊 SPL عند الجار:</strong>
          <span style="font-size:16px;font-weight:900;color:${decision.complianceOK ? '#16a34a' : '#dc2626'}">${decision.neighborSPL.toFixed(1)} dB</span></p>
-      <p><strong>⚖️ Legal Limit:</strong> ${cond.neighborLimit} dB</p>
-      <p><strong>${decision.complianceOK ? '✅ Status:' : '❌ Status:'}</strong>
+      <p><strong>⚖️ الحد القانوني:</strong> ${cond.neighborLimit} dB</p>
+      <p><strong>${decision.complianceOK ? '✅ الحالة:' : '❌ الحالة:'}</strong>
          ${decision.complianceOK
-           ? `Compliant — safety margin ${(-overBy).toFixed(1)} dB`
-           : `Exceeded by ${overBy.toFixed(1)} dB`}</p>
-      ${!decision.complianceOK ? `
-        <p style="margin-top:10px;padding:10px;background:#fee2e2;border-radius:8px;color:#991b1b">
-          <strong>⚠️ Recommendations:</strong>
-          Reduce overall SPL by ${overBy.toFixed(1)} dB ·
-          Use Cardioid Subs to cut rear energy ·
-          Redirect Line Arrays away from neighbor ·
-          Or reduce active sub count after midnight.
-        </p>` : ''}
+           ? `مطابق — هامش أمان ${(-overBy).toFixed(1)} dB`
+           : `تجاوز بمقدار ${overBy.toFixed(1)} dB`}</p>
     </div>
   `;
 
-  $('boqSection').innerHTML = `
-    <div class="decision-box">
-      <h3 style="border:none;padding:0;color:#0c4a6e;font-size:15px;margin-bottom:10px">📘 Engineering Decision Summary</h3>
-      <p>${decision.eventText}</p>
-      <p><strong>System Architecture:</strong> ${decision.systemText}</p>
-      <p><strong>Low Frequencies:</strong> ${decision.subText}</p>
-      <p><strong>Stage Monitoring:</strong> ${decision.monitorText}</p>
-      <p><strong>🗼 Delay System:</strong> ${decision.delayText}</p>
-      <p><strong>Power &amp; Amplification:</strong> ${decision.powerText}</p>
-      <p><strong>⚡ Electrical Power:</strong> ${decision.generatorText}</p>
-      <p><strong>🌤️ Environmental Conditions:</strong> ${decision.envText}</p>
-      <p><strong>💨 Wind Effect:</strong> ${decision.windText}</p>
-      <p><strong>⚖️ Compliance:</strong> ${decision.complianceText}</p>
-      <p><strong>💧 Protection:</strong> ${decision.ipText}</p>
-      <p><strong>Alternative Scenario:</strong> ${decision.alternativeText}</p>
+  const monitors = points.filter(p => p.isMonitor);
+  $('monitorSection').innerHTML = monitors.length ? `
+    <h3 style="border-right:5px solid #f59e0b;padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🎤 منظومة مونيتورات المسرح</h3>
+    <div class="mon-box">
+      <p><strong>🔢 عدد المونيتورات:</strong> <b>${monitors.length}</b> وحدة <b>DB-15M 3G</b></p>
+      <p><strong>⚡ القدرة الإجمالية:</strong> <b>${(monitors.reduce((s, m) => s + m.watt, 0)).toLocaleString()} واط</b></p>
+      <p><strong>📊 SPL لكل مونيتور:</strong> <b>128 dB</b> · زاوية 90° × 40°</p>
+      <p><strong>🎚️ قنوات المضخم:</strong> <b>${Math.ceil(monitors.length / 2)} قناة AUX</b></p>
     </div>
-
-    <h3 style="border-left:5px solid var(--red);padding-left:12px;margin:22px 0 12px;font-size:16px;color:#111">📦 Bill of Quantities (BOQ)</h3>
     <div class="rep-table-wrap">
       <table class="rep-table">
-        <thead><tr><th>Product</th><th>Qty</th><th>Category</th></tr></thead>
+        <thead><tr><th>#</th><th>الموقع</th><th>الاتجاه</th><th>SPL</th><th>Watt</th></tr></thead>
+        <tbody>
+          ${monitors.map((m, i) => `<tr>
+            <td>M${i + 1}</td>
+            <td>${m.position || 'downstage'}</td>
+            <td>${m.angle}°</td>
+            <td>${m.spl} dB</td>
+            <td>${m.watt}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  ` : '';
+
+  $('boqSection').innerHTML = `
+    <div class="decision-box">
+      <h3 style="border:none;padding:0;color:#0c4a6e;font-size:15px;margin-bottom:10px">📘 ملخص القرار الهندسي</h3>
+      <p>${decision.eventText}</p>
+      <p><strong>بنية النظام:</strong> ${decision.systemText}</p>
+      <p><strong>الترددات المنخفضة:</strong> ${decision.subText}</p>
+      <p><strong>🎤 مراقبة المسرح:</strong> ${decision.monitorText}</p>
+      <p><strong>🗼 منظومة التأخير:</strong> ${decision.delayText}</p>
+      <p><strong>القدرة والتضخيم:</strong> ${decision.powerText}</p>
+      <p><strong>⚡ الطاقة:</strong> ${decision.generatorText}</p>
+      <p><strong>🌤️ الظروف:</strong> ${decision.envText}</p>
+      <p><strong>💨 الرياح:</strong> ${decision.windText}</p>
+      <p><strong>⚖️ الامتثال:</strong> ${decision.complianceText}</p>
+      <p><strong>💧 الحماية:</strong> ${decision.ipText}</p>
+      <p><strong>🎚️ قنوات المضخم:</strong> FOH: <b>${ampData.main}</b> · مونيتورات: <b>${ampData.monitor}</b> · الإجمالي: <b>${ampData.total}</b></p>
+    </div>
+
+    <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">📦 جدول الكميات (BOQ)</h3>
+    <div class="rep-table-wrap">
+      <table class="rep-table">
+        <thead><tr><th>المنتج</th><th>الكمية</th><th>الفئة</th></tr></thead>
         <tbody>
           ${Object.entries(counts).map(([name, qty]) => {
-            const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' units)' : p.name) === name);
-            const cat = sample.type === 'main' ? 'Main System'
-                      : sample.type === 'delay' ? 'Delay'
-                      : sample.type === 'sub' ? (sample.name.includes('218') ? 'Subwoofer' : 'Monitor')
-                      : 'Side Fill';
+            const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' وحدات)' : p.name) === name);
+            const cat = (sample.isMonitor || sample.type === 'monitor') ? '🎤 مونيتور مسرح'
+                      : sample.type === 'main' ? 'النظام الرئيسي'
+                      : sample.type === 'delay' ? '🗼 برج تأخير'
+                      : sample.type === 'sub' ? (sample.name.includes('218') ? '🔊 صبة' : 'مراقبة')
+                      : '🌐 حشو جانبي';
             return `<tr><td><b>${name}</b></td><td>${qty}</td><td>${cat}</td></tr>`;
           }).join('')}
         </tbody>
@@ -2163,8 +2517,8 @@ function generateReport() {
     <table class="rep-table">
       <thead>
         <tr>
-          <th>#</th><th>Product</th><th>X (m)</th><th>Y (m)</th>
-          <th>Angle</th><th>Range (m)</th><th>SPL</th><th>Watt</th><th>Notes</th>
+          <th>#</th><th>المنتج</th><th>X (م)</th><th>Y (م)</th>
+          <th>الاتجاه</th><th>المدى (م)</th><th>SPL</th><th>Watt</th><th>ملاحظات</th>
         </tr>
       </thead>
       <tbody>
@@ -2172,8 +2526,9 @@ function generateReport() {
           const xM = ((p.x - worldBox.cx) / worldBox.scale).toFixed(1);
           const yM = ((p.y - worldBox.cy) / worldBox.scale).toFixed(1);
           const watt = p.isLineArray ? (p.watt * p.elements) : p.watt;
-          const note = p.isDelay ? `Delay ${p.delayMs}ms`
-                     : p.isLineArray ? `${p.elements} elements`
+          const note = p.isMonitor ? `مونيتور M${p.monitorIndex || ''}`
+                     : p.isDelay ? `تأخير ${p.delayMs}ms`
+                     : p.isLineArray ? `${p.elements} عنصر`
                      : p.isCardioid ? 'Cardioid'
                      : '—';
           return `<tr>
@@ -2199,7 +2554,7 @@ function generateReport() {
 function closeReport() { $('reportPage').style.display = 'none'; }
 
 /* ═══════════════════════════════════════════════════════════
-   Save / Load / Draft
+   حفظ / فتح
    ═══════════════════════════════════════════════════════════ */
 function saveMapPNG() {
   const link = document.createElement('a');
@@ -2248,7 +2603,12 @@ function applySettings(s) {
 }
 
 function saveProjectJSON() {
-  const data = { points, settings: getSettings(), version: '2026.1-outdoor' };
+  const data = {
+    points,
+    settings: getSettings(),
+    view: { zoom: view.zoom, panX: view.panX, panY: view.panY },
+    version: '2026.4-outdoor-fixed'
+  };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -2265,11 +2625,13 @@ function loadProjectJSON(e) {
       const data = JSON.parse(evt.target.result);
       points = Array.isArray(data.points) ? data.points : [];
       applySettings(data.settings);
+      view.zoom = 1; view.panX = 0; view.panY = 0;
+      updateZoomLabel();
       selectedPoint = null;
       $('beamControls').classList.remove('on');
       setupCanvasSize();
       invalidateHeat(); draw(); updateKPI(); autosave();
-    } catch (err) { alert('Invalid file'); }
+    } catch (err) { alert('ملف غير صالح'); }
   };
   reader.readAsText(file);
   e.target.value = '';
@@ -2277,40 +2639,48 @@ function loadProjectJSON(e) {
 
 function autosave() {
   try {
-    localStorage.setItem('motivity_outdoor_draft', JSON.stringify({
-      points, settings: getSettings(), ts: Date.now()
+    localStorage.setItem('motivity_outdoor_draft_v2', JSON.stringify({
+      points, settings: getSettings(),
+      ts: Date.now()
     }));
   } catch (_) {}
 }
 
 function restoreDraft() {
   try {
-    const raw = localStorage.getItem('motivity_outdoor_draft');
+    // نقبل المفتاح الجديد والقديم
+    let raw = localStorage.getItem('motivity_outdoor_draft_v2');
+    if (!raw) raw = localStorage.getItem('motivity_outdoor_draft');
     if (!raw) return false;
     const data = JSON.parse(raw);
     if (!data.points || !data.points.length) return false;
     points = data.points;
     applySettings(data.settings);
+    // 🆕 دائماً نبدأ من 100% — يحل مشكلة "الرسم خارج الشاشة"
+    view.zoom = 1;
+    view.panX = 0;
+    view.panY = 0;
     return true;
   } catch (_) { return false; }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Debounce
-   ═══════════════════════════════════════════════════════════ */
 const debouncedUpdate = (() => {
   let t;
   return () => {
     clearTimeout(t);
     t = setTimeout(() => {
       setupCanvasSize();
+      view.zoom = 1;
+      view.panX = 0;
+      view.panY = 0;
+      updateZoomLabel();
       invalidateHeat(); draw(); updateKPI(); autosave();
     }, 150);
   };
 })();
 
 /* ═══════════════════════════════════════════════════════════
-   Auto Canvas Sizing (responsive + HiDPI)
+   حجم Canvas
    ═══════════════════════════════════════════════════════════ */
 function setupCanvasSize() {
   const wrap = $('canvasWrap');
@@ -2344,8 +2714,6 @@ function setupCanvasSize() {
   canvas.width = Math.floor(logicalW * dpr);
   canvas.height = Math.floor(logicalH * dpr);
 
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
   canvas._logicalW = logicalW;
   canvas._logicalH = logicalH;
   canvas._dpr = dpr;
@@ -2354,9 +2722,6 @@ function setupCanvasSize() {
   heatDirty = true;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Resize
-   ═══════════════════════════════════════════════════════════ */
 let resizeTimer = null;
 function handleResize() {
   clearTimeout(resizeTimer);
@@ -2369,18 +2734,28 @@ function handleResize() {
 window.addEventListener('resize', handleResize);
 window.addEventListener('orientationchange', () => setTimeout(handleResize, 250));
 
-/* ═══════════════════════════════════════════════════════════
-   Boot
-   ═══════════════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
+  // 🆕 دائماً نبدأ بـ view افتراضي
+  view.zoom = 1; view.panX = 0; view.panY = 0;
+
   setupCanvasSize();
+  updateZoomLabel();
 
   const restored = restoreDraft();
-  if (restored) { invalidateHeat(); draw(); updateKPI(); }
-  else applySmartLayout();
+  if (restored) {
+    view.zoom = 1; view.panX = 0; view.panY = 0;
+    updateZoomLabel();
+    invalidateHeat(); draw(); updateKPI();
+  } else {
+    applySmartLayout();
+  }
 
   setTimeout(() => {
     setupCanvasSize();
+    if (!restored) {
+      view.zoom = 1; view.panX = 0; view.panY = 0;
+    }
+    updateZoomLabel();
     invalidateHeat(); draw(); updateKPI();
   }, 100);
 
