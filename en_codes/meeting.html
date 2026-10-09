@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Motivity AI — Elite Engineering v5.7</title>
+<title>Motivity AI — Elite Engineering v5.8</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--gold:#f59e0b;--green:#22c55e;--border:#30363d;--purple:#a855f7;--cyan:#06b6d4;--sidebar-w:380px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
@@ -171,7 +171,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 
 <aside class="sidebar" id="sidebar">
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Collapse panel">◀</button>
-  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.7 · Conference Complete</div></div>
+  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.8 · Conference Complete</div></div>
 
   <div class="tabs">
     <div class="tab active" data-tab="acoustic" onclick="switchTab('acoustic')">🔊 Acoustic</div>
@@ -420,7 +420,6 @@ if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D
   };
 }
 
-/* ============ SPEAKERS ============ */
 var SPEAKERS = {
   'At-08':  { name:'At-08',  pwr:250, angle:100, sens:97, q:5.60 },
   'At-06':  { name:'At-06',  pwr:100, angle:90,  sens:96, q:6.83 },
@@ -434,7 +433,6 @@ var SPEAKERS = {
   'Cs-06':  { name:'Cs-06',  pwr:100, angle:80,  sens:96, q:7.69 }
 };
 
-/* ============ CONFERENCE HOSTS ============ */
 var CONF_HOSTS = {
   'MT1000S': { name:'MT1000S', type:'basic',    desc:'Basic Discussion (7 modes)', maxUnits:60,  power:20, features:['7 speech modes','Power-off memory','RS232'] },
   'MT2000S': { name:'MT2000S', type:'camera',   desc:'Camera Tracking + USB',      maxUnits:60,  power:25, features:['4 cameras','USB recording','4.3" screen'] },
@@ -445,7 +443,6 @@ var CONF_HOSTS = {
   'G-T50':   { name:'G-T50',   type:'5g',       desc:'5G Converged Unlimited',     maxUnits:999, power:60, features:['WiFi 5G','AES-128','Dual CPU'] }
 };
 
-/* ============ CONFERENCE CHAIRS ============ */
 var CONF_CHAIRS = {
   'MT380VC': { name:'MT380VC', type:'basic',      power:0, display:'—',        desc:'Embedded Basic' },
   'MT880VC': { name:'MT880VC', type:'basic',      power:2, display:'2.4"',     desc:'Desktop + 2 speakers' },
@@ -458,7 +455,6 @@ var CONF_CHAIRS = {
   'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5" Touch', desc:'5G Premium Complete' }
 };
 
-/* ============ CONFERENCE DELEGATES ============ */
 var CONF_DELEGATES = {
   'MT380VD': { name:'MT380VD', power:0, desc:'Embedded' },
   'MT880VD': { name:'MT880VD', power:2, desc:'Desktop 2.4"' },
@@ -471,7 +467,6 @@ var CONF_DELEGATES = {
   'G-T54W':  { name:'G-T54W',  power:3, desc:'5G Premium' }
 };
 
-/* ============ ACCESSORIES ============ */
 var CONF_ACCESSORIES = {
   'AMIX10 II': { name:'AMIX10 II', power:30,   desc:'Smart Mixer 8ch + DSP + 2" screen' },
   'GW5020':    { name:'GW5020',    power:200,  desc:'Central Charger 20 USB ports' },
@@ -500,7 +495,6 @@ var KITS = {
   'G8PS-30': { name:'G8PS-30', desc:'30m cable' }
 };
 
-/* ============ STATE ============ */
 var canvas, ctx, vArea;
 var PX_PER_M = 25;
 var zoom = 1, offsetX = 0, offsetY = 0;
@@ -543,7 +537,6 @@ function toggleSidebar() {
   setTimeout(function(){ resizeCanvas(); markDirty(); }, 320);
 }
 
-/* ============ ACOUSTIC ENGINE ============ */
 function calcRT60(L, W, H, alpha) { var V = L*W*H, S = 2*(L*W+L*H+W*H); return 0.161 * V / Math.max(0.01, S*alpha + 4*0.001*V); }
 function calcCriticalDistance(Q, L, W, H, RT60) { return 0.057 * Math.sqrt(Q * L * W * H / Math.max(0.01, RT60)); }
 function calcRoomConstant(L, W, H, alpha) { var S = 2*(L*W+L*H+W*H); return S * alpha / Math.max(0.01, 1 - alpha); }
@@ -841,7 +834,6 @@ function updateKPI() {
   renderWarnings();
 }
 
-/* ============ RENDER ============ */
 function render() {
   var cfg = readConfig();
   var scale = PX_PER_M;
@@ -1535,7 +1527,6 @@ function printReport() {
   else doPrint();
 }
 
-/* ============ EVENTS ============ */
 var debouncedUpdate = debounce(function() { updateKPI(); markDirty(); pushHistory(); }, 150);
 var inputIds = ['dim_l','dim_w','dim_h','earH','spkPerSide','cQty','dQty','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','camCount','camFOV'];
 for (var i = 0; i < inputIds.length; i++) { (function(id) { var el = $(id); if (el) el.addEventListener('input', debouncedUpdate); })(inputIds[i]); }
@@ -1582,13 +1573,12 @@ function updateCursorInfo(e) {
   $('cursorDist').textContent = d.toFixed(1) + ' m';
 }
 
-/* ============ UNDO / SAVE / LOAD ============ */
 function getState() {
   var ids = ['projName','engName','clientName','siteLoc','projRef','roomMode','roomType','dim_l','dim_w','dim_h','earH','spkModel','spkPerSide','cQty','dQty','confMode','confHost','confChair','confDelegate','confExtMic','confMixer','audioDSP','powerSeq','interpLang','interpUnits','irReceivers','irEmitters','podiumW','podiumD','screenW','screenType','camCount','camFOV'];
   var s = {};
   for (var i = 0; i < ids.length; i++) { var el = $(ids[i]); if (el) s[ids[i]] = el.value; }
-  var checks = ['useCharger','useFeedback','useEq','confExtMicCheck','showPodium','showScreen','showCameras('','showRack'];
-  for (var c = 0cursor; c < checks.lengthDist; c++) { var el2 = $(').checks[c]); if (el2)text s[checks[c]] = el2.checked; }
+  var checks = ['useCharger','useFeedback','useEq','confExtMicCheck','showPodium','showScreen','showCameras','showRack'];
+  for (var c = 0; c < checks.length; c++) { var el2 = $(checks[c]); if (el2) s[checks[c]] = el2.checked; }
   return s;
 }
 function applyState(s) {
@@ -1619,12 +1609,12 @@ document.addEventListener('keydown', function(e) {
 });
 function saveProject() {
   try {
-    localStorage.setItem('motivity_v57_en', JSON.stringify({ state: getState(), opts: opts }));
+    localStorage.setItem('motivity_v58_en', JSON.stringify({ state: getState(), opts: opts }));
     pushWarning('ok', '✅ Saved', 3000);
   } catch (e) { pushWarning('critical', 'Save failed', 3000); }
 }
 function loadProject() {
-  var raw = localStorage.getItem('motivity_v57_en') || localStorage.getItem('motivity_v57_ar');
+  var raw = localStorage.getItem('motivity_v58_en') || localStorage.getItem('motivity_v57_en');
   if (!raw) { pushWarning('warn', 'No saved project found', 3000); return; }
   try {
     var data = JSON.parse(raw);
@@ -1635,7 +1625,6 @@ function loadProject() {
   } catch (err) { pushWarning('critical', 'Read error', 3000); }
 }
 
-/* ============ REPORT ============ */
 function generateReport() {
   var cfg = readConfig();
   var total = cfg.perSide * 2, totalW = cfg.spk.pwr * total, totalMic = cfg.cQty + cfg.dQty;
@@ -1759,7 +1748,6 @@ function generateReport() {
   $('reportModal').style.display = 'block';
 }
 
-/* ============ TOUCH ============ */
 var touchState = { mode:null, startX:0, startY:0, startDist:0, startZoom:1, startOffsetX:0, startOffsetY:0 };
 function handleTouchStart(e) {
   if (e.touches.length === 1) {
@@ -1837,7 +1825,7 @@ function bootApp() {
     ctx = canvas.getContext('2d');
     vArea = document.getElementById('vArea');
     if (!canvas || !ctx || !vArea) { showError('Init', 'Canvas not found'); return; }
-    console.log('🚀 Motivity v5.7 EN boot · mobile:', isMobile);
+    console.log('🚀 Motivity v5.8 EN boot · mobile:', isMobile);
 
     populateHosts();
     if ($('confChair').options.length) {
@@ -1860,7 +1848,7 @@ function bootApp() {
       updateCursorInfo(e);
     });
     vArea.addEventListener('mouseup', function() { isPanning = false; vArea.style.cursor = ''; });
-    vArea.addEventListener('mouseleave', function() { isPanning = false; vArea.style.cursor = ''; var ci = $('cursorSPL'); if (ci) { ci.textContent = '—'; $('cursorSTI').textContent = '—'; $Content = '—'; } });
+    vArea.addEventListener('mouseleave', function() { isPanning = false; vArea.style.cursor = ''; var ci = $('cursorSPL'); if (ci) { ci.textContent = '—'; $('cursorSTI').textContent = '—'; $('cursorDist').textContent = '—'; } });
     vArea.addEventListener('wheel', function(e) { e.preventDefault(); zoom = clamp(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), 0.3, 4); markDirty(); }, { passive: false });
     vArea.addEventListener('touchstart', handleTouchStart, { passive: true });
     vArea.addEventListener('touchmove', handleTouchMove, { passive: false });
