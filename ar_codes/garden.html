@@ -2,18 +2,37 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
 <title>موتيفيتي - نظام تصميم الحدائق الصوتية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--red:#e60012;--blue:#38bdf8;--gold:#f59e0b;--bg:#0b0e14;--panel:#161b22;--card:#21262d;--bd:#30363d;--mu:#8b949e}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:#fff;display:flex;min-height:100vh;overflow:hidden}
+:root{
+  --red:#e60012;--blue:#38bdf8;--gold:#f59e0b;
+  --bg:#0b0e14;--panel:#161b22;--card:#21262d;--bd:#30363d;--mu:#8b949e;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--bg);color:#fff;
+  display:flex;min-height:100vh;min-height:100dvh;
+  overflow:hidden;overscroll-behavior:none;
+}
 
 /* ═══ الشريط الجانبي ═══ */
 .sidebar{
   width:400px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
-  padding:22px;border-left:3px solid var(--red);height:100vh;position:sticky;top:0;
-  overflow-y:auto;flex-shrink:0;box-shadow:-8px 0 40px rgba(0,0,0,.5);
+  padding:22px;border-left:3px solid var(--red);
+  height:100vh;height:100dvh;position:sticky;top:0;
+  overflow-y:auto;flex-shrink:0;
+  box-shadow:-8px 0 40px rgba(0,0,0,.5);
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding-top:calc(22px + var(--safe-t));
+  padding-bottom:calc(22px + var(--safe-b));
 }
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
@@ -27,40 +46,91 @@ body{background:var(--bg);color:#fff;display:flex;min-height:100vh;overflow:hidd
 h3{font-size:12px;color:var(--blue);margin-bottom:12px;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:8px;flex-direction:row-reverse;justify-content:flex-end}
 h3::before{content:'';width:3px;height:14px;background:var(--red);border-radius:2px}
 label{font-size:11px;color:var(--mu);display:block;margin-top:10px;font-weight:600}
-input,select{width:100%;padding:11px 12px;background:#0a0e13;color:#fff;border:1px solid #30363d;border-radius:8px;margin-top:5px;font-family:inherit;font-size:13px;transition:.2s}
+input,select{width:100%;padding:12px 12px;background:#0a0e13;color:#fff;border:1px solid #30363d;border-radius:8px;margin-top:5px;font-family:inherit;font-size:14px;transition:.2s}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.15)}
+input[type="number"]{direction:ltr;text-align:center}
 
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}
-.kpi .v{font-size:18px;font-weight:900;color:var(--blue)}
+.kpi .v{font-size:18px;font-weight:900;color:var(--blue);direction:ltr}
 .kpi .l{font-size:9.5px;color:var(--mu);margin-top:2px}
 .kpi.ok .v{color:#22c55e}
 .kpi.warn .v{color:var(--gold)}
 
-.btn{border:none;padding:14px;width:100%;border-radius:10px;font-weight:900;cursor:pointer;transition:.3s;font-family:inherit;font-size:13px;letter-spacing:.3px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn{border:none;padding:14px;width:100%;border-radius:10px;font-weight:900;cursor:pointer;transition:.3s;font-family:inherit;font-size:13px;letter-spacing:.3px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
 .btn-smart{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 15px rgba(56,189,248,.3)}
 .btn-smart:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(56,189,248,.5)}
+.btn-smart:active{transform:translateY(0)}
 .btn-report{background:linear-gradient(135deg,#e60012,#ff2e40);color:#fff;box-shadow:0 4px 15px rgba(230,0,18,.35)}
 .btn-report:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(230,0,18,.5)}
+.btn-report:active{transform:translateY(0)}
 .btn-reset{background:#2a2f36;color:#ff4d4d;border:1px solid #444;margin-top:8px}
 .btn-reset:hover{background:#ff4d4d;color:#fff}
 
 /* ═══ العرض الرئيسي ═══ */
-.main-view{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);padding:20px;position:relative;overflow:hidden}
-canvas{background:#050505;border-radius:16px;box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.05);max-width:100%;max-height:calc(100vh - 100px);display:block}
+.main-view{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);
+  padding:20px;position:relative;overflow:hidden;min-width:0;min-height:0;
+}
+.canvas-wrap{
+  width:100%;height:100%;max-width:1300px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+canvas{
+  background:#050505;border-radius:16px;
+  box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.05);
+  display:block;width:100%;height:100%;max-width:100%;max-height:100%;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  object-fit:contain;
+}
 
-.toolbar{position:absolute;top:20px;left:20px;display:flex;gap:6px;background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:6px}
-.toolbar button{background:transparent;color:#ccc;border:none;width:36px;height:36px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;transition:.2s;font-family:inherit}
+.toolbar{
+  position:absolute;top:20px;left:20px;display:flex;gap:6px;
+  background:rgba(22,27,34,.85);backdrop-filter:blur(12px);
+  border:1px solid #30363d;border-radius:10px;padding:6px;z-index:5;
+}
+.toolbar button{
+  background:transparent;color:#ccc;border:none;
+  width:40px;height:40px;border-radius:6px;cursor:pointer;
+  font-size:16px;font-weight:700;transition:.2s;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+}
 .toolbar button:hover{background:#30363d;color:#fff}
 .toolbar button.on{background:var(--blue);color:#000}
 
-.hint-bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(22,27,34,.85);backdrop-filter:blur(12px);border:1px solid #30363d;border-radius:10px;padding:7px 16px;font-size:11.5px;color:var(--mu)}
+.hint-bar{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  background:rgba(22,27,34,.85);backdrop-filter:blur(12px);
+  border:1px solid #30363d;border-radius:10px;
+  padding:8px 16px;font-size:11.5px;color:var(--mu);
+  white-space:nowrap;max-width:calc(100% - 40px);overflow:hidden;text-overflow:ellipsis;
+  z-index:5;
+}
 .hint-bar b{color:var(--blue)}
 
+/* ═══ زر القائمة للهواتف ═══ */
+#menuBtn{
+  display:none;position:fixed;top:calc(12px + var(--safe-t));right:calc(12px + var(--safe-r));
+  z-index:200;width:48px;height:48px;
+  border-radius:13px;background:var(--red);color:#fff;border:none;
+  font-size:22px;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.6);cursor:pointer;
+}
+#menuBtn:active{transform:scale(.93)}
+#backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;backdrop-filter:blur(4px)}
+#backdrop.show{display:block}
+#closeSide{
+  display:none;position:absolute;left:12px;top:calc(12px + var(--safe-t));
+  width:38px;height:38px;min-height:0;padding:0;
+  background:#30363d;color:#fff;border:none;border-radius:10px;
+  font-size:16px;cursor:pointer;align-items:center;justify-content:center;
+}
+
 /* ═══ التقرير ═══ */
-#reportPage{display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;overflow-y:auto;color:#222;direction:rtl;text-align:right}
+#reportPage{display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;overflow-y:auto;color:#222;direction:rtl;text-align:right;-webkit-overflow-scrolling:touch}
 .report-wrap{max-width:1000px;margin:auto;padding:50px 40px;padding-bottom:100px}
-.rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid var(--red);margin-bottom:26px}
+.rep-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:3px solid var(--red);margin-bottom:26px;gap:16px;flex-wrap:wrap}
 .rep-header h1{color:var(--red);font-size:28px;font-weight:900}
 .rep-header p{font-size:12px;color:#888;margin-top:4px;letter-spacing:.5px}
 .rep-header .meta{text-align:left;font-size:12.5px;color:#555;line-height:1.9}
@@ -93,19 +163,86 @@ tr:nth-child(even) td{background:#fafbfc}
 
 .rep-footer{text-align:center;font-size:11.5px;color:#999;border-top:1px solid #eee;padding-top:24px;margin-top:50px;letter-spacing:.5px}
 
-.rep-controls{display:flex;gap:10px;margin-bottom:20px}
-.rep-controls button{padding:11px 22px;border:none;border-radius:10px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px;transition:.2s}
+.rep-controls{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.rep-controls button{padding:12px 22px;border:none;border-radius:10px;cursor:pointer;font-weight:800;font-family:inherit;font-size:13px;transition:.2s;min-height:44px}
 .rep-controls .back{background:#e5e7eb;color:#333}
 .rep-controls .back:hover{background:#d1d5db}
 .rep-controls .print{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 15px rgba(34,197,94,.3)}
 .rep-controls .print:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(34,197,94,.4)}
 
-@media print{.no-print{display:none!important}#reportPage{position:static;background:#fff}.report-wrap{padding:0}body{background:#fff}}
+/* ═══ استجابة الشاشة ═══ */
+@media (max-width:1100px) and (min-width:901px){
+  .sidebar{width:340px;padding:18px}
+}
+
+@media (max-width:900px){
+  #menuBtn{display:flex}
+  #closeSide{display:flex}
+  .sidebar{
+    position:fixed;top:0;right:0;bottom:0;z-index:180;
+    width:min(400px,88vw);
+    transform:translateX(102%);
+    transition:transform .32s cubic-bezier(.4,0,.2,1);
+    box-shadow:-6px 0 34px rgba(0,0,0,.7);
+    will-change:transform;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .brand{margin-top:8px}
+  .main-view{padding:8px}
+  .canvas-wrap{padding:0}
+  canvas{border-radius:10px}
+  .toolbar{
+    top:calc(8px + var(--safe-t));
+    left:calc(8px + var(--safe-l));
+    padding:4px;
+  }
+  .toolbar button{width:38px;height:38px;font-size:15px}
+  .hint-bar{
+    font-size:10.5px;padding:7px 12px;
+    bottom:calc(8px + var(--safe-b));
+    max-width:calc(100% - 16px);
+  }
+  .report-wrap{padding:24px 16px;padding-bottom:60px}
+  .rep-header h1{font-size:20px}
+  .rep-header .meta{text-align:right;width:100%}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .kpi-item{padding:14px}
+  .kpi-item span{font-size:18px}
+  .kpi-item h4{font-size:10px}
+  th,td{padding:9px 8px;font-size:11.5px}
+  .analysis-box{padding:16px;font-size:12.5px;line-height:1.9}
+  .rep-controls button{flex:1;min-width:130px;padding:12px 16px;font-size:12.5px}
+}
+
+@media (max-width:480px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .kpi .v{font-size:16px}
+  .toolbar button{width:36px;height:36px}
+  .toolbar{gap:3px}
+  .hint-bar{font-size:10px;padding:6px 10px}
+  .brand h1{font-size:22px}
+}
+
+/* منع تحريك الصفحة عند اللمس داخل القماش */
+canvas{touch-action:none}
+
+/* شاشة الطباعة */
+@media print{
+  .no-print{display:none!important}
+  #reportPage{position:static;background:#fff}
+  .report-wrap{padding:0}
+  body{background:#fff;display:block;overflow:visible}
+}
 </style>
 </head>
 <body>
 
-<div class="sidebar no-print">
+<button id="menuBtn" class="no-print" onclick="openSidebar()" aria-label="فتح القائمة">☰</button>
+<div id="backdrop" class="no-print" onclick="closeSidebar()"></div>
+
+<div class="sidebar no-print" id="sidebar">
+  <button id="closeSide" onclick="closeSidebar()" aria-label="إغلاق">✖</button>
+
   <div class="brand">
     <h1>موتيفيتي</h1>
     <p>نظام تصميم الحدائق الصوتية</p>
@@ -120,7 +257,7 @@ tr:nth-child(even) td{background:#fafbfc}
       <option value="stone">🧱 ممر حجري (انعكاس عالي)</option>
     </select>
     <label>الطول الإجمالي للمسار (متر)</label>
-    <input type="number" id="area_len" value="100" oninput="onChange()">
+    <input type="number" id="area_len" value="100" min="5" max="500" oninput="onChange()">
   </div>
 
   <div class="box">
@@ -147,8 +284,6 @@ tr:nth-child(even) td{background:#fafbfc}
 </div>
 
 <div class="main-view no-print">
-  <canvas id="gardenCanvas" width="1200" height="680"></canvas>
-
   <div class="toolbar">
     <button id="tgWaves" class="on" onclick="toggle('waves')" title="الموجات الصوتية">🔊</button>
     <button id="tgHeat" onclick="toggle('heat')" title="خريطة الصوت">🌡️</button>
@@ -156,7 +291,11 @@ tr:nth-child(even) td{background:#fafbfc}
     <button id="tgLabels" class="on" onclick="toggle('labels')" title="التسميات">🏷️</button>
   </div>
 
-  <div class="hint-bar">🖱️ حرّك الماوس على القماش لقراءة SPL مباشرة · استخدم الأدوات لتبديل الطبقات</div>
+  <div class="canvas-wrap">
+    <canvas id="gardenCanvas" width="1200" height="680"></canvas>
+  </div>
+
+  <div class="hint-bar" id="hintBar">👆 المس القماش لقراءة SPL · استخدم الأدوات لتبديل الطبقات</div>
 </div>
 
 <div id="reportPage">
@@ -198,7 +337,7 @@ tr:nth-child(even) td{background:#fafbfc}
 
     <div class="rep-section">
       <h3>المحاكاة الصوتية (منظر علوي)</h3>
-      <img class="preview-img" id="resImg">
+      <img class="preview-img" id="resImg" alt="محاكاة">
     </div>
 
     <div class="rep-section">
@@ -218,43 +357,23 @@ tr:nth-child(even) td{background:#fafbfc}
    الإعدادات
    ═══════════════════════════════════════════════════════════ */
 const SPEAKERS = {
-  'AG-601': {
-    name: 'AG-601 الفطرية',
-    watt: 30, sens: 92, angle: 360,
-    cover: 6.0, color: '#e60012'
-  },
-  'AG-801': {
-    name: 'AG-801 الصخرية',
-    watt: 50, sens: 94, angle: 360,
-    cover: 8.0, color: '#7f8c8d'
-  }
+  'AG-601': { name:'AG-601 الفطرية', watt:30, sens:92, angle:360, cover:6.0, color:'#e60012' },
+  'AG-801': { name:'AG-801 الصخرية', watt:50, sens:94, angle:360, cover:8.0, color:'#7f8c8d' }
 };
 
 const TERRAIN = {
-  grass: {
-    absorption: 0.35,
-    bgTop:    '#0f2419', bgBot:    '#1b4332',
-    blade:    '#2d6a4f', bladeHi:  '#40916c',
-    path:     '#8b5a3c', pathEdge: '#6b4423',
-    waveRGB:  '46,204,113',
-    speed:    0.85, name: 'العشب الطبيعي'
-  },
-  sand: {
-    absorption: 0.20,
-    bgTop:    '#8b6a4a', bgBot:    '#d4a373',
-    blade:    '#bc6c25', bladeHi:  '#e9c46a',
-    path:     '#7f8c8d', pathEdge: '#5d6d7e',
-    waveRGB:  '233,196,106',
-    speed:    1.00, name: 'التربة الرملية'
-  },
-  stone: {
-    absorption: 0.05,
-    bgTop:    '#1a252f', bgBot:    '#2c3e50',
-    blade:    '#34495e', bladeHi:  '#4a6478',
-    path:     '#95a5a6', pathEdge: '#6b7a7d',
-    waveRGB:  '236,240,241',
-    speed:    1.20, name: 'الممر الحجري'
-  }
+  grass: { absorption:0.35, bgTop:'#0f2419', bgBot:'#1b4332',
+           blade:'#2d6a4f', bladeHi:'#40916c',
+           path:'#8b5a3c', pathEdge:'#6b4423',
+           waveRGB:'46,204,113', speed:0.85, name:'العشب الطبيعي' },
+  sand:  { absorption:0.20, bgTop:'#8b6a4a', bgBot:'#d4a373',
+           blade:'#bc6c25', bladeHi:'#e9c46a',
+           path:'#7f8c8d', pathEdge:'#5d6d7e',
+           waveRGB:'233,196,106', speed:1.00, name:'التربة الرملية' },
+  stone: { absorption:0.05, bgTop:'#1a252f', bgBot:'#2c3e50',
+           blade:'#34495e', bladeHi:'#4a6478',
+           path:'#95a5a6', pathEdge:'#6b7a7d',
+           waveRGB:'236,240,241', speed:1.20, name:'الممر الحجري' }
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -265,36 +384,59 @@ const ctx = cv.getContext('2d');
 const $ = id => document.getElementById(id);
 
 let state = {
-  len: 100, qty: 12, env: 'grass', model: 'AG-601',
-  t: 0, hoverX: null, hoverY: null, hoverSPL: null,
-  layers: { waves: true, heat: false, plants: true, labels: true }
+  len:100, qty:12, env:'grass', model:'AG-601',
+  t:0, hoverX:null, hoverY:null, hoverSPL:null,
+  layers:{ waves:true, heat:false, plants:true, labels:true }
 };
 
-let decor = { trees: [], bushes: [], flowers: [], rocks: [], pebbles: [] };
+let decor = { trees:[], bushes:[], flowers:[], rocks:[], pebbles:[] };
+let baseW = 1200, baseH = 680;
+
+/* ═══════════════════════════════════════════════════════════
+   قياس القماش للتجاوب
+   ═══════════════════════════════════════════════════════════ */
+function resizeCanvas(){
+  const wrap = cv.parentElement;
+  const rect = wrap.getBoundingClientRect();
+  const aspect = baseW / baseH;
+
+  let w = rect.width;
+  let h = rect.height;
+
+  // fit with aspect ratio
+  if (w / h > aspect) w = h * aspect;
+  else h = w / aspect;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width  = Math.round(baseW); // logical
+  cv.height = Math.round(baseH);
+  cv.style.width  = Math.round(w) + 'px';
+  cv.style.height = Math.round(h) + 'px';
+}
 
 /* ═══════════════════════════════════════════════════════════
    التهيئة
    ═══════════════════════════════════════════════════════════ */
-function onChange() {
+function onChange(){
   state.len   = +$('area_len').value || 100;
   state.qty   = +$('qty').value || 1;
   state.env   = $('env_type').value;
   state.model = $('model_select').value;
 
-  if (!decor._env || decor._env !== state.env) {
+  if (!decor._env || decor._env !== state.env){
     generateDecor();
     decor._env = state.env;
   }
   updateKPI();
 }
 
-function toggle(key) {
+function toggle(key){
   state.layers[key] = !state.layers[key];
   const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
   if (btn) btn.classList.toggle('on', state.layers[key]);
 }
 
-function updateKPI() {
+function updateKPI(){
   const spk = SPEAKERS[state.model];
   const totalW = spk.watt * state.qty;
   const spacing = state.len / state.qty;
@@ -310,21 +452,30 @@ function updateKPI() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   الدرج للهواتف
+   ═══════════════════════════════════════════════════════════ */
+function openSidebar(){
+  $('sidebar').classList.add('open');
+  $('backdrop').classList.add('show');
+}
+function closeSidebar(){
+  $('sidebar').classList.remove('open');
+  $('backdrop').classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════════
    مولد العناصر الزخرفية
    ═══════════════════════════════════════════════════════════ */
-function generateDecor() {
-  decor.trees = [];
-  decor.bushes = [];
-  decor.flowers = [];
-  decor.rocks = [];
-  decor.pebbles = [];
+function generateDecor(){
+  decor.trees = []; decor.bushes = []; decor.flowers = [];
+  decor.rocks = []; decor.pebbles = [];
 
-  const W = cv.width, H = cv.height;
+  const W = baseW, H = baseH;
   const pathY = H * 0.58;
   const pathTop = pathY - 50;
   const pathBot = pathY + 50;
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++){
     decor.trees.push({
       x: 100 + Math.random() * (W - 200),
       y: 40 + Math.random() * (pathTop - 100),
@@ -332,37 +483,34 @@ function generateDecor() {
       tone: Math.random() * 0.3
     });
   }
-
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 8; i++){
     decor.bushes.push({
       x: 60 + Math.random() * (W - 120),
       y: pathBot + 40 + Math.random() * (H - pathBot - 100),
-      r: 14 + Math.random() * 10,
-      tone: Math.random() * 0.3
+      r: 14 + Math.random() * 10
     });
   }
-
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 40; i++){
     const top = Math.random() < 0.5;
     decor.flowers.push({
       x: 40 + Math.random() * (W - 80),
-      y: top ? 20 + Math.random() * (pathTop - 60) : pathBot + 20 + Math.random() * (H - pathBot - 60),
-      c: ['#fbbf24', '#f472b6', '#a78bfa', '#fff'][Math.floor(Math.random()*4)],
+      y: top ? 20 + Math.random() * (pathTop - 60)
+             : pathBot + 20 + Math.random() * (H - pathBot - 60),
+      c: ['#fbbf24','#f472b6','#a78bfa','#fff'][Math.floor(Math.random()*4)],
       s: 1.5 + Math.random() * 1.5
     });
   }
-
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++){
     const top = Math.random() < 0.5;
     decor.rocks.push({
       x: 40 + Math.random() * (W - 80),
-      y: top ? 30 + Math.random() * (pathTop - 60) : pathBot + 30 + Math.random() * (H - pathBot - 60),
+      y: top ? 30 + Math.random() * (pathTop - 60)
+             : pathBot + 30 + Math.random() * (H - pathBot - 60),
       s: 4 + Math.random() * 6,
       rot: Math.random() * Math.PI
     });
   }
-
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 60; i++){
     decor.pebbles.push({
       x: 100 + Math.random() * (W - 200),
       y: pathTop + 8 + Math.random() * (100 - 16),
@@ -372,15 +520,16 @@ function generateDecor() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   حلقة الرسم الرئيسية
+   حلقة الرسم
    ═══════════════════════════════════════════════════════════ */
-function loop() {
+let lastFrame = 0;
+function loop(ts){
   state.t += 0.022;
   draw();
   requestAnimationFrame(loop);
 }
 
-function draw() {
+function draw(){
   const W = cv.width, H = cv.height;
   const T = TERRAIN[state.env];
   const spk = SPEAKERS[state.model];
@@ -388,7 +537,6 @@ function draw() {
   const pathTop = pathY - 50;
   const pathBot = pathY + 50;
 
-  // خلفية متدرجة
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
   bgGrad.addColorStop(0, T.bgTop);
   bgGrad.addColorStop(1, T.bgBot);
@@ -403,9 +551,7 @@ function draw() {
   if (state.layers.waves) drawWaves(W, pathY, spk, T);
 
   drawSpeakers(W, pathY, spk);
-
   if (state.layers.labels) drawLabels(W, pathY, spk);
-
   drawRuler(W, H);
 
   if (state.hoverX !== null) drawHoverInfo();
@@ -414,54 +560,43 @@ function draw() {
 /* ═══════════════════════════════════════════════════════════
    نسيج التضاريس
    ═══════════════════════════════════════════════════════════ */
-function drawTerrainTexture(W, H, T) {
-  if (state.env === 'grass') {
+function drawTerrainTexture(W, H, T){
+  if (state.env === 'grass'){
     ctx.strokeStyle = T.blade;
     ctx.lineWidth = 1;
-    for (let i = 0; i < 800; i++) {
-      const x = Math.random() * W;
-      const y = Math.random() * H;
+    for (let i = 0; i < 800; i++){
+      const x = Math.random() * W, y = Math.random() * H;
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(x + (Math.random() - 0.5) * 3, y - 3);
       ctx.stroke();
     }
     ctx.fillStyle = T.bladeHi;
-    for (let i = 0; i < 100; i++) {
-      ctx.fillRect(Math.random() * W, Math.random() * H, 1, 2);
+    for (let i = 0; i < 100; i++){
+      ctx.fillRect(Math.random()*W, Math.random()*H, 1, 2);
     }
-  } else if (state.env === 'sand') {
-    for (let i = 0; i < 3000; i++) {
-      const x = Math.random() * W;
-      const y = Math.random() * H;
+  } else if (state.env === 'sand'){
+    for (let i = 0; i < 3000; i++){
+      const x = Math.random()*W, y = Math.random()*H;
       ctx.fillStyle = Math.random() < 0.5 ? T.blade : T.bladeHi;
-      ctx.globalAlpha = 0.3 + Math.random() * 0.4;
+      ctx.globalAlpha = 0.3 + Math.random()*0.4;
       ctx.fillRect(x, y, 1.5, 1.5);
     }
     ctx.globalAlpha = 1;
   } else {
     ctx.strokeStyle = T.blade;
     ctx.lineWidth = 1.2;
-    const slabSize = 70;
-    for (let x = 0; x <= W; x += slabSize) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, H);
-      ctx.stroke();
+    const slab = 70;
+    for (let x = 0; x <= W; x += slab){
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
     }
-    for (let y = 0; y <= H; y += slabSize) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(W, y);
-      ctx.stroke();
+    for (let y = 0; y <= H; y += slab){
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
     }
     ctx.strokeStyle = 'rgba(255,255,255,0.03)';
     ctx.lineWidth = 2;
-    for (let x = 3; x <= W; x += slabSize) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, H);
-      ctx.stroke();
+    for (let x = 3; x <= W; x += slab){
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
     }
   }
 }
@@ -469,15 +604,15 @@ function drawTerrainTexture(W, H, T) {
 /* ═══════════════════════════════════════════════════════════
    المسار
    ═══════════════════════════════════════════════════════════ */
-function drawPath(W, pathY, pathTop, pathBot, T) {
+function drawPath(W, pathY, pathTop, pathBot, T){
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
   ctx.fillRect(60, pathTop + 6, W - 120, 100);
 
-  const pathGrad = ctx.createLinearGradient(0, pathTop, 0, pathBot);
-  pathGrad.addColorStop(0, T.pathEdge);
-  pathGrad.addColorStop(0.5, T.path);
-  pathGrad.addColorStop(1, T.pathEdge);
-  ctx.fillStyle = pathGrad;
+  const g = ctx.createLinearGradient(0, pathTop, 0, pathBot);
+  g.addColorStop(0, T.pathEdge);
+  g.addColorStop(0.5, T.path);
+  g.addColorStop(1, T.pathEdge);
+  ctx.fillStyle = g;
   ctx.fillRect(60, pathTop, W - 120, 100);
 
   ctx.strokeStyle = 'rgba(0,0,0,0.4)';
@@ -489,19 +624,17 @@ function drawPath(W, pathY, pathTop, pathBot, T) {
 
   ctx.fillStyle = 'rgba(0,0,0,0.15)';
   decor.pebbles.forEach(p => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
   });
 }
 
 /* ═══════════════════════════════════════════════════════════
    الزخارف
    ═══════════════════════════════════════════════════════════ */
-function drawDecor() {
+function drawDecor(){
   decor.trees.forEach(t => {
     ctx.beginPath();
-    ctx.ellipse(t.x + 4, t.y + 4, t.r, t.r * 0.85, 0, 0, Math.PI * 2);
+    ctx.ellipse(t.x + 4, t.y + 4, t.r, t.r*0.85, 0, 0, Math.PI*2);
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.fill();
 
@@ -509,96 +642,78 @@ function drawDecor() {
     grad.addColorStop(0, '#2d6a4f');
     grad.addColorStop(0.7, '#1b4332');
     grad.addColorStop(1, '#0f2419');
-    ctx.beginPath();
-    ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
 
     ctx.strokeStyle = 'rgba(64,145,108,0.5)';
     ctx.lineWidth = 1;
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2;
+    for (let i = 0; i < 8; i++){
+      const a = (i/8)*Math.PI*2;
       ctx.beginPath();
       ctx.moveTo(t.x, t.y);
-      ctx.lineTo(t.x + Math.cos(a) * t.r * 0.9, t.y + Math.sin(a) * t.r * 0.9);
+      ctx.lineTo(t.x + Math.cos(a)*t.r*0.9, t.y + Math.sin(a)*t.r*0.9);
       ctx.stroke();
     }
-
-    ctx.beginPath();
-    ctx.arc(t.x, t.y, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#7f4f24';
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(t.x, t.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#7f4f24'; ctx.fill();
   });
 
   decor.bushes.forEach(b => {
-    for (let i = 0; i < 5; i++) {
-      const a = (i / 5) * Math.PI * 2;
-      const bx = b.x + Math.cos(a) * b.r * 0.5;
-      const by = b.y + Math.sin(a) * b.r * 0.5;
-      ctx.beginPath();
-      ctx.arc(bx, by, b.r * 0.7, 0, Math.PI * 2);
-      ctx.fillStyle = i % 2 === 0 ? '#2d6a4f' : '#1b4332';
+    for (let i = 0; i < 5; i++){
+      const a = (i/5)*Math.PI*2;
+      const bx = b.x + Math.cos(a)*b.r*0.5;
+      const by = b.y + Math.sin(a)*b.r*0.5;
+      ctx.beginPath(); ctx.arc(bx, by, b.r*0.7, 0, Math.PI*2);
+      ctx.fillStyle = i%2===0 ? '#2d6a4f' : '#1b4332';
       ctx.fill();
     }
-    ctx.beginPath();
-    ctx.arc(b.x, b.y, b.r * 0.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#40916c';
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, Math.PI*2);
+    ctx.fillStyle = '#40916c'; ctx.fill();
   });
 
   decor.rocks.forEach(r => {
     ctx.save();
-    ctx.translate(r.x, r.y);
-    ctx.rotate(r.rot);
+    ctx.translate(r.x, r.y); ctx.rotate(r.rot);
     ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-      const a = (i / 6) * Math.PI * 2;
-      const rad = r.s * (0.8 + Math.random() * 0.4);
-      if (i === 0) ctx.moveTo(Math.cos(a) * rad, Math.sin(a) * rad);
-      else ctx.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+    for (let i = 0; i < 6; i++){
+      const a = (i/6)*Math.PI*2;
+      const rad = r.s * (0.8 + Math.random()*0.4);
+      if (i === 0) ctx.moveTo(Math.cos(a)*rad, Math.sin(a)*rad);
+      else ctx.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);
     }
     ctx.closePath();
-    ctx.fillStyle = '#555';
-    ctx.fill();
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    ctx.fillStyle = '#555'; ctx.fill();
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.stroke();
     ctx.restore();
   });
 
   decor.flowers.forEach(f => {
-    ctx.beginPath();
-    ctx.arc(f.x, f.y, f.s, 0, Math.PI * 2);
-    ctx.fillStyle = f.c;
-    ctx.globalAlpha = 0.9;
-    ctx.fill();
-    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2);
+    ctx.fillStyle = f.c; ctx.globalAlpha = 0.9;
+    ctx.fill(); ctx.globalAlpha = 1;
   });
 }
 
 /* ═══════════════════════════════════════════════════════════
    خريطة الحرارة
    ═══════════════════════════════════════════════════════════ */
-function drawHeatmap(W, pathY, pathTop, pathBot, spk, T) {
+function drawHeatmap(W, pathY, pathTop, pathBot, spk, T){
   const positions = getSpeakerPositions(W);
   const step = 12;
-
-  for (let py = 20; py < cv.height - 20; py += step) {
-    for (let px = 20; px < W - 20; px += step) {
+  for (let py = 20; py < cv.height - 20; py += step){
+    for (let px = 20; px < W - 20; px += step){
       let minD = Infinity;
       positions.forEach(p => {
         const d = Math.hypot(px - p.x, py - p.y);
         if (d < minD) minD = d;
       });
-
-      const spl = spk.sens + 10 * Math.log10(spk.watt) - 20 * Math.log10(Math.max(1, minD / 15));
+      const spl = spk.sens + 10*Math.log10(spk.watt) - 20*Math.log10(Math.max(1, minD/15));
       ctx.fillStyle = splColor(spl);
       ctx.fillRect(px, py, step, step);
     }
   }
 }
-
-function splColor(spl) {
+function splColor(spl){
   if (spl < 60) return 'rgba(20,30,50,0.55)';
   if (spl < 70) return 'rgba(30,80,140,0.5)';
   if (spl < 78) return 'rgba(34,197,94,0.35)';
@@ -608,32 +723,29 @@ function splColor(spl) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   الموجات الصوتية المتحركة
+   الموجات الصوتية
    ═══════════════════════════════════════════════════════════ */
-function drawWaves(W, pathY, spk, T) {
+function drawWaves(W, pathY, spk, T){
   const positions = getSpeakerPositions(W);
-  const maxR = 130;
-  const numRings = 4;
-
+  const maxR = 130, numRings = 4;
   positions.forEach((p, i) => {
-    for (let r = 0; r < numRings; r++) {
-      const offset = (state.t * T.speed + r * 0.25 + i * 0.05) % 1;
+    for (let r = 0; r < numRings; r++){
+      const offset = (state.t * T.speed + r*0.25 + i*0.05) % 1;
       const radius = offset * maxR;
       const alpha = (1 - offset) * 0.55;
-
       ctx.beginPath();
-      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, radius, 0, Math.PI*2);
       ctx.strokeStyle = `rgba(${T.waveRGB},${alpha})`;
       ctx.lineWidth = 2.2;
-      ctx.shadowColor = `rgba(${T.waveRGB},${alpha * 0.8})`;
+      ctx.shadowColor = `rgba(${T.waveRGB},${alpha*0.8})`;
       ctx.shadowBlur = 14;
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      if (radius > 8) {
+      if (radius > 8){
         ctx.beginPath();
-        ctx.arc(p.x, p.y, radius - 4, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${T.waveRGB},${alpha * 0.4})`;
+        ctx.arc(p.x, p.y, radius - 4, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(${T.waveRGB},${alpha*0.4})`;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -641,41 +753,34 @@ function drawWaves(W, pathY, spk, T) {
   });
 }
 
-function getSpeakerPositions(W) {
+function getSpeakerPositions(W){
   const pathY = cv.height * 0.58;
-  const startX = 100;
-  const endX = W - 100;
+  const startX = 100, endX = W - 100;
   const span = endX - startX;
   const spacing = state.qty > 1 ? span / (state.qty - 1) : 0;
-
   const positions = [];
-  for (let i = 0; i < state.qty; i++) {
+  for (let i = 0; i < state.qty; i++){
     const x = state.qty === 1 ? (startX + endX) / 2 : startX + i * spacing;
-    positions.push({ x, y: pathY });
+    positions.push({x, y: pathY});
   }
   return positions;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   السماعات
+   رسم السماعات
    ═══════════════════════════════════════════════════════════ */
-function drawSpeakers(W, pathY, spk) {
+function drawSpeakers(W, pathY, spk){
   const positions = getSpeakerPositions(W);
-
   positions.forEach((p, i) => {
-    if (state.model === 'AG-601') {
-      drawMushroomSpeaker(p.x, p.y, i + 1);
-    } else {
-      drawRockSpeaker(p.x, p.y, i + 1);
-    }
+    if (state.model === 'AG-601') drawMushroomSpeaker(p.x, p.y, i + 1);
+    else drawRockSpeaker(p.x, p.y, i + 1);
   });
 }
 
-function drawMushroomSpeaker(x, y, num) {
+function drawMushroomSpeaker(x, y, num){
   ctx.beginPath();
-  ctx.ellipse(x, y + 12, 16, 5, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.fill();
+  ctx.ellipse(x, y + 12, 16, 5, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fill();
 
   const stemGrad = ctx.createLinearGradient(x - 8, 0, x + 8, 0);
   stemGrad.addColorStop(0, '#1a1a1a');
@@ -687,65 +792,47 @@ function drawMushroomSpeaker(x, y, num) {
   ctx.lineTo(x - 6, y - 4);
   ctx.lineTo(x + 6, y - 4);
   ctx.lineTo(x + 7, y + 8);
-  ctx.closePath();
-  ctx.fill();
+  ctx.closePath(); ctx.fill();
 
   const capGrad = ctx.createRadialGradient(x - 4, y - 6, 2, x, y, 20);
   capGrad.addColorStop(0, '#5a5a5a');
   capGrad.addColorStop(0.5, '#2a2a2a');
   capGrad.addColorStop(1, '#0f0f0f');
-  ctx.beginPath();
-  ctx.arc(x, y - 4, 18, 0, Math.PI * 2);
-  ctx.fillStyle = capGrad;
-  ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y - 4, 18, 0, Math.PI*2);
+  ctx.fillStyle = capGrad; ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(x, y - 4, 14, 0, Math.PI * 2);
-  ctx.strokeStyle = '#e60012';
-  ctx.lineWidth = 2.5;
-  ctx.shadowColor = 'rgba(230,0,18,0.7)';
-  ctx.shadowBlur = 10;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+  ctx.beginPath(); ctx.arc(x, y - 4, 14, 0, Math.PI*2);
+  ctx.strokeStyle = '#e60012'; ctx.lineWidth = 2.5;
+  ctx.shadowColor = 'rgba(230,0,18,0.7)'; ctx.shadowBlur = 10;
+  ctx.stroke(); ctx.shadowBlur = 0;
 
   ctx.fillStyle = '#555';
-  for (let i = 0; i < 8; i++) {
-    const a = (i / 8) * Math.PI * 2;
+  for (let i = 0; i < 8; i++){
+    const a = (i/8)*Math.PI*2;
     ctx.beginPath();
-    ctx.arc(x + Math.cos(a) * 8, y - 4 + Math.sin(a) * 8, 1.3, 0, Math.PI * 2);
+    ctx.arc(x + Math.cos(a)*8, y - 4 + Math.sin(a)*8, 1.3, 0, Math.PI*2);
     ctx.fill();
   }
-
-  ctx.beginPath();
-  ctx.arc(x, y - 4, 3, 0, Math.PI * 2);
+  ctx.beginPath(); ctx.arc(x, y - 4, 3, 0, Math.PI*2);
   ctx.fillStyle = '#e60012';
-  ctx.shadowColor = '#e60012';
-  ctx.shadowBlur = 12;
-  ctx.fill();
-  ctx.shadowBlur = 0;
+  ctx.shadowColor = '#e60012'; ctx.shadowBlur = 12;
+  ctx.fill(); ctx.shadowBlur = 0;
 
-  if (state.layers.labels) {
-    ctx.beginPath();
-    ctx.arc(x, y + 24, 9, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(22,27,34,0.9)';
-    ctx.fill();
-    ctx.strokeStyle = '#e60012';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+  if (state.layers.labels){
+    ctx.beginPath(); ctx.arc(x, y + 24, 9, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(22,27,34,0.9)'; ctx.fill();
+    ctx.strokeStyle = '#e60012'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(num), x, y + 24);
+    ctx.textBaseline = 'alphabetic';
   }
 }
 
-function drawRockSpeaker(x, y, num) {
+function drawRockSpeaker(x, y, num){
   ctx.beginPath();
-  ctx.ellipse(x, y + 12, 22, 6, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)';
-  ctx.fill();
+  ctx.ellipse(x, y + 12, 22, 6, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fill();
 
   const rockGrad = ctx.createRadialGradient(x - 6, y - 6, 3, x, y, 24);
   rockGrad.addColorStop(0, '#6b7280');
@@ -759,81 +846,66 @@ function drawRockSpeaker(x, y, num) {
     [x + 12, y + 14], [x - 4, y + 15], [x - 16, y + 12]
   ];
   points.forEach((pt, i) => {
-    if (i === 0) ctx.moveTo(pt[0], pt[1]);
-    else ctx.lineTo(pt[0], pt[1]);
+    if (i === 0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]);
   });
   ctx.closePath();
-  ctx.fillStyle = rockGrad;
-  ctx.fill();
+  ctx.fillStyle = rockGrad; ctx.fill();
 
   ctx.fillStyle = 'rgba(255,255,255,0.08)';
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 12; i++){
     ctx.beginPath();
-    ctx.arc(x - 15 + Math.random() * 30, y - 12 + Math.random() * 26, 1.2, 0, Math.PI * 2);
+    ctx.arc(x - 15 + Math.random()*30, y - 12 + Math.random()*26, 1.2, 0, Math.PI*2);
     ctx.fill();
   }
 
-  ctx.beginPath();
-  ctx.arc(x - 2, y - 2, 6, 0, Math.PI * 2);
-  ctx.fillStyle = '#0a0a0a';
-  ctx.fill();
-  ctx.strokeStyle = '#222';
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(x - 2, y - 2, 6, 0, Math.PI*2);
+  ctx.fillStyle = '#0a0a0a'; ctx.fill();
+  ctx.strokeStyle = '#222'; ctx.lineWidth = 1; ctx.stroke();
 
   ctx.fillStyle = '#2a2a2a';
-  for (let i = 0; i < 5; i++) {
-    const a = (i / 5) * Math.PI * 2;
+  for (let i = 0; i < 5; i++){
+    const a = (i/5)*Math.PI*2;
     ctx.beginPath();
-    ctx.arc(x - 2 + Math.cos(a) * 3, y - 2 + Math.sin(a) * 3, 0.9, 0, Math.PI * 2);
+    ctx.arc(x - 2 + Math.cos(a)*3, y - 2 + Math.sin(a)*3, 0.9, 0, Math.PI*2);
     ctx.fill();
   }
 
-  if (state.layers.labels) {
-    ctx.beginPath();
-    ctx.arc(x, y + 26, 9, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(22,27,34,0.9)';
-    ctx.fill();
-    ctx.strokeStyle = '#7f8c8d';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 10px Cairo';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+  if (state.layers.labels){
+    ctx.beginPath(); ctx.arc(x, y + 26, 9, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(22,27,34,0.9)'; ctx.fill();
+    ctx.strokeStyle = '#7f8c8d'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Cairo';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(num), x, y + 26);
+    ctx.textBaseline = 'alphabetic';
   }
 }
 
 /* ═══════════════════════════════════════════════════════════
    التسميات
    ═══════════════════════════════════════════════════════════ */
-function drawLabels(W, pathY, spk) {
+function drawLabels(W, pathY, spk){
   ctx.fillStyle = 'rgba(22,27,34,0.85)';
   ctx.fillRect(W - 280, 20, 260, 92);
   ctx.strokeStyle = 'rgba(56,189,248,0.3)';
   ctx.lineWidth = 1;
   ctx.strokeRect(W - 280, 20, 260, 92);
 
-  ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 12px Cairo';
+  ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px Cairo';
   ctx.textAlign = 'right';
   ctx.fillText('● ' + spk.name, W - 34, 44);
 
-  ctx.fillStyle = '#8b949e';
-  ctx.font = '11px Cairo';
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px Cairo';
   ctx.fillText('القدرة: ' + spk.watt + ' واط  ·  الحساسية: ' + spk.sens + ' ديسيبل', W - 34, 64);
   ctx.fillText('الوحدات: ' + state.qty + '  ·  المسافة: ' + state.len + ' م', W - 34, 82);
   ctx.fillText('التضاريس: ' + TERRAIN[state.env].name, W - 34, 100);
 
   const positions = getSpeakerPositions(W);
-  if (positions.length > 1) {
-    ctx.fillStyle = '#8b949e';
-    ctx.font = '10px Cairo';
+  if (positions.length > 1){
+    ctx.fillStyle = '#8b949e'; ctx.font = '10px Cairo';
     ctx.textAlign = 'center';
-    for (let i = 0; i < positions.length - 1; i++) {
-      const midX = (positions[i].x + positions[i + 1].x) / 2;
+    for (let i = 0; i < positions.length - 1; i++){
+      const midX = (positions[i].x + positions[i+1].x) / 2;
       const midY = pathY + 78;
       const spacing = ((state.len / (state.qty - 1)) || 0).toFixed(1);
       ctx.fillText(spacing + ' م', midX, midY);
@@ -844,62 +916,77 @@ function drawLabels(W, pathY, spk) {
 /* ═══════════════════════════════════════════════════════════
    المسطرة
    ═══════════════════════════════════════════════════════════ */
-function drawRuler(W, H) {
+function drawRuler(W, H){
   const y = H - 26;
   ctx.strokeStyle = 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(100, y);
-  ctx.lineTo(W - 100, y);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(100, y); ctx.lineTo(W - 100, y); ctx.stroke();
 
   const pxPerM = (W - 200) / state.len;
   const stepM = state.len > 60 ? 20 : 10;
 
-  for (let m = 0; m <= state.len; m += stepM) {
+  for (let m = 0; m <= state.len; m += stepM){
     const x = 100 + m * pxPerM;
-    ctx.beginPath();
-    ctx.moveTo(x, y - 5);
-    ctx.lineTo(x, y + 5);
-    ctx.stroke();
-
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '10px Cairo';
+    ctx.beginPath(); ctx.moveTo(x, y - 5); ctx.lineTo(x, y + 5); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '10px Cairo';
     ctx.textAlign = 'center';
     ctx.fillText(m + 'م', x, y + 18);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   قراءة SPL عند المؤشر
+   تفاعل اللمس والفأرة (Pointer Events)
    ═══════════════════════════════════════════════════════════ */
-cv.addEventListener('mousemove', e => {
+function getCanvasCoords(clientX, clientY){
   const r = cv.getBoundingClientRect();
   const scaleX = cv.width / r.width;
   const scaleY = cv.height / r.height;
-  state.hoverX = (e.clientX - r.left) * scaleX;
-  state.hoverY = (e.clientY - r.top) * scaleY;
+  return { x:(clientX - r.left) * scaleX, y:(clientY - r.top) * scaleY };
+}
+
+function updateHover(clientX, clientY){
+  const {x, y} = getCanvasCoords(clientX, clientY);
+  state.hoverX = x;
+  state.hoverY = y;
 
   const spk = SPEAKERS[state.model];
   const positions = getSpeakerPositions(cv.width);
   let pTotal = 0;
   positions.forEach(p => {
-    const d = Math.hypot(state.hoverX - p.x, state.hoverY - p.y) / 15;
-    const spl = spk.sens + 10 * Math.log10(spk.watt) - 20 * Math.log10(Math.max(1, d));
+    const d = Math.hypot(x - p.x, y - p.y) / 15;
+    const spl = spk.sens + 10*Math.log10(spk.watt) - 20*Math.log10(Math.max(1, d));
     pTotal += Math.pow(10, spl / 10);
   });
   state.hoverSPL = 10 * Math.log10(pTotal);
+}
+
+cv.addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch' && e.buttons === 0) return;
+  updateHover(e.clientX, e.clientY);
+  e.preventDefault();
+}, {passive:false});
+
+cv.addEventListener('pointerdown', e => {
+  updateHover(e.clientX, e.clientY);
+  if (cv.setPointerCapture) { try { cv.setPointerCapture(e.pointerId); } catch(_){} }
 });
 
-cv.addEventListener('mouseleave', () => {
+cv.addEventListener('pointerup', e => {
+  if (cv.releasePointerCapture){
+    try { cv.releasePointerCapture(e.pointerId); } catch(_){}
+  }
+});
+
+cv.addEventListener('pointerleave', () => {
   state.hoverX = null;
   state.hoverSPL = null;
 });
 
-function drawHoverInfo() {
-  const x = state.hoverX;
-  const y = state.hoverY;
+/* كتم قائمة السياق على الجوال */
+cv.addEventListener('contextmenu', e => e.preventDefault());
 
+function drawHoverInfo(){
+  const x = state.hoverX, y = state.hoverY;
   ctx.strokeStyle = 'rgba(56,189,248,0.4)';
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
@@ -910,10 +997,8 @@ function drawHoverInfo() {
   ctx.setLineDash([]);
 
   const spl = state.hoverSPL;
-  const boxW = 140;
-  const boxH = 46;
-  let bx = x + 12;
-  let by = y - boxH - 12;
+  const boxW = 140, boxH = 46;
+  let bx = x + 12, by = y - boxH - 12;
   if (bx + boxW > cv.width - 10) bx = x - boxW - 12;
   if (by < 10) by = y + 12;
 
@@ -921,27 +1006,24 @@ function drawHoverInfo() {
   ctx.strokeStyle = '#38bdf8';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.roundRect(bx, by, boxW, boxH, 8);
-  ctx.fill();
-  ctx.stroke();
+  if (ctx.roundRect) ctx.roundRect(bx, by, boxW, boxH, 8);
+  else ctx.rect(bx, by, boxW, boxH);
+  ctx.fill(); ctx.stroke();
 
-  ctx.fillStyle = '#8b949e';
-  ctx.font = '10px Cairo';
+  ctx.fillStyle = '#8b949e'; ctx.font = '10px Cairo';
   ctx.textAlign = 'right';
   ctx.fillText('تقدير SPL', bx + boxW - 12, by + 18);
 
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 15px Cairo';
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 15px Cairo';
   ctx.fillText(spl.toFixed(1) + ' ديسيبل', bx + boxW - 12, by + 37);
 }
 
 /* ═══════════════════════════════════════════════════════════
    الاقتراح الذكي
    ═══════════════════════════════════════════════════════════ */
-function applySmartAI() {
+function applySmartAI(){
   const spk = SPEAKERS[state.model];
   const T = TERRAIN[state.env];
-
   const effectiveCover = spk.cover * (1 - T.absorption * 0.5);
   const spacing = effectiveCover * 0.95;
   const optimalQty = Math.max(2, Math.ceil(state.len / spacing));
@@ -957,7 +1039,7 @@ function applySmartAI() {
 /* ═══════════════════════════════════════════════════════════
    إعادة التعيين
    ═══════════════════════════════════════════════════════════ */
-function resetAll() {
+function resetAll(){
   if (!confirm('مسح جميع بيانات التصميم الحالية؟')) return;
   $('area_len').value = 100;
   $('qty').value = 12;
@@ -969,7 +1051,7 @@ function resetAll() {
 /* ═══════════════════════════════════════════════════════════
    التقرير
    ═══════════════════════════════════════════════════════════ */
-function openReport() {
+function openReport(){
   const spk = SPEAKERS[state.model];
   const T = TERRAIN[state.env];
   const totalW = spk.watt * state.qty;
@@ -977,7 +1059,7 @@ function openReport() {
   const ampRec = Math.ceil(totalW * 1.25);
   const coverage = Math.min(100, (spk.cover / spacing) * 100);
 
-  const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+  const today = new Date().toLocaleDateString('ar-EG', {year:'numeric', month:'long', day:'numeric'});
   $('repDate').textContent = today;
 
   $('execSummary').innerHTML = `
@@ -1048,7 +1130,7 @@ function openReport() {
   window.scrollTo(0, 0);
 }
 
-function closeReport() {
+function closeReport(){
   $('reportPage').style.display = 'none';
 }
 
@@ -1056,8 +1138,27 @@ function closeReport() {
    التشغيل
    ═══════════════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
+  resizeCanvas();
   onChange();
   loop();
+});
+
+/* إعادة القياس عند تغير الأبعاد */
+let rzT;
+function scheduleResize(){
+  clearTimeout(rzT);
+  rzT = setTimeout(resizeCanvas, 100);
+}
+window.addEventListener('resize', scheduleResize);
+window.addEventListener('orientationchange', scheduleResize);
+
+if (window.ResizeObserver){
+  new ResizeObserver(scheduleResize).observe(cv.parentElement);
+}
+
+/* منع التكبير بإصبعين على القماش */
+document.addEventListener('gesturestart', e => {
+  if (e.target === cv) e.preventDefault();
 });
 </script>
 </body>
