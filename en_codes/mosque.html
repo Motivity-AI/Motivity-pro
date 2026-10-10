@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
 <title>Motivity PRO - Mosque Acoustic Design System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -9,47 +11,112 @@
   --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
   --card:#21262d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
   --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --orange:#ff8c1a;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
 }
-*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
-.wrapper{display:flex;flex:1;overflow:hidden}
-.sidebar{width:400px;background:var(--panel);padding:14px;border-right:4px solid var(--red);overflow-y:auto}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  height:100vh;height:100dvh;
+  overflow:hidden;display:flex;flex-direction:column;
+  overscroll-behavior:none;
+}
+.wrapper{display:flex;flex:1;overflow:hidden;position:relative;min-height:0}
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  width:400px;flex:0 0 auto;background:var(--panel);padding:14px;
+  border-right:4px solid var(--red);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
-h2{text-align:center;margin-bottom:10px;font-weight:900;letter-spacing:1px}
+
+.side-head{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px}
+h2{font-weight:900;letter-spacing:1px;font-size:20px;text-align:center}
 h2 span{color:var(--red)}
+#closeSide{display:none}
+
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
 label{font-size:10.5px;color:var(--muted);display:block;margin-top:8px;font-weight:600}
-input,select{width:100%;padding:8px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:12.5px}
+input,select{width:100%;padding:9px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:13px}
 input:focus,select:focus{outline:none;border-color:var(--blue)}
-.row{display:flex;gap:6px}.row>*{flex:1}
-button{width:100%;padding:10px;border:none;border-radius:7px;font-weight:700;cursor:pointer;margin-top:6px;transition:.2s;font-family:inherit;font-size:12.5px}
+.row{display:flex;gap:6px}.row>*{flex:1;min-width:0}
+button{width:100%;padding:11px;border:none;border-radius:7px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;font-size:13px;min-height:42px}
 .btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:#c40010}
 .btn-secondary{background:var(--blue);color:#000}.btn-secondary:hover{background:#0ea5e9}
 .btn-reset{background:#30363d;color:#ff4d4d;border:1px solid #444}.btn-reset:hover{background:#ff4d4d;color:#fff}
 .btn-outline{background:#2a2f36;color:#ccc;border:1px solid #444}.btn-outline:hover{background:#3a4048}
 .active-mode{background:var(--blue)!important;color:#000!important}
-.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:11.5px;color:var(--text);font-weight:600}
-.checkbox-row input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--red);cursor:pointer;flex:0 0 auto}
-input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(--blue);cursor:pointer;margin-top:8px;height:22px}
-.canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px}
-.toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.toolbar button{width:auto;padding:5px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d}
-.toolbar button:hover:not(:disabled){background:#30363d}
-.toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
-.toolbar button:disabled{opacity:.35;cursor:not-allowed}
-.toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
-.toolbar button.hist:hover:not(:disabled){background:#3d3016}
-.canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:12px;color:var(--text);font-weight:600}
+.checkbox-row input[type=checkbox]{width:20px;height:20px;margin:0;accent-color:var(--red);cursor:pointer;flex:0 0 auto}
+input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(--blue);cursor:pointer;margin-top:8px;height:30px}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
 .stat .v{font-size:15px;font-weight:900;color:var(--blue);font-family:'JetBrains Mono',monospace}
 .stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
 .stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
 .hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
-#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222}
+
+/* ============ CANVAS AREA ============ */
+.canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px;min-width:0;min-height:0}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.toolbar button{width:auto;padding:6px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d;min-height:34px}
+.toolbar button:hover:not(:disabled){background:#30363d}
+.toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
+.toolbar button:disabled{opacity:.35;cursor:not-allowed}
+.toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
+.toolbar button.hist:hover:not(:disabled){background:#3d3016}
+.canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
+canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none}
+
+/* ============ MOBILE DRAWER ============ */
+#menuBtn{
+  display:none;position:fixed;top:calc(10px + var(--safe-t));left:10px;z-index:200;
+  width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;
+  border:none;font-size:20px;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0;
+}
+#menuBtn:active{transform:scale(.93)}
+#backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
+#backdrop.show{display:block}
+
+@media (max-width:1100px) and (min-width:901px){
+  .sidebar{width:340px}
+}
+@media (max-width:900px){
+  #menuBtn{display:flex}
+  #closeSide{
+    display:flex;align-items:center;justify-content:center;
+    position:absolute;right:0;top:0;width:38px;height:38px;min-height:0;padding:0;
+    background:#30363d;color:#fff;border-radius:10px;font-size:16px;
+  }
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;z-index:180;
+    width:min(400px,88vw);
+    transform:translateX(-102%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    padding-top:calc(14px + var(--safe-t));
+    padding-bottom:calc(14px + var(--safe-b));
+    box-shadow:6px 0 34px rgba(0,0,0,.7);
+    will-change:transform;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .canvas-container{padding:8px;gap:6px}
+  .toolbar{gap:4px}
+  .toolbar button{padding:8px 10px;font-size:11.5px;min-height:38px}
+  canvas{max-height:none;border-radius:8px}
+  .report-grid{grid-template-columns:1fr;gap:14px}
+  .paper{padding:18px}
+  .paper h1{font-size:18px}
+  .table-boq th,.table-boq td{padding:6px;font-size:11px}
+  .sig{flex-direction:column;gap:14px}
+}
+
+/* ============ REPORT ============ */
+#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222;-webkit-overflow-scrolling:touch}
 .paper{max-width:920px;margin:auto;background:#fff;padding:32px;border-top:10px solid var(--red);box-shadow:0 0 30px rgba(0,0,0,.3)}
 .paper h1{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:16px;font-size:22px}
 .paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-left:4px solid var(--red);padding-left:8px}
@@ -62,18 +129,31 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 .table-boq th{background:#1a1a1a;color:#fff}
 .table-boq tr:nth-child(even) td{background:#fafafa}
 .sig{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px dashed #ccc;font-size:12px}
-#toast{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+
+/* ============ TOAST ============ */
+#toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
 .toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px}
 .toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--bad)}.toast.warn{border-left-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-@media print{.no-print{display:none!important}#reportView{position:absolute;inset:0}}
+
+@media print{
+  .no-print{display:none!important}
+  #reportView{position:absolute;inset:0;padding:0}
+  .paper{box-shadow:none;max-width:none}
+}
 </style>
 </head>
 <body>
 
+<button id="menuBtn" class="no-print" onclick="openSidebar()" aria-label="Open menu">☰</button>
+<div id="backdrop" class="no-print" onclick="closeSidebar()"></div>
+
 <div class="wrapper no-print">
-  <aside class="sidebar">
-    <h2>MOTIVITY <span>PRO</span></h2>
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <h2>MOTIVITY <span>PRO</span></h2>
+      <button id="closeSide" onclick="closeSidebar()" aria-label="Close menu">✖</button>
+    </div>
 
     <div class="box">
       <h3>📋 Project Information</h3>
@@ -90,12 +170,12 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     <div class="box">
       <h3>📐 Hall Dimensions (m)</h3>
       <div class="row">
-        <input type="number" id="m_len" value="30" oninput="draw()" placeholder="Length">
-        <input type="number" id="m_wid" value="15" oninput="draw()" placeholder="Width">
-        <input type="number" id="m_h"   value="6"  oninput="draw()" placeholder="Height">
+        <input type="number" id="m_len" value="30" oninput="onDimChange()" placeholder="Length">
+        <input type="number" id="m_wid" value="15" oninput="onDimChange()" placeholder="Width">
+        <input type="number" id="m_h"   value="6"  oninput="onDimChange()" placeholder="Height">
       </div>
       <label>Absorption Coefficient (0.05 hard – 0.30 treated)</label>
-      <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="draw()">
+      <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="onDimChange()">
     </div>
 
     <div class="box">
@@ -108,8 +188,8 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ Smart Auto Distribution</button>
       <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode (Free Placement)</button>
       <div class="hint">
-        💡 <b>Manual:</b> Click anywhere inside to place a speaker freely<br>
-        💡 Click on the minaret to add a horn<br>
+        💡 <b>Manual:</b> Tap anywhere inside to place a speaker freely<br>
+        💡 Tap on the minaret to add a horn<br>
         💡 <b>Rotate:</b> Select a speaker then drag the white handle
       </div>
     </div>
@@ -120,10 +200,11 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
       </label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
-             onmousedown="pushUndo()"
+             onpointerdown="pushUndo()"
              oninput="setSelectedAngle(this.value)">
       <div class="hint">↔️ Drag the slider or the white handle to rotate</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ Clear Selection</button>
+      <button class="btn-reset" onclick="deleteSelected()">🗑️ Delete This Speaker</button>
     </div>
 
     <div class="box">
@@ -149,9 +230,12 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     </div>
 
     <button class="btn-primary" onclick="generateReport()">📄 Generate Technical Report</button>
-    <button class="btn-outline" onclick="saveProject()">💾 Save Project</button>
-    <button class="btn-outline" onclick="loadProject()">📂 Load Project</button>
-    <button class="btn-reset" onclick="resetData()">🔄 Reset All Data</button>
+    <button class="btn-outline" onclick="saveProject()">💾 Save Project (Browser)</button>
+    <div class="row" style="margin-top:6px">
+      <button class="btn-outline" style="margin-top:0" onclick="exportProject()">⬇️ Export</button>
+      <button class="btn-outline" style="margin-top:0" onclick="importProject()">⬆️ Import</button>
+    </div>
+    <button class="btn-reset" onclick="resetData()" style="margin-top:6px">🔄 Reset All Data</button>
   </aside>
 
   <div class="canvas-container">
@@ -159,8 +243,9 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ Undo</button>
       <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ Redo</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 Coverage</button>
+      <button id="tgHeat" onclick="toggleHeat()">🔥 Heatmap</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ Grid</button>
-      <button onclick="clearSpeakers()">🗑️ Clear Speakers</button>
+      <button onclick="clearSpeakers()">🗑️ Clear</button>
     </div>
     <div class="canvas-wrap" id="cDiv">
       <canvas id="mosqueCanvas"></canvas>
@@ -177,7 +262,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     <h1>MOTIVITY Technical Design Report</h1>
     <div id="project_header"></div>
     <div class="report-grid">
-      <div class="mini-map-box"><strong>Engineering Layout</strong><img id="reportImg"></div>
+      <div class="mini-map-box"><strong>Engineering Layout</strong><img id="reportImg" alt="layout"></div>
       <div id="eng_summary"></div>
     </div>
     <h3>Bill of Quantities (BOQ)</h3>
@@ -218,8 +303,8 @@ const DB_AMP = [
 const MINARET_M = 2.5;
 const MOUNT_H_WALL = 2.8;
 const WALL_THRESHOLD = 0.04;
-const isWallType = t => t === 'Wall';
-const isHornType = t => t === 'Outdoor Horn';
+const isWallType   = t => t === 'Wall';
+const isHornType   = t => t === 'Outdoor Horn';
 const isColumnType = t => t === 'Column';
 
 /* ============ STATE ============ */
@@ -231,20 +316,17 @@ let dragging = null;
 let rotating = null;
 let manualMode = false;
 let showCoverage = true;
+let showHeat = false;
 let showGrid = true;
 let uid = 0;
 let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
 let ampResult = {amps:0};
 
-/* ============ UNDO / REDO SYSTEM ============ */
+/* ============ UNDO / REDO ============ */
 const MAX_UNDO = 40;
-let undoStack = [];
-let redoStack = [];
-let dragSnapshot = null;
+let undoStack = [], redoStack = [], dragSnapshot = null;
 
-function snapshot(){
-  return JSON.stringify(speakers.map(s => ({...s})));
-}
+function snapshot(){ return JSON.stringify(speakers.map(s => ({...s}))); }
 function pushUndo(){
   const snap = snapshot();
   if (undoStack.length && undoStack[undoStack.length-1] === snap) return;
@@ -254,34 +336,25 @@ function pushUndo(){
   updateUndoButtons();
 }
 function undo(){
-  if (undoStack.length === 0) return;
+  if (!undoStack.length) return;
   redoStack.push(snapshot());
-  const prev = JSON.parse(undoStack.pop());
-  speakers = prev;
+  speakers = JSON.parse(undoStack.pop());
   selectedId = null;
-  updateRotationPanel();
-  updateAmpLogic();
-  draw();
-  updateUndoButtons();
+  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
   toast('↶ Undo', 'ok');
 }
 function redo(){
-  if (redoStack.length === 0) return;
+  if (!redoStack.length) return;
   undoStack.push(snapshot());
-  const next = JSON.parse(redoStack.pop());
-  speakers = next;
+  speakers = JSON.parse(redoStack.pop());
   selectedId = null;
-  updateRotationPanel();
-  updateAmpLogic();
-  draw();
-  updateUndoButtons();
+  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
   toast('↷ Redo', 'ok');
 }
 function updateUndoButtons(){
-  const u = document.getElementById('undoBtn');
-  const r = document.getElementById('redoBtn');
-  if (u) u.disabled = (undoStack.length === 0);
-  if (r) r.disabled = (redoStack.length === 0);
+  const u = document.getElementById('undoBtn'), r = document.getElementById('redoBtn');
+  if (u) u.disabled = !undoStack.length;
+  if (r) r.disabled = !redoStack.length;
 }
 
 /* ============ UTILITIES ============ */
@@ -289,7 +362,7 @@ const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
 
-function toast(msg, type='') {
+function toast(msg, type=''){
   const t = document.createElement('div');
   t.className = 'toast ' + type; t.textContent = msg;
   $('toast').appendChild(t);
@@ -303,44 +376,45 @@ function getDims(){
     alpha: parseFloat($('m_alpha').value)||0.12
   };
 }
-function getMouse(e){
+function getPointer(e){
   const r = canvas.getBoundingClientRect();
-  const sx = canvas.width / r.width;
-  const sy = canvas.height / r.height;
-  return {mx: (e.clientX - r.left) * sx, my: (e.clientY - r.top) * sy};
+  const sx = canvas.width / r.width, sy = canvas.height / r.height;
+  return {mx:(e.clientX - r.left) * sx, my:(e.clientY - r.top) * sy};
 }
 function toLocal(p){
-  const {x0, y0, W, L} = layout;
-  const rx = (p.mx - x0) / W, ry = (p.my - y0) / L;
-  return {rx: clamp(rx,0,1), ry: clamp(ry,0,1),
-          rawRx: rx, rawRy: ry,
-          inside: rx>=0 && rx<=1 && ry>=0 && ry<=1,
-          mx: p.mx, my: p.my};
+  const {x0,y0,W,L} = layout;
+  const rx = (p.mx - x0)/W, ry = (p.my - y0)/L;
+  return {rx:clamp(rx,0,1), ry:clamp(ry,0,1), rawRx:rx, rawRy:ry,
+          inside: rx>=0 && rx<=1 && ry>=0 && ry<=1, mx:p.mx, my:p.my};
 }
 function getSpeakerPos(s){
-  if (s.zone === 'minaret') {
-    return {x: layout.mcx + Math.cos(s.ang) * (layout.mS * 0.30),
-            y: layout.mcy + Math.sin(s.ang) * (layout.mS * 0.30)};
-  }
-  return {x: layout.x0 + s.rx * layout.W, y: layout.y0 + s.ry * layout.L};
+  if (s.zone === 'minaret')
+    return {x: layout.mcx + Math.cos(s.ang)*(layout.mS*0.30),
+            y: layout.mcy + Math.sin(s.ang)*(layout.mS*0.30)};
+  return {x: layout.x0 + s.rx*layout.W, y: layout.y0 + s.ry*layout.L};
 }
 function getFacing(s){
   if (s.zone === 'minaret') return s.ang;
   return (s.facing !== undefined ? s.facing : Math.PI/2);
 }
-function isOnWall(s){
-  return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1 - WALL_THRESHOLD);
+function isOnWall(s){ return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1-WALL_THRESHOLD); }
+function whichWall(s){ return s.rx < 0.5 ? 'left' : 'right'; }
+
+/* ============ SIDEBAR DRAWER ============ */
+function openSidebar(){
+  $('sidebar').classList.add('open');
+  $('backdrop').classList.add('show');
 }
-function whichWall(s){
-  if (s.rx < 0.5) return 'left';
-  return 'right';
+function closeSidebar(){
+  $('sidebar').classList.remove('open');
+  $('backdrop').classList.remove('show');
 }
 
 /* ============ INIT ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
-  for (const id in DB_SPK) {
+  for (const id in DB_SPK){
     const o = DB_SPK[id];
     s1.innerHTML += `<option value="${id}">${id} — ${o.type} ${o.pwr}W</option>`;
   }
@@ -356,169 +430,200 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ DRAW WALL SPEAKER ============ */
+/* ============ HEATMAP ============ */
+function heatColor(t, a){
+  let r,g,b;
+  if (t < 0.25){ const k=t/0.25; r=0; g=k*255; b=255; }
+  else if (t < 0.5){ const k=(t-0.25)/0.25; r=0; g=255; b=255-k*255; }
+  else if (t < 0.75){ const k=(t-0.5)/0.25; r=k*255; g=255; b=0; }
+  else { const k=(t-0.75)/0.25; r=255; g=255-k*255; b=0; }
+  return `rgba(${r|0},${g|0},${b|0},${a})`;
+}
+function drawHeatmap(d, x0, y0, W, L){
+  const indoor = speakers.filter(s => s.zone !== 'minaret');
+  if (!indoor.length) return;
+  const N = 22, cw = W/N, ch = L/N, listH = 1.2;
+  for (let i=0;i<N;i++){
+    for (let j=0;j<N;j++){
+      const px = (i+0.5)/N, py = (j+0.5)/N;
+      let tot = 0;
+      for (const s of indoor){
+        const dx = (px - s.rx)*d.W, dy = (py - s.ry)*d.L, dz = d.H - listH;
+        const dist = Math.max(1, Math.sqrt(dx*dx+dy*dy+dz*dz));
+        const sp = DB_SPK[s.model];
+        const a = Math.atan2(dy, dx);
+        let diff = Math.abs(((a - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+        if (diff > Math.PI) diff = 2*Math.PI - diff;
+        const off = diff <= (sp.covH/2)*RAD ? 0 : -6;
+        const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + off;
+        tot += Math.pow(10, spl/10);
+      }
+      const spl = 10*Math.log10(tot || 1e-9);
+      if (spl < 50) continue;
+      const t = clamp((spl - 72)/23, 0, 1);
+      ctx.fillStyle = heatColor(t, 0.5);
+      ctx.fillRect(x0 + i*cw, y0 + j*ch, cw + 1, ch + 1);
+    }
+  }
+}
+
+/* ============ WALL SPEAKER ============ */
 function drawWallSpeaker(pos, s, isSel, db){
-  const wall = whichWall(s);
-  const isLeft = wall === 'left';
+  const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
-  const boxW = isCol ? 16 : 20;
-  const boxH = isCol ? 40 : 30;
+  const boxW = isCol ? 16 : 20, boxH = isCol ? 40 : 30;
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
   const py = pos.y;
   const bx = isLeft ? wallX : wallX - boxW;
 
   ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
   ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.moveTo(wallX, py - boxH/2 - 6);
-  ctx.lineTo(wallX, py + boxH/2 + 6);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(wallX, py - boxH/2 - 6); ctx.lineTo(wallX, py + boxH/2 + 6); ctx.stroke();
 
   const col = isCol ? "#e60012" : "#ff8c1a";
   ctx.fillStyle = isSel ? "#38bdf8" : col;
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
-
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
-  if (isSel) {
+  if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.strokeRect(bx - 2, py - boxH/2 - 2, boxW + 4, boxH + 4);
+    ctx.strokeRect(bx-2, py-boxH/2-2, boxW+4, boxH+4);
   }
   ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.lineWidth = 1.5;
   const lines = isCol ? 7 : 5;
-  for (let i = 1; i < lines; i++) {
-    const ly = py - boxH/2 + i * (boxH/lines);
-    ctx.beginPath(); ctx.moveTo(bx + 3, ly); ctx.lineTo(bx + boxW - 3, ly); ctx.stroke();
+  for (let i=1;i<lines;i++){
+    const ly = py - boxH/2 + i*(boxH/lines);
+    ctx.beginPath(); ctx.moveTo(bx+3, ly); ctx.lineTo(bx+boxW-3, ly); ctx.stroke();
   }
   ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
   ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
 
   const facing = getFacing(s);
-  const arrowStartX = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
+  const asx = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
   ctx.save();
-  ctx.translate(arrowStartX, py);
-  ctx.rotate(facing);
+  ctx.translate(asx, py); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(0, 0); ctx.lineTo(32, 0);
-  ctx.lineTo(24, -9); ctx.moveTo(32, 0); ctx.lineTo(24, 9);
-  ctx.stroke();
-  ctx.restore();
+  ctx.moveTo(0,0); ctx.lineTo(32,0);
+  ctx.lineTo(24,-9); ctx.moveTo(32,0); ctx.lineTo(24,9);
+  ctx.stroke(); ctx.restore();
 
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
   ctx.font = "bold 12px Inter";
   ctx.textAlign = isLeft ? "left" : "right";
+  const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.7)";
-  const textW = ctx.measureText(s.model).width + 10;
-  const tx = isLeft ? lx - 5 : lx - textW + 5;
-  ctx.fillRect(tx, py - 8, textW, 16);
-  ctx.fillStyle = "#fff";
-  ctx.fillText(s.model, lx, py + 4);
-
+  ctx.fillRect(isLeft ? lx-5 : lx-tw+5, py-8, tw, 16);
+  ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, py+4);
   ctx.font = "bold 9px Inter";
   ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
-  ctx.textAlign = isLeft ? "left" : "right";
-  ctx.fillText(isCol ? "Column" : "Wall", lx, py + 18);
+  ctx.fillText(isCol ? "Column" : "Wall", lx, py+18);
 }
 
-/* ============ DRAW FREE SPEAKER ============ */
+/* ============ FREE SPEAKER ============ */
 function drawFreeSpeaker(pos, s, isSel, db){
   const isCol = isColumnType(db.type);
   const facing = getFacing(s);
   const r = isSel ? 15 : 13;
 
   ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
-  ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 6, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
 
   ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
 
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
-
-  if (isSel) {
+  if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 4, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
   }
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
 
   ctx.save();
-  ctx.translate(pos.x, pos.y);
-  ctx.rotate(facing);
+  ctx.translate(pos.x, pos.y); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(r + 3, 0); ctx.lineTo(r + 26, 0);
-  ctx.lineTo(r + 20, -8); ctx.moveTo(r + 26, 0); ctx.lineTo(r + 20, 8);
-  ctx.stroke();
-  ctx.restore();
+  ctx.moveTo(r+3,0); ctx.lineTo(r+26,0);
+  ctx.lineTo(r+20,-8); ctx.moveTo(r+26,0); ctx.lineTo(r+20,8);
+  ctx.stroke(); ctx.restore();
 
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
   ctx.font = "bold 12px Inter";
   ctx.textAlign = rightSide ? "right" : "left";
-  const textW = ctx.measureText(s.model).width + 10;
-  const tx = rightSide ? lx - textW + 5 : lx - 5;
+  const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.75)";
-  ctx.fillRect(tx, pos.y - 8, textW, 16);
-  ctx.fillStyle = "#fff";
-  ctx.fillText(s.model, lx, pos.y + 4);
-
+  ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
+  ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
   ctx.font = "bold 9px Inter";
   ctx.fillStyle = "#a0aec0";
-  ctx.fillText("Free Position", lx, pos.y + 18);
+  ctx.fillText("Free Position", lx, pos.y+18);
 }
 
 /* ============ MAIN DRAW ============ */
+let heatDirty = true;
 function draw(){
   const div = $('cDiv');
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = div.clientWidth * dpr;
-  canvas.height = div.clientHeight * dpr;
-  canvas.style.width = div.clientWidth + 'px';
-  canvas.style.height = div.clientHeight + 'px';
+  if (!div.clientWidth || !div.clientHeight) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width  = Math.round(div.clientWidth * dpr);
+  canvas.height = Math.round(div.clientHeight * dpr);
 
   const d = getDims();
   if (!d.L || !d.W) return;
 
   const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.80;
-  const W = d.W * scale, L = d.L * scale;
-  const mS = MINARET_M * scale;
+  const W = d.W*scale, L = d.L*scale;
+  const mS = MINARET_M*scale;
   const x0 = (canvas.width - W)/2 + mS/2;
   const y0 = (canvas.height - L)/2 + mS/2;
-  const mcx = x0 - mS/2;
-  const mcy = y0 + mS/2;
+  const mcx = x0 - mS/2, mcy = y0 + mS/2;
 
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (showGrid) {
+  /* grid */
+  if (showGrid){
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
-    for (let x=0; x<=d.W; x+=2) {
+    for (let x=0; x<=d.W; x+=2){
       const px = x0 + x*scale;
       ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke();
     }
-    for (let y=0; y<=d.L; y+=2) {
+    for (let y=0; y<=d.L; y+=2){
       const py = y0 + y*scale;
       ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke();
     }
   }
 
+  /* heatmap */
+  if (showHeat){
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
+    drawHeatmap(d, x0, y0, W, L);
+    ctx.restore();
+  }
+
+  /* hall outline */
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
+  /* mihrab */
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter"; ctx.textAlign = "center";
   ctx.fillText("MIHRAB", x0 + W/2, y0 - scale*1.8);
 
+  /* dimensions */
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter";
   ctx.fillText(`${d.W} m (Width)`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`${d.L} m (Length)`, 0, 0); ctx.restore();
 
+  /* minaret */
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -529,101 +634,95 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Inter"; ctx.textAlign = "center";
   ctx.fillText("MINARET", mcx, mcy + mS*0.62);
 
-  if (showCoverage) {
+  /* coverage cones */
+  if (showCoverage){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
-      const half = (db.covH/2) * RAD;
+      const half = (db.covH/2)*RAD;
       const isSel = s.id === selectedId;
-      if (isColumnType(db.type)) {
-        ctx.fillStyle = isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)';
-      } else {
-        ctx.fillStyle = isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)';
-      }
+      ctx.fillStyle = isColumnType(db.type)
+        ? (isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)')
+        : (isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)');
       const pos = getSpeakerPos(s);
       const facing = getFacing(s);
       const R = Math.max(W, L) * 2.5;
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, facing - half, facing + half);
+      ctx.arc(pos.x, pos.y, R, facing-half, facing+half);
       ctx.closePath(); ctx.fill();
     });
     ctx.restore();
 
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
-      const half = (db.covH/2) * RAD;
+      const half = (db.covH/2)*RAD;
       const isSel = s.id === selectedId;
       ctx.fillStyle = isSel ? 'rgba(230,0,18,.30)' : 'rgba(230,0,18,.14)';
       const pos = getSpeakerPos(s);
-      const R = Math.max(W, L) * 2;
+      const R = Math.max(W, L)*2;
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, s.ang - half, s.ang + half);
+      ctx.arc(pos.x, pos.y, R, s.ang-half, s.ang+half);
       ctx.closePath(); ctx.fill();
     });
   }
 
+  /* speakers */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
     const facing = getFacing(s);
     const db = DB_SPK[s.model];
 
-    if (s.zone === 'minaret') {
+    if (s.zone === 'minaret'){
       const r = Math.max(8, layout.mS*0.18);
       ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.rotate(s.ang);
+      ctx.translate(pos.x, pos.y); ctx.rotate(s.ang);
       ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
       ctx.beginPath();
-      ctx.moveTo(r*1.4, 0);
-      ctx.lineTo(-r*0.9, -r*0.9);
-      ctx.lineTo(-r*0.9,  r*0.9);
+      ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9);
       ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = isSel ? "#fff" : "#000";
-      ctx.lineWidth = 2; ctx.stroke();
-      if (isSel) {
+      ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
+      if (isSel){
         ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(r*1.8, 0);
-        ctx.lineTo(-r*1.3, -r*1.3);
-        ctx.lineTo(-r*1.3,  r*1.3);
+        ctx.moveTo(r*1.8, 0); ctx.lineTo(-r*1.3, -r*1.3); ctx.lineTo(-r*1.3, r*1.3);
         ctx.closePath(); ctx.stroke();
       }
       ctx.restore();
-    } else if (isOnWall(s)) {
+    } else if (isOnWall(s)){
       drawWallSpeaker(pos, s, isSel, db);
     } else {
       drawFreeSpeaker(pos, s, isSel, db);
     }
 
-    if (isSel) {
-      const hx = pos.x + Math.cos(facing) * 52;
-      const hy = pos.y + Math.sin(facing) * 52;
+    if (isSel){
+      const hx = pos.x + Math.cos(facing)*52;
+      const hy = pos.y + Math.sin(facing)*52;
       ctx.strokeStyle = "rgba(56,189,248,.8)";
       ctx.lineWidth = 2; ctx.setLineDash([5,4]);
       ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(hx, hy); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = "#fff";
-      ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hx, hy, 13, 0, Math.PI*2); ctx.fill();
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = "#0d1117"; ctx.font = "bold 14px Inter";
+      ctx.fillStyle = "#0d1117"; ctx.font = "bold 15px Inter";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
     }
   });
+  heatDirty = false;
 }
 
-/* ============ INTERACTION ============ */
+/* ============ INTERACTION (Pointer Events = mouse + touch) ============ */
 function hitTest(p){
-  for (let i = speakers.length - 1; i >= 0; i--) {
+  for (let i = speakers.length - 1; i >= 0; i--){
     const s = speakers[i];
     const pos = getSpeakerPos(s);
-    let hitR = 20;
-    if (s.zone === 'minaret') hitR = 16;
+    const hitR = s.zone === 'minaret' ? 22 : 26;
     if (Math.hypot(p.mx - pos.x, p.my - pos.y) < hitR) return s;
   }
   return null;
@@ -631,12 +730,13 @@ function hitTest(p){
 function hitRotateHandle(s, mx, my){
   const pos = getSpeakerPos(s);
   const facing = getFacing(s);
-  const hx = pos.x + Math.cos(facing) * 52;
-  const hy = pos.y + Math.sin(facing) * 52;
-  return Math.hypot(mx - hx, my - hy) < 16;
+  const hx = pos.x + Math.cos(facing)*52;
+  const hy = pos.y + Math.sin(facing)*52;
+  return Math.hypot(mx-hx, my-hy) < 24;
 }
 function addSpeaker(rx, ry, model, facing){
-  const s = {id: ++uid, rx, ry, model, zone:'mosque', facing: (facing !== undefined ? facing : Math.PI/2)};
+  const s = {id: ++uid, rx, ry, model, zone:'mosque',
+             facing:(facing !== undefined ? facing : Math.PI/2)};
   speakers.push(s);
   return s;
 }
@@ -647,15 +747,18 @@ function isMinaretArea(m){
   return Math.hypot(m.mx - layout.mcx, m.my - layout.mcy) < layout.mS * 0.95;
 }
 
-canvas.addEventListener('mousedown', e => {
-  if (e.button !== 0) return;
-  const m = getMouse(e);
+function onPointerDown(e){
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  e.preventDefault();
+  if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch(_){} }
+
+  const m = getPointer(e);
   const p = toLocal(m);
 
   /* 1) rotation handle */
-  if (selectedId) {
+  if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
-    if (s && hitRotateHandle(s, m.mx, m.my)) {
+    if (s && hitRotateHandle(s, m.mx, m.my)){
       dragSnapshot = snapshot();
       rotating = s;
       canvas.style.cursor = 'grabbing';
@@ -663,52 +766,48 @@ canvas.addEventListener('mousedown', e => {
     }
   }
 
-  /* 2) drag existing speaker */
+  /* 2) drag existing */
   const hit = hitTest(p);
-  if (hit) {
+  if (hit){
     selectedId = hit.id;
     updateRotationPanel();
-    if (hit.zone !== 'minaret') {
+    if (hit.zone !== 'minaret'){
       dragSnapshot = snapshot();
       dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
 
-  /* 3) click on empty space */
-  if (!p.inside && !isMinaretArea(m)) { deselectSpeaker(); return; }
+  /* 3) empty space */
+  if (!p.inside && !isMinaretArea(m)){ deselectSpeaker(); return; }
 
   const model = $('m_model').value;
   const spk = DB_SPK[model];
 
-  /* ========== MANUAL MODE ========== */
-  if (manualMode) {
+  if (manualMode){
     pushUndo();
-    if (isMinaretArea(m)) {
+    if (isMinaretArea(m)){
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
       toast('Horn added on minaret', 'ok');
-    } else if (isHornType(spk.type)) {
+    } else if (isHornType(spk.type)){
       undoStack.pop(); updateUndoButtons();
       toast('Outdoor horns can only be placed on the minaret', 'warn');
       return;
     } else {
-      const cx = layout.x0 + layout.W * 0.5;
-      const cy = layout.y0 + layout.L * 0.5;
-      const facing = Math.atan2(cy - m.my, cx - m.mx);
-      addSpeaker(p.rx, p.ry, model, facing);
+      const cx = layout.x0 + layout.W*0.5, cy = layout.y0 + layout.L*0.5;
+      addSpeaker(p.rx, p.ry, model, Math.atan2(cy - m.my, cx - m.mx));
       toast('Speaker placed freely', 'ok');
     }
     selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  /* ========== AUTO MODE ========== */
-  if (isHornType(spk.type)) {
-    if (isMinaretArea(m)) {
+  /* auto mode */
+  if (isHornType(spk.type)){
+    if (isMinaretArea(m)){
       pushUndo();
-      const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
-      addMinaretHorn(model, ang);
+      addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
     } else {
       toast('Outdoor horns can only be placed on the minaret', 'warn'); return;
     }
@@ -718,41 +817,43 @@ canvas.addEventListener('mousedown', e => {
     addSpeaker(1, p.ry, model, Math.PI);
   }
   updateAmpLogic(); draw();
-});
+}
 
-canvas.addEventListener('mousemove', e => {
-  const m = getMouse(e);
-  if (rotating) {
+function onPointerMove(e){
+  const m = getPointer(e);
+
+  if (rotating){
     const pos = getSpeakerPos(rotating);
     const angle = Math.atan2(m.my - pos.y, m.mx - pos.x);
     if (rotating.zone === 'minaret') rotating.ang = angle;
     else rotating.facing = angle;
     updateRotationPanel(); draw(); return;
   }
-  if (dragging) {
+  if (dragging){
     const p = toLocal(m);
     const s = speakers.find(x => x.id === dragging.id);
-    if (s) {
+    if (s){
       s.rx = clamp(p.rx + dragging.offX, 0, 1);
       s.ry = clamp(p.ry + dragging.offY, 0, 1);
       draw();
     }
     return;
   }
+  /* hover cursor (mouse only) */
+  if (e.pointerType !== 'mouse') return;
   let cursor = 'crosshair';
-  if (selectedId) {
+  if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)) cursor = 'grab';
   }
   if (cursor === 'crosshair' && hitTest(toLocal(m))) cursor = 'move';
   canvas.style.cursor = cursor;
-});
+}
 
-window.addEventListener('mouseup', () => {
-  /* If drag/rotate ended with actual change, save previous state to undo */
-  if ((dragging || rotating) && dragSnapshot) {
+function onPointerUp(e){
+  if ((dragging || rotating) && dragSnapshot){
     const after = snapshot();
-    if (dragSnapshot !== after) {
+    if (dragSnapshot !== after){
       undoStack.push(dragSnapshot);
       if (undoStack.length > MAX_UNDO) undoStack.shift();
       redoStack = [];
@@ -762,16 +863,24 @@ window.addEventListener('mouseup', () => {
   dragSnapshot = null;
   dragging = null; rotating = null;
   canvas.style.cursor = 'crosshair';
-});
+  if (canvas.releasePointerCapture && e && e.pointerId !== undefined){
+    try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
+  }
+}
 
+canvas.addEventListener('pointerdown', onPointerDown);
+canvas.addEventListener('pointermove', onPointerMove);
+canvas.addEventListener('pointerup', onPointerUp);
+canvas.addEventListener('pointercancel', onPointerUp);
+canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !dragging && !rotating) canvas.style.cursor = 'crosshair'; });
 canvas.addEventListener('contextmenu', e => {
   e.preventDefault();
-  const p = toLocal(getMouse(e));
+  const p = toLocal(getPointer(e));
   const hit = hitTest(p);
-  if (hit) {
+  if (hit){
     pushUndo();
     speakers = speakers.filter(s => s.id !== hit.id);
-    if (selectedId === hit.id) { selectedId = null; updateRotationPanel(); }
+    if (selectedId === hit.id){ selectedId = null; updateRotationPanel(); }
     updateAmpLogic(); draw();
     toast('Speaker deleted', 'warn');
   }
@@ -781,21 +890,14 @@ canvas.addEventListener('contextmenu', e => {
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
-  toast(manualMode ? '🖐 Manual mode: free placement anywhere' : 'Auto mode: paired on both walls', 'ok');
+  toast(manualMode ? '🖐 Manual mode: free placement' : 'Auto mode: paired on both walls', 'ok');
 }
-function toggleCoverage(){
-  showCoverage = !showCoverage;
-  $('tgCoverage').classList.toggle('on', showCoverage);
-  draw();
-}
-function toggleGrid(){
-  showGrid = !showGrid;
-  $('tgGrid').classList.toggle('on', showGrid);
-  draw();
-}
+function toggleCoverage(){ showCoverage = !showCoverage; $('tgCoverage').classList.toggle('on', showCoverage); draw(); }
+function toggleHeat(){ showHeat = !showHeat; $('tgHeat').classList.toggle('on', showHeat); draw(); }
+function toggleGrid(){ showGrid = !showGrid; $('tgGrid').classList.toggle('on', showGrid); draw(); }
 function clearSpeakers(){
-  if (speakers.length === 0) return toast('No speakers', 'warn');
-  if (confirm(`Clear all ${speakers.length} speakers?`)) {
+  if (!speakers.length) return toast('No speakers', 'warn');
+  if (confirm(`Clear all ${speakers.length} speakers?`)){
     pushUndo();
     speakers = []; selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
@@ -813,14 +915,24 @@ function resetData(){
   toast('Data reset', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
+function deleteSelected(){
+  const s = speakers.find(x => x.id === selectedId);
+  if (!s) return;
+  pushUndo();
+  speakers = speakers.filter(x => x.id !== selectedId);
+  selectedId = null;
+  updateRotationPanel(); updateAmpLogic(); draw();
+  toast('Speaker deleted', 'warn');
+}
+function onDimChange(){ updateAmpLogic(); }
 
 /* ============ ROTATION PANEL ============ */
 function updateRotationPanel(){
   const s = speakers.find(x => x.id === selectedId);
   const box = $('rotationBox');
-  if (!s) { box.style.display = 'none'; return; }
+  if (!s){ box.style.display = 'none'; return; }
   box.style.display = 'block';
-  let posLabel = '';
+  let posLabel;
   if (s.zone === 'minaret') posLabel = ' (Minaret Horn)';
   else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'Left Wall':'Right Wall'})`;
   else posLabel = ' (Free Position)';
@@ -836,8 +948,7 @@ function setSelectedAngle(val){
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
   const rad = parseFloat(val) * RAD;
-  if (s.zone === 'minaret') s.ang = rad;
-  else s.facing = rad;
+  if (s.zone === 'minaret') s.ang = rad; else s.facing = rad;
   $('angleVal').textContent = Math.round(val);
   draw();
 }
@@ -854,13 +965,12 @@ function aiSmartDistribute(){
   speakers = [];
   let hornCount = 0;
 
-  if (addHorns) {
-    const angles = [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI];
-    angles.forEach(ang => addMinaretHorn('UT-08', ang));
-    hornCount = angles.length;
+  if (addHorns){
+    [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI].forEach(ang => addMinaretHorn('UT-08', ang));
+    hornCount = 4;
   }
 
-  if (isHorn) {
+  if (isHorn){
     toast(`${hornCount} horns placed on minaret`, 'ok');
     updateAmpLogic(); draw(); return;
   }
@@ -870,17 +980,15 @@ function aiSmartDistribute(){
   const rows = Math.max(2, Math.ceil(d.L / spacing));
   const gap = d.L / rows;
 
-  for (let i = 0; i < rows; i++) {
-    const yMeters = (i + 0.5) * gap;
-    const r = yMeters / d.L;
+  for (let i=0;i<rows;i++){
+    const r = ((i + 0.5) * gap) / d.L;
     addSpeaker(0, r, model, 0);
     addSpeaker(1, r, model, Math.PI);
   }
 
   const indoorCount = rows * 2;
   const typeName = isColumnType(spk.type) ? 'Column' : 'Wall';
-  const spacingM = gap.toFixed(1);
-  toast(`✅ ${indoorCount} ${typeName} speakers on both walls (${rows} rows, ${spacingM}m spacing)${hornCount ? ` + ${hornCount} horns on minaret` : ''}`, 'ok');
+  toast(`✅ ${indoorCount} ${typeName} speakers (${rows} rows, ${gap.toFixed(1)}m)${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
 
   updateAmpLogic(); draw();
 }
@@ -893,87 +1001,92 @@ function computeAcoustics(){
   const A = S * d.alpha;
   const rt60 = A > 0 ? 0.161 * V / A : 0;
 
-  const pts = [
-    {x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}
-  ];
+  const pts = [{x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}];
   const listH = 1.2;
-  const indoorSpk = speakers.filter(s => s.zone !== 'minaret');
+  const indoorSpk  = speakers.filter(s => s.zone !== 'minaret');
   const outdoorSpk = speakers.filter(s => s.zone === 'minaret');
 
   let splSum = 0;
   pts.forEach(p => {
     let pTotal = 0;
     indoorSpk.forEach(s => {
-      const dx = (p.x - s.rx) * d.W;
-      const dy = (p.y - s.ry) * d.L;
-      const dz = d.H - listH;
+      const dx = (p.x - s.rx)*d.W, dy = (p.y - s.ry)*d.L, dz = d.H - listH;
       const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
       const sp = DB_SPK[s.model];
-      const facing = getFacing(s);
       const angleToP = Math.atan2(dy, dx);
-      let diff = Math.abs(((angleToP - facing + Math.PI) % (2*Math.PI)) - Math.PI);
+      let diff = Math.abs(((angleToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
       if (diff > Math.PI) diff = 2*Math.PI - diff;
-      const inCone = diff <= (sp.covH/2) * RAD;
+      const inCone = diff <= (sp.covH/2)*RAD;
       const offAxis = inCone ? 0 : -6;
       const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis;
       pTotal += Math.pow(10, spl/10);
     });
     splSum += 10*Math.log10(pTotal || 1e-9);
   });
-  const avgSPL = indoorSpk.length ? splSum / pts.length : 0;
-  return {V, S, rt60, avgSPL, indoorCount: indoorSpk.length, outdoorCount: outdoorSpk.length};
+
+  return {
+    V, S, rt60,
+    avgSPL: indoorSpk.length ? splSum / pts.length : 0,
+    indoorCount: indoorSpk.length,
+    outdoorCount: outdoorSpk.length
+  };
 }
 
 function updateAmpLogic(){
-  const totalPwr = speakers.reduce((a,s)=>a + DB_SPK[s.model].pwr, 0);
+  const totalPwr = speakers.reduce((a,s) => a + DB_SPK[s.model].pwr, 0);
   const N = speakers.length;
-  const ampId = $('amp_model').value;
-  const amp = DB_AMP.find(a => a.id === ampId);
+  const amp = DB_AMP.find(a => a.id === $('amp_model').value);
   let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
-  if (N > 0) {
-    const imp = 8;
-    perCh = Math.max(1, Math.floor(imp / amp.minImp));
+
+  if (N > 0){
+    perCh = Math.max(1, Math.floor(8 / amp.minImp));
     chNeeded = Math.ceil(N / perCh);
     const ampsByCh  = Math.ceil(chNeeded / amp.ch);
     const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
     ampCount = Math.max(ampsByCh, ampsByPwr, 1);
     reason = ampsByCh >= ampsByPwr
-      ? `Constraint: Impedance (max ${perCh} speakers/channel)`
+      ? `Constraint: Impedance (max ${perCh} spk/channel)`
       : `Constraint: Power (30% headroom)`;
   }
-  ampResult = {amps: ampCount, chNeeded, perCh, totalPwr, amp};
+  ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
 
   const ac = computeAcoustics();
   const target = parseFloat($('p_purpose').value);
+
   const splEl = $('spl_v'), splStat = $('st_spl');
-  if (ac.indoorCount === 0) {
+  if (ac.indoorCount === 0){
     splEl.textContent = speakers.length ? 'Ext' : '—';
     splStat.className = 'stat';
   } else {
     splEl.textContent = ac.avgSPL.toFixed(1);
-    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target - 4 ? 'warn' : 'bad');
+    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target-4 ? 'warn' : 'bad');
   }
+
   const rtEl = $('rt_v'), rtStat = $('st_rt');
   rtEl.textContent = ac.rt60.toFixed(2);
   rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
+
   $('pwr_v').textContent = totalPwr;
   $('cnt_v').textContent = N;
+
   const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} horns on minaret</span>` : '';
   $('amp_count_info').innerHTML = N === 0
     ? 'No speakers yet'
     : `⚡ Recommended: <b>${ampCount}</b> × ${amp.id}<br>
        (${chNeeded} channels – ${perCh} spk/ch)<br>
        <span style="color:#8b949e">${reason}</span>${hornInfo}`;
+
   draw();
 }
 
 /* ============ REPORT ============ */
 function generateReport(){
-  if (speakers.length === 0) return toast('Add speakers first', 'err');
+  if (!speakers.length) return toast('Add speakers first', 'err');
   const d = getDims();
   const fs = $('fs_model').value;
   const ac = computeAcoustics();
   const today = new Date().toLocaleDateString('en-GB');
+
   $('project_header').innerHTML = `
     <table class="table-boq" style="margin-bottom:14px">
       <tr><td><b>Project:</b></td><td>${$('p_name').value}</td>
@@ -985,11 +1098,10 @@ function generateReport(){
 
   let counts = {}, totalCable = 0;
   speakers.forEach(s => {
-    counts[s.model] = (counts[s.model]||0) + 1;
+    counts[s.model] = (counts[s.model] || 0) + 1;
     if (s.zone === 'minaret') totalCable += 30;
     else {
-      const dx = (s.rx - 0.5) * d.W;
-      const dy = s.ry * d.L;
+      const dx = (s.rx - 0.5)*d.W, dy = s.ry*d.L;
       totalCable += Math.sqrt(dx*dx + dy*dy) + d.H;
     }
   });
@@ -1005,12 +1117,12 @@ function generateReport(){
       <tr><td>RT60</td><td>${ac.rt60.toFixed(2)} s</td></tr>
       <tr><td>Amplifiers</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
       <tr><td>Processing</td><td>${fs}</td></tr>
-      <tr><td>Outdoor Horns (minaret)</td><td>${ac.outdoorCount}</td></tr>
+      <tr><td>Outdoor Horns</td><td>${ac.outdoorCount}</td></tr>
       <tr><td>Estimated Cable</td><td>~${totalCable} m</td></tr>
     </table>`;
 
   let boq = '';
-  for (const m in counts) {
+  for (const m in counts){
     const sp = DB_SPK[m];
     boq += `<tr>
       <td>Motivity Speaker ${m}</td>
@@ -1026,103 +1138,119 @@ function generateReport(){
   $('boq-body').innerHTML = boq;
 
   const rtEval = ac.rt60 <= 1.2 ? 'Excellent for speech' : ac.rt60 <= 1.8 ? 'Acceptable' : 'Recommend adding absorptive material';
-  const splEval = !ac.indoorCount ? '— no indoor speakers' :
-    (ac.avgSPL >= target ? '✅ meets target' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target`);
+  const splEval = !ac.indoorCount ? '— no indoor speakers'
+    : (ac.avgSPL >= target ? '✅ meets target' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target`);
 
   let notes = `
     • <b>RT60 = ${ac.rt60.toFixed(2)} s</b> calculated via Sabine using volume ${ac.V.toFixed(0)} m³ and absorption coefficient ${d.alpha} → <b>${rtEval}</b>.<br>
     • Average SPL at listening points = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}.<br>
     • Selected <b>${ampResult.amps} × ${ampResult.amp.id}</b> with 30% power margin and ≥${ampResult.amp.minImp}Ω load per channel.<br>
     • Distribution prevents feedback thanks to ${fs === 'None' ? 'built-in processor' : fs + ' digital processor'}.<br>`;
-
-  if (ac.outdoorCount) {
+  if (ac.outdoorCount){
     notes += `• <b>${ac.outdoorCount} UT-08 outdoor horns</b> installed on the minaret facing outward for Adhan and perimeter coverage.<br>`;
   }
-  notes += `• <b>Coverage direction</b> of each speaker is individually adjustable (slider or handle drag) for optimal coverage and minimized overlap.`;
+  notes += `• <b>Coverage direction</b> of each speaker is individually adjustable for optimal coverage and minimized overlap.`;
 
   $('eng_notes').innerHTML = notes;
   $('reportImg').src = canvas.toDataURL();
   $('reportView').style.display = 'block';
 }
 
-/* ============ SAVE / LOAD ============ */
-function saveProject(){
-  const data = {
+/* ============ SAVE / LOAD / EXPORT ============ */
+function collectProjectData(){
+  return {
+    version: 2,
     speakers, manualMode,
-    dims: {len: $('m_len').value, wid: $('m_wid').value, h: $('m_h').value, alpha: $('m_alpha').value},
+    dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value},
     amp: $('amp_model').value, fs: $('fs_model').value, model: $('m_model').value,
     addHorns: $('addHornsChk').checked,
-    info: {name: $('p_name').value, client: $('p_client').value, engineer: $('p_engineer').value, purpose: $('p_purpose').value},
+    info: {name:$('p_name').value, client:$('p_client').value,
+           engineer:$('p_engineer').value, purpose:$('p_purpose').value},
     uid
   };
-  localStorage.setItem('motivity_project_en', JSON.stringify(data));
-  toast('💾 Project saved', 'ok');
+}
+function applyProjectData(d){
+  pushUndo();
+  speakers = (d.speakers || []).map(s => {
+    const ns = {...s, zone: s.zone || 'mosque'};
+    if (ns.zone !== 'minaret' && ns.facing === undefined)
+      ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
+    return ns;
+  });
+  manualMode = !!d.manualMode;
+  $('manualBtn').classList.toggle('active-mode', manualMode);
+  $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
+  $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
+  $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
+  if (d.addHorns !== undefined) $('addHornsChk').checked = d.addHorns;
+  $('p_name').value = d.info.name;
+  $('p_client').value = d.info.client || '';
+  $('p_engineer').value = d.info.engineer || '';
+  $('p_purpose').value = d.info.purpose || '90';
+  uid = d.uid || speakers.length;
+  selectedId = null;
+  updateRotationPanel(); updateAmpLogic(); draw();
+}
+function saveProject(){
+  try {
+    localStorage.setItem('motivity_project_en', JSON.stringify(collectProjectData()));
+    toast('💾 Project saved', 'ok');
+  } catch(e){ toast('Storage unavailable', 'err'); }
 }
 function loadProject(){
   const raw = localStorage.getItem('motivity_project_en') || localStorage.getItem('motivity_project');
   if (!raw) return toast('No saved project', 'warn');
-  try {
-    const d = JSON.parse(raw);
-    pushUndo();
-    speakers = (d.speakers || []).map(s => {
-      const ns = {...s, zone: s.zone || 'mosque'};
-      if (ns.zone !== 'minaret' && ns.facing === undefined) {
-        ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
-      }
-      return ns;
-    });
-    manualMode = !!d.manualMode;
-    $('manualBtn').classList.toggle('active-mode', manualMode);
-    $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
-    $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
-    $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
-    if (d.addHorns !== undefined) $('addHornsChk').checked = d.addHorns;
-    $('p_name').value = d.info.name;
-    $('p_client').value = d.info.client; $('p_engineer').value = d.info.engineer;
-    $('p_purpose').value = d.info.purpose;
-    uid = d.uid || speakers.length;
-    selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw();
-    toast('📂 Project loaded', 'ok');
-  } catch(e){ toast('Corrupted save file', 'err'); }
+  try { applyProjectData(JSON.parse(raw)); toast('📂 Project loaded', 'ok'); }
+  catch(e){ toast('Corrupted save file', 'err'); }
+}
+function exportProject(){
+  const blob = new Blob([JSON.stringify(collectProjectData(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ($('p_name').value || 'mosque').replace(/\s+/g,'_') + '.motivity.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  toast('⬇️ Exported', 'ok');
+}
+function importProject(){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try { applyProjectData(JSON.parse(rd.result)); toast('📂 Imported', 'ok'); }
+      catch(err){ toast('Invalid file', 'err'); }
+    };
+    rd.readAsText(f);
+  };
+  inp.click();
 }
 
-/* ============ KEYBOARD SHORTCUTS ============ */
+/* ============ KEYBOARD ============ */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
 
-  /* Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y */
-  if (e.ctrlKey || e.metaKey) {
+  if (e.ctrlKey || e.metaKey){
     const k = e.key.toLowerCase();
-    if (k === 'z' && !inField) {
-      e.preventDefault();
-      if (e.shiftKey) redo(); else undo();
-      return;
-    }
-    if (k === 'y' && !inField) {
-      e.preventDefault(); redo(); return;
-    }
+    if (k === 'z' && !inField){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+    if (k === 'y' && !inField){ e.preventDefault(); redo(); return; }
   }
+  if (e.key === 'Escape'){ closeSidebar(); deselectSpeaker(); return; }
 
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
-  if (e.key === 'Delete' || e.key === 'Backspace') {
-    if (inField) return;
-    pushUndo();
-    speakers = speakers.filter(x => x.id !== selectedId);
-    selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw();
-    toast('Speaker deleted', 'warn');
-    e.preventDefault(); return;
+
+  if ((e.key === 'Delete' || e.key === 'Backspace') && !inField){
+    e.preventDefault(); deleteSelected(); return;
   }
-  if (e.key === 'Escape') { deselectSpeaker(); return; }
   let delta = 0;
   if (e.key === '[') delta = -5;
   else if (e.key === ']') delta = 5;
   else if (e.key === ',') delta = -1;
   else if (e.key === '.') delta = 1;
-  if (delta) {
+  if (delta){
     pushUndo();
     const rad = delta * RAD;
     if (s.zone === 'minaret') s.ang += rad;
@@ -1140,7 +1268,18 @@ window.addEventListener('load', () => {
   updateRotationPanel(); updateAmpLogic(); updateUndoButtons(); draw();
   toast('Welcome to Motivity PRO', 'ok');
 });
-window.addEventListener('resize', () => { draw(); });
+
+/* responsive redraw + resize observer */
+let rzT;
+function scheduleResize(){ clearTimeout(rzT); rzT = setTimeout(draw, 80); }
+window.addEventListener('resize', scheduleResize);
+window.addEventListener('orientationchange', scheduleResize);
+if (window.ResizeObserver){
+  new ResizeObserver(scheduleResize).observe($('cDiv'));
+}
+if (window.visualViewport){
+  window.visualViewport.addEventListener('resize', scheduleResize);
+}
 </script>
 </body>
 </html>
