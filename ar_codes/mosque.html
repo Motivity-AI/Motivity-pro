@@ -138,10 +138,100 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 .toast.ok{border-right-color:var(--ok)}.toast.err{border-right-color:var(--bad)}.toast.warn{border-right-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}
 
+/* ============ PRINT (الإصلاح الكامل) ============ */
 @media print{
-  .no-print{display:none!important}
-  #reportView{position:absolute;inset:0;padding:0}
-  .paper{box-shadow:none;max-width:none}
+  @page{
+    size:A4;
+    margin:12mm 10mm;
+  }
+
+  html,body{
+    height:auto!important;
+    min-height:0!important;
+    overflow:visible!important;
+    background:#fff!important;
+    display:block!important;
+  }
+
+  /* إخفاء كل شيء ما عدا التقرير */
+  .wrapper,
+  .sidebar,
+  .canvas-container,
+  #menuBtn,
+  #backdrop,
+  #toast,
+  .no-print{
+    display:none!important;
+  }
+
+  /* إلغاء كل القيود على عرض التقرير ليتمدد على عدة صفحات */
+  #reportView{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    padding:0!important;
+    background:#fff!important;
+    color:#000!important;
+    z-index:auto!important;
+  }
+
+  .report-wrap{
+    max-width:none!important;
+    padding:0!important;
+    margin:0!important;
+  }
+
+  .paper{
+    box-shadow:none!important;
+    border-top:6px solid var(--red)!important;
+    padding:0 0 20px 0!important;
+    max-width:none!important;
+    page-break-after:auto;
+  }
+
+  /* منع قطع العناصر بين الصفحات */
+  .rep-header,
+  .kpi-grid,
+  .rep-section,
+  table,
+  tr,
+  .analysis-box,
+  .mini-map-box,
+  .sig,
+  h1,h2,h3,h4{
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+  h1,h3{ page-break-after:avoid!important; }
+
+  /* الصور لا تتجاوز صفحة واحدة */
+  .preview-img,
+  #reportImg{
+    max-height:150mm!important;
+    width:auto!important;
+    max-width:100%!important;
+    display:block;
+    margin:0 auto;
+    page-break-inside:avoid!important;
+  }
+
+  /* تكرار رأس الجدول في كل صفحة */
+  thead{ display:table-header-group; }
+  tfoot{ display:table-footer-group; }
+
+  .rep-section{ margin-top:14px!important; }
+  .table-boq{ font-size:10.5px!important; }
+  .table-boq th,
+  .table-boq td{ padding:5px 6px!important; }
+
+  /* ضمان طباعة الألوان والخلفيات */
+  *{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
 }
 </style>
 </head>
@@ -589,7 +679,6 @@ function draw(){
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  /* الشبكة */
   if (showGrid){
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
     for (let x=0; x<=d.W; x+=2){
@@ -602,7 +691,6 @@ function draw(){
     }
   }
 
-  /* الخريطة الحرارية */
   if (showHeat){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
@@ -610,23 +698,19 @@ function draw(){
     ctx.restore();
   }
 
-  /* إطار القاعة */
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
-  /* المحراب */
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
 
-  /* الأبعاد */
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif";
   ctx.fillText(`العرض ${d.W} م`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`الطول ${d.L} م`, 0, 0); ctx.restore();
 
-  /* المئذنة */
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -637,7 +721,6 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
-  /* مخاريط التغطية */
   if (showCoverage){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
@@ -672,7 +755,6 @@ function draw(){
     });
   }
 
-  /* السماعات */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -757,7 +839,6 @@ function onPointerDown(e){
   const m = getPointer(e);
   const p = toLocal(m);
 
-  /* مقبض التدوير */
   if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)){
@@ -768,7 +849,6 @@ function onPointerDown(e){
     }
   }
 
-  /* سحب سماعة موجودة */
   const hit = hitTest(p);
   if (hit){
     selectedId = hit.id;
@@ -780,7 +860,6 @@ function onPointerDown(e){
     draw(); return;
   }
 
-  /* مساحة فارغة */
   if (!p.inside && !isMinaretArea(m)){ deselectSpeaker(); return; }
 
   const model = $('m_model').value;
@@ -805,7 +884,6 @@ function onPointerDown(e){
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  /* الوضع التلقائي */
   if (isHornType(spk.type)){
     if (isMinaretArea(m)){
       pushUndo();
@@ -1271,7 +1349,6 @@ window.addEventListener('load', () => {
   toast('مرحباً بك في موتيفيتي برو', 'ok');
 });
 
-/* إعادة الرسم عند تغيير الحجم */
 let rzT;
 function scheduleResize(){ clearTimeout(rzT); rzT = setTimeout(draw, 80); }
 window.addEventListener('resize', scheduleResize);
