@@ -41,8 +41,9 @@ h2 span{color:var(--red)}
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
 label{font-size:10.5px;color:var(--muted);display:block;margin-top:8px;font-weight:600}
-input,select{width:100%;padding:9px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:13px}
+input,select{width:100%;padding:9px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:13px;text-align:left}
 input:focus,select:focus{outline:none;border-color:var(--blue)}
+input[type="number"]{text-align:center}
 .row{display:flex;gap:6px}.row>*{flex:1;min-width:0}
 button{width:100%;padding:11px;border:none;border-radius:7px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;font-size:13px;min-height:42px}
 .btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:#c40010}
@@ -58,7 +59,7 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .stat .v{font-size:15px;font-weight:900;color:var(--blue);font-family:'JetBrains Mono',monospace}
 .stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
 .stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
-.hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
+.hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.6}
 
 /* ============ CANVAS AREA ============ */
 .canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px;min-width:0;min-height:0}
@@ -102,6 +103,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
     padding-bottom:calc(14px + var(--safe-b));
     box-shadow:6px 0 34px rgba(0,0,0,.7);
     will-change:transform;
+    border-right:4px solid var(--red);
   }
   .sidebar.open{transform:translateX(0)}
   .canvas-container{padding:8px;gap:6px}
@@ -116,7 +118,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 }
 
 /* ============ REPORT ============ */
-#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222;-webkit-overflow-scrolling:touch}
+#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222;-webkit-overflow-scrolling:touch;direction:ltr}
 .paper{max-width:920px;margin:auto;background:#fff;padding:32px;border-top:10px solid var(--red);box-shadow:0 0 30px rgba(0,0,0,.3)}
 .paper h1{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:16px;font-size:22px}
 .paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-left:4px solid var(--red);padding-left:8px}
@@ -132,7 +134,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 
 /* ============ TOAST ============ */
 #toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
-.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px}
+.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:left}
 .toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--bad)}.toast.warn{border-left-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
 
@@ -145,14 +147,14 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 </head>
 <body>
 
-<button id="menuBtn" class="no-print" onclick="openSidebar()" aria-label="Open menu">☰</button>
+<button id="menuBtn" class="no-print" onclick="openSidebar()" aria-label="Menu">☰</button>
 <div id="backdrop" class="no-print" onclick="closeSidebar()"></div>
 
 <div class="wrapper no-print">
   <aside class="sidebar" id="sidebar">
     <div class="side-head">
       <h2>MOTIVITY <span>PRO</span></h2>
-      <button id="closeSide" onclick="closeSidebar()" aria-label="Close menu">✖</button>
+      <button id="closeSide" onclick="closeSidebar()" aria-label="Close">✖</button>
     </div>
 
     <div class="box">
@@ -188,8 +190,8 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ Smart Auto Distribution</button>
       <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode (Free Placement)</button>
       <div class="hint">
-        💡 <b>Manual:</b> Tap anywhere inside to place a speaker freely<br>
-        💡 Tap on the minaret to add a horn<br>
+        💡 <b>Manual:</b> Click anywhere inside to place a speaker freely<br>
+        💡 Click on the minaret to add a horn<br>
         💡 <b>Rotate:</b> Select a speaker then drag the white handle
       </div>
     </div>
@@ -290,7 +292,7 @@ const DB_SPK = {
   "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"Column"},
   "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall"},
   "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall"},
-  "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
+  "UT-08":  {pwr:60,  sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
 };
 const DB_AMP = [
   {id:"MA-450C", pwr:900,  ch:2, minImp:4},
@@ -306,6 +308,8 @@ const WALL_THRESHOLD = 0.04;
 const isWallType   = t => t === 'Wall';
 const isHornType   = t => t === 'Outdoor Horn';
 const isColumnType = t => t === 'Column';
+
+const TYPE_EN = {Column:"Column", Wall:"Wall", "Outdoor Horn":"Outdoor Horn"};
 
 /* ============ STATE ============ */
 const canvas = document.getElementById('mosqueCanvas');
@@ -416,7 +420,7 @@ function populate(){
   s1.innerHTML = ''; s2.innerHTML = '';
   for (const id in DB_SPK){
     const o = DB_SPK[id];
-    s1.innerHTML += `<option value="${id}">${id} — ${o.type} ${o.pwr}W</option>`;
+    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_EN[o.type]} ${o.pwr}W</option>`;
   }
   DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
   s2.value = "MA-800C";
@@ -565,7 +569,6 @@ function drawFreeSpeaker(pos, s, isSel, db){
 }
 
 /* ============ MAIN DRAW ============ */
-let heatDirty = true;
 function draw(){
   const div = $('cDiv');
   if (!div.clientWidth || !div.clientHeight) return;
@@ -586,7 +589,7 @@ function draw(){
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  /* grid */
+  /* Grid */
   if (showGrid){
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
     for (let x=0; x<=d.W; x+=2){
@@ -599,7 +602,7 @@ function draw(){
     }
   }
 
-  /* heatmap */
+  /* Heatmap */
   if (showHeat){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
@@ -607,23 +610,23 @@ function draw(){
     ctx.restore();
   }
 
-  /* hall outline */
+  /* Hall outline */
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
-  /* mihrab */
+  /* Mihrab */
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter"; ctx.textAlign = "center";
   ctx.fillText("MIHRAB", x0 + W/2, y0 - scale*1.8);
 
-  /* dimensions */
+  /* Dimensions */
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter";
   ctx.fillText(`${d.W} m (Width)`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`${d.L} m (Length)`, 0, 0); ctx.restore();
 
-  /* minaret */
+  /* Minaret */
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -634,7 +637,7 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Inter"; ctx.textAlign = "center";
   ctx.fillText("MINARET", mcx, mcy + mS*0.62);
 
-  /* coverage cones */
+  /* Coverage cones */
   if (showCoverage){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
@@ -669,7 +672,7 @@ function draw(){
     });
   }
 
-  /* speakers */
+  /* Speakers */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -714,10 +717,9 @@ function draw(){
       ctx.textBaseline = "alphabetic";
     }
   });
-  heatDirty = false;
 }
 
-/* ============ INTERACTION (Pointer Events = mouse + touch) ============ */
+/* ============ INTERACTION ============ */
 function hitTest(p){
   for (let i = speakers.length - 1; i >= 0; i--){
     const s = speakers[i];
@@ -755,7 +757,7 @@ function onPointerDown(e){
   const m = getPointer(e);
   const p = toLocal(m);
 
-  /* 1) rotation handle */
+  /* Rotation handle */
   if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)){
@@ -766,7 +768,7 @@ function onPointerDown(e){
     }
   }
 
-  /* 2) drag existing */
+  /* Drag existing */
   const hit = hitTest(p);
   if (hit){
     selectedId = hit.id;
@@ -778,7 +780,7 @@ function onPointerDown(e){
     draw(); return;
   }
 
-  /* 3) empty space */
+  /* Empty space */
   if (!p.inside && !isMinaretArea(m)){ deselectSpeaker(); return; }
 
   const model = $('m_model').value;
@@ -803,7 +805,7 @@ function onPointerDown(e){
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  /* auto mode */
+  /* Auto mode */
   if (isHornType(spk.type)){
     if (isMinaretArea(m)){
       pushUndo();
@@ -839,7 +841,6 @@ function onPointerMove(e){
     }
     return;
   }
-  /* hover cursor (mouse only) */
   if (e.pointerType !== 'mouse') return;
   let cursor = 'crosshair';
   if (selectedId){
@@ -1084,8 +1085,9 @@ function generateReport(){
   if (!speakers.length) return toast('Add speakers first', 'err');
   const d = getDims();
   const fs = $('fs_model').value;
+  const fsEn = fs === 'None' ? 'None' : fs;
   const ac = computeAcoustics();
-  const today = new Date().toLocaleDateString('en-GB');
+  const today = new Date().toLocaleDateString('en-US');
 
   $('project_header').innerHTML = `
     <table class="table-boq" style="margin-bottom:14px">
@@ -1116,7 +1118,7 @@ function generateReport(){
       <tr><td>Avg SPL (indoor)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB (Target: ${target} dB)</td></tr>
       <tr><td>RT60</td><td>${ac.rt60.toFixed(2)} s</td></tr>
       <tr><td>Amplifiers</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
-      <tr><td>Processing</td><td>${fs}</td></tr>
+      <tr><td>Processing</td><td>${fsEn}</td></tr>
       <tr><td>Outdoor Horns</td><td>${ac.outdoorCount}</td></tr>
       <tr><td>Estimated Cable</td><td>~${totalCable} m</td></tr>
     </table>`;
@@ -1126,13 +1128,13 @@ function generateReport(){
     const sp = DB_SPK[m];
     boq += `<tr>
       <td>Motivity Speaker ${m}</td>
-      <td>${sp.type} – ${sp.pwr}W – 8Ω – ${sp.sens}dB</td>
+      <td>${TYPE_EN[sp.type]} – ${sp.pwr}W – 8Ω – ${sp.sens}dB</td>
       <td>${counts[m]}</td>
       <td>~${Math.ceil(totalCable * counts[m] / speakers.length)}m (2×1.5mm²)</td>
     </tr>`;
   }
   boq += `<tr><td>Amplifier ${ampResult.amp.id}</td><td>MA Professional – ${ampResult.amp.pwr}W</td><td>${ampResult.amps}</td><td>—</td></tr>`;
-  if (fs !== 'None') boq += `<tr><td>Digital Feedback Suppressor</td><td>${fs}</td><td>1</td><td>—</td></tr>`;
+  if (fs !== 'None') boq += `<tr><td>Digital Feedback Suppressor</td><td>${fsEn}</td><td>1</td><td>—</td></tr>`;
   boq += `<tr><td>Speaker Cable</td><td>Stranded Copper 2×1.5mm²</td><td>~${totalCable}m</td><td>—</td></tr>`;
   boq += `<tr><td>Connectors</td><td>Speakon / Terminal</td><td>${speakers.length*2}</td><td>—</td></tr>`;
   $('boq-body').innerHTML = boq;
@@ -1145,9 +1147,9 @@ function generateReport(){
     • <b>RT60 = ${ac.rt60.toFixed(2)} s</b> calculated via Sabine using volume ${ac.V.toFixed(0)} m³ and absorption coefficient ${d.alpha} → <b>${rtEval}</b>.<br>
     • Average SPL at listening points = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}.<br>
     • Selected <b>${ampResult.amps} × ${ampResult.amp.id}</b> with 30% power margin and ≥${ampResult.amp.minImp}Ω load per channel.<br>
-    • Distribution prevents feedback thanks to ${fs === 'None' ? 'built-in processor' : fs + ' digital processor'}.<br>`;
+    • Distribution prevents feedback thanks to ${fs === 'None' ? 'built-in processor' : fsEn + ' digital processor'}.<br>`;
   if (ac.outdoorCount){
-    notes += `• <b>${ac.outdoorCount} UT-08 outdoor horns</b> installed on the minaret facing outward for Adhan and perimeter coverage.<br>`;
+    notes += `• <b>${ac.outdoorCount} UT-08 outdoor horns (60W each)</b> installed on the minaret facing outward for Adhan and perimeter coverage.<br>`;
   }
   notes += `• <b>Coverage direction</b> of each speaker is individually adjustable for optimal coverage and minimized overlap.`;
 
@@ -1198,7 +1200,7 @@ function saveProject(){
   } catch(e){ toast('Storage unavailable', 'err'); }
 }
 function loadProject(){
-  const raw = localStorage.getItem('motivity_project_en') || localStorage.getItem('motivity_project');
+  const raw = localStorage.getItem('motivity_project_en') || localStorage.getItem('motivity_project_ar');
   if (!raw) return toast('No saved project', 'warn');
   try { applyProjectData(JSON.parse(raw)); toast('📂 Project loaded', 'ok'); }
   catch(e){ toast('Corrupted save file', 'err'); }
@@ -1269,7 +1271,7 @@ window.addEventListener('load', () => {
   toast('Welcome to Motivity PRO', 'ok');
 });
 
-/* responsive redraw + resize observer */
+/* Responsive redraw */
 let rzT;
 function scheduleResize(){ clearTimeout(rzT); rzT = setTimeout(draw, 80); }
 window.addEventListener('resize', scheduleResize);
