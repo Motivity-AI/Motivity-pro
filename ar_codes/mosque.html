@@ -2,57 +2,126 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Motivity PRO - نظام التصميم الهندسي للمساجد</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<title>موتيفيتي برو - نظام تصميم صوتيات المساجد</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
   --card:#21262d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
   --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --orange:#ff8c1a;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
 }
-*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
-.wrapper{display:flex;flex:1;overflow:hidden}
-.sidebar{width:400px;background:var(--panel);padding:14px;border-left:4px solid var(--red);overflow-y:auto}
+*{box-sizing:border-box;font-family:'Cairo','Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  height:100vh;height:100dvh;
+  overflow:hidden;display:flex;flex-direction:column;
+  overscroll-behavior:none;
+}
+.wrapper{display:flex;flex:1;overflow:hidden;position:relative;min-height:0}
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  width:400px;flex:0 0 auto;background:var(--panel);padding:14px;
+  border-left:4px solid var(--red);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
-h2{text-align:center;margin-bottom:10px;font-weight:900;letter-spacing:1px}
+
+.side-head{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px}
+h2{font-weight:900;letter-spacing:1px;font-size:20px;text-align:center}
 h2 span{color:var(--red)}
+#closeSide{display:none}
+
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
 label{font-size:10.5px;color:var(--muted);display:block;margin-top:8px;font-weight:600}
-input,select{width:100%;padding:8px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:12.5px}
+input,select{width:100%;padding:9px;background:#0d1117;color:#fff;border:1px solid var(--border);border-radius:7px;margin-top:4px;font-family:inherit;font-size:13px;text-align:right}
 input:focus,select:focus{outline:none;border-color:var(--blue)}
-.row{display:flex;gap:6px}.row>*{flex:1}
-button{width:100%;padding:10px;border:none;border-radius:7px;font-weight:700;cursor:pointer;margin-top:6px;transition:.2s;font-family:inherit;font-size:12.5px}
+input[type="number"]{direction:ltr;text-align:center}
+.row{display:flex;gap:6px}.row>*{flex:1;min-width:0}
+button{width:100%;padding:11px;border:none;border-radius:7px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;font-size:13px;min-height:42px}
 .btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:#c40010}
 .btn-secondary{background:var(--blue);color:#000}.btn-secondary:hover{background:#0ea5e9}
 .btn-reset{background:#30363d;color:#ff4d4d;border:1px solid #444}.btn-reset:hover{background:#ff4d4d;color:#fff}
 .btn-outline{background:#2a2f36;color:#ccc;border:1px solid #444}.btn-outline:hover{background:#3a4048}
 .active-mode{background:var(--blue)!important;color:#000!important}
-.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:11.5px;color:var(--text);font-weight:600}
-.checkbox-row input[type=checkbox]{width:18px;height:18px;margin:0;accent-color:var(--red);cursor:pointer;flex:0 0 auto}
-input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(--blue);cursor:pointer;margin-top:8px;height:22px}
-.canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:12px;color:var(--text);font-weight:600}
+.checkbox-row input[type=checkbox]{width:20px;height:20px;margin:0;accent-color:var(--red);cursor:pointer;flex:0 0 auto}
+input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(--blue);cursor:pointer;margin-top:8px;height:30px;direction:ltr}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
+.stat .v{font-size:15px;font-weight:900;color:var(--blue);font-family:'JetBrains Mono',monospace;direction:ltr}
+.stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
+.stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
+.hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.7}
+
+/* ============ CANVAS AREA ============ */
+.canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px;min-width:0;min-height:0}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.toolbar button{width:auto;padding:5px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d}
+.toolbar button{width:auto;padding:6px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d;min-height:34px}
 .toolbar button:hover:not(:disabled){background:#30363d}
 .toolbar button.on{background:var(--blue);color:#000;border-color:var(--blue)}
 .toolbar button:disabled{opacity:.35;cursor:not-allowed}
 .toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
 .toolbar button.hist:hover:not(:disabled){background:#3d3016}
-.canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.stat{background:#0d1117;border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
-.stat .v{font-size:15px;font-weight:900;color:var(--blue)}
-.stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
-.stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
-.hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.5}
-#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222}
+.canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
+canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
+
+/* ============ MOBILE DRAWER ============ */
+#menuBtn{
+  display:none;position:fixed;top:calc(10px + var(--safe-t));right:10px;z-index:200;
+  width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;
+  border:none;font-size:20px;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0;
+}
+#menuBtn:active{transform:scale(.93)}
+#backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
+#backdrop.show{display:block}
+
+@media (max-width:1100px) and (min-width:901px){
+  .sidebar{width:340px}
+}
+@media (max-width:900px){
+  #menuBtn{display:flex}
+  #closeSide{
+    display:flex;align-items:center;justify-content:center;
+    position:absolute;left:0;top:0;width:38px;height:38px;min-height:0;padding:0;
+    background:#30363d;color:#fff;border-radius:10px;font-size:16px;
+  }
+  .sidebar{
+    position:fixed;top:0;right:0;bottom:0;z-index:180;
+    width:min(400px,88vw);
+    transform:translateX(102%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    padding-top:calc(14px + var(--safe-t));
+    padding-bottom:calc(14px + var(--safe-b));
+    box-shadow:-6px 0 34px rgba(0,0,0,.7);
+    will-change:transform;
+    border-left:4px solid var(--red);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .canvas-container{padding:8px;gap:6px}
+  .toolbar{gap:4px}
+  .toolbar button{padding:8px 10px;font-size:11.5px;min-height:38px}
+  canvas{max-height:none;border-radius:8px}
+  .report-grid{grid-template-columns:1fr;gap:14px}
+  .paper{padding:18px}
+  .paper h1{font-size:18px}
+  .table-boq th,.table-boq td{padding:6px;font-size:11px}
+  .sig{flex-direction:column;gap:14px}
+}
+
+/* ============ REPORT ============ */
+#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222;-webkit-overflow-scrolling:touch;direction:rtl}
 .paper{max-width:920px;margin:auto;background:#fff;padding:32px;border-top:10px solid var(--red);box-shadow:0 0 30px rgba(0,0,0,.3)}
 .paper h1{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:16px;font-size:22px}
-.paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-right:4px solid var(--red);padding-right:8px}
+.paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-right:4px solid var(--red);padding-right:8px;border-left:none}
 .report-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;margin-bottom:18px}
 .mini-map-box{border:1px solid #ddd;padding:12px;background:#f9f9f9;text-align:center;border-radius:6px}
 .mini-map-box strong{display:block;margin-bottom:8px;font-size:13px}
@@ -62,55 +131,68 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 .table-boq th{background:#1a1a1a;color:#fff}
 .table-boq tr:nth-child(even) td{background:#fafafa}
 .sig{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px dashed #ccc;font-size:12px}
-#toast{position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
-.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px}
+
+/* ============ TOAST ============ */
+#toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);border-left:none;box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:right}
 .toast.ok{border-right-color:var(--ok)}.toast.err{border-right-color:var(--bad)}.toast.warn{border-right-color:var(--warn)}
-@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-@media print{.no-print{display:none!important}#reportView{position:absolute;inset:0}}
+@keyframes slideIn{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+@media print{
+  .no-print{display:none!important}
+  #reportView{position:absolute;inset:0;padding:0}
+  .paper{box-shadow:none;max-width:none}
+}
 </style>
 </head>
 <body>
 
+<button id="menuBtn" class="no-print" onclick="openSidebar()" aria-label="القائمة">☰</button>
+<div id="backdrop" class="no-print" onclick="closeSidebar()"></div>
+
 <div class="wrapper no-print">
-  <aside class="sidebar">
-    <h2>MOTIVITY <span>PRO</span></h2>
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">
+      <h2>موتيفيتي <span>برو</span></h2>
+      <button id="closeSide" onclick="closeSidebar()" aria-label="إغلاق">✖</button>
+    </div>
 
     <div class="box">
-      <h3>📋 بيانات المشروع</h3>
+      <h3>📋 معلومات المشروع</h3>
       <input id="p_name" placeholder="اسم المشروع" value="مسجد جديد">
       <input id="p_client" placeholder="اسم العميل">
       <input id="p_engineer" placeholder="اسم المهندس" value="م. أحمد">
       <select id="p_purpose">
-        <option value="85">صلاة عادية (SPL مستهدف 85dB)</option>
-        <option value="90" selected>خطبة جمعة (SPL مستهدف 90dB)</option>
-        <option value="95">طوارئ/أذان (SPL مستهدف 95dB)</option>
+        <option value="85">صلاة عادية (هدف 85 ديسيبل)</option>
+        <option value="90" selected>خطبة الجمعة (هدف 90 ديسيبل)</option>
+        <option value="95">طوارئ / أذان (هدف 95 ديسيبل)</option>
       </select>
     </div>
 
     <div class="box">
-      <h3>📐 قياسات القاعة (متر)</h3>
+      <h3>📐 أبعاد القاعة (متر)</h3>
       <div class="row">
-        <input type="number" id="m_len" value="30" oninput="draw()" placeholder="الطول">
-        <input type="number" id="m_wid" value="15" oninput="draw()" placeholder="العرض">
-        <input type="number" id="m_h"   value="6"  oninput="draw()" placeholder="الارتفاع">
+        <input type="number" id="m_len" value="30" oninput="onDimChange()" placeholder="الطول">
+        <input type="number" id="m_wid" value="15" oninput="onDimChange()" placeholder="العرض">
+        <input type="number" id="m_h"   value="6"  oninput="onDimChange()" placeholder="الارتفاع">
       </div>
-      <label>معامل الامتصاص (0.05 قاسي – 0.30 معالج)</label>
-      <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="draw()">
+      <label>معامل الامتصاص الصوتي (0.05 صلب – 0.30 معالج)</label>
+      <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="onDimChange()">
     </div>
 
     <div class="box">
-      <h3>🔊 التوزيع الصوتي</h3>
+      <h3>🔊 توزيع الصوت</h3>
       <select id="m_model" onchange="updateAmpLogic()"></select>
       <label class="checkbox-row">
         <input type="checkbox" id="addHornsChk" checked>
-        <span>🕌 إضافة أبواق UT-08 على المئذنة تلقائياً</span>
+        <span>🕌 إضافة أبواق UT-08 تلقائياً على المئذنة</span>
       </label>
-      <button class="btn-secondary" onclick="aiSmartDistribute()">✨ توزيع ذكي تلقائي</button>
-      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 وضع التوزيع اليدوي (حر)</button>
+      <button class="btn-secondary" onclick="aiSmartDistribute()">✨ التوزيع الذكي التلقائي</button>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 الوضع اليدوي (وضع حر)</button>
       <div class="hint">
-        💡 <b>يدوي:</b> انقر في أي مكان داخل المسجد لوضع السماعة بحرية<br>
-        💡 انقر على المئذنة لإضافة بوق<br>
-        💡 <b>تدوير:</b> حدّد سماعة ثم اسحب المقبض الأبيض
+        💡 <b>اليدوي:</b> اضغط في أي مكان داخل القاعة لوضع سماعة بحرية<br>
+        💡 اضغط على المئذنة لإضافة بوق<br>
+        💡 <b>التدوير:</b> اختر سماعة ثم اسحب المقبض الأبيض
       </div>
     </div>
 
@@ -120,38 +202,42 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
       </label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
-             onmousedown="pushUndo()"
+             onpointerdown="pushUndo()"
              oninput="setSelectedAngle(this.value)">
-      <div class="hint">↔️ اسحب المنزلق أو المقبض الأبيض على الرسم للتدوير</div>
+      <div class="hint">↔️ اسحب المؤشر أو المقبض الأبيض للتدوير</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ إلغاء التحديد</button>
+      <button class="btn-reset" onclick="deleteSelected()">🗑️ حذف هذه السماعة</button>
     </div>
 
     <div class="box">
-      <h3>📊 التحليل الأكوستيكي</h3>
+      <h3>📊 التحليل الصوتي</h3>
       <div class="stat-grid">
-        <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">SPL متوسط (dB)</div></div>
-        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">RT60 (ثانية)</div></div>
-        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">إجمالي Watt</div></div>
+        <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">متوسط SPL (ديسيبل)</div></div>
+        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">زمن الصدى RT60 (ث)</div></div>
+        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">إجمالي الواط</div></div>
         <div class="stat" id="st_cnt"><div class="v" id="cnt_v">0</div><div class="l">عدد السماعات</div></div>
       </div>
     </div>
 
     <div class="box">
-      <h3>🔌 المعالجة والقدرة</h3>
-      <label>مانع التصفير</label>
+      <h3>🔌 المعالجة والطاقة</h3>
+      <label>كابح التغذية الراجعة</label>
       <select id="fs_model">
-        <option value="FB-PRO 4.0">MOTIVITY FB-PRO 4.0 (رقمي)</option>
-        <option value="None">بدون جهاز تصفير</option>
+        <option value="FB-PRO 4.0">موتيفيتي FB-PRO 4.0 (رقمي)</option>
+        <option value="None">بدون</option>
       </select>
-      <label>المكبر (MA Series)</label>
+      <label>مكبر الصوت (سلسلة MA)</label>
       <select id="amp_model" onchange="updateAmpLogic()"></select>
-      <div id="amp_count_info" style="color:var(--blue);font-size:11px;margin-top:6px;font-weight:700;line-height:1.6"></div>
+      <div id="amp_count_info" style="color:var(--blue);font-size:11px;margin-top:6px;font-weight:700;line-height:1.8"></div>
     </div>
 
-    <button class="btn-primary" onclick="generateReport()">📄 توليد التقرير الفني</button>
-    <button class="btn-outline" onclick="saveProject()">💾 حفظ المشروع</button>
-    <button class="btn-outline" onclick="loadProject()">📂 استرجاع المشروع</button>
-    <button class="btn-reset" onclick="resetData()">🔄 تصفير كافة البيانات</button>
+    <button class="btn-primary" onclick="generateReport()">📄 إنشاء التقرير الفني</button>
+    <button class="btn-outline" onclick="saveProject()">💾 حفظ المشروع (المتصفح)</button>
+    <div class="row" style="margin-top:6px">
+      <button class="btn-outline" style="margin-top:0" onclick="exportProject()">⬇️ تصدير</button>
+      <button class="btn-outline" style="margin-top:0" onclick="importProject()">⬆️ استيراد</button>
+    </div>
+    <button class="btn-reset" onclick="resetData()" style="margin-top:6px">🔄 إعادة تعيين كل البيانات</button>
   </aside>
 
   <div class="canvas-container">
@@ -159,8 +245,9 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ تراجع</button>
       <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ إعادة</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 التغطية</button>
+      <button id="tgHeat" onclick="toggleHeat()">🔥 خريطة حرارية</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ الشبكة</button>
-      <button onclick="clearSpeakers()">🗑️ مسح السماعات</button>
+      <button onclick="clearSpeakers()">🗑️ مسح</button>
     </div>
     <div class="canvas-wrap" id="cDiv">
       <canvas id="mosqueCanvas"></canvas>
@@ -174,19 +261,19 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
       <button class="btn-primary" style="width:auto;padding:8px 16px;display:inline-block;margin-left:6px" onclick="window.print()">🖨️ حفظ PDF</button>
       <button class="btn-outline" style="width:auto;padding:8px 16px;display:inline-block" onclick="document.getElementById('reportView').style.display='none'">إغلاق</button>
     </div>
-    <h1>التقرير التصميمي الفني لشركة MOTIVITY</h1>
+    <h1>تقرير التصميم الفني - موتيفيتي</h1>
     <div id="project_header"></div>
     <div class="report-grid">
-      <div class="mini-map-box"><strong>كروكي التوزيع الهندسي</strong><img id="reportImg"></div>
+      <div class="mini-map-box"><strong>المخطط الهندسي</strong><img id="reportImg" alt="layout"></div>
       <div id="eng_summary"></div>
     </div>
     <h3>جدول الكميات (BOQ)</h3>
     <table class="table-boq">
-      <thead><tr><th>البند</th><th>المواصفات</th><th>الكمية</th><th>تقدير الكيبل</th></tr></thead>
+      <thead><tr><th>البند</th><th>المواصفات</th><th>الكمية</th><th>الكابل التقديري</th></tr></thead>
       <tbody id="boq-body"></tbody>
     </table>
-    <h3>التعليل الهندسي</h3>
-    <p id="eng_notes" style="font-size:12.5px;line-height:1.7;background:#f0f7ff;padding:12px;border-radius:6px"></p>
+    <h3>المبررات الهندسية</h3>
+    <p id="eng_notes" style="font-size:12.5px;line-height:1.9;background:#f0f7ff;padding:12px;border-radius:6px"></p>
     <div class="sig">
       <div>توقيع المهندس: ______________</div>
       <div>توقيع العميل: ______________</div>
@@ -200,12 +287,12 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 <script>
 /* ============ قواعد البيانات ============ */
 const DB_SPK = {
-  "AT-08":  {pwr:250, sens:97, covH:90,  covV:60,  imp:8, type:"عمودي"},
-  "AT-06":  {pwr:150, sens:95, covH:90,  covV:60,  imp:8, type:"عمودي"},
-  "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"عمودي"},
-  "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"حائطي"},
-  "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"حائطي"},
-  "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"خارجي بوق"}
+  "AT-08":  {pwr:250, sens:97, covH:90,  covV:60,  imp:8, type:"Column"},
+  "AT-06":  {pwr:150, sens:95, covH:90,  covV:60,  imp:8, type:"Column"},
+  "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"Column"},
+  "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall"},
+  "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall"},
+  "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
 };
 const DB_AMP = [
   {id:"MA-450C", pwr:900,  ch:2, minImp:4},
@@ -218,9 +305,11 @@ const DB_AMP = [
 const MINARET_M = 2.5;
 const MOUNT_H_WALL = 2.8;
 const WALL_THRESHOLD = 0.04;
-const isWallType = t => t.includes('حائطي');
-const isHornType = t => t.includes('خارجي');
-const isColumnType = t => t.includes('عمودي');
+const isWallType   = t => t === 'Wall';
+const isHornType   = t => t === 'Outdoor Horn';
+const isColumnType = t => t === 'Column';
+
+const TYPE_AR = {Column:"عمودي", Wall:"جداري", "Outdoor Horn":"بوق خارجي"};
 
 /* ============ الحالة ============ */
 const canvas = document.getElementById('mosqueCanvas');
@@ -231,20 +320,17 @@ let dragging = null;
 let rotating = null;
 let manualMode = false;
 let showCoverage = true;
+let showHeat = false;
 let showGrid = true;
 let uid = 0;
 let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
 let ampResult = {amps:0};
 
-/* ============ نظام التراجع / الإعادة ============ */
+/* ============ التراجع / الإعادة ============ */
 const MAX_UNDO = 40;
-let undoStack = [];
-let redoStack = [];
-let dragSnapshot = null;
+let undoStack = [], redoStack = [], dragSnapshot = null;
 
-function snapshot(){
-  return JSON.stringify(speakers.map(s => ({...s})));
-}
+function snapshot(){ return JSON.stringify(speakers.map(s => ({...s}))); }
 function pushUndo(){
   const snap = snapshot();
   if (undoStack.length && undoStack[undoStack.length-1] === snap) return;
@@ -254,42 +340,33 @@ function pushUndo(){
   updateUndoButtons();
 }
 function undo(){
-  if (undoStack.length === 0) return;
+  if (!undoStack.length) return;
   redoStack.push(snapshot());
-  const prev = JSON.parse(undoStack.pop());
-  speakers = prev;
+  speakers = JSON.parse(undoStack.pop());
   selectedId = null;
-  updateRotationPanel();
-  updateAmpLogic();
-  draw();
-  updateUndoButtons();
-  toast('↶ تم التراجع', 'ok');
+  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
+  toast('↶ تراجع', 'ok');
 }
 function redo(){
-  if (redoStack.length === 0) return;
+  if (!redoStack.length) return;
   undoStack.push(snapshot());
-  const next = JSON.parse(redoStack.pop());
-  speakers = next;
+  speakers = JSON.parse(redoStack.pop());
   selectedId = null;
-  updateRotationPanel();
-  updateAmpLogic();
-  draw();
-  updateUndoButtons();
-  toast('↷ تم الإعادة', 'ok');
+  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
+  toast('↷ إعادة', 'ok');
 }
 function updateUndoButtons(){
-  const u = document.getElementById('undoBtn');
-  const r = document.getElementById('redoBtn');
-  if (u) u.disabled = (undoStack.length === 0);
-  if (r) r.disabled = (redoStack.length === 0);
+  const u = document.getElementById('undoBtn'), r = document.getElementById('redoBtn');
+  if (u) u.disabled = !undoStack.length;
+  if (r) r.disabled = !redoStack.length;
 }
 
-/* ============ أدوات ============ */
+/* ============ أدوات مساعدة ============ */
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
 
-function toast(msg, type='') {
+function toast(msg, type=''){
   const t = document.createElement('div');
   t.className = 'toast ' + type; t.textContent = msg;
   $('toast').appendChild(t);
@@ -303,46 +380,47 @@ function getDims(){
     alpha: parseFloat($('m_alpha').value)||0.12
   };
 }
-function getMouse(e){
+function getPointer(e){
   const r = canvas.getBoundingClientRect();
-  const sx = canvas.width / r.width;
-  const sy = canvas.height / r.height;
-  return {mx: (e.clientX - r.left) * sx, my: (e.clientY - r.top) * sy};
+  const sx = canvas.width / r.width, sy = canvas.height / r.height;
+  return {mx:(e.clientX - r.left) * sx, my:(e.clientY - r.top) * sy};
 }
 function toLocal(p){
-  const {x0, y0, W, L} = layout;
-  const rx = (p.mx - x0) / W, ry = (p.my - y0) / L;
-  return {rx: clamp(rx,0,1), ry: clamp(ry,0,1),
-          rawRx: rx, rawRy: ry,
-          inside: rx>=0 && rx<=1 && ry>=0 && ry<=1,
-          mx: p.mx, my: p.my};
+  const {x0,y0,W,L} = layout;
+  const rx = (p.mx - x0)/W, ry = (p.my - y0)/L;
+  return {rx:clamp(rx,0,1), ry:clamp(ry,0,1), rawRx:rx, rawRy:ry,
+          inside: rx>=0 && rx<=1 && ry>=0 && ry<=1, mx:p.mx, my:p.my};
 }
 function getSpeakerPos(s){
-  if (s.zone === 'minaret') {
-    return {x: layout.mcx + Math.cos(s.ang) * (layout.mS * 0.30),
-            y: layout.mcy + Math.sin(s.ang) * (layout.mS * 0.30)};
-  }
-  return {x: layout.x0 + s.rx * layout.W, y: layout.y0 + s.ry * layout.L};
+  if (s.zone === 'minaret')
+    return {x: layout.mcx + Math.cos(s.ang)*(layout.mS*0.30),
+            y: layout.mcy + Math.sin(s.ang)*(layout.mS*0.30)};
+  return {x: layout.x0 + s.rx*layout.W, y: layout.y0 + s.ry*layout.L};
 }
 function getFacing(s){
   if (s.zone === 'minaret') return s.ang;
   return (s.facing !== undefined ? s.facing : Math.PI/2);
 }
-function isOnWall(s){
-  return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1 - WALL_THRESHOLD);
+function isOnWall(s){ return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1-WALL_THRESHOLD); }
+function whichWall(s){ return s.rx < 0.5 ? 'left' : 'right'; }
+
+/* ============ الدرج الجانبي ============ */
+function openSidebar(){
+  $('sidebar').classList.add('open');
+  $('backdrop').classList.add('show');
 }
-function whichWall(s){
-  if (s.rx < 0.5) return 'left';
-  return 'right';
+function closeSidebar(){
+  $('sidebar').classList.remove('open');
+  $('backdrop').classList.remove('show');
 }
 
-/* ============ تهيئة ============ */
+/* ============ التهيئة ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
-  for (const id in DB_SPK) {
+  for (const id in DB_SPK){
     const o = DB_SPK[id];
-    s1.innerHTML += `<option value="${id}">${id} — ${o.type} ${o.pwr}W</option>`;
+    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_AR[o.type]} ${o.pwr}W</option>`;
   }
   DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
   s2.value = "MA-800C";
@@ -356,70 +434,95 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ رسم السماعة الحائطية ============ */
+/* ============ الخريطة الحرارية ============ */
+function heatColor(t, a){
+  let r,g,b;
+  if (t < 0.25){ const k=t/0.25; r=0; g=k*255; b=255; }
+  else if (t < 0.5){ const k=(t-0.25)/0.25; r=0; g=255; b=255-k*255; }
+  else if (t < 0.75){ const k=(t-0.5)/0.25; r=k*255; g=255; b=0; }
+  else { const k=(t-0.75)/0.25; r=255; g=255-k*255; b=0; }
+  return `rgba(${r|0},${g|0},${b|0},${a})`;
+}
+function drawHeatmap(d, x0, y0, W, L){
+  const indoor = speakers.filter(s => s.zone !== 'minaret');
+  if (!indoor.length) return;
+  const N = 22, cw = W/N, ch = L/N, listH = 1.2;
+  for (let i=0;i<N;i++){
+    for (let j=0;j<N;j++){
+      const px = (i+0.5)/N, py = (j+0.5)/N;
+      let tot = 0;
+      for (const s of indoor){
+        const dx = (px - s.rx)*d.W, dy = (py - s.ry)*d.L, dz = d.H - listH;
+        const dist = Math.max(1, Math.sqrt(dx*dx+dy*dy+dz*dz));
+        const sp = DB_SPK[s.model];
+        const a = Math.atan2(dy, dx);
+        let diff = Math.abs(((a - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+        if (diff > Math.PI) diff = 2*Math.PI - diff;
+        const off = diff <= (sp.covH/2)*RAD ? 0 : -6;
+        const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + off;
+        tot += Math.pow(10, spl/10);
+      }
+      const spl = 10*Math.log10(tot || 1e-9);
+      if (spl < 50) continue;
+      const t = clamp((spl - 72)/23, 0, 1);
+      ctx.fillStyle = heatColor(t, 0.5);
+      ctx.fillRect(x0 + i*cw, y0 + j*ch, cw + 1, ch + 1);
+    }
+  }
+}
+
+/* ============ رسم السماعة الجدارية ============ */
 function drawWallSpeaker(pos, s, isSel, db){
-  const wall = whichWall(s);
-  const isLeft = wall === 'left';
+  const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
-  const boxW = isCol ? 16 : 20;
-  const boxH = isCol ? 40 : 30;
+  const boxW = isCol ? 16 : 20, boxH = isCol ? 40 : 30;
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
   const py = pos.y;
   const bx = isLeft ? wallX : wallX - boxW;
 
   ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
   ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.moveTo(wallX, py - boxH/2 - 6);
-  ctx.lineTo(wallX, py + boxH/2 + 6);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(wallX, py - boxH/2 - 6); ctx.lineTo(wallX, py + boxH/2 + 6); ctx.stroke();
 
   const col = isCol ? "#e60012" : "#ff8c1a";
   ctx.fillStyle = isSel ? "#38bdf8" : col;
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
-
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
-  if (isSel) {
+  if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.strokeRect(bx - 2, py - boxH/2 - 2, boxW + 4, boxH + 4);
+    ctx.strokeRect(bx-2, py-boxH/2-2, boxW+4, boxH+4);
   }
   ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.lineWidth = 1.5;
   const lines = isCol ? 7 : 5;
-  for (let i = 1; i < lines; i++) {
-    const ly = py - boxH/2 + i * (boxH/lines);
-    ctx.beginPath(); ctx.moveTo(bx + 3, ly); ctx.lineTo(bx + boxW - 3, ly); ctx.stroke();
+  for (let i=1;i<lines;i++){
+    const ly = py - boxH/2 + i*(boxH/lines);
+    ctx.beginPath(); ctx.moveTo(bx+3, ly); ctx.lineTo(bx+boxW-3, ly); ctx.stroke();
   }
   ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
   ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
 
   const facing = getFacing(s);
-  const arrowStartX = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
+  const asx = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
   ctx.save();
-  ctx.translate(arrowStartX, py);
-  ctx.rotate(facing);
+  ctx.translate(asx, py); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(0, 0); ctx.lineTo(32, 0);
-  ctx.lineTo(24, -9); ctx.moveTo(32, 0); ctx.lineTo(24, 9);
-  ctx.stroke();
-  ctx.restore();
+  ctx.moveTo(0,0); ctx.lineTo(32,0);
+  ctx.lineTo(24,-9); ctx.moveTo(32,0); ctx.lineTo(24,9);
+  ctx.stroke(); ctx.restore();
 
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
-  ctx.font = "bold 12px Cairo";
+  ctx.font = "bold 12px Cairo, sans-serif";
   ctx.textAlign = isLeft ? "left" : "right";
+  const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.7)";
-  const textW = ctx.measureText(s.model).width + 10;
-  const tx = isLeft ? lx - 5 : lx - textW + 5;
-  ctx.fillRect(tx, py - 8, textW, 16);
-  ctx.fillStyle = "#fff";
-  ctx.fillText(s.model, lx, py + 4);
-
-  ctx.font = "bold 9px Cairo";
+  ctx.fillRect(isLeft ? lx-5 : lx-tw+5, py-8, tw, 16);
+  ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, py+4);
+  ctx.font = "bold 9px Cairo, sans-serif";
   ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
-  ctx.textAlign = isLeft ? "left" : "right";
-  ctx.fillText(isCol ? "عمودي" : "حائطي", lx, py + 18);
+  ctx.fillText(isCol ? "عمودي" : "جداري", lx, py+18);
 }
 
 /* ============ رسم السماعة الحرة ============ */
@@ -429,96 +532,101 @@ function drawFreeSpeaker(pos, s, isSel, db){
   const r = isSel ? 15 : 13;
 
   ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
-  ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 6, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
 
   ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
 
   ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
-
-  if (isSel) {
+  if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, r + 4, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
   }
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
 
   ctx.save();
-  ctx.translate(pos.x, pos.y);
-  ctx.rotate(facing);
+  ctx.translate(pos.x, pos.y); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
   ctx.beginPath();
-  ctx.moveTo(r + 3, 0); ctx.lineTo(r + 26, 0);
-  ctx.lineTo(r + 20, -8); ctx.moveTo(r + 26, 0); ctx.lineTo(r + 20, 8);
-  ctx.stroke();
-  ctx.restore();
+  ctx.moveTo(r+3,0); ctx.lineTo(r+26,0);
+  ctx.lineTo(r+20,-8); ctx.moveTo(r+26,0); ctx.lineTo(r+20,8);
+  ctx.stroke(); ctx.restore();
 
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
-  ctx.font = "bold 12px Cairo";
+  ctx.font = "bold 12px Cairo, sans-serif";
   ctx.textAlign = rightSide ? "right" : "left";
-  const textW = ctx.measureText(s.model).width + 10;
-  const tx = rightSide ? lx - textW + 5 : lx - 5;
+  const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.75)";
-  ctx.fillRect(tx, pos.y - 8, textW, 16);
-  ctx.fillStyle = "#fff";
-  ctx.fillText(s.model, lx, pos.y + 4);
-
-  ctx.font = "bold 9px Cairo";
+  ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
+  ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
+  ctx.font = "bold 9px Cairo, sans-serif";
   ctx.fillStyle = "#a0aec0";
-  ctx.fillText("موضع حر", lx, pos.y + 18);
+  ctx.fillText("موضع حر", lx, pos.y+18);
 }
 
-/* ============ الرسم ============ */
+/* ============ الرسم الرئيسي ============ */
 function draw(){
   const div = $('cDiv');
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = div.clientWidth * dpr;
-  canvas.height = div.clientHeight * dpr;
-  canvas.style.width = div.clientWidth + 'px';
-  canvas.style.height = div.clientHeight + 'px';
+  if (!div.clientWidth || !div.clientHeight) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width  = Math.round(div.clientWidth * dpr);
+  canvas.height = Math.round(div.clientHeight * dpr);
 
   const d = getDims();
   if (!d.L || !d.W) return;
 
   const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.80;
-  const W = d.W * scale, L = d.L * scale;
-  const mS = MINARET_M * scale;
+  const W = d.W*scale, L = d.L*scale;
+  const mS = MINARET_M*scale;
   const x0 = (canvas.width - W)/2 + mS/2;
   const y0 = (canvas.height - L)/2 + mS/2;
-  const mcx = x0 - mS/2;
-  const mcy = y0 + mS/2;
+  const mcx = x0 - mS/2, mcy = y0 + mS/2;
 
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (showGrid) {
+  /* الشبكة */
+  if (showGrid){
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
-    for (let x=0; x<=d.W; x+=2) {
+    for (let x=0; x<=d.W; x+=2){
       const px = x0 + x*scale;
       ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke();
     }
-    for (let y=0; y<=d.L; y+=2) {
+    for (let y=0; y<=d.L; y+=2){
       const py = y0 + y*scale;
       ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke();
     }
   }
 
+  /* الخريطة الحرارية */
+  if (showHeat){
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
+    drawHeatmap(d, x0, y0, W, L);
+    ctx.restore();
+  }
+
+  /* إطار القاعة */
   ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
   ctx.strokeRect(x0, y0, W, L);
 
+  /* المحراب */
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo"; ctx.textAlign = "center";
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
 
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo";
-  ctx.fillText(`${d.W} م (العرض)`, x0 + W/2, y0 - 28);
+  /* الأبعاد */
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif";
+  ctx.fillText(`العرض ${d.W} م`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText(`${d.L} م (الطول)`, 0, 0); ctx.restore();
+  ctx.fillText(`الطول ${d.L} م`, 0, 0); ctx.restore();
 
+  /* المئذنة */
   ctx.fillStyle = "rgba(230,0,18,0.08)";
   ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -526,90 +634,84 @@ function draw(){
   ctx.fillStyle = "rgba(230,0,18,0.22)"; ctx.fill();
   ctx.strokeStyle = "#ff4d4d"; ctx.lineWidth = 2; ctx.stroke();
   drawCrescent(mcx, mcy - mS*0.62, mS*0.14);
-  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo"; ctx.textAlign = "center";
+  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
-  if (showCoverage) {
+  /* مخاريط التغطية */
+  if (showCoverage){
     ctx.save();
     ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
-      const half = (db.covH/2) * RAD;
+      const half = (db.covH/2)*RAD;
       const isSel = s.id === selectedId;
-      if (isColumnType(db.type)) {
-        ctx.fillStyle = isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)';
-      } else {
-        ctx.fillStyle = isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)';
-      }
+      ctx.fillStyle = isColumnType(db.type)
+        ? (isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)')
+        : (isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)');
       const pos = getSpeakerPos(s);
       const facing = getFacing(s);
       const R = Math.max(W, L) * 2.5;
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, facing - half, facing + half);
+      ctx.arc(pos.x, pos.y, R, facing-half, facing+half);
       ctx.closePath(); ctx.fill();
     });
     ctx.restore();
 
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
-      const half = (db.covH/2) * RAD;
+      const half = (db.covH/2)*RAD;
       const isSel = s.id === selectedId;
       ctx.fillStyle = isSel ? 'rgba(230,0,18,.30)' : 'rgba(230,0,18,.14)';
       const pos = getSpeakerPos(s);
-      const R = Math.max(W, L) * 2;
+      const R = Math.max(W, L)*2;
       ctx.beginPath();
       ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, s.ang - half, s.ang + half);
+      ctx.arc(pos.x, pos.y, R, s.ang-half, s.ang+half);
       ctx.closePath(); ctx.fill();
     });
   }
 
+  /* السماعات */
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
     const facing = getFacing(s);
     const db = DB_SPK[s.model];
 
-    if (s.zone === 'minaret') {
+    if (s.zone === 'minaret'){
       const r = Math.max(8, layout.mS*0.18);
       ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.rotate(s.ang);
+      ctx.translate(pos.x, pos.y); ctx.rotate(s.ang);
       ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
       ctx.beginPath();
-      ctx.moveTo(r*1.4, 0);
-      ctx.lineTo(-r*0.9, -r*0.9);
-      ctx.lineTo(-r*0.9,  r*0.9);
+      ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9);
       ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = isSel ? "#fff" : "#000";
-      ctx.lineWidth = 2; ctx.stroke();
-      if (isSel) {
+      ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
+      if (isSel){
         ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(r*1.8, 0);
-        ctx.lineTo(-r*1.3, -r*1.3);
-        ctx.lineTo(-r*1.3,  r*1.3);
+        ctx.moveTo(r*1.8, 0); ctx.lineTo(-r*1.3, -r*1.3); ctx.lineTo(-r*1.3, r*1.3);
         ctx.closePath(); ctx.stroke();
       }
       ctx.restore();
-    } else if (isOnWall(s)) {
+    } else if (isOnWall(s)){
       drawWallSpeaker(pos, s, isSel, db);
     } else {
       drawFreeSpeaker(pos, s, isSel, db);
     }
 
-    if (isSel) {
-      const hx = pos.x + Math.cos(facing) * 52;
-      const hy = pos.y + Math.sin(facing) * 52;
+    if (isSel){
+      const hx = pos.x + Math.cos(facing)*52;
+      const hy = pos.y + Math.sin(facing)*52;
       ctx.strokeStyle = "rgba(56,189,248,.8)";
       ctx.lineWidth = 2; ctx.setLineDash([5,4]);
       ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(hx, hy); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = "#fff";
-      ctx.beginPath(); ctx.arc(hx, hy, 11, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hx, hy, 13, 0, Math.PI*2); ctx.fill();
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = "#0d1117"; ctx.font = "bold 14px Cairo";
+      ctx.fillStyle = "#0d1117"; ctx.font = "bold 15px Cairo, sans-serif";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
@@ -619,11 +721,10 @@ function draw(){
 
 /* ============ التفاعل ============ */
 function hitTest(p){
-  for (let i = speakers.length - 1; i >= 0; i--) {
+  for (let i = speakers.length - 1; i >= 0; i--){
     const s = speakers[i];
     const pos = getSpeakerPos(s);
-    let hitR = 20;
-    if (s.zone === 'minaret') hitR = 16;
+    const hitR = s.zone === 'minaret' ? 22 : 26;
     if (Math.hypot(p.mx - pos.x, p.my - pos.y) < hitR) return s;
   }
   return null;
@@ -631,12 +732,13 @@ function hitTest(p){
 function hitRotateHandle(s, mx, my){
   const pos = getSpeakerPos(s);
   const facing = getFacing(s);
-  const hx = pos.x + Math.cos(facing) * 52;
-  const hy = pos.y + Math.sin(facing) * 52;
-  return Math.hypot(mx - hx, my - hy) < 16;
+  const hx = pos.x + Math.cos(facing)*52;
+  const hy = pos.y + Math.sin(facing)*52;
+  return Math.hypot(mx-hx, my-hy) < 24;
 }
 function addSpeaker(rx, ry, model, facing){
-  const s = {id: ++uid, rx, ry, model, zone:'mosque', facing: (facing !== undefined ? facing : Math.PI/2)};
+  const s = {id: ++uid, rx, ry, model, zone:'mosque',
+             facing:(facing !== undefined ? facing : Math.PI/2)};
   speakers.push(s);
   return s;
 }
@@ -647,15 +749,18 @@ function isMinaretArea(m){
   return Math.hypot(m.mx - layout.mcx, m.my - layout.mcy) < layout.mS * 0.95;
 }
 
-canvas.addEventListener('mousedown', e => {
-  if (e.button !== 0) return;
-  const m = getMouse(e);
+function onPointerDown(e){
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  e.preventDefault();
+  if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch(_){} }
+
+  const m = getPointer(e);
   const p = toLocal(m);
 
-  /* 1) مقبض التدوير */
-  if (selectedId) {
+  /* مقبض التدوير */
+  if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
-    if (s && hitRotateHandle(s, m.mx, m.my)) {
+    if (s && hitRotateHandle(s, m.mx, m.my)){
       dragSnapshot = snapshot();
       rotating = s;
       canvas.style.cursor = 'grabbing';
@@ -663,54 +768,50 @@ canvas.addEventListener('mousedown', e => {
     }
   }
 
-  /* 2) سحب سماعة موجودة */
+  /* سحب سماعة موجودة */
   const hit = hitTest(p);
-  if (hit) {
+  if (hit){
     selectedId = hit.id;
     updateRotationPanel();
-    if (hit.zone !== 'minaret') {
+    if (hit.zone !== 'minaret'){
       dragSnapshot = snapshot();
       dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
 
-  /* 3) نقرة على فراغ */
-  if (!p.inside && !isMinaretArea(m)) { deselectSpeaker(); return; }
+  /* مساحة فارغة */
+  if (!p.inside && !isMinaretArea(m)){ deselectSpeaker(); return; }
 
   const model = $('m_model').value;
   const spk = DB_SPK[model];
 
-  /* ========== الوضع اليدوي ========== */
-  if (manualMode) {
+  if (manualMode){
     pushUndo();
-    if (isMinaretArea(m)) {
+    if (isMinaretArea(m)){
       const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
       addMinaretHorn(model, ang);
       toast('تم إضافة بوق على المئذنة', 'ok');
-    } else if (isHornType(spk.type)) {
+    } else if (isHornType(spk.type)){
       undoStack.pop(); updateUndoButtons();
-      toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn');
+      toast('الأبواق الخارجية تُوضع فقط على المئذنة', 'warn');
       return;
     } else {
-      const cx = layout.x0 + layout.W * 0.5;
-      const cy = layout.y0 + layout.L * 0.5;
-      const facing = Math.atan2(cy - m.my, cx - m.mx);
-      addSpeaker(p.rx, p.ry, model, facing);
+      const cx = layout.x0 + layout.W*0.5, cy = layout.y0 + layout.L*0.5;
+      addSpeaker(p.rx, p.ry, model, Math.atan2(cy - m.my, cx - m.mx));
       toast('تم وضع السماعة بحرية', 'ok');
     }
     selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw(); return;
   }
 
-  /* ========== الوضع التلقائي ========== */
-  if (isHornType(spk.type)) {
-    if (isMinaretArea(m)) {
+  /* الوضع التلقائي */
+  if (isHornType(spk.type)){
+    if (isMinaretArea(m)){
       pushUndo();
-      const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
-      addMinaretHorn(model, ang);
+      addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
     } else {
-      toast('الأبواق الخارجية تُوضع على المئذنة فقط', 'warn'); return;
+      toast('الأبواق الخارجية تُوضع فقط على المئذنة', 'warn'); return;
     }
   } else {
     pushUndo();
@@ -718,41 +819,42 @@ canvas.addEventListener('mousedown', e => {
     addSpeaker(1, p.ry, model, Math.PI);
   }
   updateAmpLogic(); draw();
-});
+}
 
-canvas.addEventListener('mousemove', e => {
-  const m = getMouse(e);
-  if (rotating) {
+function onPointerMove(e){
+  const m = getPointer(e);
+
+  if (rotating){
     const pos = getSpeakerPos(rotating);
     const angle = Math.atan2(m.my - pos.y, m.mx - pos.x);
     if (rotating.zone === 'minaret') rotating.ang = angle;
     else rotating.facing = angle;
     updateRotationPanel(); draw(); return;
   }
-  if (dragging) {
+  if (dragging){
     const p = toLocal(m);
     const s = speakers.find(x => x.id === dragging.id);
-    if (s) {
+    if (s){
       s.rx = clamp(p.rx + dragging.offX, 0, 1);
       s.ry = clamp(p.ry + dragging.offY, 0, 1);
       draw();
     }
     return;
   }
+  if (e.pointerType !== 'mouse') return;
   let cursor = 'crosshair';
-  if (selectedId) {
+  if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)) cursor = 'grab';
   }
   if (cursor === 'crosshair' && hitTest(toLocal(m))) cursor = 'move';
   canvas.style.cursor = cursor;
-});
+}
 
-window.addEventListener('mouseup', () => {
-  /* إذا انتهى سحب/تدوير بتغيير فعلي، احفظ الحالة السابقة في الـ undo */
-  if ((dragging || rotating) && dragSnapshot) {
+function onPointerUp(e){
+  if ((dragging || rotating) && dragSnapshot){
     const after = snapshot();
-    if (dragSnapshot !== after) {
+    if (dragSnapshot !== after){
       undoStack.push(dragSnapshot);
       if (undoStack.length > MAX_UNDO) undoStack.shift();
       redoStack = [];
@@ -762,16 +864,24 @@ window.addEventListener('mouseup', () => {
   dragSnapshot = null;
   dragging = null; rotating = null;
   canvas.style.cursor = 'crosshair';
-});
+  if (canvas.releasePointerCapture && e && e.pointerId !== undefined){
+    try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
+  }
+}
 
+canvas.addEventListener('pointerdown', onPointerDown);
+canvas.addEventListener('pointermove', onPointerMove);
+canvas.addEventListener('pointerup', onPointerUp);
+canvas.addEventListener('pointercancel', onPointerUp);
+canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !dragging && !rotating) canvas.style.cursor = 'crosshair'; });
 canvas.addEventListener('contextmenu', e => {
   e.preventDefault();
-  const p = toLocal(getMouse(e));
+  const p = toLocal(getPointer(e));
   const hit = hitTest(p);
-  if (hit) {
+  if (hit){
     pushUndo();
     speakers = speakers.filter(s => s.id !== hit.id);
-    if (selectedId === hit.id) { selectedId = null; updateRotationPanel(); }
+    if (selectedId === hit.id){ selectedId = null; updateRotationPanel(); }
     updateAmpLogic(); draw();
     toast('تم حذف السماعة', 'warn');
   }
@@ -781,21 +891,14 @@ canvas.addEventListener('contextmenu', e => {
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
-  toast(manualMode ? '🖐 الوضع اليدوي: وضع حر في أي مكان' : 'الوضع التلقائي: زوجي على الجدارين', 'ok');
+  toast(manualMode ? '🖐 وضع يدوي: وضع حر للسماعات' : 'الوضع التلقائي: أزواج على الجدارين', 'ok');
 }
-function toggleCoverage(){
-  showCoverage = !showCoverage;
-  $('tgCoverage').classList.toggle('on', showCoverage);
-  draw();
-}
-function toggleGrid(){
-  showGrid = !showGrid;
-  $('tgGrid').classList.toggle('on', showGrid);
-  draw();
-}
+function toggleCoverage(){ showCoverage = !showCoverage; $('tgCoverage').classList.toggle('on', showCoverage); draw(); }
+function toggleHeat(){ showHeat = !showHeat; $('tgHeat').classList.toggle('on', showHeat); draw(); }
+function toggleGrid(){ showGrid = !showGrid; $('tgGrid').classList.toggle('on', showGrid); draw(); }
 function clearSpeakers(){
-  if (speakers.length === 0) return toast('لا توجد سماعات', 'warn');
-  if (confirm(`مسح جميع السماعات (${speakers.length})؟`)) {
+  if (!speakers.length) return toast('لا توجد سماعات', 'warn');
+  if (confirm(`مسح كل السماعات (${speakers.length})؟`)){
     pushUndo();
     speakers = []; selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
@@ -803,26 +906,36 @@ function clearSpeakers(){
   }
 }
 function resetData(){
-  if (!confirm('مسح كافة البيانات والسماعات؟')) return;
+  if (!confirm('إعادة تعيين كل البيانات والسماعات؟')) return;
   pushUndo();
   speakers = []; selectedId = null; manualMode = false;
   $('manualBtn').classList.remove('active-mode');
   $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
   $('p_name').value = 'مسجد جديد'; $('p_client').value = ''; $('p_engineer').value = 'م. أحمد';
   updateRotationPanel(); updateAmpLogic(); draw();
-  toast('تم تصفير البيانات', 'ok');
+  toast('تم إعادة التعيين', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
+function deleteSelected(){
+  const s = speakers.find(x => x.id === selectedId);
+  if (!s) return;
+  pushUndo();
+  speakers = speakers.filter(x => x.id !== selectedId);
+  selectedId = null;
+  updateRotationPanel(); updateAmpLogic(); draw();
+  toast('تم حذف السماعة', 'warn');
+}
+function onDimChange(){ updateAmpLogic(); }
 
 /* ============ لوحة التدوير ============ */
 function updateRotationPanel(){
   const s = speakers.find(x => x.id === selectedId);
   const box = $('rotationBox');
-  if (!s) { box.style.display = 'none'; return; }
+  if (!s){ box.style.display = 'none'; return; }
   box.style.display = 'block';
-  let posLabel = '';
+  let posLabel;
   if (s.zone === 'minaret') posLabel = ' (بوق المئذنة)';
-  else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'حائط أيسر':'حائط أيمن'})`;
+  else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'الجدار الأيسر':'الجدار الأيمن'})`;
   else posLabel = ' (موضع حر)';
   $('rotModel').textContent = `— ${s.model}${posLabel}`;
   let deg = getFacing(s) * DEG;
@@ -836,8 +949,7 @@ function setSelectedAngle(val){
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
   const rad = parseFloat(val) * RAD;
-  if (s.zone === 'minaret') s.ang = rad;
-  else s.facing = rad;
+  if (s.zone === 'minaret') s.ang = rad; else s.facing = rad;
   $('angleVal').textContent = Math.round(val);
   draw();
 }
@@ -854,13 +966,12 @@ function aiSmartDistribute(){
   speakers = [];
   let hornCount = 0;
 
-  if (addHorns) {
-    const angles = [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI];
-    angles.forEach(ang => addMinaretHorn('UT-08', ang));
-    hornCount = angles.length;
+  if (addHorns){
+    [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI].forEach(ang => addMinaretHorn('UT-08', ang));
+    hornCount = 4;
   }
 
-  if (isHorn) {
+  if (isHorn){
     toast(`تم وضع ${hornCount} أبواق على المئذنة`, 'ok');
     updateAmpLogic(); draw(); return;
   }
@@ -870,17 +981,15 @@ function aiSmartDistribute(){
   const rows = Math.max(2, Math.ceil(d.L / spacing));
   const gap = d.L / rows;
 
-  for (let i = 0; i < rows; i++) {
-    const yMeters = (i + 0.5) * gap;
-    const r = yMeters / d.L;
+  for (let i=0;i<rows;i++){
+    const r = ((i + 0.5) * gap) / d.L;
     addSpeaker(0, r, model, 0);
     addSpeaker(1, r, model, Math.PI);
   }
 
   const indoorCount = rows * 2;
-  const typeName = isColumnType(spk.type) ? 'عمودية' : 'حائطية';
-  const spacingM = gap.toFixed(1);
-  toast(`✅ ${indoorCount} سماعة ${typeName} على الجدارين (${rows} صفوف، تباعد ${spacingM}م)${hornCount ? ` + ${hornCount} أبواق على المئذنة` : ''}`, 'ok');
+  const typeName = isColumnType(spk.type) ? 'عمودية' : 'جدارية';
+  toast(`✅ ${indoorCount} سماعة ${typeName} (${rows} صفوف، تباعد ${gap.toFixed(1)} م)${hornCount ? ` + ${hornCount} أبواق` : ''}`, 'ok');
 
   updateAmpLogic(); draw();
 }
@@ -893,87 +1002,93 @@ function computeAcoustics(){
   const A = S * d.alpha;
   const rt60 = A > 0 ? 0.161 * V / A : 0;
 
-  const pts = [
-    {x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}
-  ];
+  const pts = [{x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}];
   const listH = 1.2;
-  const indoorSpk = speakers.filter(s => s.zone !== 'minaret');
+  const indoorSpk  = speakers.filter(s => s.zone !== 'minaret');
   const outdoorSpk = speakers.filter(s => s.zone === 'minaret');
 
   let splSum = 0;
   pts.forEach(p => {
     let pTotal = 0;
     indoorSpk.forEach(s => {
-      const dx = (p.x - s.rx) * d.W;
-      const dy = (p.y - s.ry) * d.L;
-      const dz = d.H - listH;
+      const dx = (p.x - s.rx)*d.W, dy = (p.y - s.ry)*d.L, dz = d.H - listH;
       const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
       const sp = DB_SPK[s.model];
-      const facing = getFacing(s);
       const angleToP = Math.atan2(dy, dx);
-      let diff = Math.abs(((angleToP - facing + Math.PI) % (2*Math.PI)) - Math.PI);
+      let diff = Math.abs(((angleToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
       if (diff > Math.PI) diff = 2*Math.PI - diff;
-      const inCone = diff <= (sp.covH/2) * RAD;
+      const inCone = diff <= (sp.covH/2)*RAD;
       const offAxis = inCone ? 0 : -6;
       const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis;
       pTotal += Math.pow(10, spl/10);
     });
     splSum += 10*Math.log10(pTotal || 1e-9);
   });
-  const avgSPL = indoorSpk.length ? splSum / pts.length : 0;
-  return {V, S, rt60, avgSPL, indoorCount: indoorSpk.length, outdoorCount: outdoorSpk.length};
+
+  return {
+    V, S, rt60,
+    avgSPL: indoorSpk.length ? splSum / pts.length : 0,
+    indoorCount: indoorSpk.length,
+    outdoorCount: outdoorSpk.length
+  };
 }
 
 function updateAmpLogic(){
-  const totalPwr = speakers.reduce((a,s)=>a + DB_SPK[s.model].pwr, 0);
+  const totalPwr = speakers.reduce((a,s) => a + DB_SPK[s.model].pwr, 0);
   const N = speakers.length;
-  const ampId = $('amp_model').value;
-  const amp = DB_AMP.find(a => a.id === ampId);
+  const amp = DB_AMP.find(a => a.id === $('amp_model').value);
   let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
-  if (N > 0) {
-    const imp = 8;
-    perCh = Math.max(1, Math.floor(imp / amp.minImp));
+
+  if (N > 0){
+    perCh = Math.max(1, Math.floor(8 / amp.minImp));
     chNeeded = Math.ceil(N / perCh);
     const ampsByCh  = Math.ceil(chNeeded / amp.ch);
     const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
     ampCount = Math.max(ampsByCh, ampsByPwr, 1);
     reason = ampsByCh >= ampsByPwr
-      ? `القيود: المعاوقة (${perCh} سماعة/قناة كحد أقصى)`
-      : `القيود: القدرة (هامش 30%)`;
+      ? `القيد: المعاوقة (حد أقصى ${perCh} سماعة/قناة)`
+      : `القيد: الطاقة (هامش 30%)`;
   }
-  ampResult = {amps: ampCount, chNeeded, perCh, totalPwr, amp};
+  ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
 
   const ac = computeAcoustics();
   const target = parseFloat($('p_purpose').value);
+
   const splEl = $('spl_v'), splStat = $('st_spl');
-  if (ac.indoorCount === 0) {
+  if (ac.indoorCount === 0){
     splEl.textContent = speakers.length ? 'خارجي' : '—';
     splStat.className = 'stat';
   } else {
     splEl.textContent = ac.avgSPL.toFixed(1);
-    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target - 4 ? 'warn' : 'bad');
+    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target-4 ? 'warn' : 'bad');
   }
+
   const rtEl = $('rt_v'), rtStat = $('st_rt');
   rtEl.textContent = ac.rt60.toFixed(2);
   rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
+
   $('pwr_v').textContent = totalPwr;
   $('cnt_v').textContent = N;
-  const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} بوق على المئذنة</span>` : '';
+
+  const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} أبواق على المئذنة</span>` : '';
   $('amp_count_info').innerHTML = N === 0
     ? 'لا توجد سماعات بعد'
-    : `⚡ العدد المقترح: <b>${ampCount}</b> × ${amp.id}<br>
+    : `⚡ الموصى به: <b>${ampCount}</b> × ${amp.id}<br>
        (${chNeeded} قناة – ${perCh} سماعة/قناة)<br>
        <span style="color:#8b949e">${reason}</span>${hornInfo}`;
+
   draw();
 }
 
 /* ============ التقرير ============ */
 function generateReport(){
-  if (speakers.length === 0) return toast('أضف سماعات أولاً', 'err');
+  if (!speakers.length) return toast('أضف سماعات أولاً', 'err');
   const d = getDims();
   const fs = $('fs_model').value;
+  const fsAr = fs === 'None' ? 'بدون' : fs;
   const ac = computeAcoustics();
   const today = new Date().toLocaleDateString('ar-EG');
+
   $('project_header').innerHTML = `
     <table class="table-boq" style="margin-bottom:14px">
       <tr><td><b>المشروع:</b></td><td>${$('p_name').value}</td>
@@ -985,11 +1100,10 @@ function generateReport(){
 
   let counts = {}, totalCable = 0;
   speakers.forEach(s => {
-    counts[s.model] = (counts[s.model]||0) + 1;
+    counts[s.model] = (counts[s.model] || 0) + 1;
     if (s.zone === 'minaret') totalCable += 30;
     else {
-      const dx = (s.rx - 0.5) * d.W;
-      const dy = s.ry * d.L;
+      const dx = (s.rx - 0.5)*d.W, dy = s.ry*d.L;
       totalCable += Math.sqrt(dx*dx + dy*dy) + d.H;
     }
   });
@@ -999,131 +1113,146 @@ function generateReport(){
   $('eng_summary').innerHTML = `
     <table class="table-boq">
       <tr><td>المساحة الإجمالية</td><td>${(d.L*d.W).toFixed(1)} م²</td></tr>
-      <tr><td>الحجم الكلي</td><td>${ac.V.toFixed(1)} م³</td></tr>
-      <tr><td>إجمالي الحمل الصوتي</td><td>${ampResult.totalPwr} واط</td></tr>
-      <tr><td>SPL المتوسط (داخلي)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB (المستهدف: ${target} dB)</td></tr>
-      <tr><td>زمن الرنين RT60</td><td>${ac.rt60.toFixed(2)} ثانية</td></tr>
-      <tr><td>عدد المكبرات</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
-      <tr><td>المعالج</td><td>${fs}</td></tr>
-      <tr><td>أبواق خارجية (مئذنة)</td><td>${ac.outdoorCount}</td></tr>
-      <tr><td>الكيبلات التقديرية</td><td>~${totalCable} متر</td></tr>
+      <tr><td>الحجم الإجمالي</td><td>${ac.V.toFixed(1)} م³</td></tr>
+      <tr><td>الحمل الصوتي الكلي</td><td>${ampResult.totalPwr} واط</td></tr>
+      <tr><td>متوسط SPL (داخلي)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} ديسيبل (الهدف: ${target} ديسيبل)</td></tr>
+      <tr><td>زمن الصدى RT60</td><td>${ac.rt60.toFixed(2)} ثانية</td></tr>
+      <tr><td>المكبرات</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
+      <tr><td>المعالجة</td><td>${fsAr}</td></tr>
+      <tr><td>الأبواق الخارجية</td><td>${ac.outdoorCount}</td></tr>
+      <tr><td>الكابل التقديري</td><td>~${totalCable} م</td></tr>
     </table>`;
 
   let boq = '';
-  for (const m in counts) {
+  for (const m in counts){
     const sp = DB_SPK[m];
     boq += `<tr>
-      <td>سماعة Motivity ${m}</td>
-      <td>${sp.type} – ${sp.pwr}W – 8Ω – ${sp.sens}dB</td>
+      <td>سماعة موتيفيتي ${m}</td>
+      <td>${TYPE_AR[sp.type]} – ${sp.pwr} واط – 8 أوم – ${sp.sens} ديسيبل</td>
       <td>${counts[m]}</td>
-      <td>~${Math.ceil(totalCable * counts[m] / speakers.length)}م (2×1.5mm²)</td>
+      <td>~${Math.ceil(totalCable * counts[m] / speakers.length)} م (2×1.5 مم²)</td>
     </tr>`;
   }
-  boq += `<tr><td>مكبر قدرة ${ampResult.amp.id}</td><td>MA Professional – ${ampResult.amp.pwr}W</td><td>${ampResult.amps}</td><td>—</td></tr>`;
-  if (fs !== 'None') boq += `<tr><td>مانع تصفير رقمي</td><td>${fs}</td><td>1</td><td>—</td></tr>`;
-  boq += `<tr><td>كيبل سماعات</td><td>نحاس مجدول 2×1.5mm²</td><td>~${totalCable}م</td><td>—</td></tr>`;
-  boq += `<tr><td>موصلات وكونيكتورات</td><td>Speakon / Terminal</td><td>${speakers.length*2}</td><td>—</td></tr>`;
+  boq += `<tr><td>مكبر صوت ${ampResult.amp.id}</td><td>MA احترافي – ${ampResult.amp.pwr} واط</td><td>${ampResult.amps}</td><td>—</td></tr>`;
+  if (fs !== 'None') boq += `<tr><td>كابح تغذية راجعة رقمي</td><td>${fsAr}</td><td>1</td><td>—</td></tr>`;
+  boq += `<tr><td>كابل السماعات</td><td>نحاس مجدول 2×1.5 مم²</td><td>~${totalCable} م</td><td>—</td></tr>`;
+  boq += `<tr><td>موصلات</td><td>Speakon / طرفية</td><td>${speakers.length*2}</td><td>—</td></tr>`;
   $('boq-body').innerHTML = boq;
 
-  const rtEval = ac.rt60 <= 1.2 ? 'ممتاز للكلام' : ac.rt60 <= 1.8 ? 'مقبول' : 'يُنصح بإضافة مواد ماصة';
-  const splEval = !ac.indoorCount ? '— لا توجد سماعات داخلية' :
-    (ac.avgSPL >= target ? '✅ يحقق المستهدف' : `⚠️ أقل من المستهدف بـ ${(target - ac.avgSPL).toFixed(1)} dB`);
+  const rtEval = ac.rt60 <= 1.2 ? 'ممتاز للخطاب' : ac.rt60 <= 1.8 ? 'مقبول' : 'يُنصح بإضافة مواد ماصة للصوت';
+  const splEval = !ac.indoorCount ? '— لا توجد سماعات داخلية'
+    : (ac.avgSPL >= target ? '✅ يحقق الهدف' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} ديسيبل أقل من الهدف`);
 
   let notes = `
-    • تم حساب <b>زمن الرنين RT60 = ${ac.rt60.toFixed(2)} ث</b> بطريقة سابين بناءً على
-    حجم ${ac.V.toFixed(0)} م³ ومعامل امتصاص ${d.alpha} → تقييم: <b>${rtEval}</b>.<br>
-    • متوسط ضغط الصوت (SPL) عند نقاط الاستماع = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}.<br>
-    • تم اعتماد <b>${ampResult.amps} مكبر ${ampResult.amp.id}</b> بهامش قدرة 30% وضمان تحميل ≥${ampResult.amp.minImp}Ω لكل قناة.<br>
-    • توزيع السماعات يمنع التصفير (Feedback) بفضل ${fs === 'None' ? 'المعالج المدمج' : fs + ' الرقمي'}.<br>`;
-
-  if (ac.outdoorCount) {
-    notes += `• تم تركيب <b>${ac.outdoorCount} أبواق خارجية UT-08</b> على المئذنة موجهة نحو الخارج (${ac.outdoorCount} اتجاهات) لتغطية الأذان والمحيط.<br>`;
+    • <b>RT60 = ${ac.rt60.toFixed(2)} ثانية</b> محسوب بمعادلة سابين باستخدام الحجم ${ac.V.toFixed(0)} م³ ومعامل الامتصاص ${d.alpha} → <b>${rtEval}</b>.<br>
+    • متوسط SPL عند نقاط الاستماع = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} ديسيبل</b> → ${splEval}.<br>
+    • تم اختيار <b>${ampResult.amps} × ${ampResult.amp.id}</b> بهامش طاقة 30% وحمل ≥${ampResult.amp.minImp} أوم لكل قناة.<br>
+    • التوزيع يمنع التغذية الراجعة بفضل ${fs === 'None' ? 'المعالج المدمج' : fsAr + ' الرقمي'}.<br>`;
+  if (ac.outdoorCount){
+    notes += `• <b>${ac.outdoorCount} أبواق خارجية UT-08</b> مثبتة على المئذنة باتجاه الخارج للأذان وتغطية المحيط.<br>`;
   }
-  notes += `• <b>اتجاه التغطية</b> لكل سماعة قابل للتعديل فردياً (منزلق أو سحب المقبض) لضمان أفضل تغطية وتفادي التداخل.`;
+  notes += `• <b>اتجاه التغطية</b> لكل سماعة قابل للتعديل بشكل مستقل للحصول على تغطية مثالية وتقليل التداخل.`;
 
   $('eng_notes').innerHTML = notes;
   $('reportImg').src = canvas.toDataURL();
   $('reportView').style.display = 'block';
 }
 
-/* ============ حفظ/استرجاع ============ */
-function saveProject(){
-  const data = {
+/* ============ الحفظ / التحميل / التصدير ============ */
+function collectProjectData(){
+  return {
+    version: 2,
     speakers, manualMode,
-    dims: {len: $('m_len').value, wid: $('m_wid').value, h: $('m_h').value, alpha: $('m_alpha').value},
+    dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value},
     amp: $('amp_model').value, fs: $('fs_model').value, model: $('m_model').value,
     addHorns: $('addHornsChk').checked,
-    info: {name: $('p_name').value, client: $('p_client').value, engineer: $('p_engineer').value, purpose: $('p_purpose').value},
+    info: {name:$('p_name').value, client:$('p_client').value,
+           engineer:$('p_engineer').value, purpose:$('p_purpose').value},
     uid
   };
-  localStorage.setItem('motivity_project', JSON.stringify(data));
-  toast('💾 تم حفظ المشروع', 'ok');
+}
+function applyProjectData(d){
+  pushUndo();
+  speakers = (d.speakers || []).map(s => {
+    const ns = {...s, zone: s.zone || 'mosque'};
+    if (ns.zone !== 'minaret' && ns.facing === undefined)
+      ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
+    return ns;
+  });
+  manualMode = !!d.manualMode;
+  $('manualBtn').classList.toggle('active-mode', manualMode);
+  $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
+  $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
+  $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
+  if (d.addHorns !== undefined) $('addHornsChk').checked = d.addHorns;
+  $('p_name').value = d.info.name;
+  $('p_client').value = d.info.client || '';
+  $('p_engineer').value = d.info.engineer || '';
+  $('p_purpose').value = d.info.purpose || '90';
+  uid = d.uid || speakers.length;
+  selectedId = null;
+  updateRotationPanel(); updateAmpLogic(); draw();
+}
+function saveProject(){
+  try {
+    localStorage.setItem('motivity_project_ar', JSON.stringify(collectProjectData()));
+    toast('💾 تم حفظ المشروع', 'ok');
+  } catch(e){ toast('التخزين غير متاح', 'err'); }
 }
 function loadProject(){
-  const raw = localStorage.getItem('motivity_project');
+  const raw = localStorage.getItem('motivity_project_ar') || localStorage.getItem('motivity_project_en');
   if (!raw) return toast('لا يوجد مشروع محفوظ', 'warn');
-  try {
-    const d = JSON.parse(raw);
-    pushUndo();
-    speakers = (d.speakers || []).map(s => {
-      const ns = {...s, zone: s.zone || 'mosque'};
-      if (ns.zone !== 'minaret' && ns.facing === undefined) {
-        ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
-      }
-      return ns;
-    });
-    manualMode = !!d.manualMode;
-    $('manualBtn').classList.toggle('active-mode', manualMode);
-    $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
-    $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
-    $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
-    if (d.addHorns !== undefined) $('addHornsChk').checked = d.addHorns;
-    $('p_name').value = d.info.name;
-    $('p_client').value = d.info.client; $('p_engineer').value = d.info.engineer;
-    $('p_purpose').value = d.info.purpose;
-    uid = d.uid || speakers.length;
-    selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw();
-    toast('📂 تم استرجاع المشروع', 'ok');
-  } catch(e){ toast('ملف محفوظ تالف', 'err'); }
+  try { applyProjectData(JSON.parse(raw)); toast('📂 تم تحميل المشروع', 'ok'); }
+  catch(e){ toast('ملف محفوظ تالف', 'err'); }
+}
+function exportProject(){
+  const blob = new Blob([JSON.stringify(collectProjectData(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = ($('p_name').value || 'mosque').replace(/\s+/g,'_') + '.motivity.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  toast('⬇️ تم التصدير', 'ok');
+}
+function importProject(){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try { applyProjectData(JSON.parse(rd.result)); toast('📂 تم الاستيراد', 'ok'); }
+      catch(err){ toast('ملف غير صالح', 'err'); }
+    };
+    rd.readAsText(f);
+  };
+  inp.click();
 }
 
-/* ============ اختصارات ============ */
+/* ============ لوحة المفاتيح ============ */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
 
-  /* Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y */
-  if (e.ctrlKey || e.metaKey) {
+  if (e.ctrlKey || e.metaKey){
     const k = e.key.toLowerCase();
-    if (k === 'z' && !inField) {
-      e.preventDefault();
-      if (e.shiftKey) redo(); else undo();
-      return;
-    }
-    if (k === 'y' && !inField) {
-      e.preventDefault(); redo(); return;
-    }
+    if (k === 'z' && !inField){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+    if (k === 'y' && !inField){ e.preventDefault(); redo(); return; }
   }
+  if (e.key === 'Escape'){ closeSidebar(); deselectSpeaker(); return; }
 
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
-  if (e.key === 'Delete' || e.key === 'Backspace') {
-    if (inField) return;
-    pushUndo();
-    speakers = speakers.filter(x => x.id !== selectedId);
-    selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw();
-    toast('تم حذف السماعة', 'warn');
-    e.preventDefault(); return;
+
+  if ((e.key === 'Delete' || e.key === 'Backspace') && !inField){
+    e.preventDefault(); deleteSelected(); return;
   }
-  if (e.key === 'Escape') { deselectSpeaker(); return; }
   let delta = 0;
   if (e.key === '[') delta = -5;
   else if (e.key === ']') delta = 5;
   else if (e.key === ',') delta = -1;
   else if (e.key === '.') delta = 1;
-  if (delta) {
+  if (delta){
     pushUndo();
     const rad = delta * RAD;
     if (s.zone === 'minaret') s.ang += rad;
@@ -1133,15 +1262,26 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ============ التهيئة ============ */
+/* ============ التشغيل ============ */
 window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
     $(id).addEventListener('input', () => updateAmpLogic()));
   updateRotationPanel(); updateAmpLogic(); updateUndoButtons(); draw();
-  toast('مرحباً بك في Motivity PRO', 'ok');
+  toast('مرحباً بك في موتيفيتي برو', 'ok');
 });
-window.addEventListener('resize', () => { draw(); });
+
+/* إعادة الرسم عند تغيير الحجم */
+let rzT;
+function scheduleResize(){ clearTimeout(rzT); rzT = setTimeout(draw, 80); }
+window.addEventListener('resize', scheduleResize);
+window.addEventListener('orientationchange', scheduleResize);
+if (window.ResizeObserver){
+  new ResizeObserver(scheduleResize).observe($('cDiv'));
+}
+if (window.visualViewport){
+  window.visualViewport.addEventListener('resize', scheduleResize);
+}
 </script>
 </body>
 </html>
