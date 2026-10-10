@@ -292,7 +292,7 @@ const DB_SPK = {
   "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"Column"},
   "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall"},
   "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall"},
-  "UT-08":  {pwr:200, sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
+  "UT-08":  {pwr:60,  sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
 };
 const DB_AMP = [
   {id:"MA-450C", pwr:900,  ch:2, minImp:4},
@@ -1149,7 +1149,7 @@ function generateReport(){
     • تم اختيار <b>${ampResult.amps} × ${ampResult.amp.id}</b> بهامش طاقة 30% وحمل ≥${ampResult.amp.minImp} أوم لكل قناة.<br>
     • التوزيع يمنع التغذية الراجعة بفضل ${fs === 'None' ? 'المعالج المدمج' : fsAr + ' الرقمي'}.<br>`;
   if (ac.outdoorCount){
-    notes += `• <b>${ac.outdoorCount} أبواق خارجية UT-08</b> مثبتة على المئذنة باتجاه الخارج للأذان وتغطية المحيط.<br>`;
+    notes += `• <b>${ac.outdoorCount} أبواق خارجية UT-08 (60 واط)</b> مثبتة على المئذنة باتجاه الخارج للأذان وتغطية المحيط.<br>`;
   }
   notes += `• <b>اتجاه التغطية</b> لكل سماعة قابل للتعديل بشكل مستقل للحصول على تغطية مثالية وتقليل التداخل.`;
 
