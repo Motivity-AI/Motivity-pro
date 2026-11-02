@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Motivity AI — Elite Engineering v5.7</title>
+<title>Motivity AI — Elite Engineering v5.8 (3D + Gauges)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--gold:#f59e0b;--green:#22c55e;--border:#30363d;--purple:#a855f7;--cyan:#06b6d4;--sidebar-w:380px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
@@ -57,7 +57,7 @@ input[type="checkbox"]{width:auto;min-width:20px;min-height:20px;margin:0;accent
 canvas{display:block;width:100%;height:100%;touch-action:none}
 .v-ctrl{position:absolute;background:rgba(22,27,34,.92);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:10px;padding:6px;display:flex;gap:4px;z-index:10;flex-wrap:wrap;max-width:calc(100% - 32px)}
 .v-ctrl.top-left{top:16px;left:16px}
-.v-ctrl.top-right{top:16px;right:16px;max-width:440px}
+.v-ctrl.top-right{top:16px;right:16px;max-width:520px}
 .v-ctrl button{background:transparent;color:#ccc;border:none;width:38px;height:38px;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .2s}
 .v-ctrl button:active{background:rgba(56,189,248,.2)}
 .v-ctrl button.on{background:var(--blue);color:#000}
@@ -107,7 +107,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .sys-card .row-item b{color:#c40010}
 .mobile-fab{display:none;position:fixed;top:calc(12px + var(--safe-top));right:12px;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#e60012,#ff2e40);color:#fff;border:none;font-size:22px;font-weight:900;cursor:pointer;z-index:1100;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(230,0,18,.5)}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1050;backdrop-filter:blur(2px)}
-@media(max-width:1100px){:root{--sidebar-w:340px}.sidebar{padding:16px}.kpi .v{font-size:15px}.v-ctrl.top-right{max-width:360px}.v-ctrl button{width:34px;height:34px}}
+@media(max-width:1100px){:root{--sidebar-w:340px}.sidebar{padding:16px}.kpi .v{font-size:15px}.v-ctrl.top-right{max-width:400px}.v-ctrl button{width:34px;height:34px}}
 @media(max-width:820px){
   body{display:block}
   .mobile-fab{display:flex}
@@ -171,7 +171,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 
 <aside class="sidebar" id="sidebar">
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="طي القائمة">◀</button>
-  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.7 · Conference Complete</div></div>
+  <div class="brand"><h1>MOTIVITY <span>AI</span></h1><p>ELITE ENGINEERING</p><div class="ver">v5.8 · 3D + Gauges</div></div>
 
   <div class="tabs">
     <div class="tab active" data-tab="acoustic" onclick="switchTab('acoustic')">🔊 صوتيات</div>
@@ -343,6 +343,8 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   <canvas id="mainCanvas"></canvas>
   <div class="v-ctrl top-left"><button onclick="zoomIn()" aria-label="تكبير">+</button><button onclick="zoomOut()" aria-label="تصغير">−</button><button onclick="resetView()" aria-label="إعادة">⌂</button></div>
   <div class="v-ctrl top-right" id="toggleBar">
+    <button id="tg3D" onclick="toggle3D()" title="عرض 3D">🧊</button>
+    <button id="tgGauge" class="on" onclick="toggle('gauge')" title="العدادات">📊</button>
     <button id="tgTile" class="on" onclick="toggle('tile')">▦</button>
     <button id="tgCover" class="on" onclick="toggle('cover')">🌐</button>
     <button id="tgHeat" onclick="toggle('heat')">🌡️</button>
@@ -357,7 +359,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   </div>
   <div class="warnings" id="warningsPanel"></div>
   <div class="hint-bar">🖱️ <b>عجلة</b> للتقريب · <b>اسحب</b> للتحريك · 📱 <b>قرّب بإصبعين</b></div>
-  <div class="cursor-info">
+  <div class="cursor-info" id="cursorInfo">
     <span>SPL: <b id="cursorSPL">—</b></span>
     <span>STI: <b id="cursorSTI">—</b></span>
     <span>d: <b id="cursorDist">—</b></span>
@@ -434,7 +436,6 @@ var SPEAKERS = {
   'Cs-06':  { name:'Cs-06',  pwr:100, angle:80,  sens:96, q:7.69 }
 };
 
-/* ============ CONFERENCE HOSTS (from catalog) ============ */
 var CONF_HOSTS = {
   'MT1000S': { name:'MT1000S', type:'basic',    desc:'مناقشة أساسي (7 أنماط)', maxUnits:60,  power:20, features:['7 أنماط كلام','ذاكرة انقطاع','RS232'] },
   'MT2000S': { name:'MT2000S', type:'camera',   desc:'تتبع كاميرا + USB',       maxUnits:60,  power:25, features:['4 كاميرات','USB تسجيل','شاشة 4.3"'] },
@@ -445,7 +446,6 @@ var CONF_HOSTS = {
   'G-T50':   { name:'G-T50',   type:'5g',       desc:'5G متكامل لا محدود',      maxUnits:999, power:60, features:['WiFi 5G','AES-128','مزدوج'] }
 };
 
-/* ============ CONFERENCE CHAIRS (from catalog) ============ */
 var CONF_CHAIRS = {
   'MT380VC': { name:'MT380VC', type:'basic',      power:0, display:'—',        desc:'مدمج أساسي' },
   'MT880VC': { name:'MT880VC', type:'basic',      power:2, display:'2.4"',     desc:'سطح مكتب + سماعتين' },
@@ -458,7 +458,6 @@ var CONF_CHAIRS = {
   'G-T53W':  { name:'G-T53W',  type:'wireless5g', power:3, display:'5" لمس',   desc:'5G راقٍ متكامل' }
 };
 
-/* ============ CONFERENCE DELEGATES (from catalog) ============ */
 var CONF_DELEGATES = {
   'MT380VD': { name:'MT380VD', power:0, desc:'مدمج' },
   'MT880VD': { name:'MT880VD', power:2, desc:'سطح مكتب 2.4"' },
@@ -471,7 +470,6 @@ var CONF_DELEGATES = {
   'G-T54W':  { name:'G-T54W',  power:3, desc:'5G راقٍ' }
 };
 
-/* ============ ACCESSORIES ============ */
 var CONF_ACCESSORIES = {
   'AMIX10 II': { name:'AMIX10 II', power:30,   desc:'ميكسر ذكي 8ch + DSP + شاشة 2"' },
   'GW5020':    { name:'GW5020',    power:200,  desc:'شاحن مركزي 20 منفذ USB' },
@@ -505,12 +503,46 @@ var canvas, ctx, vArea;
 var PX_PER_M = 25;
 var zoom = 1, offsetX = 0, offsetY = 0;
 var isPanning = false, startX = 0, startY = 0;
-var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true, furn:true, stage:true, cam:true, rack:true, tech:true };
+var opts = { tile:true, cover:true, heat:false, rays:true, grid:false, conf:true, furn:true, stage:true, cam:true, rack:true, tech:true, gauge:true };
 var heatmapCache = null, heatmapKey = '';
 var needsRedraw = true;
 var animTime = 0, lastFrameTime = 0;
 var undoHistory = [], historyIndex = -1, suppressHistory = false;
 var isMobile = window.matchMedia('(max-width:820px)').matches;
+
+/* ===== GAUGE STATE ===== */
+var gaugeAnim = { spl: 78, sti: 0.5, rt60: 1.0, cov: 80 };
+var gaugeTarget = { spl: 78, sti: 0.5, rt60: 1.0, cov: 80 };
+var gaugeInit = false;
+
+/* ===== 3D STATE ===== */
+var view3D = {
+  enabled: false,
+  yaw: -Math.PI / 6,
+  elevation: Math.PI / 4,
+  distance: 40,
+  fov: 55 * Math.PI / 180,
+  targetY: 2
+};
+var isOrbiting = false;
+var orbitStartX = 0, orbitStartY = 0;
+var orbitStartYaw = 0, orbitStartElev = 0;
+
+function toggle3D() {
+  view3D.enabled = !view3D.enabled;
+  var btn = document.getElementById('tg3D');
+  if (btn) btn.classList.toggle('on', view3D.enabled);
+  var ci = document.getElementById('cursorInfo');
+  if (ci) ci.style.display = view3D.enabled ? 'none' : '';
+  if (view3D.enabled) {
+    var cfg = readConfig();
+    view3D.distance = Math.max(cfg.L, cfg.W, cfg.H) * 1.8;
+    view3D.targetY = cfg.H / 2;
+    view3D.elevation = Math.PI / 4;
+    view3D.yaw = -Math.PI / 6;
+  }
+  markDirty();
+}
 
 function isMobileNow() { return window.matchMedia('(max-width:820px)').matches; }
 function debounce(fn, ms) { var t; return function() { var a = arguments; clearTimeout(t); t = setTimeout(function() { fn.apply(null, a); }, ms); }; }
@@ -795,6 +827,35 @@ function resizeCanvas() {
   needsRedraw = true;
 }
 
+function updateGaugeTargets() {
+  var cfg = readConfig();
+  var RT60 = calcRT60(cfg.L, cfg.W, cfg.H, cfg.alpha);
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan((cfg.spk.angle / 2) * Math.PI / 180);
+  var spacing = cfg.L / Math.max(1, cfg.perSide);
+  var cov = Math.min(100, (coverR / Math.max(0.1, spacing)) * 200);
+
+  var minSpl = Infinity, minSti = 1, S = 8;
+  for (var i = 0; i < S; i++) for (var j = 0; j < S; j++) {
+    var x = -cfg.L/2 + cfg.L*(i+0.5)/S, y = -cfg.W/2 + cfg.W*(j+0.5)/S;
+    var r = splAtPoint(x, y, cfg);
+    if (r.spl < minSpl) minSpl = r.spl;
+    if (r.sti < minSti) minSti = r.sti;
+  }
+  gaugeTarget.spl = minSpl;
+  gaugeTarget.sti = minSti;
+  gaugeTarget.rt60 = RT60;
+  gaugeTarget.cov = cov;
+
+  if (!gaugeInit) {
+    gaugeAnim.spl = minSpl;
+    gaugeAnim.sti = minSti;
+    gaugeAnim.rt60 = RT60;
+    gaugeAnim.cov = cov;
+    gaugeInit = true;
+  }
+}
+
 function updateKPI() {
   var cfg = readConfig();
   var total = cfg.perSide * 2;
@@ -838,12 +899,14 @@ function updateKPI() {
   var loadPct = host.maxUnits ? Math.round((totalUnits / host.maxUnits) * 100) : 0;
   $('kpiConfLoadV').textContent = loadPct + '%';
   $('kpiConfLoad').className = 'kpi ' + (loadPct <= 70 ? 'ok' : loadPct <= 100 ? 'warn' : 'bad');
+  updateGaugeTargets();
   renderWarnings();
 }
 
-/* ============ RENDER ============ */
+/* ============ RENDER (2D) ============ */
 function render() {
   var cfg = readConfig();
+  if (view3D.enabled) { render3D(cfg); return; }
   var scale = PX_PER_M;
   var Lpx = cfg.L * scale, Wpx = cfg.W * scale;
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -874,6 +937,7 @@ function render() {
   if (opts.tech) drawTechnicalAnnotations(Lpx, Wpx, cfg, scale);
   ctx.restore();
   if (opts.tech) drawScreenOverlays(cfg);
+  if (opts.gauge) drawGaugePanel(cfg);
 }
 
 function drawBlueprintBg() {
@@ -1512,6 +1576,568 @@ function splColorRGBA(spl) {
   }
   return stops[0].c;
 }
+
+/* ============ GAUGE PANEL ============ */
+function drawGaugePanel(cfg) {
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var w = canvas.width / dpr, h = canvas.height / dpr;
+  var isMob = isMobileNow();
+
+  var gw    = isMob ? 46 : 60;
+  var gap   = isMob ? 8  : 10;
+  var pad   = isMob ? 8  : 12;
+  var panelW = gw * 4 + gap * 3 + pad * 2;
+  var panelH = gw + pad * 2 + 18;
+
+  var px, py;
+  if (isMob) {
+    px = w - panelW - 12;
+    py = h - panelH - 12;
+  } else {
+    px = 16;
+    py = h - panelH - 16;
+  }
+
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  ctx.beginPath();
+  ctx.roundRect(px, py, panelW, panelH, 10);
+  ctx.fillStyle = "rgba(10, 21, 32, 0.94)";
+  ctx.fill();
+  ctx.strokeStyle = "#7fb8d8";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  var grad = ctx.createLinearGradient(px, 0, px + panelW, 0);
+  grad.addColorStop(0, "#e60012");
+  grad.addColorStop(1, "#38bdf8");
+  ctx.fillStyle = grad;
+  ctx.fillRect(px + 1, py + 1, panelW - 2, 3);
+
+  var gauges = [
+    { key:'spl',  label:'SPL',  unit:'dB', val:gaugeAnim.spl,  min:60, max:100,
+      zones:[{from:60,to:78,color:'#e60012'},{from:78,to:85,color:'#f59e0b'},{from:85,to:100,color:'#22c55e'}],
+      color: gaugeAnim.spl  >= 85 ? '#22c55e' : gaugeAnim.spl  >= 78 ? '#f59e0b' : '#e60012',
+      fmt: function(v){ return Math.round(v); } },
+    { key:'sti',  label:'STI',  unit:'',   val:gaugeAnim.sti,  min:0,  max:1,
+      zones:[{from:0,to:0.45,color:'#e60012'},{from:0.45,to:0.6,color:'#f59e0b'},{from:0.6,to:1,color:'#22c55e'}],
+      color: gaugeAnim.sti  >= 0.6 ? '#22c55e' : gaugeAnim.sti >= 0.45 ? '#f59e0b' : '#e60012',
+      fmt: function(v){ return v.toFixed(2); } },
+    { key:'rt60', label:'RT60', unit:'s',  val:gaugeAnim.rt60, min:0,  max:2,
+      zones:[{from:0,to:1.2,color:'#22c55e'},{from:1.2,to:1.8,color:'#f59e0b'},{from:1.8,to:2,color:'#e60012'}],
+      color: gaugeAnim.rt60 <= 1.2 ? '#22c55e' : gaugeAnim.rt60 <= 1.8 ? '#f59e0b' : '#e60012',
+      fmt: function(v){ return v.toFixed(2); } },
+    { key:'cov',  label:'COV',  unit:'%',  val:gaugeAnim.cov,  min:0,  max:100,
+      zones:[{from:0,to:60,color:'#e60012'},{from:60,to:80,color:'#f59e0b'},{from:80,to:100,color:'#22c55e'}],
+      color: gaugeAnim.cov  >= 80 ? '#22c55e' : gaugeAnim.cov >= 60 ? '#f59e0b' : '#e60012',
+      fmt: function(v){ return Math.round(v) + '%'; } }
+  ];
+
+  for (var i = 0; i < gauges.length; i++) {
+    var gx = px + pad + gw/2 + i * (gw + gap);
+    var gy = py + pad + gw/2;
+    drawCircularGauge(gx, gy, gw/2 - 2, gauges[i], isMob);
+  }
+
+  ctx.restore();
+}
+
+function drawCircularGauge(cx, cy, radius, gauge, isMob) {
+  var startAngle = Math.PI * 0.75;
+  var endAngle   = Math.PI * 2.25;
+  var totalAngle = endAngle - startAngle;
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, startAngle, endAngle);
+  ctx.strokeStyle = "rgba(127, 184, 216, 0.14)";
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  for (var z = 0; z < gauge.zones.length; z++) {
+    var zone = gauge.zones[z];
+    var zFrom = (zone.from - gauge.min) / (gauge.max - gauge.min);
+    var zTo   = (zone.to   - gauge.min) / (gauge.max - gauge.min);
+    var zStart = startAngle + totalAngle * zFrom;
+    var zEnd   = startAngle + totalAngle * zTo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + 3.5, zStart, zEnd);
+    ctx.strokeStyle = zone.color;
+    ctx.globalAlpha = 0.5;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  var valNorm = clamp((gauge.val - gauge.min) / (gauge.max - gauge.min), 0, 1);
+  var valAngle = startAngle + totalAngle * valNorm;
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, startAngle, valAngle);
+  ctx.strokeStyle = gauge.color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.shadowColor = gauge.color;
+  ctx.shadowBlur = 8;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  var needleLen = radius - 4;
+  ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(valAngle) * 3, cy - Math.sin(valAngle) * 3);
+  ctx.lineTo(cx + Math.cos(valAngle) * needleLen, cy + Math.sin(valAngle) * needleLen);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.92)';
+  ctx.lineWidth = 1.4;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 2.4, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+
+  ctx.fillStyle = gauge.color;
+  ctx.font = "bold " + (isMob ? 10 : 12) + "px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(gauge.fmt(gauge.val), cx, cy + radius * 0.48);
+
+  ctx.fillStyle = '#7fb8d8';
+  ctx.font = "bold " + (isMob ? 8 : 9) + "px Cairo";
+  ctx.fillText(gauge.label, cx, cy + radius + 9);
+}
+
+/* ============ 3D ENGINE ============ */
+function getViewportSize() {
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  return {
+    w: canvas.clientWidth || (canvas.width / dpr),
+    h: canvas.clientHeight || (canvas.height / dpr)
+  };
+}
+
+function render3D(cfg) {
+  var vp = getViewportSize();
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+
+  ctx.save();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  var bg = ctx.createLinearGradient(0, 0, 0, vp.h);
+  bg.addColorStop(0, "#0a1a2a");
+  bg.addColorStop(0.6, "#08141f");
+  bg.addColorStop(1, "#02070c");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, vp.w, vp.h);
+
+  var L = cfg.L, W = cfg.W, H = cfg.H;
+  var cx0 = vp.w / 2, cy0 = vp.h / 2;
+  var f = (vp.h / 2) / Math.tan(view3D.fov / 2);
+  var yaw = view3D.yaw, elev = view3D.elevation;
+  var pitch = -elev;
+  var cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+  var cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+  var camDist = view3D.distance;
+  var targetY = H / 2;
+
+  function project(x, y, z) {
+    var cy0w = y - targetY;
+    var x1 = x * cosY - z * sinY;
+    var z1 = x * sinY + z * cosY;
+    var y2 = cy0w * cosP - z1 * sinP;
+    var z2 = cy0w * sinP + z1 * cosP;
+    var zv = z2 + camDist;
+    if (zv <= 0.3) return null;
+    var s = f / zv;
+    return { x: cx0 + x1 * s, y: cy0 - y2 * s, z: zv, scale: s };
+  }
+
+  function shadeHex(hex, sh) {
+    var r = parseInt(hex.substr(1, 2), 16);
+    var g = parseInt(hex.substr(3, 2), 16);
+    var b = parseInt(hex.substr(5, 2), 16);
+    return 'rgb(' + Math.round(r * sh) + ',' + Math.round(g * sh) + ',' + Math.round(b * sh) + ')';
+  }
+
+  drawFloor3D(L, W, project, ctx);
+
+  var objects = [];
+
+  var walls = [
+    { corners: [[-L/2,0,-W/2],[-L/2,H,-W/2],[L/2,H,-W/2],[L/2,0,-W/2]] },
+    { corners: [[-L/2,0, W/2],[-L/2,H, W/2],[L/2,H, W/2],[L/2,0, W/2]] },
+    { corners: [[-L/2,0,-W/2],[-L/2,H,-W/2],[-L/2,H, W/2],[-L/2,0, W/2]] },
+    { corners: [[ L/2,0,-W/2],[ L/2,H,-W/2],[ L/2,H, W/2],[ L/2,0, W/2]] },
+    { corners: [[-L/2,H,-W/2],[ L/2,H,-W/2],[ L/2,H, W/2],[-L/2,H, W/2]] }
+  ];
+  for (var wi = 0; wi < walls.length; wi++) {
+    objects.push({ type: 'poly', corners: walls[wi].corners, color: '#0f2a40', alpha: 0.35, stroke: 'rgba(56,189,248,0.55)' });
+  }
+
+  var spkColor = '#1a202c', spkStroke = '#38bdf8';
+  for (var si = 0; si < 2; si++) {
+    var sWallZ = si === 0 ? -W/2 + 0.25 : W/2 - 0.25;
+    for (var ii = 0; ii < cfg.perSide; ii++) {
+      var sx = -L/2 + (L * (ii + 0.5) / cfg.perSide);
+      objects.push(makeBox(sx, H - 0.35, sWallZ, 0.5, 0.35, 0.35, spkColor, spkStroke));
+    }
+  }
+
+  var furnObjs = buildFurniture3D(cfg);
+  for (var fi = 0; fi < furnObjs.length; fi++) objects.push(furnObjs[fi]);
+
+  if (opts.conf && (cfg.cQty + cfg.dQty) > 0) {
+    var unitObjs = buildUnits3D(cfg);
+    for (var ui = 0; ui < unitObjs.length; ui++) objects.push(unitObjs[ui]);
+  }
+
+  for (var oi = 0; oi < objects.length; oi++) {
+    var o = objects[oi];
+    var pts = [];
+    if (o.type === 'poly') {
+      for (var ci = 0; ci < o.corners.length; ci++) {
+        var p1 = project(o.corners[ci][0], o.corners[ci][1], o.corners[ci][2]);
+        if (p1) pts.push(p1);
+      }
+    } else if (o.type === 'box') {
+      var c8 = getBoxCorners(o);
+      for (var c8i = 0; c8i < 8; c8i++) {
+        var p2 = project(c8[c8i][0], c8[c8i][1], c8[c8i][2]);
+        if (p2) pts.push(p2);
+      }
+    }
+    o.projected = pts;
+    o.avgZ = pts.length > 0 ? pts.reduce(function(s, p) { return s + p.z; }, 0) / pts.length : 0;
+  }
+  objects = objects.filter(function(o) { return o.projected && o.projected.length > 0; });
+  objects.sort(function(a, b) { return b.avgZ - a.avgZ; });
+
+  for (var di = 0; di < objects.length; di++) {
+    var dobj = objects[di];
+    if (dobj.type === 'poly') {
+      drawPoly3D(dobj.projected, dobj.color, dobj.alpha, dobj.stroke);
+    } else if (dobj.type === 'box') {
+      drawBox3D(dobj, project, shadeHex);
+    }
+  }
+
+  if (opts.rays) drawCones3D(cfg, project);
+
+  drawHUD3D(vp, cfg);
+
+  ctx.restore();
+
+  if (opts.gauge) drawGaugePanel(cfg);
+}
+
+function makeBox(x, y, z, w, h, d, color, stroke) {
+  return { type: 'box', x: x, y: y, z: z, w: w, h: h, d: d, color: color || '#2d3748', stroke: stroke || '#7fb8d8' };
+}
+
+function getBoxCorners(o) {
+  var hw = o.w / 2, hh = o.h / 2, hd = o.d / 2;
+  return [
+    [o.x - hw, o.y - hh, o.z - hd], [o.x + hw, o.y - hh, o.z - hd],
+    [o.x + hw, o.y - hh, o.z + hd], [o.x - hw, o.y - hh, o.z + hd],
+    [o.x - hw, o.y + hh, o.z - hd], [o.x + hw, o.y + hh, o.z - hd],
+    [o.x + hw, o.y + hh, o.z + hd], [o.x - hw, o.y + hh, o.z + hd]
+  ];
+}
+
+function drawFloor3D(L, W, project, ctx) {
+  var corners = [[-L/2, 0, -W/2], [L/2, 0, -W/2], [L/2, 0, W/2], [-L/2, 0, W/2]];
+  var pts = [];
+  for (var i = 0; i < corners.length; i++) {
+    var p = project(corners[i][0], corners[i][1], corners[i][2]);
+    if (p) pts.push(p);
+  }
+  if (pts.length < 4) return;
+
+  var floorGrad = ctx.createLinearGradient(pts[0].x, pts[0].y, pts[2].x, pts[2].y);
+  floorGrad.addColorStop(0, '#0a1e30');
+  floorGrad.addColorStop(1, '#05121e');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (var j = 1; j < 4; j++) ctx.lineTo(pts[j].x, pts[j].y);
+  ctx.closePath();
+  ctx.fillStyle = floorGrad;
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(56,189,248,0.18)';
+  ctx.lineWidth = 0.7;
+  var step = 1;
+  for (var gx = -L/2 + step; gx < L/2; gx += step) {
+    var a = project(gx, 0, -W/2), b = project(gx, 0, W/2);
+    if (a && b) { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+  }
+  for (var gz = -W/2 + step; gz < W/2; gz += step) {
+    var c = project(-L/2, 0, gz), d = project(L/2, 0, gz);
+    if (c && d) { ctx.beginPath(); ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); ctx.stroke(); }
+  }
+
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (var k = 1; k < 4; k++) ctx.lineTo(pts[k].x, pts[k].y);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+function drawPoly3D(pts, fillHex, alpha, strokeHex) {
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.closePath();
+  ctx.globalAlpha = alpha || 1;
+  ctx.fillStyle = fillHex;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  if (strokeHex) { ctx.strokeStyle = strokeHex; ctx.lineWidth = 1.2; ctx.stroke(); }
+}
+
+function drawBox3D(obj, project, shadeHex) {
+  var c8 = getBoxCorners(obj);
+  var faceDefs = [
+    { idx: [0,1,2,3], n: [0,-1,0] },
+    { idx: [4,5,6,7], n: [0, 1,0] },
+    { idx: [0,1,5,4], n: [0,0,-1] },
+    { idx: [3,2,6,7], n: [0,0, 1] },
+    { idx: [0,3,7,4], n: [-1,0,0] },
+    { idx: [1,2,6,5], n: [ 1,0,0] }
+  ];
+  var lightDir = [-0.3, 0.8, -0.4];
+  var faces = [];
+  for (var i = 0; i < faceDefs.length; i++) {
+    var f = faceDefs[i];
+    var pts = [];
+    var ok = true;
+    for (var j = 0; j < 4; j++) {
+      var c = c8[f.idx[j]];
+      var p = project(c[0], c[1], c[2]);
+      if (!p) { ok = false; break; }
+      pts.push(p);
+    }
+    if (!ok) continue;
+    var dot = f.n[0]*lightDir[0] + f.n[1]*lightDir[1] + f.n[2]*lightDir[2];
+    var shade = 0.45 + 0.55 * Math.max(0, dot);
+    var avgZ = (pts[0].z + pts[1].z + pts[2].z + pts[3].z) / 4;
+    faces.push({ pts: pts, shade: shade, avgZ: avgZ });
+  }
+  faces.sort(function(a, b) { return b.avgZ - a.avgZ; });
+  for (var k = 0; k < faces.length; k++) {
+    var fc = faces[k];
+    ctx.beginPath();
+    ctx.moveTo(fc.pts[0].x, fc.pts[0].y);
+    ctx.lineTo(fc.pts[1].x, fc.pts[1].y);
+    ctx.lineTo(fc.pts[2].x, fc.pts[2].y);
+    ctx.lineTo(fc.pts[3].x, fc.pts[3].y);
+    ctx.closePath();
+    ctx.fillStyle = shadeHex(obj.color, fc.shade);
+    ctx.fill();
+    ctx.strokeStyle = obj.stroke;
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+}
+
+function buildFurniture3D(cfg) {
+  var objs = [];
+  var tableColor = '#2a3a50', chairColor = '#3a4a5f', chairStroke = '#7fb8d8';
+
+  if (cfg.mode === 'meeting') {
+    var rx = cfg.L * 0.36, rz = cfg.W * 0.30;
+    var segs = 12;
+    for (var s = 0; s < segs; s++) {
+      var a1 = (s / segs) * Math.PI * 2;
+      var a2 = ((s + 1) / segs) * Math.PI * 2;
+      var mx = Math.cos((a1 + a2) / 2) * rx;
+      var mz = Math.sin((a1 + a2) / 2) * rz;
+      objs.push(makeBox(mx, 0.75, mz, rx * 0.55, 0.08, rz * 0.55, tableColor, '#7fb8d8'));
+    }
+    var nCh = Math.max(8, cfg.cQty + cfg.dQty);
+    for (var i = 0; i < nCh; i++) {
+      var ang = (i / nCh) * Math.PI * 2 - Math.PI / 2;
+      var cx2 = Math.cos(ang) * (rx + 0.7);
+      var cz2 = Math.sin(ang) * (rz + 0.7);
+      objs.push(makeBox(cx2, 0.45, cz2, 0.5, 0.9, 0.5, chairColor, chairStroke));
+    }
+  } else if (cfg.mode === 'rectangular') {
+    var tw = cfg.L * 0.55, td = cfg.W * 0.32;
+    objs.push(makeBox(0, 0.75, 0, tw, 0.08, td, tableColor, '#7fb8d8'));
+    var nCh2 = Math.max(8, cfg.cQty + cfg.dQty);
+    var perSide = Math.ceil(nCh2 / 4);
+    var dx = tw / perSide;
+    for (var q = 0; q < 4; q++) {
+      for (var p = 0; p < perSide; p++) {
+        var off = -tw / 2 + dx * (p + 0.5);
+        var cx3, cz3;
+        if (q === 0) { cx3 = off; cz3 = -td/2 - 0.7; }
+        else if (q === 1) { cx3 = off; cz3 = td/2 + 0.7; }
+        else if (q === 2) { cx3 = -tw/2 - 0.7; cz3 = off * (td / tw); }
+        else { cx3 = tw/2 + 0.7; cz3 = off * (td / tw); }
+        objs.push(makeBox(cx3, 0.45, cz3, 0.5, 0.9, 0.5, chairColor, chairStroke));
+      }
+    }
+  } else if (cfg.mode === 'boardroom') {
+    var uw = cfg.L * 0.75, ud = cfg.W * 0.55, ut = 1.0;
+    objs.push(makeBox(-uw/2 + ut/2, 0.75, 0, ut, 0.08, ud, tableColor, '#7fb8d8'));
+    objs.push(makeBox( uw/2 - ut/2, 0.75, 0, ut, 0.08, ud, tableColor, '#7fb8d8'));
+    objs.push(makeBox(0, 0.75, ud/2 - ut/2, uw - ut*2, 0.08, ut, tableColor, '#7fb8d8'));
+    var nChU = Math.max(8, cfg.cQty + cfg.dQty);
+    var perSideU = Math.ceil(nChU / 3);
+    for (var pu = 0; pu < perSideU; pu++) {
+      var yOff = -ud/2 + (ud / perSideU) * (pu + 0.5);
+      objs.push(makeBox(-uw/2 - 0.7, 0.45, yOff, 0.5, 0.9, 0.5, chairColor, chairStroke));
+      objs.push(makeBox( uw/2 + 0.7, 0.45, yOff, 0.5, 0.9, 0.5, chairColor, chairStroke));
+    }
+    for (var pb = 0; pb < perSideU; pb++) {
+      var xOff = -uw/2 + (uw / perSideU) * (pb + 0.5);
+      objs.push(makeBox(xOff, 0.45, ud/2 + 0.7, 0.5, 0.9, 0.5, chairColor, chairStroke));
+    }
+  } else {
+    var nChT = Math.max(6, cfg.cQty + cfg.dQty);
+    var colsT = Math.min(12, Math.max(6, Math.ceil(Math.sqrt(nChT))));
+    var rowsT = Math.ceil(nChT / colsT);
+    var xSpanT = cfg.L * 0.80, zStart = -cfg.W * 0.10, zEnd = cfg.W * 0.42;
+    var zStepT = (zEnd - zStart) / Math.max(1, rowsT);
+    var xStepT = xSpanT / colsT;
+    for (var r = 0; r < rowsT; r++) {
+      for (var c2 = 0; c2 < colsT; c2++) {
+        if (r * colsT + c2 >= nChT) break;
+        var xx = -xSpanT/2 + xStepT * (c2 + 0.5);
+        var zz = zStart + zStepT * (r + 0.5);
+        objs.push(makeBox(xx, 0.45, zz, 0.5, 0.9, 0.5, chairColor, chairStroke));
+      }
+    }
+  }
+  return objs;
+}
+
+function buildUnits3D(cfg) {
+  var objs = [];
+  var total = cfg.cQty + cfg.dQty;
+  if (total === 0) return objs;
+  var chair = CONF_CHAIRS[cfg.confChair] || {};
+  var isWl = chair.type === 'wireless' || chair.type === 'wireless5g';
+  var unitColor = isWl ? '#a855f7' : '#38bdf8';
+
+  if (cfg.mode === 'meeting' || cfg.mode === 'rectangular') {
+    var rx = cfg.mode === 'meeting' ? cfg.L * 0.36 : cfg.L * 0.55 / 2;
+    var rz = cfg.mode === 'meeting' ? cfg.W * 0.30 : cfg.W * 0.32 / 2;
+    for (var i = 0; i < total; i++) {
+      var ang = (i / total) * Math.PI * 2;
+      var mx = Math.cos(ang) * (rx - 0.4);
+      var mz = Math.sin(ang) * (rz - 0.4);
+      objs.push(makeBox(mx, 0.78 + 0.05, mz, 0.15, 0.1, 0.15, '#1a202c', unitColor));
+      objs.push(makeBox(mx, 0.78 + 0.2, mz, 0.03, 0.3, 0.03, '#1a202c', unitColor));
+    }
+  } else {
+    for (var j = 0; j < total; j++) {
+      var col = j % 8;
+      var row = Math.floor(j / 8);
+      var mx2 = -3 + col * 0.85;
+      var mz2 = -1 + row * 0.85;
+      objs.push(makeBox(mx2, 0.78 + 0.05, mz2, 0.15, 0.1, 0.15, '#1a202c', unitColor));
+    }
+  }
+  return objs;
+}
+
+function drawCones3D(cfg, project) {
+  var half = (cfg.spk.angle / 2) * Math.PI / 180;
+  var throwH = Math.max(0.5, cfg.H - cfg.earH);
+  var coverR = throwH * Math.tan(half);
+
+  ctx.save();
+  for (var s = 0; s < 2; s++) {
+    var wallZ = s === 0 ? -cfg.W/2 + 0.3 : cfg.W/2 - 0.3;
+    for (var i = 0; i < cfg.perSide; i++) {
+      var sx = -cfg.L/2 + (cfg.L * (i + 0.5) / cfg.perSide);
+      var spkY = cfg.H - 0.35;
+      var dirZ = s === 0 ? 1 : -1;
+
+      var N = 16;
+      var perimeter = [];
+      for (var k = 0; k < N; k++) {
+        var a = (k / N) * Math.PI * 2;
+        var cx = sx + Math.cos(a) * coverR;
+        var cz = wallZ + dirZ * throwH + Math.sin(a) * coverR;
+        var p = project(cx, 0.05, cz);
+        if (p) perimeter.push(p);
+      }
+
+      if (perimeter.length === N) {
+        var grad = ctx.createRadialGradient(
+          perimeter[0].x, perimeter[0].y, 0,
+          perimeter[0].x, perimeter[0].y, 100
+        );
+        grad.addColorStop(0, 'rgba(56,189,248,0.10)');
+        grad.addColorStop(1, 'rgba(56,189,248,0)');
+        ctx.beginPath();
+        ctx.moveTo(perimeter[0].x, perimeter[0].y);
+        for (var m = 1; m < N; m++) ctx.lineTo(perimeter[m].x, perimeter[m].y);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56,189,248,0.5)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        var topP = project(sx, spkY, wallZ);
+        if (topP) {
+          var pulse = 0.5 + 0.5 * Math.sin(animTime * 2 + i * 0.4 + s);
+          ctx.strokeStyle = 'rgba(56,189,248,' + (0.25 + pulse * 0.35) + ')';
+          ctx.lineWidth = 0.9;
+          for (var r2 = 0; r2 < N; r2 += 3) {
+            ctx.beginPath();
+            ctx.moveTo(topP.x, topP.y);
+            ctx.lineTo(perimeter[r2].x, perimeter[r2].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function drawHUD3D(vp, cfg) {
+  var bw = 240, bh = 90;
+  var bx = 16, by = 16;
+
+  ctx.fillStyle = 'rgba(10,21,32,0.92)';
+  ctx.fillRect(bx, by, bw, bh);
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(bx, by, bw, bh);
+
+  var grad = ctx.createLinearGradient(bx, by, bx + bw, by);
+  grad.addColorStop(0, '#e60012');
+  grad.addColorStop(1, '#38bdf8');
+  ctx.fillStyle = grad;
+  ctx.fillRect(bx, by, bw, 4);
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Cairo';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('MOTIVITY · 3D VIEW', bx + bw - 10, by + 10);
+  ctx.font = '10px Cairo';
+  ctx.fillStyle = '#7fb8d8';
+  ctx.fillText('دوران: سحب · تكبير: عجلة', bx + bw - 10, by + 28);
+  ctx.fillText('Yaw: ' + (view3D.yaw * 180 / Math.PI).toFixed(0) + '°', bx + bw - 10, by + 46);
+  ctx.fillText('Elev: ' + (view3D.elevation * 180 / Math.PI).toFixed(0) + '°', bx + bw - 10, by + 60);
+  ctx.fillText('Dist: ' + view3D.distance.toFixed(1) + 'm', bx + bw - 10, by + 74);
+}
+
+/* ============ LOOP & RENDER SAFE ============ */
 var __renderErrorCount = 0;
 function safeRender() {
   try { render(); __renderErrorCount = 0; }
@@ -1520,13 +2146,30 @@ function safeRender() {
 function loop(now) {
   var dt = (now - lastFrameTime) / 1000;
   lastFrameTime = now;
-  if (opts.rays || needsRedraw) {
+
+  if (opts.gauge && gaugeInit) {
+    var keys = ['spl', 'sti', 'rt60', 'cov'];
+    for (var ki = 0; ki < keys.length; ki++) {
+      var k = keys[ki];
+      var diff = gaugeTarget[k] - gaugeAnim[k];
+      if (Math.abs(diff) > 0.005) {
+        gaugeAnim[k] += diff * 0.12;
+        needsRedraw = true;
+      } else if (gaugeAnim[k] !== gaugeTarget[k]) {
+        gaugeAnim[k] = gaugeTarget[k];
+        needsRedraw = true;
+      }
+    }
+  }
+
+  if (opts.rays || needsRedraw || view3D.enabled) {
     if (opts.rays) animTime += Math.min(0.05, dt || 0.016);
     safeRender();
     needsRedraw = opts.rays;
   }
   requestAnimationFrame(loop);
 }
+
 function printReport() {
   var img = $('reportImg');
   var doPrint = function() { setTimeout(function() { window.print(); }, 200); };
@@ -1566,6 +2209,7 @@ function toggle(key) {
   markDirty();
 }
 function updateCursorInfo(e) {
+  if (view3D.enabled) return;
   var rect = canvas.getBoundingClientRect();
   var mx = e.clientX - rect.left, my = e.clientY - rect.top;
   var cfg = readConfig();
@@ -1616,20 +2260,27 @@ document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); }
   if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
   if (e.key === 'Escape') $('reportModal').style.display = 'none';
+  if (view3D.enabled) {
+    if (e.key === 'ArrowLeft')  { view3D.yaw += 0.1; markDirty(); }
+    if (e.key === 'ArrowRight') { view3D.yaw -= 0.1; markDirty(); }
+    if (e.key === 'ArrowUp')    { view3D.elevation = clamp(view3D.elevation + 0.08, 0.05, Math.PI/2 - 0.05); markDirty(); }
+    if (e.key === 'ArrowDown')  { view3D.elevation = clamp(view3D.elevation - 0.08, 0.05, Math.PI/2 - 0.05); markDirty(); }
+  }
 });
 function saveProject() {
   try {
-    localStorage.setItem('motivity_v57_ar', JSON.stringify({ state: getState(), opts: opts }));
+    localStorage.setItem('motivity_v58_ar', JSON.stringify({ state: getState(), opts: opts, view3D: view3D }));
     pushWarning('ok', '✅ تم الحفظ', 3000);
   } catch (e) { pushWarning('critical', 'فشل الحفظ', 3000); }
 }
 function loadProject() {
-  var raw = localStorage.getItem('motivity_v57_ar') || localStorage.getItem('motivity_v56_ar') || localStorage.getItem('motivity_v55_ar') || localStorage.getItem('motivity_v54_ar') || localStorage.getItem('motivity_v53_ar');
+  var raw = localStorage.getItem('motivity_v58_ar') || localStorage.getItem('motivity_v57_ar') || localStorage.getItem('motivity_v56_ar') || localStorage.getItem('motivity_v55_ar');
   if (!raw) { pushWarning('warn', 'لا يوجد مشروع محفوظ', 3000); return; }
   try {
     var data = JSON.parse(raw);
     applyState(data.state);
     if (data.opts) { for (var k in data.opts) opts[k] = data.opts[k]; heatmapKey = ''; }
+    if (data.view3D) { for (var kk in data.view3D) view3D[kk] = data.view3D[kk]; }
     pushHistory();
     pushWarning('ok', '✅ تم التحميل', 3000);
   } catch (err) { pushWarning('critical', 'خطأ في القراءة', 3000); }
@@ -1762,22 +2413,59 @@ function generateReport() {
 /* ============ TOUCH ============ */
 var touchState = { mode:null, startX:0, startY:0, startDist:0, startZoom:1, startOffsetX:0, startOffsetY:0 };
 function handleTouchStart(e) {
+  if (view3D.enabled) {
+    if (e.touches.length === 1) {
+      touchState.mode = '3d-orbit';
+      var t = e.touches[0];
+      touchState.startX = t.clientX;
+      touchState.startY = t.clientY;
+      touchState.startOffsetX = view3D.yaw;
+      touchState.startOffsetY = view3D.elevation;
+    } else if (e.touches.length === 2) {
+      touchState.mode = '3d-zoom';
+      var t1 = e.touches[0], t2 = e.touches[1];
+      var dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+      touchState.startDist = Math.sqrt(dx*dx + dy*dy);
+      touchState.startZoom = view3D.distance;
+    }
+    return;
+  }
   if (e.touches.length === 1) {
     touchState.mode = 'pan';
-    var t = e.touches[0];
-    touchState.startX = t.clientX; touchState.startY = t.clientY;
+    var t3 = e.touches[0];
+    touchState.startX = t3.clientX; touchState.startY = t3.clientY;
     touchState.startOffsetX = offsetX; touchState.startOffsetY = offsetY;
     touchState.startDist = 0;
   } else if (e.touches.length === 2) {
     touchState.mode = 'pinch';
-    var t1 = e.touches[0], t2 = e.touches[1];
-    var dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
-    touchState.startDist = Math.sqrt(dx*dx + dy*dy);
+    var t4 = e.touches[0], t5 = e.touches[1];
+    var dx2 = t4.clientX - t5.clientX, dy2 = t4.clientY - t5.clientY;
+    touchState.startDist = Math.sqrt(dx2*dx2 + dy2*dy2);
     touchState.startZoom = zoom;
     touchState.startOffsetX = offsetX; touchState.startOffsetY = offsetY;
   }
 }
 function handleTouchMove(e) {
+  if (view3D.enabled) {
+    if (touchState.mode === '3d-orbit' && e.touches.length === 1) {
+      var t = e.touches[0];
+      view3D.yaw = touchState.startOffsetX + (t.clientX - touchState.startX) * 0.008;
+      view3D.elevation = clamp(touchState.startOffsetY - (t.clientY - touchState.startY) * 0.008, 0.05, Math.PI / 2 - 0.05);
+      markDirty();
+      e.preventDefault();
+    } else if (touchState.mode === '3d-zoom' && e.touches.length === 2) {
+      var t1 = e.touches[0], t2 = e.touches[1];
+      var dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (touchState.startDist > 0) {
+        var ratio = touchState.startDist / dist;
+        view3D.distance = clamp(touchState.startZoom * ratio, 4, 300);
+        markDirty();
+      }
+      e.preventDefault();
+    }
+    return;
+  }
   if (touchState.mode === 'pan' && e.touches.length === 1) {
     var t = e.touches[0];
     offsetX = touchState.startOffsetX + (t.clientX - touchState.startX);
@@ -1805,7 +2493,7 @@ function handleTouchMove(e) {
 }
 function handleTouchEnd(e) {
   if (e.touches.length === 0) touchState.mode = null;
-  else if (e.touches.length === 1) {
+  else if (e.touches.length === 1 && !view3D.enabled) {
     touchState.mode = 'pan';
     var t = e.touches[0];
     touchState.startX = t.clientX; touchState.startY = t.clientY;
@@ -1838,7 +2526,7 @@ function bootApp() {
     ctx = canvas.getContext('2d');
     vArea = document.getElementById('vArea');
     if (!canvas || !ctx || !vArea) { showError('تهيئة', 'لم يتم العثور على Canvas'); return; }
-    console.log('🚀 Motivity v5.7 boot · mobile:', isMobile);
+    console.log('🚀 Motivity v5.8 boot · mobile:', isMobile);
 
     populateHosts();
     if ($('confChair').options.length) {
@@ -1854,15 +2542,65 @@ function bootApp() {
     }
 
     vArea.addEventListener('mousedown', function(e) {
-      if (e.button === 0 || e.button === 1) { isPanning = true; startX = e.clientX - offsetX; startY = e.clientY - offsetY; vArea.style.cursor = 'grabbing'; }
+      if (view3D.enabled) {
+        isOrbiting = true;
+        orbitStartX = e.clientX;
+        orbitStartY = e.clientY;
+        orbitStartYaw = view3D.yaw;
+        orbitStartElev = view3D.elevation;
+        vArea.style.cursor = 'grabbing';
+        return;
+      }
+      if (e.button === 0 || e.button === 1) {
+        isPanning = true;
+        startX = e.clientX - offsetX;
+        startY = e.clientY - offsetY;
+        vArea.style.cursor = 'grabbing';
+      }
     });
     vArea.addEventListener('mousemove', function(e) {
-      if (isPanning) { offsetX = e.clientX - startX; offsetY = e.clientY - startY; markDirty(); }
+      if (view3D.enabled) {
+        if (isOrbiting) {
+          var dx = e.clientX - orbitStartX;
+          var dy = e.clientY - orbitStartY;
+          view3D.yaw = orbitStartYaw + dx * 0.008;
+          view3D.elevation = clamp(orbitStartElev - dy * 0.008, 0.05, Math.PI / 2 - 0.05);
+          markDirty();
+        }
+        return;
+      }
+      if (isPanning) {
+        offsetX = e.clientX - startX;
+        offsetY = e.clientY - startY;
+        markDirty();
+      }
       updateCursorInfo(e);
     });
-    vArea.addEventListener('mouseup', function() { isPanning = false; vArea.style.cursor = ''; });
-    vArea.addEventListener('mouseleave', function() { isPanning = false; vArea.style.cursor = ''; var ci = $('cursorSPL'); if (ci) { ci.textContent = '—'; $('cursorSTI').textContent = '—'; $('cursorDist').textContent = '—'; } });
-    vArea.addEventListener('wheel', function(e) { e.preventDefault(); zoom = clamp(zoom * (e.deltaY < 0 ? 1.1 : 1/1.1), 0.3, 4); markDirty(); }, { passive: false });
+    vArea.addEventListener('mouseup', function() {
+      isPanning = false;
+      isOrbiting = false;
+      vArea.style.cursor = '';
+    });
+    vArea.addEventListener('mouseleave', function() {
+      isPanning = false;
+      isOrbiting = false;
+      vArea.style.cursor = '';
+      var ci = $('cursorSPL');
+      if (ci && !view3D.enabled) {
+        ci.textContent = '—';
+        $('cursorSTI').textContent = '—';
+        $('cursorDist').textContent = '—';
+      }
+    });
+    vArea.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      if (view3D.enabled) {
+        view3D.distance = clamp(view3D.distance * (e.deltaY < 0 ? 0.9 : 1.1), 4, 300);
+      } else {
+        zoom = clamp(zoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1), 0.3, 4);
+      }
+      markDirty();
+    }, { passive: false });
     vArea.addEventListener('touchstart', handleTouchStart, { passive: true });
     vArea.addEventListener('touchmove', handleTouchMove, { passive: false });
     vArea.addEventListener('touchend', handleTouchEnd, { passive: true });
@@ -1890,7 +2628,7 @@ function bootApp() {
       safeRender();
       requestAnimationFrame(loop);
       pushHistory();
-      console.log('✅ Ready · Canvas:', canvas.width + '×' + canvas.height);
+      console.log('✅ Ready v5.8 · Canvas:', canvas.width + '×' + canvas.height);
     } catch (e) { showError('تشغيل', e.message); }
   }, 200);
 }
