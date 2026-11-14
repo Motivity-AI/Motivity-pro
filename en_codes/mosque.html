@@ -7,25 +7,15 @@
 <title>Motivity Pro - Mosque Audio Design System</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
-  --card:#21262d; --border:#30363d; --text:#e6edf3; --muted:#8b949e;
-  --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --orange:#ff8c1a;
-  --safe-t:env(safe-area-inset-top,0px);
-  --safe-b:env(safe-area-inset-bottom,0px);
-}
+:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--panel:#161b22;--card:#21262d;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;font-family:'Cairo','Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%}
 body{background:var(--bg);color:var(--text);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none}
 .wrapper{display:flex;flex:1;overflow:hidden;position:relative;min-height:0}
-
-/* SIDEBAR */
 .sidebar{width:400px;flex:0 0 auto;background:var(--panel);padding:14px;border-right:4px solid var(--red);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.sidebar::-webkit-scrollbar{width:8px}
-.sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
+.sidebar::-webkit-scrollbar{width:8px}.sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 .side-head{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px}
-h2{font-weight:900;letter-spacing:1px;font-size:20px;text-align:center}
-h2 span{color:var(--red)}
+h2{font-weight:900;letter-spacing:1px;font-size:20px;text-align:center}h2 span{color:var(--red)}
 #closeSide{display:none}
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
@@ -49,8 +39,6 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .stat .l{font-size:9.5px;color:var(--muted);margin-top:2px}
 .stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
 .hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.7}
-
-/* CANVAS */
 .canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px;min-width:0;min-height:0}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .toolbar button{width:auto;padding:6px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d;min-height:34px}
@@ -64,10 +52,8 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
 #threeWrap{position:relative}
 #threeWrap canvas{display:block;border:2px solid #333;border-radius:10px;touch-action:none}
-#threeWrap::after{content:'🖱️ Drag to rotate — scroll to zoom — two fingers to rotate';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
+#threeWrap::after{content:'🖱️ Drag to rotate — scroll to zoom';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
 canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
-
-/* MOBILE */
 #menuBtn{display:none;position:fixed;top:calc(10px + var(--safe-t));left:10px;z-index:200;width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;border:none;font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0}
 #menuBtn:active{transform:scale(.93)}
 #backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
@@ -82,20 +68,15 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
   .toolbar{gap:4px}.toolbar button{padding:8px 10px;font-size:11.5px;min-height:38px}
   canvas#mosqueCanvas{max-height:none;border-radius:8px}
 }
-
-/* ============= REPORT ============= */
 #reportView{display:none;position:fixed;inset:0;background:#e8ecf1;z-index:9999;overflow-y:auto;direction:ltr;-webkit-overflow-scrolling:touch}
 .report-toolbar{position:sticky;top:0;background:rgba(13,17,23,.96);padding:12px 20px;display:flex;justify-content:flex-end;gap:8px;z-index:10;backdrop-filter:blur(10px);border-bottom:1px solid #30363d}
 .report-toolbar button{width:auto;padding:9px 20px;font-size:13px}
 .report-page{max-width:1080px;margin:20px auto;background:#fff;color:#1a2028;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15)}
-
-/* Hero */
 .report-hero{background:linear-gradient(135deg,#0d1117 0%,#1a2430 60%,#2a1a1f 100%);color:#fff;padding:44px 44px 36px;position:relative;overflow:hidden}
 .report-hero::before{content:'';position:absolute;top:-40%;left:-15%;width:70%;height:220%;background:radial-gradient(circle,rgba(230,0,18,.25),transparent 60%);pointer-events:none}
 .report-hero::after{content:'';position:absolute;bottom:-60%;right:-15%;width:60%;height:200%;background:radial-gradient(circle,rgba(56,189,248,.18),transparent 60%);pointer-events:none}
 .hero-brand{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1;gap:20px;flex-wrap:wrap}
-.brand-logo{font-size:30px;font-weight:900;letter-spacing:2px;line-height:1}
-.brand-logo span{color:var(--red)}
+.brand-logo{font-size:30px;font-weight:900;letter-spacing:2px;line-height:1}.brand-logo span{color:var(--red)}
 .brand-sub{font-size:11px;color:#8b949e;margin-top:6px;letter-spacing:2px}
 .doc-badge{background:rgba(230,0,18,.15);border:1px solid rgba(230,0,18,.5);padding:8px 18px;border-radius:30px;font-size:11.5px;font-weight:700;color:#ff6b6b;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .doc-badge::before{content:'';width:8px;height:8px;background:#e60012;border-radius:50%;box-shadow:0 0 8px #e60012;animation:pulse 2s infinite}
@@ -106,81 +87,56 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 .meta-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;backdrop-filter:blur(12px)}
 .meta-card .label{font-size:9.5px;color:#8b949e;letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
 .meta-card .value{font-size:13.5px;font-weight:700;color:#fff;word-break:break-word}
-
-/* Body */
 .report-body{padding:32px 44px 44px}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
-.kpi-card{background:#f8fafc;border:1px solid #e1e8ed;border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;transition:.2s}
+.kpi-card{background:#f8fafc;border:1px solid #e1e8ed;border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#64748b,#475569)}
 .kpi-card.good::before{background:linear-gradient(90deg,#22c55e,#16a34a)}
 .kpi-card.warn::before{background:linear-gradient(90deg,#f59e0b,#d97706)}
 .kpi-card.bad::before{background:linear-gradient(90deg,#ef4444,#dc2626)}
 .kpi-value{font-size:26px;font-weight:900;color:#0d1117;font-family:'JetBrains Mono',monospace;line-height:1;direction:ltr}
 .kpi-value .unit{font-size:12px;color:#94a3b8;font-weight:600;margin-left:3px}
-.kpi-label{font-size:10.5px;color:#64748b;margin-top:8px;font-weight:700;letter-spacing:.5px}
-
-/* Gallery */
+.kpi-label{font-size:10.5px;color:#64748b;margin-top:8px;font-weight:700}
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
 .view-card{border:1px solid #e1e8ed;border-radius:12px;overflow:hidden;background:#fafbfc}
-.view-label{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 16px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:.5px}
+.view-label{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 16px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px}
 .view-card img{display:block;width:100%;height:auto;background:#000}
-
-/* Sections */
-.rep-section{margin-bottom:34px;page-break-inside:avoid;break-inside:avoid}
+.rep-section{margin-bottom:34px}
 .rep-section h2{font-size:17px;font-weight:800;color:#0d1117;margin-bottom:16px;padding-bottom:11px;border-bottom:2px solid #e1e8ed;display:flex;align-items:center;gap:10px}
 .rep-section h2::before{content:'';width:5px;height:22px;background:var(--red);border-radius:3px}
-
-/* Analysis grid */
 .analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .analysis-item{background:linear-gradient(135deg,#f8fafc,#eef2f7);border:1px solid #e1e8ed;border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px}
-.analysis-item .icon{font-size:26px;width:48px;height:48px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.analysis-item .icon{font-size:26px;width:48px;height:48px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .analysis-item .info{flex:1;min-width:0}
-.analysis-item .label{font-size:10px;color:#64748b;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.analysis-item .label{font-size:10px;color:#64748b;font-weight:700;margin-bottom:3px}
 .analysis-item .value{font-size:14.5px;font-weight:800;color:#0d1117;font-family:'JetBrains Mono',monospace}
 .analysis-item .value small{font-size:11px;color:#64748b;font-weight:600;margin-left:3px}
-
-/* Data table */
-.data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e1e8ed}
-.data-table th{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 12px;text-align:left;font-weight:700;font-size:11px;letter-spacing:.5px}
-.data-table th:first-child{border-top-left-radius:10px}
-.data-table th:last-child{border-top-right-radius:10px}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border-radius:10px;overflow:hidden;border:1px solid #e1e8ed}
+.data-table th{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 12px;text-align:left;font-weight:700;font-size:11px}
+.data-table th:first-child{border-top-left-radius:10px}.data-table th:last-child{border-top-right-radius:10px}
 .data-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#334155;text-align:left}
 .data-table tr:last-child td{border-bottom:none}
 .data-table tr:nth-child(even) td{background:#fafbfc}
 .data-table .num{font-family:'JetBrains Mono',monospace;font-weight:700;color:#0d1117;text-align:center}
-
-/* Signal flow */
 .signal-flow{padding:20px;background:linear-gradient(135deg,#f8fafc,#eef2f7);border-radius:12px;border:1px solid #e1e8ed;overflow-x:auto}
 .signal-flow svg{display:block;margin:0 auto;max-width:100%;height:auto}
-.signal-flow text{font-family:'Cairo',sans-serif;font-weight:700;font-size:11px}
-
-/* Notes */
 .notes-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:12px;padding:20px;font-size:12.5px;line-height:2;color:#0c4a6e}
 .notes-box b{color:#0369a1}
 .notes-box ul{list-style:none;padding:0;margin:0}
 .notes-box li{padding:6px 0;padding-left:24px;position:relative;border-bottom:1px dashed rgba(3,105,161,.15)}
 .notes-box li:last-child{border-bottom:none}
 .notes-box li::before{content:'◆';position:absolute;left:0;color:#0284c7;font-size:10px;top:9px}
-
-/* Standards */
 .standards-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
 .standards-list li{background:#f8fafc;border:1px solid #e1e8ed;border-left:3px solid var(--red);padding:11px 14px;border-radius:6px;font-size:11.5px;color:#334155;line-height:1.6}
 .standards-list li b{color:#0d1117;display:block;margin-bottom:3px;font-size:11px}
-
-/* Signatures */
 .sig{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;padding-top:20px;border-top:2px dashed #cbd5e1}
-.sig-box{text-align:center}
-.sig-line{border-bottom:1.5px solid #94a3b8;height:50px;margin-bottom:8px}
-.sig-label{font-size:10.5px;color:#64748b;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.sig-box{text-align:center}.sig-line{border-bottom:1.5px solid #94a3b8;height:50px;margin-bottom:8px}
+.sig-label{font-size:10.5px;color:#64748b;font-weight:700;margin-bottom:3px}
 .sig-name{font-size:12px;font-weight:800;color:#0d1117}
-
-/* TOAST */
 #toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
 .toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:left}
 .toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--bad)}.toast.warn{border-left-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-
-/* PRINT */
 @media print{
   @page{size:A4;margin:8mm}
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;display:block!important}
@@ -191,18 +147,12 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
   .report-hero{background:#0d1117!important;padding:24px 20px!important}
   .report-body{padding:20px!important}
   .kpi-row{grid-template-columns:repeat(4,1fr)!important;gap:8px!important;margin-bottom:16px!important}
-  .kpi-card{padding:12px 8px!important}
-  .kpi-value{font-size:20px!important}
+  .kpi-card{padding:12px 8px!important}.kpi-value{font-size:20px!important}
   .gallery{grid-template-columns:1fr 1fr!important;gap:8px!important;margin-bottom:16px!important}
-  .rep-section{margin-bottom:16px!important}
-  .rep-section h2{font-size:14px!important;margin-bottom:10px!important}
-  .report-title{font-size:20px!important;margin:14px 0 4px!important}
+  .rep-section{margin-bottom:16px!important}.rep-section h2{font-size:14px!important}
+  .report-title{font-size:20px!important}
   .view-card,.kpi-card,.rep-section,.analysis-item,.sig{page-break-inside:avoid!important;break-inside:avoid!important}
-  h2,h3{page-break-after:avoid!important}
-  .sig{margin-top:24px!important;padding-top:12px!important}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  .data-table{font-size:10px!important}
-  .data-table th,.data-table td{padding:6px!important}
 }
 </style>
 </head>
@@ -241,6 +191,36 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
       <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="onDimChange()">
     </div>
 
+    <div class="box" style="border-color:#e60012">
+      <h3>🏛️ Hall Shape &amp; Columns</h3>
+      <label>Floor Plan Shape</label>
+      <select id="m_shape" onchange="onShapeChange()">
+        <option value="rect">Rectangle</option>
+        <option value="circle">Circular / Elliptical</option>
+        <option value="octagon">Octagonal</option>
+        <option value="lshape">L-Shape</option>
+      </select>
+      <label class="checkbox-row" style="margin-top:10px">
+        <input type="checkbox" id="colEnabled" checked onchange="onColumnToggle()">
+        <span>Include columns in acoustic calculations</span>
+      </label>
+      <div class="row" style="margin-top:8px">
+        <div>
+          <label>Column Radius (m)</label>
+          <input type="number" id="col_radius" value="0.35" step="0.05" min="0.1" max="2" oninput="updateAmpLogic()">
+        </div>
+        <div>
+          <label>Grid Spacing (m)</label>
+          <input type="number" id="col_spacing" value="6" step="0.5" min="3" max="15">
+        </div>
+      </div>
+      <button class="btn-outline" onclick="autoLayoutColumns()" style="margin-top:8px">🏗️ Auto-Layout Columns</button>
+      <button id="colModeBtn" class="btn-outline" onclick="toggleColumnMode()">➕ Manual Column Placement</button>
+      <button class="btn-reset" onclick="clearColumns()">🗑️ Clear All Columns</button>
+      <div class="hint" id="colInfo">0 columns placed</div>
+      <div class="hint" style="color:#ffb84d">⚠️ Each column blocks sound (up to −8 dB behind).</div>
+    </div>
+
     <div class="box">
       <h3>🔊 Audio Distribution</h3>
       <select id="m_model" onchange="updateAmpLogic()"></select>
@@ -249,22 +229,14 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
         <span>🕌 Auto-add UT-08 horns on the minaret</span>
       </label>
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ Smart Auto-Distribution</button>
-      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode (Free Placement)</button>
-      <div class="hint">
-        💡 <b>Manual:</b> Click anywhere inside the hall to place a speaker freely<br>
-        💡 Click on the minaret to add a horn<br>
-        💡 <b>Rotate:</b> Select a speaker then drag the white handle
-      </div>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode</button>
+      <div class="hint">💡 Click inside hall to place • Click minaret for horn • Drag white handle to rotate</div>
     </div>
 
     <div class="box" id="rotationBox" style="display:none;border-color:var(--blue)">
       <h3>🎯 Coverage Direction <span id="rotModel" style="color:var(--red);font-size:11px"></span></h3>
-      <label>Angle:
-        <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
-      </label>
-      <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
-             onpointerdown="pushUndo()" oninput="setSelectedAngle(this.value)">
-      <div class="hint">↔️ Drag the slider or white handle to rotate</div>
+      <label>Angle: <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°</label>
+      <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1" onpointerdown="pushUndo()" oninput="setSelectedAngle(this.value)">
       <button class="btn-outline" onclick="deselectSpeaker()">✖ Deselect</button>
       <button class="btn-reset" onclick="deleteSelected()">🗑️ Delete This Speaker</button>
     </div>
@@ -292,7 +264,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
     </div>
 
     <button class="btn-primary" onclick="generateReport()">📄 Generate Technical Report</button>
-    <button class="btn-outline" onclick="saveProject()">💾 Save Project (Browser)</button>
+    <button class="btn-outline" onclick="saveProject()">💾 Save Project</button>
     <div class="row" style="margin-top:6px">
       <button class="btn-outline" style="margin-top:0" onclick="exportProject()">⬇️ Export</button>
       <button class="btn-outline" style="margin-top:0" onclick="importProject()">⬆️ Import</button>
@@ -304,115 +276,52 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
     <div class="toolbar no-print">
       <button id="view2D" class="view-btn on" onclick="switchView('2d')">🗺️ 2D Plan</button>
       <button id="view3D" class="view-btn" onclick="switchView('3d')">🎨 3D View</button>
-      <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ Undo</button>
-      <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ Redo</button>
+      <button id="undoBtn" class="hist" onclick="undo()" disabled>↶ Undo</button>
+      <button id="redoBtn" class="hist" onclick="redo()" disabled>↷ Redo</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 Coverage</button>
       <button id="tgHeat" onclick="toggleHeat()">🔥 Heatmap</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ Grid</button>
       <button id="autoRotBtn" onclick="toggleAutoRotate3D()" style="display:none">🔄 Auto Rotate</button>
-      <button onclick="clearSpeakers()">🗑️ Clear</button>
+      <button onclick="clearSpeakers()">🗑️ Clear Speakers</button>
     </div>
-    <div class="canvas-wrap" id="cDiv">
-      <canvas id="mosqueCanvas"></canvas>
-    </div>
+    <div class="canvas-wrap" id="cDiv"><canvas id="mosqueCanvas"></canvas></div>
     <div class="canvas-wrap" id="threeWrap" style="display:none"></div>
   </div>
 </div>
 
-<!-- ================= REPORT ================= -->
 <div id="reportView">
   <div class="report-toolbar no-print">
     <button class="btn-primary" onclick="window.print()">🖨️ Print / Save PDF</button>
     <button class="btn-outline" onclick="document.getElementById('reportView').style.display='none'">✖ Close</button>
   </div>
-
   <div class="report-page">
     <header class="report-hero">
       <div class="hero-brand">
-        <div>
-          <div class="brand-logo">Motivity<span>PRO</span></div>
-          <div class="brand-sub">MOSQUE AUDIO DESIGN SYSTEM</div>
-        </div>
+        <div><div class="brand-logo">Motivity<span>PRO</span></div><div class="brand-sub">MOSQUE AUDIO DESIGN SYSTEM</div></div>
         <div class="doc-badge">Certified Technical Report</div>
       </div>
       <h1 class="report-title">Integrated Audio System Design</h1>
       <div class="report-subtitle">Acoustic Analysis • Bill of Quantities • Engineering Justification • 3D Perspective</div>
       <div class="report-meta" id="project_header"></div>
     </header>
-
     <div class="report-body">
       <div class="kpi-row" id="kpi_grid"></div>
-
       <div class="gallery">
-        <div class="view-card">
-          <div class="view-label">📐 2D Floor Plan</div>
-          <img id="reportImg2D" alt="2D Plan">
-        </div>
-        <div class="view-card">
-          <div class="view-label">🎨 3D Perspective View</div>
-          <img id="reportImg3D" alt="3D View">
-        </div>
+        <div class="view-card"><div class="view-label">📐 2D Floor Plan</div><img id="reportImg2D" alt="2D"></div>
+        <div class="view-card"><div class="view-label">🎨 3D Perspective View</div><img id="reportImg3D" alt="3D"></div>
       </div>
-
-      <section class="rep-section">
-        <h2>Room &amp; Acoustic Analysis</h2>
-        <div class="analysis-grid" id="room_analysis"></div>
+      <section class="rep-section"><h2>Room &amp; Acoustic Analysis</h2><div class="analysis-grid" id="room_analysis"></div></section>
+      <section class="rep-section"><h2>SPL Distribution (Heatmap)</h2><div style="text-align:center"><img id="spl_chart_img" style="max-width:100%;border-radius:10px;border:1px solid #e1e8ed"></div></section>
+      <section class="rep-section"><h2>Bill of Quantities (BOQ)</h2>
+        <table class="data-table"><thead><tr><th style="width:36px">#</th><th>Item</th><th>Specifications</th><th style="width:70px">Qty</th><th style="width:130px">Cable</th></tr></thead><tbody id="boq-body"></tbody></table>
       </section>
-
-      <section class="rep-section">
-        <h2>SPL Distribution (Heatmap)</h2>
-        <div style="text-align:center">
-          <img id="spl_chart_img" style="max-width:100%;border-radius:10px;border:1px solid #e1e8ed;box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        </div>
-      </section>
-
-      <section class="rep-section">
-        <h2>Bill of Quantities (BOQ)</h2>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th style="width:36px">#</th>
-              <th>Item</th>
-              <th>Technical Specifications</th>
-              <th style="width:70px">Qty</th>
-              <th style="width:130px">Est. Cable</th>
-            </tr>
-          </thead>
-          <tbody id="boq-body"></tbody>
-        </table>
-      </section>
-
-      <section class="rep-section">
-        <h2>Signal Flow Diagram</h2>
-        <div class="signal-flow" id="signal_flow"></div>
-      </section>
-
-      <section class="rep-section">
-        <h2>Engineering Justification</h2>
-        <div class="notes-box" id="eng_notes"></div>
-      </section>
-
-      <section class="rep-section">
-        <h2>Standards &amp; References</h2>
-        <ul class="standards-list" id="standards_list"></ul>
-      </section>
-
+      <section class="rep-section"><h2>Signal Flow Diagram</h2><div class="signal-flow" id="signal_flow"></div></section>
+      <section class="rep-section"><h2>Engineering Justification</h2><div class="notes-box" id="eng_notes"></div></section>
+      <section class="rep-section"><h2>Standards &amp; References</h2><ul class="standards-list" id="standards_list"></ul></section>
       <div class="sig">
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Engineer Signature</div>
-          <div class="sig-name" id="sig_engineer">—</div>
-        </div>
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Client Signature</div>
-          <div class="sig-name" id="sig_client">—</div>
-        </div>
-        <div class="sig-box">
-          <div class="sig-line"></div>
-          <div class="sig-label">Date</div>
-          <div class="sig-name" id="report_date">—</div>
-        </div>
+        <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Engineer Signature</div><div class="sig-name" id="sig_engineer">—</div></div>
+        <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Client Signature</div><div class="sig-name" id="sig_client">—</div></div>
+        <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Date</div><div class="sig-name" id="report_date">—</div></div>
       </div>
     </div>
   </div>
@@ -420,10 +329,8 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 
 <div id="toast"></div>
 
-<!-- Three.js -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
 <script>
 /* ============ DATABASES ============ */
 const DB_SPK = {
@@ -435,71 +342,55 @@ const DB_SPK = {
   "UT-08":  {pwr:60,  sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
 };
 const DB_AMP = [
-  {id:"MA-450C", pwr:900,  ch:2, minImp:4},
-  {id:"MA-600C", pwr:1200, ch:2, minImp:4},
-  {id:"MA-800C", pwr:1600, ch:2, minImp:4},
-  {id:"MA-1000C",pwr:2000, ch:2, minImp:4},
-  {id:"MA-1200C",pwr:2400, ch:2, minImp:4},
-  {id:"MA-1500C",pwr:3000, ch:2, minImp:4}
+  {id:"MA-450C",pwr:900,ch:2,minImp:4},{id:"MA-600C",pwr:1200,ch:2,minImp:4},
+  {id:"MA-800C",pwr:1600,ch:2,minImp:4},{id:"MA-1000C",pwr:2000,ch:2,minImp:4},
+  {id:"MA-1200C",pwr:2400,ch:2,minImp:4},{id:"MA-1500C",pwr:3000,ch:2,minImp:4}
 ];
-const MINARET_M = 2.5;
-const MOUNT_H_WALL = 2.8;
-const WALL_THRESHOLD = 0.04;
-const isWallType   = t => t === 'Wall';
-const isHornType   = t => t === 'Outdoor Horn';
-const isColumnType = t => t === 'Column';
+const MINARET_M = 2.5, MOUNT_H_WALL = 2.8;
+const isWallType = t => t==='Wall';
+const isHornType = t => t==='Outdoor Horn';
+const isColumnType = t => t==='Column';
 const TYPE_EN = {Column:"Column", Wall:"Wall", "Outdoor Horn":"Outdoor Horn"};
+const SHAPES_EN = {rect:'Rectangle', circle:'Circular', octagon:'Octagonal', lshape:'L-Shape'};
 
 /* ============ STATE ============ */
 const canvas = document.getElementById('mosqueCanvas');
 const ctx = canvas.getContext('2d');
-let speakers = [];
-let selectedId = null;
-let dragging = null;
-let rotating = null;
-let manualMode = false;
-let showCoverage = true;
-let showHeat = false;
-let showGrid = true;
-let uid = 0;
-let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
-let ampResult = {amps:0};
-let currentView = '2d';
+let speakers = [], columns = [], selectedId = null, dragging = null, rotating = null;
+let manualMode = false, columnMode = false, columnId = 0;
+let showCoverage = true, showHeat = false, showGrid = true;
+let uid = 0, layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
+let ampResult = {amps:0}, currentView = '2d';
 
-/* ============ Three.js 3D ============ */
-let scene3d, camera3d, renderer3d, controls3d, group3d;
-let autoRotate3D = false;
+/* ============ 3D ============ */
+let scene3d, camera3d, renderer3d, controls3d, group3d, autoRotate3D = false;
 
 /* ============ Undo/Redo ============ */
 const MAX_UNDO = 40;
 let undoStack = [], redoStack = [], dragSnapshot = null;
-
-function snapshot(){ return JSON.stringify(speakers.map(s => ({...s}))); }
+function snapshot(){ return JSON.stringify({speakers, columns}); }
 function pushUndo(){
   const snap = snapshot();
   if (undoStack.length && undoStack[undoStack.length-1] === snap) return;
   undoStack.push(snap);
   if (undoStack.length > MAX_UNDO) undoStack.shift();
-  redoStack = [];
-  updateUndoButtons();
+  redoStack = []; updateUndoButtons();
+}
+function restoreState(json){
+  const obj = JSON.parse(json);
+  speakers = obj.speakers || [];
+  columns = obj.columns || [];
+  selectedId = null;
+  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
+  if (scene3d) buildScene3D();
 }
 function undo(){
   if (!undoStack.length) return;
-  redoStack.push(snapshot());
-  speakers = JSON.parse(undoStack.pop());
-  selectedId = null;
-  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
-  if (scene3d) buildScene3D();
-  toast('↶ Undo', 'ok');
+  redoStack.push(snapshot()); restoreState(undoStack.pop()); toast('↶ Undo', 'ok');
 }
 function redo(){
   if (!redoStack.length) return;
-  undoStack.push(snapshot());
-  speakers = JSON.parse(redoStack.pop());
-  selectedId = null;
-  updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
-  if (scene3d) buildScene3D();
-  toast('↷ Redo', 'ok');
+  undoStack.push(snapshot()); restoreState(redoStack.pop()); toast('↷ Redo', 'ok');
 }
 function updateUndoButtons(){
   const u = document.getElementById('undoBtn'), r = document.getElementById('redoBtn');
@@ -511,7 +402,6 @@ function updateUndoButtons(){
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
-
 function toast(msg, type=''){
   const t = document.createElement('div');
   t.className = 'toast ' + type; t.textContent = msg;
@@ -526,17 +416,114 @@ function getDims(){
     alpha: parseFloat($('m_alpha').value)||0.12
   };
 }
-function getPointer(e){
-  const r = canvas.getBoundingClientRect();
-  const sx = canvas.width / r.width, sy = canvas.height / r.height;
-  return {mx:(e.clientX - r.left) * sx, my:(e.clientY - r.top) * sy};
+function getShape(){ return $('m_shape') ? $('m_shape').value : 'rect'; }
+
+/* ============ SHAPE HELPERS ============ */
+function isInsideShape(rx, ry, shape){
+  shape = shape || getShape();
+  if (rx < 0 || rx > 1 || ry < 0 || ry > 1) return false;
+  if (shape === 'circle') {
+    const dx = (rx - 0.5) * 2, dy = (ry - 0.5) * 2;
+    return dx*dx + dy*dy <= 1;
+  }
+  if (shape === 'octagon') {
+    const dx = Math.abs((rx - 0.5) * 2), dy = Math.abs((ry - 0.5) * 2);
+    return dx <= 0.9239 && dy <= 0.9239 && (dx + dy) <= 1.3066;
+  }
+  if (shape === 'lshape') {
+    return !(rx > 0.5 && ry > 0.5);
+  }
+  return true;
 }
-function toLocal(p){
-  const {x0,y0,W,L} = layout;
-  const rx = (p.mx - x0)/W, ry = (p.my - y0)/L;
-  return {rx:clamp(rx,0,1), ry:clamp(ry,0,1), rawRx:rx, rawRy:ry,
-          inside: rx>=0 && rx<=1 && ry>=0 && ry<=1, mx:p.mx, my:p.my};
+
+function pointToSegmentDist(px, py, x1, y1, x2, y2){
+  const dx = x2 - x1, dy = y2 - y1;
+  const len2 = dx*dx + dy*dy;
+  if (len2 < 1e-10) return Math.hypot(px - x1, py - y1);
+  let t = ((px - x1) * dx + (py - y1) * dy) / len2;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t*dx), py - (y1 + t*dy));
 }
+
+function distanceToBoundary(rx, ry, shape){
+  shape = shape || getShape();
+  if (shape === 'circle') {
+    const dx = (rx - 0.5) * 2, dy = (ry - 0.5) * 2;
+    return (1 - Math.sqrt(dx*dx + dy*dy)) * 0.5;
+  }
+  if (shape === 'octagon') {
+    const dx = Math.abs((rx - 0.5) * 2), dy = Math.abs((ry - 0.5) * 2);
+    const d1 = 0.9239 - dx, d2 = 0.9239 - dy;
+    const d3 = (1.3066 - (dx + dy)) / Math.SQRT2;
+    return Math.min(d1, d2, d3) * 0.5;
+  }
+  if (shape === 'lshape') {
+    const segs = [
+      [0,0, 1,0], [1,0, 1,0.5], [1,0.5, 0.5,0.5],
+      [0.5,0.5, 0.5,1], [0.5,1, 0,1], [0,1, 0,0]
+    ];
+    let minD = Infinity;
+    for (const [x1,y1,x2,y2] of segs){
+      const d = pointToSegmentDist(rx, ry, x1, y1, x2, y2);
+      if (d < minD) minD = d;
+    }
+    return minD;
+  }
+  return Math.min(rx, 1 - rx, ry, 1 - ry);
+}
+
+function pathHallShape(){
+  const {x0, y0, W, L} = layout;
+  const shape = getShape();
+  ctx.beginPath();
+  if (shape === 'circle') {
+    ctx.ellipse(x0 + W/2, y0 + L/2, W/2, L/2, 0, 0, Math.PI*2);
+  } else if (shape === 'octagon') {
+    const cx = x0 + W/2, cy = y0 + L/2;
+    const a = 0.9239, b = 0.3827;
+    const pts = [[a,b],[b,a],[-b,a],[-a,b],[-a,-b],[-b,-a],[b,-a],[a,-b]];
+    pts.forEach(([dx, dy], i) => {
+      const px = cx + dx * W/2, py = cy + dy * L/2;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.closePath();
+  } else if (shape === 'lshape') {
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x0 + W, y0);
+    ctx.lineTo(x0 + W, y0 + L/2);
+    ctx.lineTo(x0 + W/2, y0 + L/2);
+    ctx.lineTo(x0 + W/2, y0 + L);
+    ctx.lineTo(x0, y0 + L);
+    ctx.closePath();
+  } else {
+    ctx.rect(x0, y0, W, L);
+  }
+}
+
+/* ============ COLUMN BLOCKING ============ */
+function columnBlocking(rx_s, ry_s, rx_p, ry_p, d){
+  if (!$('colEnabled').checked || !columns.length) return 0;
+  const sx = rx_s * d.W, sy = ry_s * d.L;
+  const px = rx_p * d.W, py = ry_p * d.L;
+  let att = 0;
+  for (const c of columns) {
+    const cx = c.rx * d.W, cy = c.ry * d.L;
+    const dx = px - sx, dy = py - sy;
+    const len2 = dx*dx + dy*dy;
+    if (len2 < 0.01) continue;
+    let t = ((cx - sx) * dx + (cy - sy) * dy) / len2;
+    t = Math.max(0, Math.min(1, t));
+    const nx = sx + t * dx, ny = sy + t * dy;
+    const dist = Math.hypot(cx - nx, cy - ny);
+    if (dist < c.radius) {
+      const k = Math.sqrt(Math.max(0, 1 - (dist/c.radius)**2));
+      att += 8 * k;
+    }
+  }
+  return Math.min(att, 24);
+}
+
+/* ============ SPEAKER POSITION ============ */
 function getSpeakerPos(s){
   if (s.zone === 'minaret')
     return {x: layout.mcx + Math.cos(s.ang)*(layout.mS*0.30),
@@ -547,20 +534,26 @@ function getFacing(s){
   if (s.zone === 'minaret') return s.ang;
   return (s.facing !== undefined ? s.facing : Math.PI/2);
 }
-function isOnWall(s){ return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1-WALL_THRESHOLD); }
-function whichWall(s){ return s.rx < 0.5 ? 'left' : 'right'; }
+function isOnWall(s){
+  if (s.zone === 'minaret') return false;
+  return distanceToBoundary(s.rx, s.ry) < 0.04;
+}
+function whichWall(s){
+  const shape = getShape();
+  if (shape !== 'rect' && shape !== 'lshape') return null;
+  return s.rx < 0.5 ? 'left' : 'right';
+}
 
-/* ============ Sidebar Mobile ============ */
+/* ============ Sidebar mobile ============ */
 function openSidebar(){ $('sidebar').classList.add('open'); $('backdrop').classList.add('show'); }
 function closeSidebar(){ $('sidebar').classList.remove('open'); $('backdrop').classList.remove('show'); }
 
-/* ============ Populate ============ */
+/* ============ populate ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
   for (const id in DB_SPK){
-    const o = DB_SPK[id];
-    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_EN[o.type]} ${o.pwr}W</option>`;
+    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_EN[DB_SPK[id].type]} ${DB_SPK[id].pwr}W</option>`;
   }
   DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
   s2.value = "MA-800C";
@@ -583,76 +576,125 @@ function heatColor(t, a){
   else { const k=(t-0.75)/0.25; r=255; g=255-k*255; b=0; }
   return `rgba(${r|0},${g|0},${b|0},${a})`;
 }
-function drawHeatmap(d, x0, y0, W, L){
+
+/* ============ SPL computation ============ */
+function computeSPLAt(rx, ry, d, listH = 1.2){
+  if (!isInsideShape(rx, ry)) return 0;
   const indoor = speakers.filter(s => s.zone !== 'minaret');
-  if (!indoor.length) return;
-  const N = 22, cw = W/N, ch = L/N, listH = 1.2;
-  for (let i=0;i<N;i++){
-    for (let j=0;j<N;j++){
-      const px = (i+0.5)/N, py = (j+0.5)/N;
-      let tot = 0;
-      for (const s of indoor){
-        const dx = (px - s.rx)*d.W, dy = (py - s.ry)*d.L, dz = d.H - listH;
-        const dist = Math.max(1, Math.sqrt(dx*dx+dy*dy+dz*dz));
-        const sp = DB_SPK[s.model];
-        const a = Math.atan2(dy, dx);
-        let diff = Math.abs(((a - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
-        if (diff > Math.PI) diff = 2*Math.PI - diff;
-        const off = diff <= (sp.covH/2)*RAD ? 0 : -6;
-        const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + off;
-        tot += Math.pow(10, spl/10);
-      }
-      const spl = 10*Math.log10(tot || 1e-9);
-      if (spl < 50) continue;
-      const t = clamp((spl - 72)/23, 0, 1);
-      ctx.fillStyle = heatColor(t, 0.5);
-      ctx.fillRect(x0 + i*cw, y0 + j*ch, cw + 1, ch + 1);
-    }
+  let total = 0;
+  for (const s of indoor) {
+    const dx = (rx - s.rx) * d.W;
+    const dy = (ry - s.ry) * d.L;
+    const dz = d.H - listH;
+    const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+    const sp = DB_SPK[s.model];
+    const aToP = Math.atan2(dy, dx);
+    let diff = Math.abs(((aToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+    if (diff > Math.PI) diff = 2*Math.PI - diff;
+    const inCone = diff <= (sp.covH/2) * RAD;
+    const offAxis = inCone ? 0 : -6;
+    const colAtt = columnBlocking(s.rx, s.ry, rx, ry, d);
+    const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis - colAtt;
+    total += Math.pow(10, spl/10);
   }
+  return 10 * Math.log10(total || 1e-9);
 }
 
-/* ============ Wall speaker draw ============ */
+function computeCoverage(d, target){
+  const N = 30; let ok = 0, total = 0;
+  for (let i=0;i<N;i++) for (let j=0;j<N;j++){
+    const rx = (i+0.5)/N, ry = (j+0.5)/N;
+    if (!isInsideShape(rx, ry)) continue;
+    if (computeSPLAt(rx, ry, d) >= target - 3) ok++;
+    total++;
+  }
+  return total ? (ok/total)*100 : 0;
+}
+
+function computeAcoustics(){
+  const d = getDims();
+  const shape = getShape();
+  let area = d.L * d.W;
+  if (shape === 'circle') area = Math.PI * (d.W/2) * (d.L/2);
+  else if (shape === 'octagon') area = d.L * d.W * 0.828;
+  else if (shape === 'lshape') area = d.L * d.W * 0.75;
+  const V = area * d.H;
+  const S = 2 * area + 2 * (d.L + d.W) * d.H * 0.85;
+  const A = S * d.alpha;
+  const rt60 = A > 0 ? 0.161 * V / A : 0;
+  const pts = [{x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}]
+    .filter(p => isInsideShape(p.x, p.y));
+  const indoorSpk = speakers.filter(s => s.zone !== 'minaret');
+  const outdoorSpk = speakers.filter(s => s.zone === 'minaret');
+  let splSum = 0;
+  for (const p of pts) splSum += computeSPLAt(p.x, p.y, d);
+  return {V, S, area, rt60, avgSPL: indoorSpk.length && pts.length ? splSum / pts.length : 0,
+          indoorCount: indoorSpk.length, outdoorCount: outdoorSpk.length};
+}
+
+function updateAmpLogic(){
+  const totalPwr = speakers.reduce((a,s) => a + DB_SPK[s.model].pwr, 0);
+  const N = speakers.length;
+  const amp = DB_AMP.find(a => a.id === $('amp_model').value);
+  let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
+  if (N > 0){
+    perCh = Math.max(1, Math.floor(8 / amp.minImp));
+    chNeeded = Math.ceil(N / perCh);
+    const ampsByCh  = Math.ceil(chNeeded / amp.ch);
+    const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
+    ampCount = Math.max(ampsByCh, ampsByPwr, 1);
+    reason = ampsByCh >= ampsByPwr ? `Constraint: impedance (${perCh}/ch)` : `Constraint: power (30% headroom)`;
+  }
+  ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
+  const ac = computeAcoustics();
+  const target = parseFloat($('p_purpose').value);
+  const splEl = $('spl_v'), splStat = $('st_spl');
+  if (ac.indoorCount === 0){
+    splEl.textContent = speakers.length ? 'Ext.' : '—';
+    splStat.className = 'stat';
+  } else {
+    splEl.textContent = ac.avgSPL.toFixed(1);
+    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target-4 ? 'warn' : 'bad');
+  }
+  const rtEl = $('rt_v'), rtStat = $('st_rt');
+  rtEl.textContent = ac.rt60.toFixed(2);
+  rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
+  $('pwr_v').textContent = totalPwr;
+  $('cnt_v').textContent = N;
+  $('colInfo').textContent = `${columns.length} column${columns.length !== 1 ? 's' : ''} placed`;
+  const colInfo = columns.length ? `<br><span style="color:#ff8c1a">🏛️ ${columns.length} columns (acoustic shadowing)</span>` : '';
+  const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} minaret horns</span>` : '';
+  $('amp_count_info').innerHTML = N === 0 ? 'No speakers added yet' :
+    `⚡ Recommended: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} ch – ${perCh} spk/ch)<br><span style="color:#8b949e">${reason}</span>${hornInfo}${colInfo}`;
+  if (currentView === '2d') draw();
+}
+
+/* ============ Speaker drawing ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
   const boxW = isCol ? 16 : 20, boxH = isCol ? 40 : 30;
   const wallX = isLeft ? layout.x0 : layout.x0 + layout.W;
-  const py = pos.y;
-  const bx = isLeft ? wallX : wallX - boxW;
-
-  ctx.strokeStyle = isSel ? "#38bdf8" : "#fff";
-  ctx.lineWidth = 5;
+  const py = pos.y, bx = isLeft ? wallX : wallX - boxW;
+  ctx.strokeStyle = isSel ? "#38bdf8" : "#fff"; ctx.lineWidth = 5;
   ctx.beginPath(); ctx.moveTo(wallX, py - boxH/2 - 6); ctx.lineTo(wallX, py + boxH/2 + 6); ctx.stroke();
-
-  const col = isCol ? "#e60012" : "#ff8c1a";
-  ctx.fillStyle = isSel ? "#38bdf8" : col;
+  ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.fillRect(bx, py - boxH/2, boxW, boxH);
-  ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
-  ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
-  if (isSel){
-    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.strokeRect(bx-2, py-boxH/2-2, boxW+4, boxH+4);
-  }
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 3; ctx.strokeRect(bx, py - boxH/2, boxW, boxH);
+  if (isSel){ ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.strokeRect(bx-2, py-boxH/2-2, boxW+4, boxH+4); }
   ctx.strokeStyle = "rgba(0,0,0,.55)"; ctx.lineWidth = 1.5;
   const lines = isCol ? 7 : 5;
   for (let i=1;i<lines;i++){
     const ly = py - boxH/2 + i*(boxH/lines);
     ctx.beginPath(); ctx.moveTo(bx+3, ly); ctx.lineTo(bx+boxW-3, ly); ctx.stroke();
   }
-  ctx.fillStyle = isSel ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.55)";
-  ctx.fillRect(isLeft ? bx + boxW - 5 : bx, py - boxH/2 + 4, 5, boxH - 8);
-
   const facing = getFacing(s);
   const asx = isLeft ? wallX + boxW + 6 : wallX - boxW - 6;
-  ctx.save();
-  ctx.translate(asx, py); ctx.rotate(facing);
+  ctx.save(); ctx.translate(asx, py); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
-  ctx.beginPath();
-  ctx.moveTo(0,0); ctx.lineTo(32,0);
-  ctx.lineTo(24,-9); ctx.moveTo(32,0); ctx.lineTo(24,9);
-  ctx.stroke(); ctx.restore();
-
+  ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(32,0); ctx.lineTo(24,-9); ctx.moveTo(32,0); ctx.lineTo(24,9); ctx.stroke();
+  ctx.restore();
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
   ctx.font = "bold 12px Cairo, sans-serif";
   ctx.textAlign = isLeft ? "left" : "right";
@@ -660,41 +702,24 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "rgba(0,0,0,.7)";
   ctx.fillRect(isLeft ? lx-5 : lx-tw+5, py-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, py+4);
-  ctx.font = "bold 9px Cairo, sans-serif";
-  ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
-  ctx.fillText(isCol ? "Column" : "Wall", lx, py+18);
 }
 
-/* ============ Free speaker draw ============ */
 function drawFreeSpeaker(pos, s, isSel, db){
   const isCol = isColumnType(db.type);
   const facing = getFacing(s);
   const r = isSel ? 15 : 13;
-
   ctx.fillStyle = isSel ? "rgba(56,189,248,.3)" : "rgba(230,0,18,.2)";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
-
   ctx.fillStyle = isSel ? "#38bdf8" : (isCol ? "#e60012" : "#ff8c1a");
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
-
-  ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
-  if (isSel){
-    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
-  }
-  ctx.fillStyle = "#fff";
-  ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
-
-  ctx.save();
-  ctx.translate(pos.x, pos.y); ctx.rotate(facing);
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
+  if (isSel){ ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke(); }
+  ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
+  ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(facing);
   ctx.strokeStyle = isSel ? "#fff" : (isCol ? "#38bdf8" : "#ff8c1a");
   ctx.lineWidth = 3.5;
-  ctx.beginPath();
-  ctx.moveTo(r+3,0); ctx.lineTo(r+26,0);
-  ctx.lineTo(r+20,-8); ctx.moveTo(r+26,0); ctx.lineTo(r+20,8);
-  ctx.stroke(); ctx.restore();
-
+  ctx.beginPath(); ctx.moveTo(r+3,0); ctx.lineTo(r+26,0); ctx.lineTo(r+20,-8); ctx.moveTo(r+26,0); ctx.lineTo(r+20,8); ctx.stroke();
+  ctx.restore();
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
   ctx.font = "bold 12px Cairo, sans-serif";
@@ -703,47 +728,72 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "rgba(0,0,0,.75)";
   ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
-  ctx.font = "bold 9px Cairo, sans-serif";
-  ctx.fillStyle = "#a0aec0";
-  ctx.fillText("Free", lx, pos.y+18);
 }
 
-/* ============ Main draw 2D ============ */
+function drawColumns2D(){
+  columns.forEach(c => {
+    const px = layout.x0 + c.rx * layout.W;
+    const py = layout.y0 + c.ry * layout.L;
+    const r = Math.max(3, c.radius * layout.scale);
+    const g = ctx.createRadialGradient(px - r*0.3, py - r*0.3, 0, px, py, r);
+    g.addColorStop(0, '#6b7280');
+    g.addColorStop(1, '#1a2028');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (r > 8){
+      ctx.fillStyle = 'rgba(148,163,184,.8)';
+      ctx.font = `bold ${Math.max(8, r*0.8)}px Cairo, sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('🏛', px, py);
+      ctx.textBaseline = 'alphabetic';
+    }
+  });
+}
+
+/* ============ MAIN DRAW ============ */
 function draw(){
   const div = $('cDiv');
   if (!div.clientWidth || !div.clientHeight || currentView !== '2d') return;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width  = Math.round(div.clientWidth * dpr);
   canvas.height = Math.round(div.clientHeight * dpr);
-
   const d = getDims();
   if (!d.L || !d.W) return;
-
   const scale = Math.min(canvas.width/d.W, canvas.height/d.L) * 0.80;
   const W = d.W*scale, L = d.L*scale;
   const mS = MINARET_M*scale;
   const x0 = (canvas.width - W)/2 + mS/2;
   const y0 = (canvas.height - L)/2 + mS/2;
   const mcx = x0 - mS/2, mcy = y0 + mS/2;
-
   layout = {x0, y0, W, L, scale, mS, mcx, mcy};
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (showGrid){
+    ctx.save(); pathHallShape(); ctx.clip();
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
     for (let x=0; x<=d.W; x+=2){ const px = x0 + x*scale; ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke(); }
     for (let y=0; y<=d.L; y+=2){ const py = y0 + y*scale; ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke(); }
-  }
-
-  if (showHeat){
-    ctx.save();
-    ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
-    drawHeatmap(d, x0, y0, W, L);
     ctx.restore();
   }
 
-  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5;
-  ctx.strokeRect(x0, y0, W, L);
+  if (showHeat){
+    ctx.save(); pathHallShape(); ctx.clip();
+    const N = 22;
+    for (let i=0;i<N;i++) for (let j=0;j<N;j++){
+      const rx = (i+0.5)/N, ry = (j+0.5)/N;
+      if (!isInsideShape(rx, ry)) continue;
+      const spl = computeSPLAt(rx, ry, d);
+      if (spl < 50) continue;
+      const t = clamp((spl - 72)/23, 0, 1);
+      ctx.fillStyle = heatColor(t, 0.5);
+      ctx.fillRect(x0 + i*W/N, y0 + j*L/N, W/N+1, L/N+1);
+    }
+    ctx.restore();
+  }
+
+  pathHallShape();
+  ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 5; ctx.stroke();
 
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
@@ -752,9 +802,11 @@ function draw(){
   ctx.fillText(`Width ${d.W} m`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`Length ${d.L} m`, 0, 0); ctx.restore();
+  ctx.fillStyle = "#8b949e"; ctx.font = "bold 11px Cairo, sans-serif";
+  ctx.textAlign = "right";
+  ctx.fillText(SHAPES_EN[getShape()], x0 + W - 4, y0 + L + 20);
 
-  ctx.fillStyle = "rgba(230,0,18,0.08)";
-  ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
+  ctx.fillStyle = "rgba(230,0,18,0.08)"; ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.arc(mcx, mcy, mS*0.32, 0, Math.PI*2);
   ctx.fillStyle = "rgba(230,0,18,0.22)"; ctx.fill();
@@ -764,8 +816,7 @@ function draw(){
   ctx.fillText("Minaret", mcx, mcy + mS*0.62);
 
   if (showCoverage){
-    ctx.save();
-    ctx.beginPath(); ctx.rect(x0, y0, W, L); ctx.clip();
+    ctx.save(); pathHallShape(); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2)*RAD;
@@ -773,27 +824,12 @@ function draw(){
       ctx.fillStyle = isColumnType(db.type)
         ? (isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)')
         : (isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)');
-      const pos = getSpeakerPos(s);
-      const facing = getFacing(s);
+      const pos = getSpeakerPos(s), facing = getFacing(s);
       const R = Math.max(W, L) * 2.5;
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, facing-half, facing+half);
-      ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+      ctx.arc(pos.x, pos.y, R, facing-half, facing+half); ctx.closePath(); ctx.fill();
     });
     ctx.restore();
-    speakers.filter(s => s.zone === 'minaret').forEach(s => {
-      const db = DB_SPK[s.model];
-      const half = (db.covH/2)*RAD;
-      const isSel = s.id === selectedId;
-      ctx.fillStyle = isSel ? 'rgba(230,0,18,.30)' : 'rgba(230,0,18,.14)';
-      const pos = getSpeakerPos(s);
-      const R = Math.max(W, L)*2;
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, s.ang-half, s.ang+half);
-      ctx.closePath(); ctx.fill();
-    });
   }
 
   speakers.forEach(s => {
@@ -803,36 +839,45 @@ function draw(){
     const db = DB_SPK[s.model];
     if (s.zone === 'minaret'){
       const r = Math.max(8, layout.mS*0.18);
-      ctx.save();
-      ctx.translate(pos.x, pos.y); ctx.rotate(s.ang);
+      ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(s.ang);
       ctx.fillStyle = isSel ? "#38bdf8" : "#e60012";
-      ctx.beginPath();
-      ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9);
-      ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
       ctx.restore();
-    } else if (isOnWall(s)) drawWallSpeaker(pos, s, isSel, db);
-    else drawFreeSpeaker(pos, s, isSel, db);
-
+    } else if (isWallType(db.type) && whichWall(s)){
+      drawWallSpeaker(pos, s, isSel, db);
+    } else {
+      drawFreeSpeaker(pos, s, isSel, db);
+    }
     if (isSel){
       const hx = pos.x + Math.cos(facing)*52;
       const hy = pos.y + Math.sin(facing)*52;
-      ctx.strokeStyle = "rgba(56,189,248,.8)";
-      ctx.lineWidth = 2; ctx.setLineDash([5,4]);
+      ctx.strokeStyle = "rgba(56,189,248,.8)"; ctx.lineWidth = 2; ctx.setLineDash([5,4]);
       ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(hx, hy); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = "#fff";
-      ctx.beginPath(); ctx.arc(hx, hy, 13, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(hx, hy, 13, 0, Math.PI*2); ctx.fill();
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
       ctx.fillStyle = "#0d1117"; ctx.font = "bold 15px Cairo, sans-serif";
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillText("↻", hx, hy+1);
+      ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
     }
   });
+
+  drawColumns2D();
 }
 
-/* ============ Interaction 2D ============ */
+/* ============ INTERACTION ============ */
+function getPointer(e){
+  const r = canvas.getBoundingClientRect();
+  const sx = canvas.width / r.width, sy = canvas.height / r.height;
+  return {mx:(e.clientX - r.left) * sx, my:(e.clientY - r.top) * sy};
+}
+function toLocal(p){
+  const {x0,y0,W,L} = layout;
+  const rx = (p.mx - x0)/W, ry = (p.my - y0)/L;
+  const inside = isInsideShape(rx, ry);
+  return {rx:clamp(rx,0,1), ry:clamp(ry,0,1), rawRx:rx, rawRy:ry, inside, mx:p.mx, my:p.my};
+}
 function hitTest(p){
   for (let i = speakers.length - 1; i >= 0; i--){
     const s = speakers[i];
@@ -842,17 +887,23 @@ function hitTest(p){
   }
   return null;
 }
+function hitTestColumn(mx, my){
+  for (let i = columns.length - 1; i >= 0; i--){
+    const c = columns[i];
+    const px = layout.x0 + c.rx * layout.W;
+    const py = layout.y0 + c.ry * layout.L;
+    if (Math.hypot(mx - px, my - py) < Math.max(8, c.radius * layout.scale + 4)) return c;
+  }
+  return null;
+}
 function hitRotateHandle(s, mx, my){
-  const pos = getSpeakerPos(s);
-  const facing = getFacing(s);
-  const hx = pos.x + Math.cos(facing)*52;
-  const hy = pos.y + Math.sin(facing)*52;
+  const pos = getSpeakerPos(s), facing = getFacing(s);
+  const hx = pos.x + Math.cos(facing)*52, hy = pos.y + Math.sin(facing)*52;
   return Math.hypot(mx-hx, my-hy) < 24;
 }
 function addSpeaker(rx, ry, model, facing){
   const s = {id: ++uid, rx, ry, model, zone:'mosque', facing:(facing !== undefined ? facing : Math.PI/2)};
-  speakers.push(s);
-  return s;
+  speakers.push(s); return s;
 }
 function addMinaretHorn(model, ang){ speakers.push({id: ++uid, zone:'minaret', ang, model}); }
 function isMinaretArea(m){ return Math.hypot(m.mx - layout.mcx, m.my - layout.mcy) < layout.mS * 0.95; }
@@ -860,30 +911,42 @@ function isMinaretArea(m){ return Math.hypot(m.mx - layout.mcx, m.my - layout.mc
 function onPointerDown(e){
   if (e.pointerType === 'mouse' && e.button !== 0) return;
   e.preventDefault();
-  if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch(_){} }
-  const m = getPointer(e);
-  const p = toLocal(m);
+  try { canvas.setPointerCapture(e.pointerId); } catch(_){}
+  const m = getPointer(e), p = toLocal(m);
+
+  if (columnMode){
+    const colHit = hitTestColumn(m.mx, m.my);
+    if (colHit){
+      pushUndo();
+      columns = columns.filter(c => c.id !== colHit.id);
+      updateAmpLogic(); draw(); if (scene3d) buildScene3D();
+      toast('Column removed', 'warn');
+    } else if (p.inside){
+      pushUndo();
+      const radius = parseFloat($('col_radius').value) || 0.35;
+      columns.push({id: ++columnId, rx: p.rx, ry: p.ry, radius});
+      updateAmpLogic(); draw(); if (scene3d) buildScene3D();
+      toast('Column added', 'ok');
+    }
+    return;
+  }
 
   if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)){
       dragSnapshot = snapshot(); rotating = s;
-      canvas.style.cursor = 'grabbing';
-      return;
+      canvas.style.cursor = 'grabbing'; return;
     }
   }
-
   const hit = hitTest(p);
   if (hit){
-    selectedId = hit.id;
-    updateRotationPanel();
+    selectedId = hit.id; updateRotationPanel();
     if (hit.zone !== 'minaret'){
       dragSnapshot = snapshot();
       dragging = {id: hit.id, offX: hit.rx - p.rx, offY: hit.ry - p.ry};
     }
     draw(); return;
   }
-
   if (!p.inside && !isMinaretArea(m)){ deselectSpeaker(); return; }
 
   const model = $('m_model').value;
@@ -892,35 +955,38 @@ function onPointerDown(e){
   if (manualMode){
     pushUndo();
     if (isMinaretArea(m)){
-      const ang = Math.atan2(m.my - layout.mcy, m.mx - layout.mcx);
-      addMinaretHorn(model, ang);
-      toast('Horn added to the minaret', 'ok');
+      addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
+      toast('Horn added to minaret', 'ok');
     } else if (isHornType(spk.type)){
       undoStack.pop(); updateUndoButtons();
-      toast('Outdoor horns can only be placed on the minaret', 'warn');
-      return;
+      toast('Outdoor horns only on minaret', 'warn'); return;
     } else {
       const cx = layout.x0 + layout.W*0.5, cy = layout.y0 + layout.L*0.5;
       addSpeaker(p.rx, p.ry, model, Math.atan2(cy - m.my, cx - m.mx));
-      toast('Speaker placed freely', 'ok');
+      toast('Speaker placed', 'ok');
     }
-    selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw();
-    if (scene3d) buildScene3D();
-    return;
+    selectedId = null; updateRotationPanel(); updateAmpLogic(); draw();
+    if (scene3d) buildScene3D(); return;
   }
 
   if (isHornType(spk.type)){
     if (isMinaretArea(m)){
       pushUndo();
       addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
-    } else {
-      toast('Outdoor horns can only be placed on the minaret', 'warn'); return;
-    }
+    } else { toast('Outdoor horns only on minaret', 'warn'); return; }
   } else {
     pushUndo();
-    addSpeaker(0, p.ry, model, 0);
-    addSpeaker(1, p.ry, model, Math.PI);
+    const shape = getShape();
+    if (shape === 'rect' || shape === 'lshape'){
+      addSpeaker(0, p.ry, model, 0);
+      addSpeaker(1, p.ry, model, Math.PI);
+    } else {
+      const angle = Math.atan2(p.ry - 0.5, p.rx - 0.5);
+      const r = 0.48;
+      const rx = 0.5 + r * Math.cos(angle);
+      const ry = 0.5 + r * Math.sin(angle);
+      addSpeaker(rx, ry, model, angle + Math.PI);
+    }
   }
   updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
@@ -946,7 +1012,7 @@ function onPointerMove(e){
     return;
   }
   if (e.pointerType !== 'mouse') return;
-  let cursor = 'crosshair';
+  let cursor = columnMode ? 'cell' : 'crosshair';
   if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)) cursor = 'grab';
@@ -961,25 +1027,21 @@ function onPointerUp(e){
     if (dragSnapshot !== after){
       undoStack.push(dragSnapshot);
       if (undoStack.length > MAX_UNDO) undoStack.shift();
-      redoStack = [];
-      updateUndoButtons();
+      redoStack = []; updateUndoButtons();
     }
   }
-  const wasDragging = dragging;
-  const wasRotating = rotating;
+  const wasD = dragging || rotating;
   dragSnapshot = null; dragging = null; rotating = null;
-  canvas.style.cursor = 'crosshair';
-  if (scene3d && (wasDragging || wasRotating)) buildScene3D();
-  if (canvas.releasePointerCapture && e && e.pointerId !== undefined){
+  canvas.style.cursor = columnMode ? 'cell' : 'crosshair';
+  if (scene3d && wasD) buildScene3D();
+  if (e && e.pointerId !== undefined){
     try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
   }
 }
-
 canvas.addEventListener('pointerdown', onPointerDown);
 canvas.addEventListener('pointermove', onPointerMove);
 canvas.addEventListener('pointerup', onPointerUp);
 canvas.addEventListener('pointercancel', onPointerUp);
-canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !dragging && !rotating) canvas.style.cursor = 'crosshair'; });
 canvas.addEventListener('contextmenu', e => {
   e.preventDefault();
   const p = toLocal(getPointer(e));
@@ -988,13 +1050,12 @@ canvas.addEventListener('contextmenu', e => {
     pushUndo();
     speakers = speakers.filter(s => s.id !== hit.id);
     if (selectedId === hit.id){ selectedId = null; updateRotationPanel(); }
-    updateAmpLogic(); draw();
-    if (scene3d) buildScene3D();
+    updateAmpLogic(); draw(); if (scene3d) buildScene3D();
     toast('Speaker deleted', 'warn');
   }
 });
 
-/* ============ View switching ============ */
+/* ============ VIEW TOGGLE ============ */
 function switchView(mode){
   currentView = mode;
   if (mode === '3d'){
@@ -1006,8 +1067,7 @@ function switchView(mode){
     $('tgHeat').style.opacity = '.4';
     $('tgHeat').disabled = true;
     if (!scene3d) init3D();
-    resize3D();
-    buildScene3D();
+    resize3D(); buildScene3D();
   } else {
     $('cDiv').style.display = 'flex';
     $('threeWrap').style.display = 'none';
@@ -1019,18 +1079,13 @@ function switchView(mode){
     draw();
   }
 }
-
 function resize3D(){
   if (!renderer3d || !camera3d) return;
-  const container = $('threeWrap');
-  const w = container.clientWidth;
-  const h = container.clientHeight;
+  const c = $('threeWrap'), w = c.clientWidth, h = c.clientHeight;
   if (!w || !h) return;
-  camera3d.aspect = w/h;
-  camera3d.updateProjectionMatrix();
+  camera3d.aspect = w/h; camera3d.updateProjectionMatrix();
   renderer3d.setSize(w, h);
 }
-
 function toggleAutoRotate3D(){
   autoRotate3D = !autoRotate3D;
   if (controls3d) controls3d.autoRotate = autoRotate3D;
@@ -1038,72 +1093,48 @@ function toggleAutoRotate3D(){
   $('autoRotBtn').classList.toggle('on', autoRotate3D);
 }
 
-/* ============ Init 3D ============ */
+/* ============ 3D ============ */
 function init3D(){
-  const container = $('threeWrap');
-  if (!container || container.dataset.ready) return;
-  container.dataset.ready = '1';
-
-  const w = Math.max(container.clientWidth, 800);
-  const h = Math.max(container.clientHeight, 600);
-
+  const c = $('threeWrap');
+  if (!c || c.dataset.ready) return;
+  c.dataset.ready = '1';
+  const w = Math.max(c.clientWidth, 800), h = Math.max(c.clientHeight, 600);
   scene3d = new THREE.Scene();
   scene3d.background = new THREE.Color(0x0a0e14);
   scene3d.fog = new THREE.Fog(0x0a0e14, 100, 280);
-
   camera3d = new THREE.PerspectiveCamera(45, w/h, 0.1, 500);
   camera3d.position.set(35, 28, 42);
-
   renderer3d = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
   renderer3d.setSize(w, h);
   renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer3d.shadowMap.enabled = true;
   renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
-  container.appendChild(renderer3d.domElement);
-
+  c.appendChild(renderer3d.domElement);
   controls3d = new THREE.OrbitControls(camera3d, renderer3d.domElement);
-  controls3d.enableDamping = true;
-  controls3d.dampingFactor = 0.08;
-  controls3d.minDistance = 8;
-  controls3d.maxDistance = 200;
+  controls3d.enableDamping = true; controls3d.dampingFactor = 0.08;
+  controls3d.minDistance = 8; controls3d.maxDistance = 200;
   controls3d.maxPolarAngle = Math.PI/2 - 0.02;
   controls3d.target.set(0, 4, 0);
-
-  const hemi = new THREE.HemisphereLight(0x38bdf8, 0x0a0a0a, 0.55);
-  scene3d.add(hemi);
-
+  scene3d.add(new THREE.HemisphereLight(0x38bdf8, 0x0a0a0a, 0.55));
   const key = new THREE.DirectionalLight(0xffffff, 1.1);
-  key.position.set(30, 50, 30);
-  key.castShadow = true;
-  key.shadow.mapSize.width = 2048;
-  key.shadow.mapSize.height = 2048;
-  key.shadow.camera.left = -80;
-  key.shadow.camera.right = 80;
-  key.shadow.camera.top = 80;
-  key.shadow.camera.bottom = -80;
+  key.position.set(30, 50, 30); key.castShadow = true;
+  key.shadow.mapSize.width = 2048; key.shadow.mapSize.height = 2048;
+  key.shadow.camera.left = -80; key.shadow.camera.right = 80;
+  key.shadow.camera.top = 80; key.shadow.camera.bottom = -80;
   key.shadow.camera.far = 200;
   scene3d.add(key);
-
   const fill = new THREE.DirectionalLight(0xe60012, 0.35);
-  fill.position.set(-30, 25, -25);
-  scene3d.add(fill);
-
+  fill.position.set(-30, 25, -25); scene3d.add(fill);
   const rim = new THREE.PointLight(0x38bdf8, 0.7, 120);
-  rim.position.set(0, 12, 0);
-  scene3d.add(rim);
-
-  group3d = new THREE.Group();
-  scene3d.add(group3d);
-
+  rim.position.set(0, 12, 0); scene3d.add(rim);
+  group3d = new THREE.Group(); scene3d.add(group3d);
   animate3D();
 }
-
 function animate3D(){
   requestAnimationFrame(animate3D);
   if (controls3d) controls3d.update();
   if (renderer3d && scene3d && camera3d) renderer3d.render(scene3d, camera3d);
 }
-
 function clear3D(){
   if (!group3d) return;
   while(group3d.children.length){
@@ -1116,6 +1147,15 @@ function clear3D(){
     }
   }
 }
+function addWallPlane(x1, z1, x2, z2, H, mat){
+  const dx = x2 - x1, dz = z2 - z1;
+  const len = Math.hypot(dx, dz);
+  const geo = new THREE.PlaneGeometry(len, H);
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set((x1+x2)/2, H/2, (z1+z2)/2);
+  mesh.rotation.y = -Math.atan2(dz, dx);
+  return mesh;
+}
 
 function buildScene3D(){
   if (!group3d) init3D();
@@ -1123,99 +1163,112 @@ function buildScene3D(){
   const d = getDims();
   if (!d.L || !d.W) return;
   const W = d.W, L = d.L, H = d.H;
-
+  const shape = getShape();
   const floorMat = new THREE.MeshStandardMaterial({color:0x1a1f27, roughness:0.9, metalness:0.05});
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, L), floorMat);
-  floor.rotation.x = -Math.PI/2;
-  floor.receiveShadow = true;
-  group3d.add(floor);
+  const wallMat = new THREE.MeshStandardMaterial({color:0x38bdf8, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
+  const edgeMat = new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85});
 
-  const gridSize = Math.max(W, L) * 1.2;
-  const grid = new THREE.GridHelper(gridSize, Math.max(Math.round(gridSize), 20), 0x1f2937, 0x161b22);
-  grid.position.y = 0.02;
-  group3d.add(grid);
+  // Floor
+  if (shape === 'circle'){
+    const R = Math.min(W, L) / 2;
+    const fGeo = new THREE.CircleGeometry(R, 64); fGeo.rotateX(-Math.PI/2);
+    const f = new THREE.Mesh(fGeo, floorMat);
+    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
+    f.receiveShadow = true; group3d.add(f);
+    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+  } else if (shape === 'octagon'){
+    const R = Math.min(W, L) / 2;
+    const fGeo = new THREE.CircleGeometry(R, 8); fGeo.rotateX(-Math.PI/2);
+    const f = new THREE.Mesh(fGeo, floorMat);
+    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
+    f.receiveShadow = true; group3d.add(f);
+    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+  } else if (shape === 'lshape'){
+    const s = new THREE.Shape();
+    s.moveTo(-W/2, -L/2); s.lineTo(W/2, -L/2); s.lineTo(W/2, 0);
+    s.lineTo(0, 0); s.lineTo(0, L/2); s.lineTo(-W/2, L/2); s.closePath();
+    const fGeo = new THREE.ShapeGeometry(s); fGeo.rotateX(Math.PI/2);
+    const f = new THREE.Mesh(fGeo, floorMat); f.position.y = 0.001;
+    group3d.add(f);
+    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+  } else {
+    const f = new THREE.Mesh(new THREE.PlaneGeometry(W, L), floorMat);
+    f.rotation.x = -Math.PI/2; f.receiveShadow = true; group3d.add(f);
+    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+  }
 
-  const wallMat = new THREE.MeshStandardMaterial({
-    color:0x38bdf8, transparent:true, opacity:0.055, side:THREE.DoubleSide, depthWrite:false
-  });
-  const wallGeoLR = new THREE.PlaneGeometry(L, H);
-  const wallGeoFB = new THREE.PlaneGeometry(W, H);
+  // Walls
+  if (shape === 'circle' || shape === 'octagon'){
+    const R = Math.min(W, L) / 2;
+    const sides = shape === 'circle' ? 64 : 8;
+    const wGeo = new THREE.CylinderGeometry(R, R, H, sides, 1, true);
+    const w = new THREE.Mesh(wGeo, wallMat);
+    w.position.y = H/2;
+    w.scale.x = W / (2 * R); w.scale.z = L / (2 * R);
+    group3d.add(w);
+    const topGeo = new THREE.RingGeometry(R * 0.99, R, sides); topGeo.rotateX(-Math.PI/2);
+    const topMesh = new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.6, side:THREE.DoubleSide}));
+    topMesh.position.y = H;
+    topMesh.scale.x = W / (2 * R); topMesh.scale.z = L / (2 * R);
+    group3d.add(topMesh);
+  } else if (shape === 'lshape'){
+    group3d.add(addWallPlane(-W/2, -L/2, W/2, -L/2, H, wallMat));
+    group3d.add(addWallPlane(-W/2, L/2, -W/2, -L/2, H, wallMat));
+    group3d.add(addWallPlane(0, L/2, -W/2, L/2, H, wallMat));
+    group3d.add(addWallPlane(W/2, 0, W/2, -L/2, H, wallMat));
+    group3d.add(addWallPlane(0, 0, W/2, 0, H, wallMat));
+    group3d.add(addWallPlane(0, L/2, 0, 0, H, wallMat));
+    const pts = [[-W/2,-L/2,H],[W/2,-L/2,H],[W/2,0,H],[0,0,H],[0,L/2,H],[-W/2,L/2,H],[-W/2,-L/2,H]]
+      .map(([x,y,z]) => new THREE.Vector3(x, y, z));
+    const wg = new THREE.BufferGeometry().setFromPoints(pts);
+    group3d.add(new THREE.Line(wg, edgeMat));
+  } else {
+    const wGeoLR = new THREE.PlaneGeometry(L, H), wGeoFB = new THREE.PlaneGeometry(W, H);
+    const left = new THREE.Mesh(wGeoLR, wallMat); left.rotation.y = Math.PI/2; left.position.set(-W/2, H/2, 0); group3d.add(left);
+    const right = new THREE.Mesh(wGeoLR, wallMat); right.rotation.y = -Math.PI/2; right.position.set(W/2, H/2, 0); group3d.add(right);
+    const back = new THREE.Mesh(wGeoFB, wallMat); back.position.set(0, H/2, -L/2); group3d.add(back);
+    const front = new THREE.Mesh(wGeoFB, wallMat); front.rotation.y = Math.PI; front.position.set(0, H/2, L/2); group3d.add(front);
+    const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(W, H, L));
+    const wire = new THREE.LineSegments(boxEdges, edgeMat);
+    wire.position.set(0, H/2, 0); group3d.add(wire);
+  }
 
-  const leftWall = new THREE.Mesh(wallGeoLR, wallMat);
-  leftWall.rotation.y = Math.PI/2;
-  leftWall.position.set(-W/2, H/2, 0);
-  group3d.add(leftWall);
+  // Mihrab
+  const mShape = new THREE.Shape();
+  mShape.moveTo(-2.5, 0); mShape.lineTo(-2.5, 3.2);
+  mShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
+  mShape.quadraticCurveTo(2.5, 5.5, 2.5, 3.2);
+  mShape.lineTo(2.5, 0); mShape.lineTo(-2.5, 0);
+  const mihrab = new THREE.Mesh(new THREE.ShapeGeometry(mShape, 12),
+    new THREE.MeshStandardMaterial({color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7}));
+  mihrab.position.set(0, 0.1, -L/2 + 0.08); group3d.add(mihrab);
 
-  const rightWall = new THREE.Mesh(wallGeoLR, wallMat);
-  rightWall.rotation.y = -Math.PI/2;
-  rightWall.position.set(W/2, H/2, 0);
-  group3d.add(rightWall);
-
-  const backWall = new THREE.Mesh(wallGeoFB, wallMat);
-  backWall.position.set(0, H/2, -L/2);
-  group3d.add(backWall);
-
-  const frontWall = new THREE.Mesh(wallGeoFB, wallMat);
-  frontWall.rotation.y = Math.PI;
-  frontWall.position.set(0, H/2, L/2);
-  group3d.add(frontWall);
-
-  const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(W, H, L));
-  const wire = new THREE.LineSegments(boxEdges, new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85}));
-  wire.position.set(0, H/2, 0);
-  group3d.add(wire);
-
-  const mihrabShape = new THREE.Shape();
-  mihrabShape.moveTo(-2.5, 0);
-  mihrabShape.lineTo(-2.5, 3.2);
-  mihrabShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
-  mihrabShape.quadraticCurveTo(2.5, 5.5, 2.5, 3.2);
-  mihrabShape.lineTo(2.5, 0);
-  mihrabShape.lineTo(-2.5, 0);
-  const mihrabGeo = new THREE.ShapeGeometry(mihrabShape, 12);
-  const mihrabMat = new THREE.MeshStandardMaterial({
-    color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7
-  });
-  const mihrab = new THREE.Mesh(mihrabGeo, mihrabMat);
-  mihrab.position.set(0, 0.1, -L/2 + 0.08);
-  group3d.add(mihrab);
-
+  // Minaret
   const minaretH = Math.max(H * 2.2, 14);
-  const mX = -W/2 - 2.2;
-  const mZ = -L/2 - 2.2;
-  const minaretGeo = new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20);
-  const minaretMat = new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.55, metalness:0.25});
-  const minaret = new THREE.Mesh(minaretGeo, minaretMat);
-  minaret.position.set(mX, minaretH/2, mZ);
-  minaret.castShadow = true;
-  group3d.add(minaret);
+  const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
+  const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20),
+    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.55, metalness:0.25}));
+  minaret.position.set(mX, minaretH/2, mZ); minaret.castShadow = true; group3d.add(minaret);
+  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.3, 20),
+    new THREE.MeshStandardMaterial({color:0xb00010, roughness:0.6}));
+  balcony.position.set(mX, minaretH * 0.72, mZ); group3d.add(balcony);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI*2, 0, Math.PI/2),
+    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.35, metalness:0.4, emissive:0x220000}));
+  dome.position.set(mX, minaretH, mZ); dome.castShadow = true; group3d.add(dome);
+  const crescent = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4),
+    new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2}));
+  crescent.position.set(mX, minaretH + 1.6, mZ); crescent.rotation.z = Math.PI / 2; group3d.add(crescent);
 
-  const balconyGeo = new THREE.CylinderGeometry(2.2, 2.2, 0.3, 20);
-  const balconyMat = new THREE.MeshStandardMaterial({color:0xb00010, roughness:0.6});
-  const balcony = new THREE.Mesh(balconyGeo, balconyMat);
-  balcony.position.set(mX, minaretH * 0.72, mZ);
-  group3d.add(balcony);
-
-  const domeGeo = new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI*2, 0, Math.PI/2);
-  const domeMat = new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.35, metalness:0.4, emissive:0x220000});
-  const dome = new THREE.Mesh(domeGeo, domeMat);
-  dome.position.set(mX, minaretH, mZ);
-  dome.castShadow = true;
-  group3d.add(dome);
-
-  const crescentGeo = new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4);
-  const crescentMat = new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2});
-  const crescent = new THREE.Mesh(crescentGeo, crescentMat);
-  crescent.position.set(mX, minaretH + 1.6, mZ);
-  crescent.rotation.z = Math.PI / 2;
-  group3d.add(crescent);
-
-  const pillarMat = new THREE.MeshStandardMaterial({color:0x2a3240, roughness:0.7});
-  [[-W/2,H,L/2],[W/2,H,L/2],[-W/2,H,-L/2],[W/2,H,-L/2]].forEach(([px,ph,pz]) => {
-    const pGeo = new THREE.CylinderGeometry(0.15, 0.15, H, 8);
-    const p = new THREE.Mesh(pGeo, pillarMat);
-    p.position.set(px, H/2, pz);
-    group3d.add(p);
+  // Columns
+  columns.forEach(c => {
+    const cx = (c.rx - 0.5) * W, cz = (c.ry - 0.5) * L;
+    const geo = new THREE.CylinderGeometry(c.radius, c.radius, H, 16);
+    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x2a3240, roughness:0.75, metalness:0.15}));
+    mesh.position.set(cx, H/2, cz);
+    mesh.castShadow = true; mesh.receiveShadow = true; group3d.add(mesh);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.3, c.radius, 0.3, 16),
+      new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.6, roughness:0.3, emissive:0x0a2e45, emissiveIntensity:0.4}));
+    cap.position.set(cx, H - 0.15, cz); group3d.add(cap);
   });
 
   speakers.forEach(s => addSpeakerMesh3D(s, d));
@@ -1230,34 +1283,23 @@ function addSpeakerMesh3D(s, d){
   const sp = DB_SPK[s.model];
   const isCol = isColumnType(sp.type);
   const W = d.W, L = d.L, H = d.H;
+  const shape = getShape();
 
   if (s.zone === 'minaret'){
     const minaretH = Math.max(H * 2.2, 14);
-    const mX = -W/2 - 2.2;
-    const mZ = -L/2 - 2.2;
+    const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
     const R = 1.8;
-    const dirX = Math.cos(s.ang);
-    const dirZ = Math.sin(s.ang);
-    const hx = mX + dirX * R;
-    const hz = mZ + dirZ * R;
-    const hy = minaretH * 0.78;
-
-    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 12);
-    bodyGeo.rotateX(-Math.PI/2);
-    const bodyMat = new THREE.MeshStandardMaterial({color:0xe60012, metalness:0.6, roughness:0.3, emissive:0x330000, emissiveIntensity:0.4});
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    const dirX = Math.cos(s.ang), dirZ = Math.sin(s.ang);
+    const hx = mX + dirX * R, hz = mZ + dirZ * R, hy = minaretH * 0.78;
+    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 12); bodyGeo.rotateX(-Math.PI/2);
+    const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({color:0xe60012, metalness:0.6, roughness:0.3, emissive:0x330000, emissiveIntensity:0.4}));
     body.position.set(hx + dirX*0.55, hy, hz + dirZ*0.55);
     body.lookAt(hx + dirX*10, hy, hz + dirZ*10);
-    body.castShadow = true;
-    group3d.add(body);
-
+    body.castShadow = true; group3d.add(body);
     if (showCoverage){
-      const covHalf = (sp.covH/2) * Math.PI / 180;
-      const covLen = 10;
-      const covGeo = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true);
-      covGeo.rotateX(-Math.PI/2);
-      const covMat = new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
-      const cov = new THREE.Mesh(covGeo, covMat);
+      const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 10;
+      const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true); cg.rotateX(-Math.PI/2);
+      const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false}));
       cov.position.set(hx + dirX * covLen/2, hy, hz + dirZ * covLen/2);
       cov.lookAt(hx + dirX*100, hy, hz + dirZ*100);
       group3d.add(cov);
@@ -1265,85 +1307,66 @@ function addSpeakerMesh3D(s, d){
     return;
   }
 
-  let x, y, z, facingRad;
-  if (isOnWall(s)){
-    const left = whichWall(s) === 'left';
-    x = left ? -W/2 + 0.25 : W/2 - 0.25;
-    z = -L/2 + s.ry * L;
-    y = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
-    facingRad = getFacing(s);
+  let wx, wy, wz, facingRad;
+  const onWall = isOnWall(s);
+  if (onWall){
+    if (shape === 'rect' || shape === 'lshape'){
+      const left = s.rx < 0.5;
+      wx = left ? -W/2 : W/2;
+      wz = (s.ry - 0.5) * L;
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      facingRad = left ? 0 : Math.PI;
+    } else {
+      const angle = Math.atan2(s.ry - 0.5, s.rx - 0.5);
+      const Rx = W / 2, Rz = L / 2;
+      wx = Rx * Math.cos(angle) * 0.96;
+      wz = Rz * Math.sin(angle) * 0.96;
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      facingRad = angle + Math.PI;
+    }
   } else {
-    x = -W/2 + s.rx * W;
-    z = -L/2 + s.ry * L;
-    y = H - 0.4;
+    wx = (s.rx - 0.5) * W;
+    wz = (s.ry - 0.5) * L;
+    wy = H - 0.4;
     facingRad = getFacing(s);
   }
 
-  const dirX = Math.cos(facingRad);
-  const dirZ = Math.sin(facingRad);
-
-  const bw = isCol ? 0.45 : 0.55;
-  const bh = isCol ? 1.15 : 0.85;
-  const bd = 0.38;
-  const bodyGeo = new THREE.BoxGeometry(bw, bh, bd);
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: isCol ? 0xe60012 : 0xff8c1a,
-    metalness:0.5, roughness:0.4,
-    emissive: isCol ? 0x330000 : 0x331500,
-    emissiveIntensity:0.35
-  });
-  const body = new THREE.Mesh(bodyGeo, bodyMat);
-  body.position.set(x, y, z);
-  body.castShadow = true;
-  body.receiveShadow = true;
-  group3d.add(body);
-
-  const faceGeo = new THREE.PlaneGeometry(bw * 0.75, bh * 0.85);
-  const faceMat = new THREE.MeshBasicMaterial({color:0x0a0a0a, transparent:true, opacity:0.55});
-  const face = new THREE.Mesh(faceGeo, faceMat);
-  face.position.set(x + dirX * (bd/2 + 0.01), y, z + dirZ * (bd/2 + 0.01));
-  face.lookAt(x + dirX*10, y, z + dirZ*10);
-  group3d.add(face);
-
-  const arrowLen = 1.3;
-  const arrowGeo = new THREE.ConeGeometry(0.16, arrowLen, 10);
-  arrowGeo.rotateX(Math.PI/2);
-  const arrowMat = new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.7, roughness:0.3, emissive:0x0a4060, emissiveIntensity:0.8});
-  const arrow = new THREE.Mesh(arrowGeo, arrowMat);
-  arrow.position.set(x + dirX * (bd/2 + arrowLen/2), y, z + dirZ * (bd/2 + arrowLen/2));
-  arrow.lookAt(x + dirX*100, y, z + dirZ*100);
+  const dirX = Math.cos(facingRad), dirZ = Math.sin(facingRad);
+  const bw = isCol ? 0.45 : 0.55, bh = isCol ? 1.15 : 0.85, bd = 0.38;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd),
+    new THREE.MeshStandardMaterial({color: isCol ? 0xe60012 : 0xff8c1a, metalness:0.5, roughness:0.4, emissive: isCol ? 0x330000 : 0x331500, emissiveIntensity:0.35}));
+  body.position.set(wx, wy, wz); body.castShadow = true; body.receiveShadow = true; group3d.add(body);
+  const arrowGeo = new THREE.ConeGeometry(0.16, 1.3, 10); arrowGeo.rotateX(Math.PI/2);
+  const arrow = new THREE.Mesh(arrowGeo, new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.7, roughness:0.3, emissive:0x0a4060, emissiveIntensity:0.8}));
+  arrow.position.set(wx + dirX * 0.85, wy, wz + dirZ * 0.85);
+  arrow.lookAt(wx + dirX*100, wy, wz + dirZ*100);
   group3d.add(arrow);
-
   if (showCoverage){
-    const covHalf = (sp.covH/2) * Math.PI / 180;
-    const covLen = 8;
-    const covGeo = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true);
-    covGeo.rotateX(-Math.PI/2);
-    const covMat = new THREE.MeshBasicMaterial({
-      color: isCol ? 0x38bdf8 : 0xff8c1a,
-      transparent:true, opacity:0.065, side:THREE.DoubleSide, depthWrite:false
-    });
-    const cov = new THREE.Mesh(covGeo, covMat);
-    cov.position.set(x + dirX * covLen/2, y, z + dirZ * covLen/2);
-    cov.lookAt(x + dirX*100, y, z + dirZ*100);
+    const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 8;
+    const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true); cg.rotateX(-Math.PI/2);
+    const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color: isCol ? 0x38bdf8 : 0xff8c1a, transparent:true, opacity:0.065, side:THREE.DoubleSide, depthWrite:false}));
+    cov.position.set(wx + dirX * covLen/2, wy, wz + dirZ * covLen/2);
+    cov.lookAt(wx + dirX*100, wy, wz + dirZ*100);
     group3d.add(cov);
-  }
-
-  if (isOnWall(s)){
-    const bracketGeo = new THREE.BoxGeometry(0.1, 0.1, 0.4);
-    const bracketMat = new THREE.MeshStandardMaterial({color:0x555, metalness:0.8, roughness:0.4});
-    const wallX = whichWall(s) === 'left' ? -W/2 : W/2;
-    const bracket = new THREE.Mesh(bracketGeo, bracketMat);
-    bracket.position.set(wallX + (whichWall(s) === 'left' ? 0.2 : -0.2), y, z);
-    group3d.add(bracket);
   }
 }
 
-/* ============ Toggle controls ============ */
+/* ============ TOGGLES ============ */
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
-  toast(manualMode ? '🖐 Manual mode: free speaker placement' : 'Auto mode: paired on both walls', 'ok');
+  toast(manualMode ? '🖐 Manual mode' : 'Auto mode', 'ok');
+}
+function toggleColumnMode(){
+  columnMode = !columnMode;
+  $('colModeBtn').classList.toggle('active-mode', columnMode);
+  if (columnMode) toast('Click to add or remove a column', 'ok');
+}
+function onColumnToggle(){ updateAmpLogic(); draw(); if (scene3d) buildScene3D(); }
+function onShapeChange(){
+  updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
+  toast(`Shape: ${SHAPES_EN[getShape()]}`, 'ok');
 }
 function toggleCoverage(){
   showCoverage = !showCoverage;
@@ -1363,7 +1386,7 @@ function toggleGrid(){
   if (currentView === '2d') draw();
 }
 function clearSpeakers(){
-  if (!speakers.length) return toast('No speakers to clear', 'warn');
+  if (!speakers.length) return toast('No speakers', 'warn');
   if (confirm(`Clear all speakers (${speakers.length})?`)){
     pushUndo();
     speakers = []; selectedId = null;
@@ -1372,16 +1395,28 @@ function clearSpeakers(){
     toast('Speakers cleared', 'ok');
   }
 }
+function clearColumns(){
+  if (!columns.length) return toast('No columns', 'warn');
+  if (confirm(`Clear all columns (${columns.length})?`)){
+    pushUndo();
+    columns = [];
+    updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
+    toast('Columns cleared', 'ok');
+  }
+}
 function resetData(){
-  if (!confirm('Reset all data and speakers?')) return;
+  if (!confirm('Reset all data?')) return;
   pushUndo();
-  speakers = []; selectedId = null; manualMode = false;
+  speakers = []; columns = []; selectedId = null; manualMode = false; columnMode = false;
   $('manualBtn').classList.remove('active-mode');
+  $('colModeBtn').classList.remove('active-mode');
   $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
+  $('m_shape').value = 'rect';
   $('p_name').value = 'New Mosque'; $('p_client').value = ''; $('p_engineer').value = 'Eng. Ahmed';
   updateRotationPanel(); updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
-  toast('All data reset', 'ok');
+  toast('Reset done', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
 function deleteSelected(){
@@ -1396,7 +1431,7 @@ function deleteSelected(){
 }
 function onDimChange(){ updateAmpLogic(); if (scene3d && currentView === '3d') buildScene3D(); }
 
-/* ============ Rotation panel ============ */
+/* ============ ROTATION PANEL ============ */
 function updateRotationPanel(){
   const s = speakers.find(x => x.id === selectedId);
   const box = $('rotationBox');
@@ -1404,15 +1439,14 @@ function updateRotationPanel(){
   box.style.display = 'block';
   let posLabel;
   if (s.zone === 'minaret') posLabel = ' (Minaret horn)';
-  else if (isOnWall(s)) posLabel = ` (${whichWall(s)==='left'?'Left wall':'Right wall'})`;
-  else posLabel = ' (Free position)';
+  else if (isOnWall(s)) posLabel = ` (${whichWall(s) === 'left' ? 'Left wall' : whichWall(s) === 'right' ? 'Right wall' : 'Curved wall'})`;
+  else posLabel = ' (Free)';
   $('rotModel').textContent = `— ${s.model}${posLabel}`;
   let deg = getFacing(s) * DEG;
   while (deg > 180) deg -= 360;
   while (deg < -180) deg += 360;
   deg = Math.round(deg);
-  $('angleSlider').value = deg;
-  $('angleVal').textContent = deg;
+  $('angleSlider').value = deg; $('angleVal').textContent = deg;
 }
 function setSelectedAngle(val){
   const s = speakers.find(x => x.id === selectedId);
@@ -1424,14 +1458,65 @@ function setSelectedAngle(val){
   if (scene3d && currentView === '3d') buildScene3D();
 }
 
-/* ============ Smart distribute ============ */
+/* ============ AUTO-LAYOUT COLUMNS ============ */
+function autoLayoutColumns(){
+  const d = getDims();
+  const shape = getShape();
+  const spacing = parseFloat($('col_spacing').value) || 6;
+  const radius = parseFloat($('col_radius').value) || 0.35;
+  pushUndo();
+  columns = [];
+  const avgDim = Math.sqrt(d.W * d.L);
+
+  if (shape === 'circle' || shape === 'octagon'){
+    const spacingNorm = spacing / avgDim;
+    const numRings = Math.max(1, Math.floor(0.38 / spacingNorm));
+    for (let r = 1; r <= numRings; r++){
+      const ringR = r * spacingNorm;
+      if (ringR > 0.42) break;
+      const r_phys = ringR * avgDim;
+      const n = Math.max(6, Math.round(2 * Math.PI * r_phys / spacing));
+      for (let k = 0; k < n; k++){
+        const angle = (k / n) * Math.PI * 2;
+        const rx = 0.5 + ringR * Math.cos(angle);
+        const ry = 0.5 + ringR * Math.sin(angle);
+        if (isInsideShape(rx, ry, shape)){
+          columns.push({id: ++columnId, rx, ry, radius});
+        }
+      }
+    }
+    if (!columns.length){
+      const n = Math.max(8, Math.round(2 * Math.PI * (avgDim*0.35) / spacing));
+      for (let k = 0; k < n; k++){
+        const angle = (k / n) * Math.PI * 2;
+        columns.push({id: ++columnId, rx: 0.5 + 0.35*Math.cos(angle), ry: 0.5 + 0.35*Math.sin(angle), radius});
+      }
+    }
+  } else {
+    const nx = Math.max(1, Math.round(d.W / spacing) - 1);
+    const ny = Math.max(1, Math.round(d.L / spacing) - 1);
+    for (let i = 1; i <= nx; i++){
+      for (let j = 1; j <= ny; j++){
+        const rx = i / (nx + 1), ry = j / (ny + 1);
+        if (isInsideShape(rx, ry, shape)){
+          columns.push({id: ++columnId, rx, ry, radius});
+        }
+      }
+    }
+  }
+  updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
+  toast(`✅ ${columns.length} columns placed`, 'ok');
+}
+
+/* ============ SMART DISTRIBUTION ============ */
 function aiSmartDistribute(){
   const d = getDims();
+  const shape = getShape();
   const model = $('m_model').value;
   const spk = DB_SPK[model];
   const addHorns = $('addHornsChk').checked;
   const isHorn = isHornType(spk.type);
-
   pushUndo();
   speakers = [];
   let hornCount = 0;
@@ -1440,9 +1525,8 @@ function aiSmartDistribute(){
     [-Math.PI/2, -Math.PI*3/4, -Math.PI/4, Math.PI].forEach(ang => addMinaretHorn('UT-08', ang));
     hornCount = 4;
   }
-
   if (isHorn){
-    toast(`${hornCount} horns placed on the minaret`, 'ok');
+    toast(`${hornCount} horns on minaret`, 'ok');
     updateAmpLogic(); draw();
     if (scene3d) buildScene3D();
     return;
@@ -1450,171 +1534,87 @@ function aiSmartDistribute(){
 
   const mountH = isWallType(spk.type) ? MOUNT_H_WALL : (d.H - 0.5);
   const spacing = Math.max(3.5, mountH * 1.6);
-  const rows = Math.max(2, Math.ceil(d.L / spacing));
-  const gap = d.L / rows;
 
-  for (let i=0;i<rows;i++){
-    const r = ((i + 0.5) * gap) / d.L;
-    addSpeaker(0, r, model, 0);
-    addSpeaker(1, r, model, Math.PI);
+  if (shape === 'circle' || shape === 'octagon'){
+    const a = d.W/2, b = d.L/2;
+    const perimeter = Math.PI * (3*(a+b) - Math.sqrt((3*a+b)*(a+3*b)));
+    const n = Math.max(6, Math.ceil(perimeter / spacing));
+    for (let i = 0; i < n; i++){
+      const angle = (i / n) * Math.PI * 2;
+      const r = 0.48;
+      const rx = 0.5 + r * Math.cos(angle);
+      const ry = 0.5 + r * Math.sin(angle);
+      if (!isInsideShape(rx, ry, shape)) continue;
+      addSpeaker(rx, ry, model, angle + Math.PI);
+    }
+    toast(`✅ ${n} speakers on perimeter${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
+  } else if (shape === 'lshape'){
+    const rows = Math.max(2, Math.ceil(d.L / spacing));
+    const gap = d.L / rows;
+    for (let i = 0; i < rows; i++){
+      const ry = ((i + 0.5) * gap) / d.L;
+      addSpeaker(0, ry, model, 0);
+      if (ry < 0.5) addSpeaker(1, ry, model, Math.PI);
+    }
+    toast(`✅ L-shape speakers${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
+  } else {
+    const rows = Math.max(2, Math.ceil(d.L / spacing));
+    const gap = d.L / rows;
+    for (let i = 0; i < rows; i++){
+      const r = ((i + 0.5) * gap) / d.L;
+      addSpeaker(0, r, model, 0);
+      addSpeaker(1, r, model, Math.PI);
+    }
+    const typeName = isColumnType(spk.type) ? 'Column' : 'Wall';
+    toast(`✅ ${rows*2} ${typeName} speakers${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
   }
-
-  const indoorCount = rows * 2;
-  const typeName = isColumnType(spk.type) ? 'Column' : 'Wall';
-  toast(`✅ ${indoorCount} ${typeName} speakers (${rows} rows)${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
   updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
 }
 
-/* ============ Acoustics ============ */
-function computeSPLAt(rx, ry, d, listH = 1.2){
-  const indoor = speakers.filter(s => s.zone !== 'minaret');
-  let total = 0;
-  indoor.forEach(s => {
-    const dx = (rx - s.rx) * d.W;
-    const dy = (ry - s.ry) * d.L;
-    const dz = d.H - listH;
-    const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-    const sp = DB_SPK[s.model];
-    const angleToP = Math.atan2(dy, dx);
-    let diff = Math.abs(((angleToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
-    if (diff > Math.PI) diff = 2*Math.PI - diff;
-    const inCone = diff <= (sp.covH/2) * RAD;
-    const offAxis = inCone ? 0 : -6;
-    const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis;
-    total += Math.pow(10, spl/10);
-  });
-  return 10 * Math.log10(total || 1e-9);
-}
-
-function computeCoverage(d, target){
-  const N = 30;
-  let ok = 0, total = 0;
-  for (let i=0;i<N;i++){
-    for (let j=0;j<N;j++){
-      const rx = (i+0.5)/N, ry = (j+0.5)/N;
-      const spl = computeSPLAt(rx, ry, d);
-      total++;
-      if (spl >= target - 3) ok++;
-    }
-  }
-  return (ok/total) * 100;
-}
-
-function computeAcoustics(){
-  const d = getDims();
-  const V = d.L * d.W * d.H;
-  const S = 2 * (d.L*d.W + d.L*d.H + d.W*d.H);
-  const A = S * d.alpha;
-  const rt60 = A > 0 ? 0.161 * V / A : 0;
-
-  const pts = [{x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}];
-  const indoorSpk  = speakers.filter(s => s.zone !== 'minaret');
-  const outdoorSpk = speakers.filter(s => s.zone === 'minaret');
-  let splSum = 0;
-  pts.forEach(p => {
-    let pTotal = 0;
-    indoorSpk.forEach(s => {
-      const dx = (p.x - s.rx)*d.W, dy = (p.y - s.ry)*d.L, dz = d.H - 1.2;
-      const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-      const sp = DB_SPK[s.model];
-      const aToP = Math.atan2(dy, dx);
-      let diff = Math.abs(((aToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
-      if (diff > Math.PI) diff = 2*Math.PI - diff;
-      const inCone = diff <= (sp.covH/2)*RAD;
-      const offAxis = inCone ? 0 : -6;
-      const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis;
-      pTotal += Math.pow(10, spl/10);
-    });
-    splSum += 10*Math.log10(pTotal || 1e-9);
-  });
-  return {V, S, rt60, avgSPL: indoorSpk.length ? splSum / pts.length : 0, indoorCount: indoorSpk.length, outdoorCount: outdoorSpk.length};
-}
-
-function updateAmpLogic(){
-  const totalPwr = speakers.reduce((a,s) => a + DB_SPK[s.model].pwr, 0);
-  const N = speakers.length;
-  const amp = DB_AMP.find(a => a.id === $('amp_model').value);
-  let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
-  if (N > 0){
-    perCh = Math.max(1, Math.floor(8 / amp.minImp));
-    chNeeded = Math.ceil(N / perCh);
-    const ampsByCh  = Math.ceil(chNeeded / amp.ch);
-    const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
-    ampCount = Math.max(ampsByCh, ampsByPwr, 1);
-    reason = ampsByCh >= ampsByPwr ? `Constraint: impedance (${perCh} speakers/channel max)` : `Constraint: power (30% headroom)`;
-  }
-  ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
-  const ac = computeAcoustics();
-  const target = parseFloat($('p_purpose').value);
-  const splEl = $('spl_v'), splStat = $('st_spl');
-  if (ac.indoorCount === 0){
-    splEl.textContent = speakers.length ? 'Ext.' : '—';
-    splStat.className = 'stat';
-  } else {
-    splEl.textContent = ac.avgSPL.toFixed(1);
-    splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target-4 ? 'warn' : 'bad');
-  }
-  const rtEl = $('rt_v'), rtStat = $('st_rt');
-  rtEl.textContent = ac.rt60.toFixed(2);
-  rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
-  $('pwr_v').textContent = totalPwr;
-  $('cnt_v').textContent = N;
-  const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} minaret horns</span>` : '';
-  $('amp_count_info').innerHTML = N === 0 ? 'No speakers added yet' :
-    `⚡ Recommended: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} channels – ${perCh} speakers/ch)<br><span style="color:#8b949e">${reason}</span>${hornInfo}`;
-  if (currentView === '2d') draw();
-}
-
-/* ============ SPL Chart Image ============ */
+/* ============ SPL CHART ============ */
 function renderSPLChartImage(d, target){
-  const N = 44;
-  const W = 900, H = 520;
+  const N = 44, W = 900, H = 520;
   const cv = document.createElement('canvas');
   cv.width = W; cv.height = H;
   const c = cv.getContext('2d');
-  c.fillStyle = '#0a0e14';
-  c.fillRect(0, 0, W, H);
+  c.fillStyle = '#0a0e14'; c.fillRect(0, 0, W, H);
   const pad = 60;
-  const cw = (W - pad*2) / N;
-  const ch = (H - pad*2 - 30) / N;
+  const cw = (W - pad*2) / N, ch = (H - pad*2 - 30) / N;
   const minDB = target - 15, maxDB = target + 10;
-  for (let i=0;i<N;i++){
-    for (let j=0;j<N;j++){
-      const rx = (i+0.5)/N, ry = (j+0.5)/N;
-      const spl = computeSPLAt(rx, ry, d);
-      const t = clamp((spl - minDB) / (maxDB - minDB), 0, 1);
-      c.fillStyle = heatColor(t, 1);
-      c.fillRect(pad + i*cw, pad + j*ch, cw+0.5, ch+0.5);
-    }
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++){
+    const rx = (i+0.5)/N, ry = (j+0.5)/N;
+    if (!isInsideShape(rx, ry)) continue;
+    const spl = computeSPLAt(rx, ry, d);
+    const t = clamp((spl - minDB) / (maxDB - minDB), 0, 1);
+    c.fillStyle = heatColor(t, 1);
+    c.fillRect(pad + i*cw, pad + j*ch, cw+0.5, ch+0.5);
   }
   c.strokeStyle = '#38bdf8'; c.lineWidth = 2;
   c.strokeRect(pad, pad, N*cw, N*ch);
-  c.fillStyle = '#fff';
-  c.font = 'bold 16px Cairo, sans-serif';
-  c.textAlign = 'center';
-  c.fillText(`SPL Distribution at Listening Level — Target: ${target} dB`, W/2, 32);
-  c.font = '11px Cairo, sans-serif';
-  c.fillStyle = '#8b949e';
-  c.fillText('Blue = weak | Green/Yellow = ideal | Red = high', W/2, 50);
-  const legW = 320, legH = 18;
-  const legX = (W - legW)/2, legY = H - 32;
-  for (let i=0;i<legW;i++){
-    c.fillStyle = heatColor(i/legW, 1);
-    c.fillRect(legX + i, legY, 1, legH);
+  c.fillStyle = '#fff'; c.font = 'bold 16px Cairo, sans-serif'; c.textAlign = 'center';
+  c.fillText(`SPL Distribution — Target: ${target} dB  |  ${SHAPES_EN[getShape()]}`, W/2, 32);
+  c.font = '11px Cairo, sans-serif'; c.fillStyle = '#8b949e';
+  c.fillText(`Columns: ${columns.length}`, W/2, 50);
+  columns.forEach(col => {
+    const cx = pad + col.rx * N * cw;
+    const cy = pad + col.ry * N * ch;
+    c.fillStyle = '#6b7280'; c.beginPath();
+    c.arc(cx, cy, Math.max(3, col.radius / Math.max(d.W, d.L) * N * cw), 0, Math.PI*2);
+    c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 1; c.stroke();
+  });
+  const legW = 320, legH = 18, legX = (W - legW)/2, legY = H - 32;
+  for (let i = 0; i < legW; i++){
+    c.fillStyle = heatColor(i/legW, 1); c.fillRect(legX + i, legY, 1, legH);
   }
-  c.strokeStyle = '#8b949e'; c.lineWidth = 1;
-  c.strokeRect(legX, legY, legW, legH);
-  c.fillStyle = '#fff';
-  c.font = 'bold 11px Cairo, sans-serif';
-  c.textAlign = 'right';
-  c.fillText(`${maxDB} dB`, legX + legW + 25, legY + 13);
-  c.textAlign = 'left';
-  c.fillText(`${minDB} dB`, legX - 25, legY + 13);
+  c.strokeStyle = '#8b949e'; c.strokeRect(legX, legY, legW, legH);
+  c.fillStyle = '#fff'; c.font = 'bold 11px Cairo, sans-serif';
+  c.textAlign = 'right'; c.fillText(`${maxDB} dB`, legX + legW + 25, legY + 13);
+  c.textAlign = 'left'; c.fillText(`${minDB} dB`, legX - 25, legY + 13);
   return cv.toDataURL('image/png');
 }
 
-/* ============ Signal Flow SVG ============ */
+/* ============ Signal flow ============ */
 function renderSignalFlowSVG(fs, amp){
   const stages = [
     {label:'Audio Sources', sub:'Mic / Player', color:'#e60012'},
@@ -1630,21 +1630,19 @@ function renderSignalFlowSVG(fs, amp){
     const cx = x + i*(bw+gap);
     svg += `<rect x="${cx}" y="${y}" width="${bw}" height="${bh}" rx="12" fill="#fff" stroke="${st.color}" stroke-width="2.5"/>`;
     svg += `<rect x="${cx}" y="${y}" width="${bw}" height="6" rx="3" fill="${st.color}"/>`;
-    svg += `<text x="${cx + bw/2}" y="${y + 34}" text-anchor="middle" fill="#0d1117" font-size="12">${st.label}</text>`;
-    svg += `<text x="${cx + bw/2}" y="${y + 56}" text-anchor="middle" fill="#64748b" font-size="10">${st.sub}</text>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 34}" text-anchor="middle" fill="#0d1117" font-size="12" font-family="Cairo">${st.label}</text>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 56}" text-anchor="middle" fill="#64748b" font-size="10" font-family="Cairo">${st.sub}</text>`;
     if (i < stages.length - 1){
-      const ax1 = cx + bw, ax2 = cx + bw + gap;
-      svg += `<line x1="${ax1}" y1="${y + bh/2}" x2="${ax2 - 4}" y2="${y + bh/2}" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>`;
+      svg += `<line x1="${cx + bw}" y1="${y + bh/2}" x2="${cx + bw + gap - 4}" y2="${y + bh/2}" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>`;
     }
   });
   svg += `</svg>`;
   return svg;
 }
 
-/* ============ Generate Report ============ */
+/* ============ GENERATE REPORT ============ */
 function generateReport(){
   if (!speakers.length) return toast('Add speakers first', 'err');
-
   const d = getDims();
   const fs = $('fs_model').value;
   const fsTxt = fs === 'None' ? 'None' : fs;
@@ -1656,56 +1654,43 @@ function generateReport(){
   if (!scene3d) init3D();
   const tw = $('threeWrap');
   const prevDisplay = tw.style.display;
-  if (prevDisplay === 'none'){
-    tw.style.display = 'flex';
-    resize3D();
-  }
+  if (prevDisplay === 'none'){ tw.style.display = 'flex'; resize3D(); }
   buildScene3D();
   renderer3d.render(scene3d, camera3d);
   const img3D = renderer3d.domElement.toDataURL('image/png');
   if (prevDisplay === 'none') tw.style.display = 'none';
-
   const img2D = canvas.toDataURL('image/png');
 
   $('project_header').innerHTML = `
     <div class="meta-card"><div class="label">PROJECT</div><div class="value">${$('p_name').value || '—'}</div></div>
     <div class="meta-card"><div class="label">CLIENT</div><div class="value">${$('p_client').value || '—'}</div></div>
-    <div class="meta-card"><div class="label">RESPONSIBLE ENGINEER</div><div class="value">${$('p_engineer').value || '—'}</div></div>
+    <div class="meta-card"><div class="label">ENGINEER</div><div class="value">${$('p_engineer').value || '—'}</div></div>
     <div class="meta-card"><div class="label">DATE</div><div class="value">${today}</div></div>`;
 
   const splClass = ac.indoorCount ? (ac.avgSPL >= target ? 'good' : ac.avgSPL >= target-4 ? 'warn' : 'bad') : '';
   const rtClass = ac.rt60 <= 1.2 ? 'good' : ac.rt60 <= 1.8 ? 'warn' : 'bad';
   const covClass = coverage >= 90 ? 'good' : coverage >= 70 ? 'warn' : 'bad';
   $('kpi_grid').innerHTML = `
-    <div class="kpi-card ${splClass}">
-      <div class="kpi-value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'}<span class="unit">dB</span></div>
-      <div class="kpi-label">Avg SPL (Target ${target})</div>
-    </div>
-    <div class="kpi-card ${rtClass}">
-      <div class="kpi-value">${ac.rt60.toFixed(2)}<span class="unit">s</span></div>
-      <div class="kpi-label">Reverberation RT60</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-value">${ampResult.totalPwr}<span class="unit">W</span></div>
-      <div class="kpi-label">Total Acoustic Power</div>
-    </div>
-    <div class="kpi-card ${covClass}">
-      <div class="kpi-value">${coverage.toFixed(0)}<span class="unit">%</span></div>
-      <div class="kpi-label">Balanced Coverage</div>
-    </div>`;
+    <div class="kpi-card ${splClass}"><div class="kpi-value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'}<span class="unit">dB</span></div><div class="kpi-label">Avg SPL (Target ${target})</div></div>
+    <div class="kpi-card ${rtClass}"><div class="kpi-value">${ac.rt60.toFixed(2)}<span class="unit">s</span></div><div class="kpi-label">RT60</div></div>
+    <div class="kpi-card"><div class="kpi-value">${ampResult.totalPwr}<span class="unit">W</span></div><div class="kpi-label">Total Power</div></div>
+    <div class="kpi-card ${covClass}"><div class="kpi-value">${coverage.toFixed(0)}<span class="unit">%</span></div><div class="kpi-label">Coverage</div></div>`;
 
   $('reportImg2D').src = img2D;
   $('reportImg3D').src = img3D;
 
+  const shapeName = SHAPES_EN[getShape()];
   $('room_analysis').innerHTML = `
-    <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">HALL DIMENSIONS</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>m</small></div></div></div>
-    <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">TOTAL VOLUME</div><div class="value">${ac.V.toFixed(1)} <small>m³</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🔲</div><div class="info"><div class="label">SURFACE AREA</div><div class="value">${ac.S.toFixed(1)} <small>m²</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">HALL SHAPE</div><div class="value">${shapeName}</div></div></div>
+    <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">DIMENSIONS</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>m</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🔲</div><div class="info"><div class="label">FLOOR AREA</div><div class="value">${ac.area.toFixed(1)} <small>m²</small></div></div></div>
+    <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">VOLUME</div><div class="value">${ac.V.toFixed(1)} <small>m³</small></div></div></div>
     <div class="analysis-item"><div class="icon">⏱️</div><div class="info"><div class="label">RT60</div><div class="value">${ac.rt60.toFixed(2)} <small>s</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🎯</div><div class="info"><div class="label">ACTUAL SPL</div><div class="value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} <small>dB</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">SPEAKER COUNT</div><div class="value">${speakers.length} <small>units</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🎯</div><div class="info"><div class="label">SPL</div><div class="value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} <small>dB</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">SPEAKERS</div><div class="value">${speakers.length}</div></div></div>
+    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">COLUMNS</div><div class="value">${columns.length} <small>(active shadowing)</small></div></div></div>
     <div class="analysis-item"><div class="icon">⚡</div><div class="info"><div class="label">AMPLIFIERS</div><div class="value">${ampResult.amps} × ${ampResult.amp.id}</div></div></div>
-    <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">MINARET HORNS</div><div class="value">${ac.outdoorCount} <small>horns</small></div></div></div>`;
+    <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">MINARET HORNS</div><div class="value">${ac.outdoorCount}</div></div></div>`;
 
   $('spl_chart_img').src = renderSPLChartImage(d, target);
 
@@ -1723,114 +1708,99 @@ function generateReport(){
   let boq = '', idx = 1;
   for (const m in counts){
     const sp = DB_SPK[m];
-    const isCol = isColumnType(sp.type);
-    boq += `<tr>
-      <td class="num">${idx++}</td>
-      <td><b>Motivity Speaker ${m}</b></td>
-      <td>${TYPE_EN[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB • ${isCol ? '90° coverage' : '90°×90° coverage'}</td>
-      <td class="num">${counts[m]}</td>
-      <td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} m</td>
-    </tr>`;
+    boq += `<tr><td class="num">${idx++}</td><td><b>Motivity ${m}</b></td><td>${TYPE_EN[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB</td><td class="num">${counts[m]}</td><td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} m</td></tr>`;
   }
-  boq += `<tr>
-    <td class="num">${idx++}</td>
-    <td><b>Amplifier ${ampResult.amp.id}</b></td>
-    <td>MA Series Professional • ${ampResult.amp.pwr}W • 2 channels • Impedance ≥${ampResult.amp.minImp}Ω</td>
-    <td class="num">${ampResult.amps}</td>
-    <td class="num">—</td>
-  </tr>`;
-  if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>Digital Feedback Suppressor</b></td><td>${fsTxt} • Auto-detect • 24-bit DSP</td><td class="num">1</td><td class="num">—</td></tr>`;
-  boq += `<tr><td class="num">${idx++}</td><td><b>Speaker Cable</b></td><td>Twisted copper 2×1.5 mm² • Double shielded</td><td class="num">~${totalCable} m</td><td class="num">—</td></tr>`;
-  boq += `<tr><td class="num">${idx++}</td><td><b>Connectors &amp; Mounts</b></td><td>Speakon / brass terminals • Wall brackets</td><td class="num">${speakers.length*2}</td><td class="num">—</td></tr>`;
+  boq += `<tr><td class="num">${idx++}</td><td><b>Amplifier ${ampResult.amp.id}</b></td><td>MA • ${ampResult.amp.pwr}W • 2ch • ≥${ampResult.amp.minImp}Ω</td><td class="num">${ampResult.amps}</td><td class="num">—</td></tr>`;
+  if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>Feedback Suppressor</b></td><td>${fsTxt}</td><td class="num">1</td><td class="num">—</td></tr>`;
+  boq += `<tr><td class="num">${idx++}</td><td><b>Speaker Cable</b></td><td>2×1.5 mm² copper</td><td class="num">~${totalCable} m</td><td class="num">—</td></tr>`;
   $('boq-body').innerHTML = boq;
 
   $('signal_flow').innerHTML = renderSignalFlowSVG(fs, ampResult.amp);
 
-  const rtEval = ac.rt60 <= 1.2 ? '<b style="color:#16a34a">Excellent for speech</b>' : ac.rt60 <= 1.8 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Requires treatment</b>';
-  const splEval = !ac.indoorCount ? '— No indoor speakers'
-    : (ac.avgSPL >= target ? '<b style="color:#16a34a">✅ Meets target</b>' : `<b style="color:#dc2626">⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target</b>`);
-  const covEval = coverage >= 90 ? '<b style="color:#16a34a">Excellent coverage (≥90%)</b>' : coverage >= 70 ? '<b style="color:#d97706">Acceptable coverage</b>' : '<b style="color:#dc2626">Insufficient coverage</b>';
+  const rtEval = ac.rt60 <= 1.2 ? '<b style="color:#16a34a">Excellent</b>' : ac.rt60 <= 1.8 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Requires treatment</b>';
+  const splEval = !ac.indoorCount ? '—' : (ac.avgSPL >= target ? '<b style="color:#16a34a">✅ Meets target</b>' : `<b style="color:#dc2626">⚠️ ${(target - ac.avgSPL).toFixed(1)} dB short</b>`);
+  const covEval = coverage >= 90 ? '<b style="color:#16a34a">Excellent</b>' : coverage >= 70 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Insufficient</b>';
 
-  let notesHTML = '<ul>';
-  notesHTML += `<li><b>RT60 = ${ac.rt60.toFixed(2)} seconds</b> — computed using Sabine's equation: V=${ac.V.toFixed(0)} m³, S=${ac.S.toFixed(0)} m², α=${d.alpha} → ${rtEval}</li>`;
-  notesHTML += `<li>Average SPL at 6 listening points = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}</li>`;
-  notesHTML += `<li>Balanced coverage ratio (SPL ≥ ${target-3} dB) = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
-  notesHTML += `<li>Selected <b>${ampResult.amps} × ${ampResult.amp.id}</b> with 30% power headroom and ≥${ampResult.amp.minImp}Ω load per channel to avoid stress</li>`;
-  if (fs !== 'None'){
-    notesHTML += `<li>Integrated <b>${fsTxt}</b> digital feedback killer to eliminate feedback in high-reverberance mosque environments</li>`;
-  }
-  if (ac.outdoorCount){
-    notesHTML += `<li><b>${ac.outdoorCount} outdoor UT-08 horns (60W)</b> mounted on the minaret for Adhan and courtyard coverage up to 150 m</li>`;
-  }
-  notesHTML += `<li>Coverage direction independently adjusted for each speaker using the rotation handle for uniform distribution and minimized interference</li>`;
-  notesHTML += `<li>Recommended to use twisted copper cables 2×1.5 mm² up to 30 m, and 2×2.5 mm² for longer runs</li>`;
-  notesHTML += '</ul>';
-  $('eng_notes').innerHTML = notesHTML;
+  let notes = '<ul>';
+  notes += `<li><b>Hall shape: ${shapeName}</b> — floor area ${ac.area.toFixed(1)} m², volume ${ac.V.toFixed(0)} m³</li>`;
+  notes += `<li><b>${columns.length} structural columns</b> included in acoustic model: each column casts a shadow (up to −8 dB) on downstream seating</li>`;
+  notes += `<li>RT60 = <b>${ac.rt60.toFixed(2)} s</b> (Sabine) → ${rtEval}</li>`;
+  notes += `<li>Average SPL = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}</li>`;
+  notes += `<li>Balanced coverage = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
+  notes += `<li>${ampResult.amps} × ${ampResult.amp.id} selected with 30% headroom</li>`;
+  if (fs !== 'None') notes += `<li>${fsTxt} digital feedback suppressor engaged</li>`;
+  if (ac.outdoorCount) notes += `<li>${ac.outdoorCount} UT-08 horns on the minaret for outdoor coverage</li>`;
+  if (columns.length) notes += `<li>Recommend placing extra speakers near dense column rows to compensate for shadows</li>`;
+  notes += '</ul>';
+  $('eng_notes').innerHTML = notes;
 
   const standards = [
-    {n:'IEC 60268-16', d:'Speech intelligibility rating (STI/RASTI) — achieves ≥ 0.6'},
-    {n:'IEC 60268-5', d:'Speaker specifications, sensitivity, and coverage measurement'},
-    {n:'ANSI S1.4', d:'Sound level measurement in decibels (A-weighted)'},
-    {n:'ISO 3382-1', d:'Reverberation time measurement in rooms — RT60'},
-    {n:'NFPA 72', d:'Standard for alarm and emergency voice systems'},
-    {n:'Saudi Building Code', d:'Acoustic insulation requirements for religious buildings'},
-    {n:'SABER / SASO', d:'Conformity certificates for audio equipment'},
-    {n:'HTA / EASE', d:'Certified acoustic simulation software for verification'}
+    {n:'IEC 60268-16', d:'Speech intelligibility (STI) ≥ 0.6'},
+    {n:'IEC 60268-5', d:'Loudspeaker specifications and sensitivity'},
+    {n:'ANSI S1.4', d:'Sound level measurement (A-weighted)'},
+    {n:'ISO 3382-1', d:'Reverberation time RT60 measurement'},
+    {n:'NFPA 72', d:'Voice alarm and emergency systems'},
+    {n:'Saudi Building Code', d:'Acoustic insulation for religious buildings'},
+    {n:'SABER / SASO', d:'Audio equipment conformity certificates'},
+    {n:'HTA / EASE', d:'Certified acoustic simulation software'}
   ];
   $('standards_list').innerHTML = standards.map(s => `<li><b>${s.n}</b>${s.d}</li>`).join('');
 
   $('sig_engineer').textContent = $('p_engineer').value || '—';
   $('sig_client').textContent = $('p_client').value || '—';
   $('report_date').textContent = today;
-
   $('reportView').style.display = 'block';
   $('reportView').scrollTop = 0;
 }
 
-/* ============ Save/Load ============ */
+/* ============ SAVE/LOAD ============ */
 function collectProjectData(){
   return {
-    version: 3,
-    speakers, manualMode,
-    dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value},
+    version: 4,
+    speakers, columns, manualMode,
+    dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value, shape:getShape()},
+    colRad: $('col_radius').value, colSpacing: $('col_spacing').value, colEnabled: $('colEnabled').checked,
     amp: $('amp_model').value, fs: $('fs_model').value, model: $('m_model').value,
     addHorns: $('addHornsChk').checked,
     info: {name:$('p_name').value, client:$('p_client').value, engineer:$('p_engineer').value, purpose:$('p_purpose').value},
-    uid
+    uid, columnId
   };
 }
 function applyProjectData(d){
   pushUndo();
   speakers = (d.speakers || []).map(s => {
     const ns = {...s, zone: s.zone || 'mosque'};
-    if (ns.zone !== 'minaret' && ns.facing === undefined)
-      ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
+    if (ns.zone !== 'minaret' && ns.facing === undefined) ns.facing = ns.rx < 0.5 ? 0 : Math.PI;
     return ns;
   });
+  columns = (d.columns || []).map(c => ({...c, radius: c.radius || 0.35}));
   manualMode = !!d.manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
   $('m_len').value = d.dims.len; $('m_wid').value = d.dims.wid;
   $('m_h').value = d.dims.h; $('m_alpha').value = d.dims.alpha;
+  if (d.dims.shape) $('m_shape').value = d.dims.shape;
+  if (d.colRad) $('col_radius').value = d.colRad;
+  if (d.colSpacing) $('col_spacing').value = d.colSpacing;
+  if (d.colEnabled !== undefined) $('colEnabled').checked = d.colEnabled;
   $('amp_model').value = d.amp; $('fs_model').value = d.fs; $('m_model').value = d.model;
   if (d.addHorns !== undefined) $('addHornsChk').checked = d.addHorns;
-  $('p_name').value = d.info.name;
-  $('p_client').value = d.info.client || '';
-  $('p_engineer').value = d.info.engineer || '';
-  $('p_purpose').value = d.info.purpose || '90';
+  $('p_name').value = d.info.name; $('p_client').value = d.info.client || '';
+  $('p_engineer').value = d.info.engineer || ''; $('p_purpose').value = d.info.purpose || '90';
   uid = d.uid || speakers.length;
+  columnId = d.columnId || columns.length;
   selectedId = null;
   updateRotationPanel(); updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
 }
 function saveProject(){
-  try { localStorage.setItem('motivity_project_en', JSON.stringify(collectProjectData())); toast('💾 Project saved', 'ok'); }
+  try { localStorage.setItem('motivity_project_en', JSON.stringify(collectProjectData())); toast('💾 Saved', 'ok'); }
   catch(e){ toast('Storage unavailable', 'err'); }
 }
 function loadProject(){
   const raw = localStorage.getItem('motivity_project_en');
-  if (!raw) return toast('No saved project found', 'warn');
-  try { applyProjectData(JSON.parse(raw)); toast('📂 Project loaded', 'ok'); }
-  catch(e){ toast('Corrupt saved file', 'err'); }
+  if (!raw) return toast('No saved project', 'warn');
+  try { applyProjectData(JSON.parse(raw)); toast('📂 Loaded', 'ok'); }
+  catch(e){ toast('Corrupt file', 'err'); }
 }
 function exportProject(){
   const blob = new Blob([JSON.stringify(collectProjectData(), null, 2)], {type:'application/json'});
@@ -1856,7 +1826,7 @@ function importProject(){
   inp.click();
 }
 
-/* ============ Keyboard ============ */
+/* ============ KEYBOARD ============ */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
@@ -1885,7 +1855,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ============ Init ============ */
+/* ============ INIT ============ */
 window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
