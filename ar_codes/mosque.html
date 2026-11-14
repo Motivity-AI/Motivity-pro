@@ -7,7 +7,7 @@
 <title>موتيفيتي برو - نظام تصميم صوتيات المساجد</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--panel:#161b22;--card:#21262d;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+:root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--panel:#161b22;--card:#21262d;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--purple:#a78bfa;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;font-family:'Cairo','Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%}
 body{background:var(--bg);color:var(--text);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none}
@@ -197,7 +197,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
       <select id="m_shape" onchange="onShapeChange()">
         <option value="rect">مستطيل</option>
         <option value="circle">دائري / بيضاوي</option>
-        <option value="octagon">مثمّن (Octagon)</option>
+        <option value="octagon">مثمّن</option>
         <option value="lshape">شكل L</option>
       </select>
       <label class="checkbox-row" style="margin-top:10px">
@@ -230,13 +230,14 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
       </label>
       <button class="btn-secondary" onclick="aiSmartDistribute()">✨ التوزيع الذكي التلقائي</button>
       <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 الوضع اليدوي</button>
-      <div class="hint">💡 اضغط في القاعة لوضع سماعة • اضغط على المئذنة لإضافة بوق • اسحب المقبض الأبيض للتدوير</div>
+      <div class="hint">💡 اضغط داخل القاعة لوضع سماعة • اضغط على المئذنة لإضافة بوق • اسحب المقبض الأبيض للتدوير</div>
     </div>
 
     <div class="box" id="rotationBox" style="display:none;border-color:var(--blue)">
       <h3>🎯 اتجاه التغطية <span id="rotModel" style="color:var(--red);font-size:11px"></span></h3>
       <label>الزاوية: <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°</label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1" onpointerdown="pushUndo()" oninput="setSelectedAngle(this.value)">
+      <div class="hint" id="rotHint">↔️ اسحب المؤشر أو المقبض الأبيض للتدوير</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ إلغاء التحديد</button>
       <button class="btn-reset" onclick="deleteSelected()">🗑️ حذف هذه السماعة</button>
     </div>
@@ -339,18 +340,22 @@ const DB_SPK = {
   "AT-265": {pwr:250, sens:98, covH:100, covV:60,  imp:8, type:"Column"},
   "CS-08":  {pwr:150, sens:92, covH:90,  covV:90,  imp:8, type:"Wall"},
   "CS-06":  {pwr:100, sens:90, covH:90,  covV:90,  imp:8, type:"Wall"},
-  "UT-08":  {pwr:60,  sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"}
+  "UT-08":  {pwr:60,  sens:96, covH:90,  covV:70,  imp:8, type:"Outdoor Horn"},
+  "CS-606": {pwr:6,   sens:88, covH:120, covV:120, imp:8, type:"Ceiling"},
+  "CS-612": {pwr:12,  sens:90, covH:110, covV:110, imp:8, type:"Ceiling"},
+  "CS-620": {pwr:20,  sens:92, covH:100, covV:100, imp:8, type:"Ceiling"}
 };
 const DB_AMP = [
   {id:"MA-450C",pwr:900,ch:2,minImp:4},{id:"MA-600C",pwr:1200,ch:2,minImp:4},
   {id:"MA-800C",pwr:1600,ch:2,minImp:4},{id:"MA-1000C",pwr:2000,ch:2,minImp:4},
   {id:"MA-1200C",pwr:2400,ch:2,minImp:4},{id:"MA-1500C",pwr:3000,ch:2,minImp:4}
 ];
-const MINARET_M = 2.5, MOUNT_H_WALL = 2.8;
+const MINARET_M = 2.5, MOUNT_H_WALL = 2.8, LISTENER_H = 1.2;
 const isWallType = t => t==='Wall';
 const isHornType = t => t==='Outdoor Horn';
 const isColumnType = t => t==='Column';
-const TYPE_AR = {Column:"عمودي", Wall:"جداري", "Outdoor Horn":"بوق خارجي"};
+const isCeilingType = t => t==='Ceiling';
+const TYPE_AR = {Column:"عمودي", Wall:"جداري", "Outdoor Horn":"بوق خارجي", Ceiling:"سقفي"};
 const SHAPES_AR = {rect:'مستطيل', circle:'دائري', octagon:'مثمّن', lshape:'شكل L'};
 
 /* ============ الحالة ============ */
@@ -417,6 +422,7 @@ function getDims(){
   };
 }
 function getShape(){ return $('m_shape') ? $('m_shape').value : 'rect'; }
+function getModelType(id){ return DB_SPK[id] ? DB_SPK[id].type : 'Column'; }
 
 /* ============ حسابات الشكل ============ */
 function isInsideShape(rx, ry, shape){
@@ -435,7 +441,6 @@ function isInsideShape(rx, ry, shape){
   }
   return true;
 }
-
 function pointToSegmentDist(px, py, x1, y1, x2, y2){
   const dx = x2 - x1, dy = y2 - y1;
   const len2 = dx*dx + dy*dy;
@@ -444,7 +449,6 @@ function pointToSegmentDist(px, py, x1, y1, x2, y2){
   t = Math.max(0, Math.min(1, t));
   return Math.hypot(px - (x1 + t*dx), py - (y1 + t*dy));
 }
-
 function distanceToBoundary(rx, ry, shape){
   shape = shape || getShape();
   if (shape === 'circle') {
@@ -458,10 +462,7 @@ function distanceToBoundary(rx, ry, shape){
     return Math.min(d1, d2, d3) * 0.5;
   }
   if (shape === 'lshape') {
-    const segs = [
-      [0,0, 1,0], [1,0, 1,0.5], [1,0.5, 0.5,0.5],
-      [0.5,0.5, 0.5,1], [0.5,1, 0,1], [0,1, 0,0]
-    ];
+    const segs = [[0,0,1,0],[1,0,1,0.5],[1,0.5,0.5,0.5],[0.5,0.5,0.5,1],[0.5,1,0,1],[0,1,0,0]];
     let minD = Infinity;
     for (const [x1,y1,x2,y2] of segs){
       const d = pointToSegmentDist(rx, ry, x1, y1, x2, y2);
@@ -471,7 +472,6 @@ function distanceToBoundary(rx, ry, shape){
   }
   return Math.min(rx, 1 - rx, ry, 1 - ry);
 }
-
 function pathHallShape(){
   const {x0, y0, W, L} = layout;
   const shape = getShape();
@@ -532,10 +532,12 @@ function getSpeakerPos(s){
 }
 function getFacing(s){
   if (s.zone === 'minaret') return s.ang;
+  if (isCeilingType(getModelType(s.model))) return -Math.PI/2;
   return (s.facing !== undefined ? s.facing : Math.PI/2);
 }
 function isOnWall(s){
   if (s.zone === 'minaret') return false;
+  if (isCeilingType(getModelType(s.model))) return false;
   return distanceToBoundary(s.rx, s.ry) < 0.04;
 }
 function whichWall(s){
@@ -553,7 +555,8 @@ function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
   for (const id in DB_SPK){
-    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_AR[DB_SPK[id].type]} ${DB_SPK[id].pwr}W</option>`;
+    const t = DB_SPK[id].type;
+    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_AR[t]} ${DB_SPK[id].pwr}W</option>`;
   }
   DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
   s2.value = "MA-800C";
@@ -578,28 +581,42 @@ function heatColor(t, a){
 }
 
 /* ============ حساب SPL ============ */
-function computeSPLAt(rx, ry, d, listH = 1.2){
+function computeSPLAt(rx, ry, d, listH = LISTENER_H){
   if (!isInsideShape(rx, ry)) return 0;
   const indoor = speakers.filter(s => s.zone !== 'minaret');
   let total = 0;
   for (const s of indoor) {
+    const sp = DB_SPK[s.model];
     const dx = (rx - s.rx) * d.W;
     const dy = (ry - s.ry) * d.L;
-    const dz = d.H - listH;
-    const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
-    const sp = DB_SPK[s.model];
-    const aToP = Math.atan2(dy, dx);
-    let diff = Math.abs(((aToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
-    if (diff > Math.PI) diff = 2*Math.PI - diff;
-    const inCone = diff <= (sp.covH/2) * RAD;
-    const offAxis = inCone ? 0 : -6;
     const colAtt = columnBlocking(s.rx, s.ry, rx, ry, d);
-    const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis - colAtt;
+    let spl;
+    if (isCeilingType(sp.type)) {
+      // سماعة سقفية: تشع عمودياً للأسفل بمخروط
+      const dz = d.H - listH;
+      const horiz = Math.sqrt(dx*dx + dy*dy);
+      const dist = Math.max(1, Math.sqrt(horiz*horiz + dz*dz));
+      const theta = Math.atan2(horiz, dz) * DEG;
+      const covHalf = sp.covH / 2;
+      let offAxis;
+      if (theta <= covHalf) offAxis = 0;
+      else if (theta <= covHalf + 15) offAxis = -6 * (theta - covHalf) / 15;
+      else offAxis = -12;
+      spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis - colAtt;
+    } else {
+      const dz = d.H - listH;
+      const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+      const aToP = Math.atan2(dy, dx);
+      let diff = Math.abs(((aToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+      if (diff > Math.PI) diff = 2*Math.PI - diff;
+      const inCone = diff <= (sp.covH/2) * RAD;
+      const offAxis = inCone ? 0 : -6;
+      spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis - colAtt;
+    }
     total += Math.pow(10, spl/10);
   }
   return 10 * Math.log10(total || 1e-9);
 }
-
 function computeCoverage(d, target){
   const N = 30; let ok = 0, total = 0;
   for (let i=0;i<N;i++) for (let j=0;j<N;j++){
@@ -610,7 +627,6 @@ function computeCoverage(d, target){
   }
   return total ? (ok/total)*100 : 0;
 }
-
 function computeAcoustics(){
   const d = getDims();
   const shape = getShape();
@@ -662,10 +678,13 @@ function updateAmpLogic(){
   $('pwr_v').textContent = totalPwr;
   $('cnt_v').textContent = N;
   $('colInfo').textContent = `${columns.length} عمود`;
+
+  const ceilCount = speakers.filter(s => isCeilingType(getModelType(s.model))).length;
+  const ceilInfo = ceilCount ? `<br><span style="color:#a78bfa">🔘 ${ceilCount} سماعة سقفية (يُفضّل نظام 100V)</span>` : '';
   const colInfo = columns.length ? `<br><span style="color:#ff8c1a">🏛️ ${columns.length} عمود (حجب صوتي)</span>` : '';
   const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} أبواق على المئذنة</span>` : '';
   $('amp_count_info').innerHTML = N === 0 ? 'لا توجد سماعات بعد' :
-    `⚡ الموصى به: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} قناة – ${perCh} سماعة/قناة)<br><span style="color:#8b949e">${reason}</span>${hornInfo}${colInfo}`;
+    `⚡ الموصى به: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} قناة – ${perCh} سماعة/قناة)<br><span style="color:#8b949e">${reason}</span>${hornInfo}${ceilInfo}${colInfo}`;
   if (currentView === '2d') draw();
 }
 
@@ -702,6 +721,9 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "rgba(0,0,0,.7)";
   ctx.fillRect(isLeft ? lx-5 : lx-tw+5, py-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, py+4);
+  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
+  ctx.fillText(isCol ? "عمودي" : "جداري", lx, py+18);
 }
 
 function drawFreeSpeaker(pos, s, isSel, db){
@@ -728,6 +750,66 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.fillStyle = "rgba(0,0,0,.75)";
   ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
+  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.fillStyle = "#a0aec0";
+  ctx.fillText("موضع حر", lx, pos.y+18);
+}
+
+/* ============ سماعة السقف (2D) ============ */
+function drawCeilingSpeaker(pos, s, isSel){
+  const r = isSel ? 14 : 11;
+  const baseColor = "#a78bfa";
+  // هالة
+  ctx.fillStyle = isSel ? "rgba(167,139,250,.35)" : "rgba(167,139,250,.18)";
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
+  // الجسم
+  ctx.fillStyle = isSel ? "#38bdf8" : baseColor;
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
+  // حلقات الشبكة
+  ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 1;
+  for (let i = 1; i <= 3; i++){
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r * i / 4, 0, Math.PI*2); ctx.stroke();
+  }
+  // خطوط شعاعية
+  ctx.strokeStyle = "rgba(0,0,0,.4)";
+  for (let a = 0; a < Math.PI*2; a += Math.PI/6){
+    ctx.beginPath();
+    ctx.moveTo(pos.x + Math.cos(a) * r * 0.25, pos.y + Math.sin(a) * r * 0.25);
+    ctx.lineTo(pos.x + Math.cos(a) * r * 0.9, pos.y + Math.sin(a) * r * 0.9);
+    ctx.stroke();
+  }
+  // مركز
+  ctx.fillStyle = "#fff";
+  ctx.beginPath(); ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI*2); ctx.fill();
+  // حلقة التحديد
+  if (isSel){
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
+  }
+  // سهم للأسفل
+  ctx.strokeStyle = isSel ? "#fff" : "#a78bfa";
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y + r + 3);
+  ctx.lineTo(pos.x, pos.y + r + 13);
+  ctx.moveTo(pos.x - 4, pos.y + r + 9);
+  ctx.lineTo(pos.x, pos.y + r + 13);
+  ctx.lineTo(pos.x + 4, pos.y + r + 9);
+  ctx.stroke();
+  // اسم
+  const rightSide = pos.x > layout.x0 + layout.W/2;
+  const lx = pos.x + (rightSide ? -1 : 1) * (r + 22);
+  ctx.font = "bold 12px Cairo, sans-serif";
+  ctx.textAlign = rightSide ? "right" : "left";
+  const tw = ctx.measureText(s.model).width + 10;
+  ctx.fillStyle = "rgba(0,0,0,.75)";
+  ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
+  ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
+  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.fillStyle = "#a78bfa";
+  ctx.fillText("سقفي", lx, pos.y+18);
 }
 
 function drawColumns2D(){
@@ -815,23 +897,38 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
+  // التغطية
   if (showCoverage){
     ctx.save(); pathHallShape(); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
-      const half = (db.covH/2)*RAD;
       const isSel = s.id === selectedId;
-      ctx.fillStyle = isColumnType(db.type)
-        ? (isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)')
-        : (isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)');
-      const pos = getSpeakerPos(s), facing = getFacing(s);
-      const R = Math.max(W, L) * 2.5;
-      ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-      ctx.arc(pos.x, pos.y, R, facing-half, facing+half); ctx.closePath(); ctx.fill();
+      const pos = getSpeakerPos(s);
+      if (isCeilingType(db.type)){
+        // بقعة دائرية على الأرض
+        const covRadius = (d.H - LISTENER_H) * Math.tan((db.covH/2) * RAD) * layout.scale;
+        ctx.fillStyle = isSel ? 'rgba(167,139,250,.28)' : 'rgba(167,139,250,.10)';
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, covRadius, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = isSel ? 'rgba(167,139,250,.7)' : 'rgba(167,139,250,.3)';
+        ctx.lineWidth = isSel ? 2 : 1;
+        ctx.stroke();
+      } else {
+        const half = (db.covH/2)*RAD;
+        const facing = getFacing(s);
+        ctx.fillStyle = isColumnType(db.type)
+          ? (isSel ? 'rgba(56,189,248,.28)' : 'rgba(56,189,248,.12)')
+          : (isSel ? 'rgba(255,140,26,.35)' : 'rgba(255,140,26,.16)');
+        const R = Math.max(W, L) * 2.5;
+        ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+        ctx.arc(pos.x, pos.y, R, facing-half, facing+half); ctx.closePath(); ctx.fill();
+      }
     });
     ctx.restore();
   }
 
+  // السماعات
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -844,12 +941,14 @@ function draw(){
       ctx.beginPath(); ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
       ctx.restore();
+    } else if (isCeilingType(db.type)){
+      drawCeilingSpeaker(pos, s, isSel);
     } else if (isWallType(db.type) && whichWall(s)){
       drawWallSpeaker(pos, s, isSel, db);
     } else {
       drawFreeSpeaker(pos, s, isSel, db);
     }
-    if (isSel){
+    if (isSel && !isCeilingType(db.type)){
       const hx = pos.x + Math.cos(facing)*52;
       const hy = pos.y + Math.sin(facing)*52;
       ctx.strokeStyle = "rgba(56,189,248,.8)"; ctx.lineWidth = 2; ctx.setLineDash([5,4]);
@@ -897,12 +996,15 @@ function hitTestColumn(mx, my){
   return null;
 }
 function hitRotateHandle(s, mx, my){
+  if (isCeilingType(getModelType(s.model))) return false;
   const pos = getSpeakerPos(s), facing = getFacing(s);
   const hx = pos.x + Math.cos(facing)*52, hy = pos.y + Math.sin(facing)*52;
   return Math.hypot(mx-hx, my-hy) < 24;
 }
 function addSpeaker(rx, ry, model, facing){
-  const s = {id: ++uid, rx, ry, model, zone:'mosque', facing:(facing !== undefined ? facing : Math.PI/2)};
+  const t = getModelType(model);
+  const face = isCeilingType(t) ? -Math.PI/2 : (facing !== undefined ? facing : Math.PI/2);
+  const s = {id: ++uid, rx, ry, model, zone:'mosque', facing: face};
   speakers.push(s); return s;
 }
 function addMinaretHorn(model, ang){ speakers.push({id: ++uid, zone:'minaret', ang, model}); }
@@ -951,29 +1053,41 @@ function onPointerDown(e){
 
   const model = $('m_model').value;
   const spk = DB_SPK[model];
+  const type = spk.type;
 
+  // الوضع اليدوي
   if (manualMode){
     pushUndo();
     if (isMinaretArea(m)){
       addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
       toast('تم إضافة بوق على المئذنة', 'ok');
-    } else if (isHornType(spk.type)){
+    } else if (isHornType(type)){
       undoStack.pop(); updateUndoButtons();
       toast('الأبواق تُوضع فقط على المئذنة', 'warn'); return;
+    } else if (!p.inside){
+      undoStack.pop(); updateUndoButtons();
+      toast('اضغط داخل القاعة', 'warn'); return;
     } else {
       const cx = layout.x0 + layout.W*0.5, cy = layout.y0 + layout.L*0.5;
-      addSpeaker(p.rx, p.ry, model, Math.atan2(cy - m.my, cx - m.mx));
-      toast('تم وضع السماعة', 'ok');
+      const face = isCeilingType(type) ? -Math.PI/2 : Math.atan2(cy - m.my, cx - m.mx);
+      addSpeaker(p.rx, p.ry, model, face);
+      toast(isCeilingType(type) ? 'تم وضع سماعة السقف' : 'تم وضع السماعة', 'ok');
     }
     selectedId = null; updateRotationPanel(); updateAmpLogic(); draw();
     if (scene3d) buildScene3D(); return;
   }
 
-  if (isHornType(spk.type)){
+  // الوضع التلقائي
+  if (isHornType(type)){
     if (isMinaretArea(m)){
       pushUndo();
       addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
     } else { toast('الأبواق تُوضع فقط على المئذنة', 'warn'); return; }
+  } else if (isCeilingType(type)){
+    if (!p.inside) { toast('اضغط داخل القاعة', 'warn'); return; }
+    pushUndo();
+    addSpeaker(p.rx, p.ry, model, -Math.PI/2);
+    toast('تم وضع سماعة السقف', 'ok');
   } else {
     pushUndo();
     const shape = getShape();
@@ -1168,7 +1282,6 @@ function buildScene3D(){
   const wallMat = new THREE.MeshStandardMaterial({color:0x38bdf8, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
   const edgeMat = new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85});
 
-  // Floor
   if (shape === 'circle'){
     const R = Math.min(W, L) / 2;
     const fGeo = new THREE.CircleGeometry(R, 64); fGeo.rotateX(-Math.PI/2);
@@ -1197,7 +1310,6 @@ function buildScene3D(){
     const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
   }
 
-  // Walls
   if (shape === 'circle' || shape === 'octagon'){
     const R = Math.min(W, L) / 2;
     const sides = shape === 'circle' ? 64 : 8;
@@ -1233,7 +1345,18 @@ function buildScene3D(){
     wire.position.set(0, H/2, 0); group3d.add(wire);
   }
 
-  // Mihrab
+  // سقف شفاف (لإظهار السماعات السقفية)
+  const hasCeiling = speakers.some(s => isCeilingType(getModelType(s.model)));
+  if (hasCeiling){
+    const ceilGeo = new THREE.PlaneGeometry(W, L);
+    const ceilMat = new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.03, side:THREE.DoubleSide, depthWrite:false});
+    const ceilMesh = new THREE.Mesh(ceilGeo, ceilMat);
+    ceilMesh.rotation.x = Math.PI/2;
+    ceilMesh.position.y = H;
+    group3d.add(ceilMesh);
+  }
+
+  // المحراب
   const mShape = new THREE.Shape();
   mShape.moveTo(-2.5, 0); mShape.lineTo(-2.5, 3.2);
   mShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
@@ -1243,7 +1366,7 @@ function buildScene3D(){
     new THREE.MeshStandardMaterial({color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7}));
   mihrab.position.set(0, 0.1, -L/2 + 0.08); group3d.add(mihrab);
 
-  // Minaret
+  // المئذنة
   const minaretH = Math.max(H * 2.2, 14);
   const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
   const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20),
@@ -1259,7 +1382,7 @@ function buildScene3D(){
     new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2}));
   crescent.position.set(mX, minaretH + 1.6, mZ); crescent.rotation.z = Math.PI / 2; group3d.add(crescent);
 
-  // Columns
+  // الأعمدة
   columns.forEach(c => {
     const cx = (c.rx - 0.5) * W, cz = (c.ry - 0.5) * L;
     const geo = new THREE.CylinderGeometry(c.radius, c.radius, H, 16);
@@ -1271,6 +1394,7 @@ function buildScene3D(){
     cap.position.set(cx, H - 0.15, cz); group3d.add(cap);
   });
 
+  // السماعات
   speakers.forEach(s => addSpeakerMesh3D(s, d));
 
   const maxDim = Math.max(W, L, minaretH);
@@ -1285,6 +1409,7 @@ function addSpeakerMesh3D(s, d){
   const W = d.W, L = d.L, H = d.H;
   const shape = getShape();
 
+  // بوق المئذنة
   if (s.zone === 'minaret'){
     const minaretH = Math.max(H * 2.2, 14);
     const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
@@ -1307,6 +1432,54 @@ function addSpeakerMesh3D(s, d){
     return;
   }
 
+  // سماعة السقف
+  if (isCeilingType(sp.type)){
+    const cx = (s.rx - 0.5) * W;
+    const cz = (s.ry - 0.5) * L;
+    const cy = H - 0.05;
+
+    // حلقة خارجية
+    const bezelGeo = new THREE.CylinderGeometry(0.28, 0.30, 0.08, 24);
+    const bezel = new THREE.Mesh(bezelGeo, new THREE.MeshStandardMaterial({
+      color:0x8b949e, metalness:0.7, roughness:0.35, emissive:0x1a1f26, emissiveIntensity:0.2
+    }));
+    bezel.position.set(cx, cy, cz);
+    group3d.add(bezel);
+
+    // الشبكة الداخلية
+    const grilleGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 24);
+    const grille = new THREE.Mesh(grilleGeo, new THREE.MeshStandardMaterial({
+      color:0x0a0e14, metalness:0.4, roughness:0.7
+    }));
+    grille.position.set(cx, cy - 0.055, cz);
+    group3d.add(grille);
+
+    // حلقة بنفسجية مميزة
+    const accentGeo = new THREE.TorusGeometry(0.26, 0.015, 8, 24);
+    accentGeo.rotateX(Math.PI/2);
+    const accent = new THREE.Mesh(accentGeo, new THREE.MeshStandardMaterial({
+      color:0xa78bfa, emissive:0x4c1d95, emissiveIntensity:0.6, metalness:0.8, roughness:0.3
+    }));
+    accent.position.set(cx, cy - 0.05, cz);
+    group3d.add(accent);
+
+    // مخروط التغطية للأسفل
+    if (showCoverage){
+      const covHalf = (sp.covH/2) * Math.PI / 180;
+      const covLen = H - LISTENER_H;
+      const covRadius = Math.tan(covHalf) * covLen;
+      const covGeo = new THREE.ConeGeometry(covRadius, covLen, 32, 1, true);
+      const covMat = new THREE.MeshBasicMaterial({
+        color:0xa78bfa, transparent:true, opacity:0.07, side:THREE.DoubleSide, depthWrite:false
+      });
+      const cov = new THREE.Mesh(covGeo, covMat);
+      cov.position.set(cx, (H + LISTENER_H) / 2, cz);
+      group3d.add(cov);
+    }
+    return;
+  }
+
+  // سماعة جدارية/عمودية
   let wx, wy, wz, facingRad;
   const onWall = isOnWall(s);
   if (onWall){
@@ -1437,20 +1610,40 @@ function updateRotationPanel(){
   const box = $('rotationBox');
   if (!s){ box.style.display = 'none'; return; }
   box.style.display = 'block';
+  const type = s.zone === 'minaret' ? 'Outdoor Horn' : getModelType(s.model);
+  const isCeil = isCeilingType(type);
+
   let posLabel;
   if (s.zone === 'minaret') posLabel = ' (بوق المئذنة)';
+  else if (isCeil) posLabel = ' (سقفي - للأسفل)';
   else if (isOnWall(s)) posLabel = ` (${whichWall(s) === 'left' ? 'الجدار الأيسر' : whichWall(s) === 'right' ? 'الجدار الأيمن' : 'جدار منحنٍ'})`;
   else posLabel = ' (موضع حر)';
   $('rotModel').textContent = `— ${s.model}${posLabel}`;
-  let deg = getFacing(s) * DEG;
-  while (deg > 180) deg -= 360;
-  while (deg < -180) deg += 360;
-  deg = Math.round(deg);
-  $('angleSlider').value = deg; $('angleVal').textContent = deg;
+
+  const slider = $('angleSlider'), valEl = $('angleVal'), hint = $('rotHint');
+  if (isCeil){
+    slider.disabled = true;
+    slider.style.opacity = '0.3';
+    valEl.textContent = 'غير قابل';
+    hint.textContent = '🔘 السماعات السقفية تشع للأسفل مباشرةً — لا حاجة للتدوير';
+    hint.style.color = '#a78bfa';
+  } else {
+    slider.disabled = false;
+    slider.style.opacity = '1';
+    hint.textContent = '↔️ اسحب المؤشر أو المقبض الأبيض للتدوير';
+    hint.style.color = '';
+    let deg = getFacing(s) * DEG;
+    while (deg > 180) deg -= 360;
+    while (deg < -180) deg += 360;
+    deg = Math.round(deg);
+    slider.value = deg;
+    valEl.textContent = deg;
+  }
 }
 function setSelectedAngle(val){
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
+  if (isCeilingType(getModelType(s.model))) return;
   const rad = parseFloat(val) * RAD;
   if (s.zone === 'minaret') s.ang = rad; else s.facing = rad;
   $('angleVal').textContent = Math.round(val);
@@ -1458,7 +1651,7 @@ function setSelectedAngle(val){
   if (scene3d && currentView === '3d') buildScene3D();
 }
 
-/* ============ توزيع الأعمدة تلقائياً ============ */
+/* ============ توزيع الأعمدة ============ */
 function autoLayoutColumns(){
   const d = getDims();
   const shape = getShape();
@@ -1517,6 +1710,7 @@ function aiSmartDistribute(){
   const spk = DB_SPK[model];
   const addHorns = $('addHornsChk').checked;
   const isHorn = isHornType(spk.type);
+  const isCeil = isCeilingType(spk.type);
   pushUndo();
   speakers = [];
   let hornCount = 0;
@@ -1527,6 +1721,28 @@ function aiSmartDistribute(){
   }
   if (isHorn){
     toast(`${hornCount} أبواق على المئذنة`, 'ok');
+    updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
+    return;
+  }
+
+  // سماعات السقف: شبكة منتظمة
+  if (isCeil){
+    const covRadius = (d.H - LISTENER_H) * Math.tan((spk.covH/2) * RAD);
+    const spacing = covRadius * 1.8;
+    const nx = Math.max(1, Math.ceil(d.W / spacing));
+    const ny = Math.max(1, Math.ceil(d.L / spacing));
+    let placed = 0;
+    for (let i = 0; i < nx; i++){
+      for (let j = 0; j < ny; j++){
+        const rx = (i + 0.5) / nx;
+        const ry = (j + 0.5) / ny;
+        if (!isInsideShape(rx, ry, shape)) continue;
+        addSpeaker(rx, ry, model, -Math.PI/2);
+        placed++;
+      }
+    }
+    toast(`✅ ${placed} سماعة سقفية (شبكة ${nx}×${ny}، تباعد ${spacing.toFixed(1)}م)${hornCount ? ` + ${hornCount} أبواق` : ''}`, 'ok');
     updateAmpLogic(); draw();
     if (scene3d) buildScene3D();
     return;
@@ -1595,7 +1811,7 @@ function renderSPLChartImage(d, target){
   c.fillStyle = '#fff'; c.font = 'bold 16px Cairo, sans-serif'; c.textAlign = 'center';
   c.fillText(`توزيع SPL — الهدف: ${target} dB  |  ${SHAPES_AR[getShape()]}`, W/2, 32);
   c.font = '11px Cairo, sans-serif'; c.fillStyle = '#8b949e';
-  c.fillText(`عدد الأعمدة: ${columns.length}`, W/2, 50);
+  c.fillText(`الأعمدة: ${columns.length}`, W/2, 50);
   columns.forEach(col => {
     const cx = pad + col.rx * N * cw;
     const cy = pad + col.ry * N * ch;
@@ -1680,6 +1896,10 @@ function generateReport(){
   $('reportImg3D').src = img3D;
 
   const shapeName = SHAPES_AR[getShape()];
+  const ceilCount = speakers.filter(s => isCeilingType(getModelType(s.model))).length;
+  const wallColCount = speakers.filter(s => s.zone !== 'minaret' && !isCeilingType(getModelType(s.model))).length;
+  const ceilModels = [...new Set(speakers.filter(s => isCeilingType(getModelType(s.model))).map(s => s.model))].join(', ') || '—';
+
   $('room_analysis').innerHTML = `
     <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">شكل القاعة</div><div class="value">${shapeName}</div></div></div>
     <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">الأبعاد</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>م</small></div></div></div>
@@ -1687,7 +1907,9 @@ function generateReport(){
     <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">الحجم</div><div class="value">${ac.V.toFixed(1)} <small>م³</small></div></div></div>
     <div class="analysis-item"><div class="icon">⏱️</div><div class="info"><div class="label">RT60</div><div class="value">${ac.rt60.toFixed(2)} <small>ث</small></div></div></div>
     <div class="analysis-item"><div class="icon">🎯</div><div class="info"><div class="label">SPL</div><div class="value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} <small>dB</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">السماعات</div><div class="value">${speakers.length}</div></div></div>
+    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">السماعات (إجمالي)</div><div class="value">${speakers.length}</div></div></div>
+    <div class="analysis-item"><div class="icon">🔘</div><div class="info"><div class="label">سماعات سقفية</div><div class="value">${ceilCount} <small>(${ceilModels})</small></div></div></div>
+    <div class="analysis-item"><div class="icon">📢</div><div class="info"><div class="label">جدارية / عمودية</div><div class="value">${wallColCount}</div></div></div>
     <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">الأعمدة</div><div class="value">${columns.length} <small>(حجب نشط)</small></div></div></div>
     <div class="analysis-item"><div class="icon">⚡</div><div class="info"><div class="label">المكبرات</div><div class="value">${ampResult.amps} × ${ampResult.amp.id}</div></div></div>
     <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">أبواق المئذنة</div><div class="value">${ac.outdoorCount}</div></div></div>`;
@@ -1698,7 +1920,9 @@ function generateReport(){
   speakers.forEach(s => {
     counts[s.model] = (counts[s.model] || 0) + 1;
     if (s.zone === 'minaret') totalCable += 30;
-    else {
+    else if (isCeilingType(getModelType(s.model))){
+      totalCable += d.H + Math.hypot((s.rx - 0.5)*d.W, (s.ry - 0.5)*d.L) * 0.5;
+    } else {
       const dx = (s.rx - 0.5)*d.W, dy = s.ry*d.L;
       totalCable += Math.sqrt(dx*dx + dy*dy) + d.H;
     }
@@ -1708,7 +1932,8 @@ function generateReport(){
   let boq = '', idx = 1;
   for (const m in counts){
     const sp = DB_SPK[m];
-    boq += `<tr><td class="num">${idx++}</td><td><b>سماعة ${m}</b></td><td>${TYPE_AR[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB</td><td class="num">${counts[m]}</td><td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} م</td></tr>`;
+    const suffix = isCeilingType(sp.type) ? ' • يُفضّل نظام 100V للتركيبات الكثيفة' : '';
+    boq += `<tr><td class="num">${idx++}</td><td><b>سماعة ${m}</b></td><td>${TYPE_AR[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB${suffix}</td><td class="num">${counts[m]}</td><td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} م</td></tr>`;
   }
   boq += `<tr><td class="num">${idx++}</td><td><b>مكبر ${ampResult.amp.id}</b></td><td>MA • ${ampResult.amp.pwr}W • 2ch • ≥${ampResult.amp.minImp}Ω</td><td class="num">${ampResult.amps}</td><td class="num">—</td></tr>`;
   if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>كابح التغذية</b></td><td>${fsAr}</td><td class="num">1</td><td class="num">—</td></tr>`;
@@ -1724,6 +1949,10 @@ function generateReport(){
   let notes = '<ul>';
   notes += `<li><b>شكل القاعة: ${shapeName}</b> — المساحة ${ac.area.toFixed(1)} م²، الحجم ${ac.V.toFixed(0)} م³</li>`;
   notes += `<li><b>${columns.length} عمود هيكلي</b> مضمّن في النموذج الصوتي: كل عمود يحجب حتى −8 dB خلفه</li>`;
+  if (ceilCount) {
+    notes += `<li><b>${ceilCount} سماعة سقفية</b> (${ceilModels}) مثبتة على ارتفاع ${d.H}م وتشع للأسفل بمخروط تغطية على الأرض</li>`;
+    notes += `<li>⚠️ للتركيبات الكبيرة (≥10 سماعات سقفية)، يُوصى بشدة بـ <b>نظام خط 100V</b> لتشغيل عدد كبير من السماعات على قناة مكبر واحدة بأقل خسائر</li>`;
+  }
   notes += `<li>RT60 = <b>${ac.rt60.toFixed(2)} ث</b> (سابين) → ${rtEval}</li>`;
   notes += `<li>متوسط SPL = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}</li>`;
   notes += `<li>نسبة التغطية = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
@@ -1740,9 +1969,9 @@ function generateReport(){
     {n:'ANSI S1.4', d:'قياس مستويات الصوت A-weighted'},
     {n:'ISO 3382-1', d:'قياس زمن الصدى RT60'},
     {n:'NFPA 72', d:'أنظمة الإخلاء الصوتية'},
+    {n:'IEC 60268-7', d:'مرجع مواصفات السماعات السقفية'},
     {n:'Saudi Building Code', d:'متطلبات العزل للمباني الدينية'},
-    {n:'SABER / SASO', d:'شهادات مطابقة المعدات'},
-    {n:'HTA / EASE', d:'برامج المحاكاة الصوتية'}
+    {n:'SABER / SASO', d:'شهادات مطابقة المعدات'}
   ];
   $('standards_list').innerHTML = standards.map(s => `<li><b>${s.n}</b>${s.d}</li>`).join('');
 
@@ -1756,7 +1985,7 @@ function generateReport(){
 /* ============ حفظ / تحميل ============ */
 function collectProjectData(){
   return {
-    version: 4,
+    version: 5,
     speakers, columns, manualMode,
     dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value, shape:getShape()},
     colRad: $('col_radius').value, colSpacing: $('col_spacing').value, colEnabled: $('colEnabled').checked,
@@ -1839,6 +2068,7 @@ document.addEventListener('keydown', e => {
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
   if ((e.key === 'Delete' || e.key === 'Backspace') && !inField){ e.preventDefault(); deleteSelected(); return; }
+  if (isCeilingType(getModelType(s.model))) return;
   let delta = 0;
   if (e.key === '[') delta = -5;
   else if (e.key === ']') delta = 5;
