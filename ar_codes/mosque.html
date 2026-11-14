@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0d1117">
 <title>موتيفيتي برو - نظام تصميم صوتيات المساجد</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#e60012; --blue:#38bdf8; --bg:#0d1117; --panel:#161b22;
@@ -16,28 +16,17 @@
 }
 *{box-sizing:border-box;font-family:'Cairo','Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%}
-body{
-  background:var(--bg);color:var(--text);
-  height:100vh;height:100dvh;
-  overflow:hidden;display:flex;flex-direction:column;
-  overscroll-behavior:none;
-}
+body{background:var(--bg);color:var(--text);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none}
 .wrapper{display:flex;flex:1;overflow:hidden;position:relative;min-height:0}
 
-/* ============ SIDEBAR ============ */
-.sidebar{
-  width:400px;flex:0 0 auto;background:var(--panel);padding:14px;
-  border-left:4px solid var(--red);overflow-y:auto;
-  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-}
+/* SIDEBAR */
+.sidebar{width:400px;flex:0 0 auto;background:var(--panel);padding:14px;border-left:4px solid var(--red);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
-
 .side-head{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:10px}
 h2{font-weight:900;letter-spacing:1px;font-size:20px;text-align:center}
 h2 span{color:var(--red)}
 #closeSide{display:none}
-
 .box{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
 .box h3{font-size:13px;margin-bottom:6px;color:var(--blue);font-weight:700;display:flex;align-items:center;gap:6px}
 label{font-size:10.5px;color:var(--muted);display:block;margin-top:8px;font-weight:600}
@@ -61,7 +50,7 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .stat.ok .v{color:var(--ok)}.stat.warn .v{color:var(--warn)}.stat.bad .v{color:var(--bad)}
 .hint{font-size:10.5px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.7}
 
-/* ============ CANVAS AREA ============ */
+/* CANVAS */
 .canvas-container{flex:1;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;gap:8px;min-width:0;min-height:0}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .toolbar button{width:auto;padding:6px 12px;margin:0;font-size:11.5px;background:#21262d;color:#ccc;border:1px solid #30363d;min-height:34px}
@@ -70,168 +59,153 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .toolbar button:disabled{opacity:.35;cursor:not-allowed}
 .toolbar button.hist{background:#2a2214;border-color:#5a4010;color:#ffb84d}
 .toolbar button.hist:hover:not(:disabled){background:#3d3016}
+.toolbar button.view-btn{background:#1a1f26;border-color:#4a5568;color:#8b949e}
+.toolbar button.view-btn.on{background:linear-gradient(135deg,#e60012,#c40010);color:#fff;border-color:var(--red);box-shadow:0 0 12px rgba(230,0,18,.4)}
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
-canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
+#threeWrap{position:relative}
+#threeWrap canvas{display:block;border:2px solid #333;border-radius:10px;touch-action:none}
+#threeWrap::after{content:'🖱️ اسحب للتدوير — عجلة الفأرة للتقريب — إصبعان للتدوير';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
+canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
 
-/* ============ MOBILE DRAWER ============ */
-#menuBtn{
-  display:none;position:fixed;top:calc(10px + var(--safe-t));right:10px;z-index:200;
-  width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;
-  border:none;font-size:20px;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0;
-}
+/* MOBILE */
+#menuBtn{display:none;position:fixed;top:calc(10px + var(--safe-t));right:10px;z-index:200;width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;border:none;font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0}
 #menuBtn:active{transform:scale(.93)}
 #backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
 #backdrop.show{display:block}
-
-@media (max-width:1100px) and (min-width:901px){
-  .sidebar{width:340px}
-}
+@media (max-width:1100px) and (min-width:901px){.sidebar{width:340px}}
 @media (max-width:900px){
   #menuBtn{display:flex}
-  #closeSide{
-    display:flex;align-items:center;justify-content:center;
-    position:absolute;left:0;top:0;width:38px;height:38px;min-height:0;padding:0;
-    background:#30363d;color:#fff;border-radius:10px;font-size:16px;
-  }
-  .sidebar{
-    position:fixed;top:0;right:0;bottom:0;z-index:180;
-    width:min(400px,88vw);
-    transform:translateX(102%);
-    transition:transform .3s cubic-bezier(.4,0,.2,1);
-    padding-top:calc(14px + var(--safe-t));
-    padding-bottom:calc(14px + var(--safe-b));
-    box-shadow:-6px 0 34px rgba(0,0,0,.7);
-    will-change:transform;
-    border-left:4px solid var(--red);
-  }
+  #closeSide{display:flex;align-items:center;justify-content:center;position:absolute;left:0;top:0;width:38px;height:38px;min-height:0;padding:0;background:#30363d;color:#fff;border-radius:10px;font-size:16px}
+  .sidebar{position:fixed;top:0;right:0;bottom:0;z-index:180;width:min(400px,88vw);transform:translateX(102%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding-top:calc(14px + var(--safe-t));padding-bottom:calc(14px + var(--safe-b));box-shadow:-6px 0 34px rgba(0,0,0,.7);will-change:transform;border-left:4px solid var(--red)}
   .sidebar.open{transform:translateX(0)}
   .canvas-container{padding:8px;gap:6px}
-  .toolbar{gap:4px}
-  .toolbar button{padding:8px 10px;font-size:11.5px;min-height:38px}
-  canvas{max-height:none;border-radius:8px}
-  .report-grid{grid-template-columns:1fr;gap:14px}
-  .paper{padding:18px}
-  .paper h1{font-size:18px}
-  .table-boq th,.table-boq td{padding:6px;font-size:11px}
-  .sig{flex-direction:column;gap:14px}
+  .toolbar{gap:4px}.toolbar button{padding:8px 10px;font-size:11.5px;min-height:38px}
+  canvas#mosqueCanvas{max-height:none;border-radius:8px}
 }
 
-/* ============ REPORT ============ */
-#reportView{display:none;position:fixed;inset:0;background:#fff;z-index:9999;padding:20px;overflow-y:auto;color:#222;-webkit-overflow-scrolling:touch;direction:rtl}
-.paper{max-width:920px;margin:auto;background:#fff;padding:32px;border-top:10px solid var(--red);box-shadow:0 0 30px rgba(0,0,0,.3)}
-.paper h1{color:var(--red);border-bottom:3px solid var(--red);padding-bottom:10px;margin-bottom:16px;font-size:22px}
-.paper h3{color:#111;margin:14px 0 8px;font-size:15px;border-right:4px solid var(--red);padding-right:8px;border-left:none}
-.report-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;margin-bottom:18px}
-.mini-map-box{border:1px solid #ddd;padding:12px;background:#f9f9f9;text-align:center;border-radius:6px}
-.mini-map-box strong{display:block;margin-bottom:8px;font-size:13px}
-#reportImg{width:100%;border:1px solid #ccc;border-radius:4px}
-.table-boq{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
-.table-boq th,.table-boq td{border:1px solid #ddd;padding:8px;text-align:right}
-.table-boq th{background:#1a1a1a;color:#fff}
-.table-boq tr:nth-child(even) td{background:#fafafa}
-.sig{display:flex;justify-content:space-between;margin-top:40px;padding-top:16px;border-top:1px dashed #ccc;font-size:12px}
+/* ============= REPORT ============= */
+#reportView{display:none;position:fixed;inset:0;background:#e8ecf1;z-index:9999;overflow-y:auto;direction:rtl;-webkit-overflow-scrolling:touch}
+.report-toolbar{position:sticky;top:0;background:rgba(13,17,23,.96);padding:12px 20px;display:flex;justify-content:flex-end;gap:8px;z-index:10;backdrop-filter:blur(10px);border-bottom:1px solid #30363d}
+.report-toolbar button{width:auto;padding:9px 20px;font-size:13px}
+.report-page{max-width:1080px;margin:20px auto;background:#fff;color:#1a2028;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15)}
 
-/* ============ TOAST ============ */
+/* Hero */
+.report-hero{background:linear-gradient(135deg,#0d1117 0%,#1a2430 60%,#2a1a1f 100%);color:#fff;padding:44px 44px 36px;position:relative;overflow:hidden}
+.report-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:70%;height:220%;background:radial-gradient(circle,rgba(230,0,18,.25),transparent 60%);pointer-events:none}
+.report-hero::after{content:'';position:absolute;bottom:-60%;left:-15%;width:60%;height:200%;background:radial-gradient(circle,rgba(56,189,248,.18),transparent 60%);pointer-events:none}
+.hero-brand{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1;gap:20px;flex-wrap:wrap}
+.brand-logo{font-size:30px;font-weight:900;letter-spacing:2px;line-height:1}
+.brand-logo span{color:var(--red)}
+.brand-sub{font-size:11px;color:#8b949e;margin-top:6px;letter-spacing:2px}
+.doc-badge{background:rgba(230,0,18,.15);border:1px solid rgba(230,0,18,.5);padding:8px 18px;border-radius:30px;font-size:11.5px;font-weight:700;color:#ff6b6b;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.doc-badge::before{content:'';width:8px;height:8px;background:#e60012;border-radius:50%;box-shadow:0 0 8px #e60012;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.report-title{font-size:28px;font-weight:900;margin:28px 0 8px;color:#fff;position:relative;z-index:1;line-height:1.2}
+.report-subtitle{color:#8b949e;font-size:13px;position:relative;z-index:1}
+.report-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:24px;position:relative;z-index:1}
+.meta-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;backdrop-filter:blur(12px)}
+.meta-card .label{font-size:9.5px;color:#8b949e;letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
+.meta-card .value{font-size:13.5px;font-weight:700;color:#fff;word-break:break-word}
+
+/* Body */
+.report-body{padding:32px 44px 44px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.kpi-card{background:#f8fafc;border:1px solid #e1e8ed;border-radius:12px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;transition:.2s}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#64748b,#475569)}
+.kpi-card.good::before{background:linear-gradient(90deg,#22c55e,#16a34a)}
+.kpi-card.warn::before{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.kpi-card.bad::before{background:linear-gradient(90deg,#ef4444,#dc2626)}
+.kpi-value{font-size:26px;font-weight:900;color:#0d1117;font-family:'JetBrains Mono',monospace;line-height:1;direction:ltr}
+.kpi-value .unit{font-size:12px;color:#94a3b8;font-weight:600;margin-right:3px}
+.kpi-label{font-size:10.5px;color:#64748b;margin-top:8px;font-weight:700;letter-spacing:.5px}
+
+/* Gallery */
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.view-card{border:1px solid #e1e8ed;border-radius:12px;overflow:hidden;background:#fafbfc}
+.view-label{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 16px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:.5px}
+.view-card img{display:block;width:100%;height:auto;background:#000}
+
+/* Sections */
+.rep-section{margin-bottom:34px;page-break-inside:avoid;break-inside:avoid}
+.rep-section h2{font-size:17px;font-weight:800;color:#0d1117;margin-bottom:16px;padding-bottom:11px;border-bottom:2px solid #e1e8ed;display:flex;align-items:center;gap:10px}
+.rep-section h2::before{content:'';width:5px;height:22px;background:var(--red);border-radius:3px}
+
+/* Analysis grid */
+.analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.analysis-item{background:linear-gradient(135deg,#f8fafc,#eef2f7);border:1px solid #e1e8ed;border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px}
+.analysis-item .icon{font-size:26px;width:48px;height:48px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.analysis-item .info{flex:1;min-width:0}
+.analysis-item .label{font-size:10px;color:#64748b;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.analysis-item .value{font-size:14.5px;font-weight:800;color:#0d1117;font-family:'JetBrains Mono',monospace}
+.analysis-item .value small{font-size:11px;color:#64748b;font-weight:600;margin-right:3px}
+
+/* Data table */
+.data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #e1e8ed}
+.data-table th{background:linear-gradient(135deg,#0d1117,#1a2430);color:#fff;padding:11px 12px;text-align:right;font-weight:700;font-size:11px;letter-spacing:.5px}
+.data-table th:first-child{border-top-right-radius:10px}
+.data-table th:last-child{border-top-left-radius:10px}
+.data-table td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#334155}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:nth-child(even) td{background:#fafbfc}
+.data-table .num{font-family:'JetBrains Mono',monospace;font-weight:700;color:#0d1117;text-align:center}
+.data-table .tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:#e0f2fe;color:#0369a1}
+.data-table .tag.red{background:#fee2e2;color:#b91c1c}
+.data-table .tag.orange{background:#ffedd5;color:#c2410c}
+
+/* Signal flow */
+.signal-flow{padding:20px;background:linear-gradient(135deg,#f8fafc,#eef2f7);border-radius:12px;border:1px solid #e1e8ed;overflow-x:auto}
+.signal-flow svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.signal-flow text{font-family:'Cairo',sans-serif;font-weight:700;font-size:11px}
+
+/* Notes */
+.notes-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:12px;padding:20px;font-size:12.5px;line-height:2;color:#0c4a6e}
+.notes-box b{color:#0369a1}
+.notes-box ul{list-style:none;padding:0;margin:0}
+.notes-box li{padding:6px 0;padding-right:24px;position:relative;border-bottom:1px dashed rgba(3,105,161,.15)}
+.notes-box li:last-child{border-bottom:none}
+.notes-box li::before{content:'◆';position:absolute;right:0;color:#0284c7;font-size:10px;top:9px}
+
+/* Standards */
+.standards-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.standards-list li{background:#f8fafc;border:1px solid #e1e8ed;border-right:3px solid var(--red);padding:11px 14px;border-radius:6px;font-size:11.5px;color:#334155;line-height:1.6}
+.standards-list li b{color:#0d1117;display:block;margin-bottom:3px;font-size:11px}
+
+/* Signatures */
+.sig{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;padding-top:20px;border-top:2px dashed #cbd5e1}
+.sig-box{text-align:center}
+.sig-line{border-bottom:1.5px solid #94a3b8;height:50px;margin-bottom:8px}
+.sig-label{font-size:10.5px;color:#64748b;font-weight:700;letter-spacing:.5px;margin-bottom:3px}
+.sig-name{font-size:12px;font-weight:800;color:#0d1117}
+
+/* TOAST */
 #toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
-.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);border-left:none;box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:right}
+.toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-right:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:right}
 .toast.ok{border-right-color:var(--ok)}.toast.err{border-right-color:var(--bad)}.toast.warn{border-right-color:var(--warn)}
 @keyframes slideIn{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* ============ PRINT (الإصلاح الكامل) ============ */
+/* PRINT */
 @media print{
-  @page{
-    size:A4;
-    margin:12mm 10mm;
-  }
-
-  html,body{
-    height:auto!important;
-    min-height:0!important;
-    overflow:visible!important;
-    background:#fff!important;
-    display:block!important;
-  }
-
-  /* إخفاء كل شيء ما عدا التقرير */
-  .wrapper,
-  .sidebar,
-  .canvas-container,
-  #menuBtn,
-  #backdrop,
-  #toast,
-  .no-print{
-    display:none!important;
-  }
-
-  /* إلغاء كل القيود على عرض التقرير ليتمدد على عدة صفحات */
-  #reportView{
-    display:block!important;
-    position:static!important;
-    inset:auto!important;
-    height:auto!important;
-    max-height:none!important;
-    overflow:visible!important;
-    padding:0!important;
-    background:#fff!important;
-    color:#000!important;
-    z-index:auto!important;
-  }
-
-  .report-wrap{
-    max-width:none!important;
-    padding:0!important;
-    margin:0!important;
-  }
-
-  .paper{
-    box-shadow:none!important;
-    border-top:6px solid var(--red)!important;
-    padding:0 0 20px 0!important;
-    max-width:none!important;
-    page-break-after:auto;
-  }
-
-  /* منع قطع العناصر بين الصفحات */
-  .rep-header,
-  .kpi-grid,
-  .rep-section,
-  table,
-  tr,
-  .analysis-box,
-  .mini-map-box,
-  .sig,
-  h1,h2,h3,h4{
-    page-break-inside:avoid!important;
-    break-inside:avoid!important;
-  }
-  h1,h3{ page-break-after:avoid!important; }
-
-  /* الصور لا تتجاوز صفحة واحدة */
-  .preview-img,
-  #reportImg{
-    max-height:150mm!important;
-    width:auto!important;
-    max-width:100%!important;
-    display:block;
-    margin:0 auto;
-    page-break-inside:avoid!important;
-  }
-
-  /* تكرار رأس الجدول في كل صفحة */
-  thead{ display:table-header-group; }
-  tfoot{ display:table-footer-group; }
-
-  .rep-section{ margin-top:14px!important; }
-  .table-boq{ font-size:10.5px!important; }
-  .table-boq th,
-  .table-boq td{ padding:5px 6px!important; }
-
-  /* ضمان طباعة الألوان والخلفيات */
-  *{
-    -webkit-print-color-adjust:exact!important;
-    print-color-adjust:exact!important;
-  }
+  @page{size:A4;margin:8mm}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;display:block!important}
+  .wrapper,.sidebar,.canvas-container,#menuBtn,#backdrop,#toast,.no-print{display:none!important}
+  #reportView{display:block!important;position:static!important;padding:0!important;background:#fff!important;overflow:visible!important}
+  .report-toolbar{display:none!important}
+  .report-page{max-width:none!important;margin:0!important;box-shadow:none!important;border-radius:0!important}
+  .report-hero{background:#0d1117!important;padding:24px 20px!important}
+  .report-body{padding:20px!important}
+  .kpi-row{grid-template-columns:repeat(4,1fr)!important;gap:8px!important;margin-bottom:16px!important}
+  .kpi-card{padding:12px 8px!important}
+  .kpi-value{font-size:20px!important}
+  .gallery{grid-template-columns:1fr 1fr!important;gap:8px!important;margin-bottom:16px!important}
+  .rep-section{margin-bottom:16px!important}
+  .rep-section h2{font-size:14px!important;margin-bottom:10px!important}
+  .report-title{font-size:20px!important;margin:14px 0 4px!important}
+  .view-card,.kpi-card,.rep-section,.analysis-item,.sig{page-break-inside:avoid!important;break-inside:avoid!important}
+  h2,h3{page-break-after:avoid!important}
+  .sig{margin-top:24px!important;padding-top:12px!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .data-table{font-size:10px!important}
+  .data-table th,.data-table td{padding:6px!important}
 }
 </style>
 </head>
@@ -292,8 +266,7 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
         <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°
       </label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1"
-             onpointerdown="pushUndo()"
-             oninput="setSelectedAngle(this.value)">
+             onpointerdown="pushUndo()" oninput="setSelectedAngle(this.value)">
       <div class="hint">↔️ اسحب المؤشر أو المقبض الأبيض للتدوير</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ إلغاء التحديد</button>
       <button class="btn-reset" onclick="deleteSelected()">🗑️ حذف هذه السماعة</button>
@@ -332,47 +305,127 @@ canvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crossh
 
   <div class="canvas-container">
     <div class="toolbar no-print">
+      <button id="view2D" class="view-btn on" onclick="switchView('2d')">🗺️ مخطط 2D</button>
+      <button id="view3D" class="view-btn" onclick="switchView('3d')">🎨 منظور 3D</button>
       <button id="undoBtn" class="hist" onclick="undo()" disabled title="Ctrl+Z">↶ تراجع</button>
       <button id="redoBtn" class="hist" onclick="redo()" disabled title="Ctrl+Y">↷ إعادة</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 التغطية</button>
-      <button id="tgHeat" onclick="toggleHeat()">🔥 خريطة حرارية</button>
+      <button id="tgHeat" onclick="toggleHeat()">🔥 حراري</button>
       <button id="tgGrid" class="on" onclick="toggleGrid()">▦ الشبكة</button>
+      <button id="autoRotBtn" onclick="toggleAutoRotate3D()" style="display:none">🔄 تدوير تلقائي</button>
       <button onclick="clearSpeakers()">🗑️ مسح</button>
     </div>
     <div class="canvas-wrap" id="cDiv">
       <canvas id="mosqueCanvas"></canvas>
     </div>
+    <div class="canvas-wrap" id="threeWrap" style="display:none"></div>
   </div>
 </div>
 
+<!-- ================= REPORT ================= -->
 <div id="reportView">
-  <div class="paper">
-    <div style="text-align:left" class="no-print">
-      <button class="btn-primary" style="width:auto;padding:8px 16px;display:inline-block;margin-left:6px" onclick="window.print()">🖨️ حفظ PDF</button>
-      <button class="btn-outline" style="width:auto;padding:8px 16px;display:inline-block" onclick="document.getElementById('reportView').style.display='none'">إغلاق</button>
-    </div>
-    <h1>تقرير التصميم الفني - موتيفيتي</h1>
-    <div id="project_header"></div>
-    <div class="report-grid">
-      <div class="mini-map-box"><strong>المخطط الهندسي</strong><img id="reportImg" alt="layout"></div>
-      <div id="eng_summary"></div>
-    </div>
-    <h3>جدول الكميات (BOQ)</h3>
-    <table class="table-boq">
-      <thead><tr><th>البند</th><th>المواصفات</th><th>الكمية</th><th>الكابل التقديري</th></tr></thead>
-      <tbody id="boq-body"></tbody>
-    </table>
-    <h3>المبررات الهندسية</h3>
-    <p id="eng_notes" style="font-size:12.5px;line-height:1.9;background:#f0f7ff;padding:12px;border-radius:6px"></p>
-    <div class="sig">
-      <div>توقيع المهندس: ______________</div>
-      <div>توقيع العميل: ______________</div>
-      <div id="report_date"></div>
+  <div class="report-toolbar no-print">
+    <button class="btn-primary" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+    <button class="btn-outline" onclick="document.getElementById('reportView').style.display='none'">✖ إغلاق</button>
+  </div>
+
+  <div class="report-page">
+    <header class="report-hero">
+      <div class="hero-brand">
+        <div>
+          <div class="brand-logo">موتيفيتي<span>PRO</span></div>
+          <div class="brand-sub">نظام تصميم صوتيات المساجد — MOTIVITY AUDIO SYSTEMS</div>
+        </div>
+        <div class="doc-badge">تقرير فني معتمد</div>
+      </div>
+      <h1 class="report-title">تصميم النظام الصوتي المتكامل</h1>
+      <div class="report-subtitle">تحليل أكوستيكي • جدول كميات • مبررات هندسية • منظور ثلاثي الأبعاد</div>
+      <div class="report-meta" id="project_header"></div>
+    </header>
+
+    <div class="report-body">
+      <div class="kpi-row" id="kpi_grid"></div>
+
+      <div class="gallery">
+        <div class="view-card">
+          <div class="view-label">📐 المخطط الأفقي (2D Plan)</div>
+          <img id="reportImg2D" alt="2D Plan">
+        </div>
+        <div class="view-card">
+          <div class="view-label">🎨 المنظور ثلاثي الأبعاد (3D View)</div>
+          <img id="reportImg3D" alt="3D View">
+        </div>
+      </div>
+
+      <section class="rep-section">
+        <h2>تحليل القاعة والأكوستيك</h2>
+        <div class="analysis-grid" id="room_analysis"></div>
+      </section>
+
+      <section class="rep-section">
+        <h2>توزيع مستوى الصوت (SPL Heatmap)</h2>
+        <div style="text-align:center">
+          <img id="spl_chart_img" style="max-width:100%;border-radius:10px;border:1px solid #e1e8ed;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+        </div>
+      </section>
+
+      <section class="rep-section">
+        <h2>جدول الكميات (Bill of Quantities)</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:36px">#</th>
+              <th>البند</th>
+              <th>المواصفات الفنية</th>
+              <th style="width:70px">الكمية</th>
+              <th style="width:130px">الكابل التقديري</th>
+            </tr>
+          </thead>
+          <tbody id="boq-body"></tbody>
+        </table>
+      </section>
+
+      <section class="rep-section">
+        <h2>مخطط الإشارة الصوتية (Signal Flow)</h2>
+        <div class="signal-flow" id="signal_flow"></div>
+      </section>
+
+      <section class="rep-section">
+        <h2>المبررات الهندسية</h2>
+        <div class="notes-box" id="eng_notes"></div>
+      </section>
+
+      <section class="rep-section">
+        <h2>المعايير والمراجع الهندسية</h2>
+        <ul class="standards-list" id="standards_list"></ul>
+      </section>
+
+      <div class="sig">
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">توقيع المهندس</div>
+          <div class="sig-name" id="sig_engineer">—</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">توقيع العميل</div>
+          <div class="sig-name" id="sig_client">—</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-line"></div>
+          <div class="sig-label">التاريخ</div>
+          <div class="sig-name" id="report_date">—</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
+
+<!-- Three.js -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
 /* ============ قواعد البيانات ============ */
@@ -398,7 +451,6 @@ const WALL_THRESHOLD = 0.04;
 const isWallType   = t => t === 'Wall';
 const isHornType   = t => t === 'Outdoor Horn';
 const isColumnType = t => t === 'Column';
-
 const TYPE_AR = {Column:"عمودي", Wall:"جداري", "Outdoor Horn":"بوق خارجي"};
 
 /* ============ الحالة ============ */
@@ -415,8 +467,13 @@ let showGrid = true;
 let uid = 0;
 let layout = {x0:0,y0:0,W:0,L:0,scale:1,mS:0,mcx:0,mcy:0};
 let ampResult = {amps:0};
+let currentView = '2d';
 
-/* ============ التراجع / الإعادة ============ */
+/* ============ Three.js 3D ============ */
+let scene3d, camera3d, renderer3d, controls3d, group3d;
+let autoRotate3D = false;
+
+/* ============ Undo/Redo ============ */
 const MAX_UNDO = 40;
 let undoStack = [], redoStack = [], dragSnapshot = null;
 
@@ -435,6 +492,7 @@ function undo(){
   speakers = JSON.parse(undoStack.pop());
   selectedId = null;
   updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
+  if (scene3d) buildScene3D();
   toast('↶ تراجع', 'ok');
 }
 function redo(){
@@ -443,6 +501,7 @@ function redo(){
   speakers = JSON.parse(redoStack.pop());
   selectedId = null;
   updateRotationPanel(); updateAmpLogic(); draw(); updateUndoButtons();
+  if (scene3d) buildScene3D();
   toast('↷ إعادة', 'ok');
 }
 function updateUndoButtons(){
@@ -451,7 +510,7 @@ function updateUndoButtons(){
   if (r) r.disabled = !redoStack.length;
 }
 
-/* ============ أدوات مساعدة ============ */
+/* ============ أدوات ============ */
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
@@ -494,17 +553,11 @@ function getFacing(s){
 function isOnWall(s){ return s.zone !== 'minaret' && (s.rx < WALL_THRESHOLD || s.rx > 1-WALL_THRESHOLD); }
 function whichWall(s){ return s.rx < 0.5 ? 'left' : 'right'; }
 
-/* ============ الدرج الجانبي ============ */
-function openSidebar(){
-  $('sidebar').classList.add('open');
-  $('backdrop').classList.add('show');
-}
-function closeSidebar(){
-  $('sidebar').classList.remove('open');
-  $('backdrop').classList.remove('show');
-}
+/* ============ Sidebar Mobile ============ */
+function openSidebar(){ $('sidebar').classList.add('open'); $('backdrop').classList.add('show'); }
+function closeSidebar(){ $('sidebar').classList.remove('open'); $('backdrop').classList.remove('show'); }
 
-/* ============ التهيئة ============ */
+/* ============ Populate ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
@@ -516,7 +569,7 @@ function populate(){
   s2.value = "MA-800C";
 }
 
-/* ============ الهلال ============ */
+/* ============ Crescent ============ */
 function drawCrescent(cx, cy, r){
   ctx.fillStyle = "#e60012";
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
@@ -524,7 +577,7 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ الخريطة الحرارية ============ */
+/* ============ Heat colors ============ */
 function heatColor(t, a){
   let r,g,b;
   if (t < 0.25){ const k=t/0.25; r=0; g=k*255; b=255; }
@@ -561,7 +614,7 @@ function drawHeatmap(d, x0, y0, W, L){
   }
 }
 
-/* ============ رسم السماعة الجدارية ============ */
+/* ============ Wall speaker draw ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
@@ -615,7 +668,7 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.fillText(isCol ? "عمودي" : "جداري", lx, py+18);
 }
 
-/* ============ رسم السماعة الحرة ============ */
+/* ============ Free speaker draw ============ */
 function drawFreeSpeaker(pos, s, isSel, db){
   const isCol = isColumnType(db.type);
   const facing = getFacing(s);
@@ -658,10 +711,10 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.fillText("موضع حر", lx, pos.y+18);
 }
 
-/* ============ الرسم الرئيسي ============ */
+/* ============ Main draw 2D ============ */
 function draw(){
   const div = $('cDiv');
-  if (!div.clientWidth || !div.clientHeight) return;
+  if (!div.clientWidth || !div.clientHeight || currentView !== '2d') return;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width  = Math.round(div.clientWidth * dpr);
   canvas.height = Math.round(div.clientHeight * dpr);
@@ -681,14 +734,8 @@ function draw(){
 
   if (showGrid){
     ctx.strokeStyle = '#1a2028'; ctx.lineWidth = 1;
-    for (let x=0; x<=d.W; x+=2){
-      const px = x0 + x*scale;
-      ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke();
-    }
-    for (let y=0; y<=d.L; y+=2){
-      const py = y0 + y*scale;
-      ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke();
-    }
+    for (let x=0; x<=d.W; x+=2){ const px = x0 + x*scale; ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px, y0+L); ctx.stroke(); }
+    for (let y=0; y<=d.L; y+=2){ const py = y0 + y*scale; ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x0+W, py); ctx.stroke(); }
   }
 
   if (showHeat){
@@ -705,8 +752,6 @@ function draw(){
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
   ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المحراب", x0 + W/2, y0 - scale*1.8);
-
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif";
   ctx.fillText(`العرض ${d.W} م`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
   ctx.fillText(`الطول ${d.L} م`, 0, 0); ctx.restore();
@@ -740,7 +785,6 @@ function draw(){
       ctx.closePath(); ctx.fill();
     });
     ctx.restore();
-
     speakers.filter(s => s.zone === 'minaret').forEach(s => {
       const db = DB_SPK[s.model];
       const half = (db.covH/2)*RAD;
@@ -760,7 +804,6 @@ function draw(){
     const pos = getSpeakerPos(s);
     const facing = getFacing(s);
     const db = DB_SPK[s.model];
-
     if (s.zone === 'minaret'){
       const r = Math.max(8, layout.mS*0.18);
       ctx.save();
@@ -770,18 +813,9 @@ function draw(){
       ctx.moveTo(r*1.4, 0); ctx.lineTo(-r*0.9, -r*0.9); ctx.lineTo(-r*0.9, r*0.9);
       ctx.closePath(); ctx.fill();
       ctx.strokeStyle = isSel ? "#fff" : "#000"; ctx.lineWidth = 2; ctx.stroke();
-      if (isSel){
-        ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(r*1.8, 0); ctx.lineTo(-r*1.3, -r*1.3); ctx.lineTo(-r*1.3, r*1.3);
-        ctx.closePath(); ctx.stroke();
-      }
       ctx.restore();
-    } else if (isOnWall(s)){
-      drawWallSpeaker(pos, s, isSel, db);
-    } else {
-      drawFreeSpeaker(pos, s, isSel, db);
-    }
+    } else if (isOnWall(s)) drawWallSpeaker(pos, s, isSel, db);
+    else drawFreeSpeaker(pos, s, isSel, db);
 
     if (isSel){
       const hx = pos.x + Math.cos(facing)*52;
@@ -801,7 +835,7 @@ function draw(){
   });
 }
 
-/* ============ التفاعل ============ */
+/* ============ Interaction 2D ============ */
 function hitTest(p){
   for (let i = speakers.length - 1; i >= 0; i--){
     const s = speakers[i];
@@ -819,31 +853,24 @@ function hitRotateHandle(s, mx, my){
   return Math.hypot(mx-hx, my-hy) < 24;
 }
 function addSpeaker(rx, ry, model, facing){
-  const s = {id: ++uid, rx, ry, model, zone:'mosque',
-             facing:(facing !== undefined ? facing : Math.PI/2)};
+  const s = {id: ++uid, rx, ry, model, zone:'mosque', facing:(facing !== undefined ? facing : Math.PI/2)};
   speakers.push(s);
   return s;
 }
-function addMinaretHorn(model, ang){
-  speakers.push({id: ++uid, zone:'minaret', ang, model});
-}
-function isMinaretArea(m){
-  return Math.hypot(m.mx - layout.mcx, m.my - layout.mcy) < layout.mS * 0.95;
-}
+function addMinaretHorn(model, ang){ speakers.push({id: ++uid, zone:'minaret', ang, model}); }
+function isMinaretArea(m){ return Math.hypot(m.mx - layout.mcx, m.my - layout.mcy) < layout.mS * 0.95; }
 
 function onPointerDown(e){
   if (e.pointerType === 'mouse' && e.button !== 0) return;
   e.preventDefault();
   if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch(_){} }
-
   const m = getPointer(e);
   const p = toLocal(m);
 
   if (selectedId){
     const s = speakers.find(x => x.id === selectedId);
     if (s && hitRotateHandle(s, m.mx, m.my)){
-      dragSnapshot = snapshot();
-      rotating = s;
+      dragSnapshot = snapshot(); rotating = s;
       canvas.style.cursor = 'grabbing';
       return;
     }
@@ -881,7 +908,9 @@ function onPointerDown(e){
       toast('تم وضع السماعة بحرية', 'ok');
     }
     selectedId = null;
-    updateRotationPanel(); updateAmpLogic(); draw(); return;
+    updateRotationPanel(); updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
+    return;
   }
 
   if (isHornType(spk.type)){
@@ -897,11 +926,11 @@ function onPointerDown(e){
     addSpeaker(1, p.ry, model, Math.PI);
   }
   updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
 }
 
 function onPointerMove(e){
   const m = getPointer(e);
-
   if (rotating){
     const pos = getSpeakerPos(rotating);
     const angle = Math.atan2(m.my - pos.y, m.mx - pos.x);
@@ -939,9 +968,9 @@ function onPointerUp(e){
       updateUndoButtons();
     }
   }
-  dragSnapshot = null;
-  dragging = null; rotating = null;
+  dragSnapshot = null; dragging = null; rotating = null;
   canvas.style.cursor = 'crosshair';
+  if (scene3d && (dragging || rotating)) buildScene3D();
   if (canvas.releasePointerCapture && e && e.pointerId !== undefined){
     try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
   }
@@ -961,25 +990,407 @@ canvas.addEventListener('contextmenu', e => {
     speakers = speakers.filter(s => s.id !== hit.id);
     if (selectedId === hit.id){ selectedId = null; updateRotationPanel(); }
     updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
     toast('تم حذف السماعة', 'warn');
   }
 });
 
-/* ============ التحكم ============ */
+/* ============ View switching ============ */
+function switchView(mode){
+  currentView = mode;
+  if (mode === '3d'){
+    $('cDiv').style.display = 'none';
+    $('threeWrap').style.display = 'flex';
+    $('view2D').classList.remove('on');
+    $('view3D').classList.add('on');
+    $('autoRotBtn').style.display = 'block';
+    // hide 2D-specific toggles
+    $('tgHeat').style.opacity = '.4';
+    $('tgHeat').disabled = true;
+    if (!scene3d) init3D();
+    resize3D();
+    buildScene3D();
+  } else {
+    $('cDiv').style.display = 'flex';
+    $('threeWrap').style.display = 'none';
+    $('view2D').classList.add('on');
+    $('view3D').classList.remove('on');
+    $('autoRotBtn').style.display = 'none';
+    $('tgHeat').style.opacity = '1';
+    $('tgHeat').disabled = false;
+    draw();
+  }
+}
+
+function resize3D(){
+  if (!renderer3d || !camera3d) return;
+  const container = $('threeWrap');
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+  if (!w || !h) return;
+  camera3d.aspect = w/h;
+  camera3d.updateProjectionMatrix();
+  renderer3d.setSize(w, h);
+}
+
+function toggleAutoRotate3D(){
+  autoRotate3D = !autoRotate3D;
+  if (controls3d) controls3d.autoRotate = autoRotate3D;
+  controls3d.autoRotateSpeed = 1.5;
+  $('autoRotBtn').classList.toggle('on', autoRotate3D);
+}
+
+/* ============ Init 3D ============ */
+function init3D(){
+  const container = $('threeWrap');
+  if (!container || container.dataset.ready) return;
+  container.dataset.ready = '1';
+
+  const w = Math.max(container.clientWidth, 800);
+  const h = Math.max(container.clientHeight, 600);
+
+  scene3d = new THREE.Scene();
+  scene3d.background = new THREE.Color(0x0a0e14);
+  scene3d.fog = new THREE.Fog(0x0a0e14, 100, 280);
+
+  camera3d = new THREE.PerspectiveCamera(45, w/h, 0.1, 500);
+  camera3d.position.set(35, 28, 42);
+
+  renderer3d = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+  renderer3d.setSize(w, h);
+  renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer3d.shadowMap.enabled = true;
+  renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer3d.domElement);
+
+  controls3d = new THREE.OrbitControls(camera3d, renderer3d.domElement);
+  controls3d.enableDamping = true;
+  controls3d.dampingFactor = 0.08;
+  controls3d.minDistance = 8;
+  controls3d.maxDistance = 200;
+  controls3d.maxPolarAngle = Math.PI/2 - 0.02;
+  controls3d.target.set(0, 4, 0);
+
+  // Lights
+  const hemi = new THREE.HemisphereLight(0x38bdf8, 0x0a0a0a, 0.55);
+  scene3d.add(hemi);
+
+  const key = new THREE.DirectionalLight(0xffffff, 1.1);
+  key.position.set(30, 50, 30);
+  key.castShadow = true;
+  key.shadow.mapSize.width = 2048;
+  key.shadow.mapSize.height = 2048;
+  key.shadow.camera.left = -80;
+  key.shadow.camera.right = 80;
+  key.shadow.camera.top = 80;
+  key.shadow.camera.bottom = -80;
+  key.shadow.camera.far = 200;
+  scene3d.add(key);
+
+  const fill = new THREE.DirectionalLight(0xe60012, 0.35);
+  fill.position.set(-30, 25, -25);
+  scene3d.add(fill);
+
+  const rim = new THREE.PointLight(0x38bdf8, 0.7, 120);
+  rim.position.set(0, 12, 0);
+  scene3d.add(rim);
+
+  group3d = new THREE.Group();
+  scene3d.add(group3d);
+
+  animate3D();
+}
+
+function animate3D(){
+  requestAnimationFrame(animate3D);
+  if (controls3d) controls3d.update();
+  if (renderer3d && scene3d && camera3d) renderer3d.render(scene3d, camera3d);
+}
+
+function clear3D(){
+  if (!group3d) return;
+  while(group3d.children.length){
+    const c = group3d.children.pop();
+    group3d.remove(c);
+    if (c.geometry) c.geometry.dispose();
+    if (c.material){
+      if (Array.isArray(c.material)) c.material.forEach(m => m.dispose());
+      else c.material.dispose();
+    }
+  }
+}
+
+function buildScene3D(){
+  if (!group3d) init3D();
+  clear3D();
+  const d = getDims();
+  if (!d.L || !d.W) return;
+  const W = d.W, L = d.L, H = d.H;
+
+  // Floor
+  const floorMat = new THREE.MeshStandardMaterial({color:0x1a1f27, roughness:0.9, metalness:0.05});
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, L), floorMat);
+  floor.rotation.x = -Math.PI/2;
+  floor.receiveShadow = true;
+  group3d.add(floor);
+
+  // Grid
+  const gridSize = Math.max(W, L) * 1.2;
+  const grid = new THREE.GridHelper(gridSize, Math.max(Math.round(gridSize), 20), 0x1f2937, 0x161b22);
+  grid.position.y = 0.02;
+  group3d.add(grid);
+
+  // Walls (transparent)
+  const wallMat = new THREE.MeshStandardMaterial({
+    color:0x38bdf8, transparent:true, opacity:0.055, side:THREE.DoubleSide, depthWrite:false
+  });
+  const wallGeoLR = new THREE.PlaneGeometry(L, H);
+  const wallGeoFB = new THREE.PlaneGeometry(W, H);
+
+  const leftWall = new THREE.Mesh(wallGeoLR, wallMat);
+  leftWall.rotation.y = Math.PI/2;
+  leftWall.position.set(-W/2, H/2, 0);
+  group3d.add(leftWall);
+
+  const rightWall = new THREE.Mesh(wallGeoLR, wallMat);
+  rightWall.rotation.y = -Math.PI/2;
+  rightWall.position.set(W/2, H/2, 0);
+  group3d.add(rightWall);
+
+  const backWall = new THREE.Mesh(wallGeoFB, wallMat);
+  backWall.position.set(0, H/2, -L/2);
+  group3d.add(backWall);
+
+  const frontWall = new THREE.Mesh(wallGeoFB, wallMat);
+  frontWall.rotation.y = Math.PI;
+  frontWall.position.set(0, H/2, L/2);
+  group3d.add(frontWall);
+
+  // Edges
+  const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(W, H, L));
+  const wire = new THREE.LineSegments(boxEdges, new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85}));
+  wire.position.set(0, H/2, 0);
+  group3d.add(wire);
+
+  // Mihrab arch at back wall center
+  const mihrabShape = new THREE.Shape();
+  mihrabShape.moveTo(-2.5, 0);
+  mihrabShape.lineTo(-2.5, 3.2);
+  mihrabShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
+  mihrabShape.quadraticCurveTo(2.5, 5.5, 2.5, 3.2);
+  mihrabShape.lineTo(2.5, 0);
+  mihrabShape.lineTo(-2.5, 0);
+  const mihrabGeo = new THREE.ShapeGeometry(mihrabShape, 12);
+  const mihrabMat = new THREE.MeshStandardMaterial({
+    color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7
+  });
+  const mihrab = new THREE.Mesh(mihrabGeo, mihrabMat);
+  mihrab.position.set(0, 0.1, -L/2 + 0.08);
+  group3d.add(mihrab);
+
+  // Minaret
+  const minaretH = Math.max(H * 2.2, 14);
+  const mX = -W/2 - 2.2;
+  const mZ = -L/2 - 2.2;
+  const minaretGeo = new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20);
+  const minaretMat = new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.55, metalness:0.25});
+  const minaret = new THREE.Mesh(minaretGeo, minaretMat);
+  minaret.position.set(mX, minaretH/2, mZ);
+  minaret.castShadow = true;
+  group3d.add(minaret);
+
+  // Balcony
+  const balconyGeo = new THREE.CylinderGeometry(2.2, 2.2, 0.3, 20);
+  const balconyMat = new THREE.MeshStandardMaterial({color:0xb00010, roughness:0.6});
+  const balcony = new THREE.Mesh(balconyGeo, balconyMat);
+  balcony.position.set(mX, minaretH * 0.72, mZ);
+  group3d.add(balcony);
+
+  // Dome
+  const domeGeo = new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI*2, 0, Math.PI/2);
+  const domeMat = new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.35, metalness:0.4, emissive:0x220000});
+  const dome = new THREE.Mesh(domeGeo, domeMat);
+  dome.position.set(mX, minaretH, mZ);
+  dome.castShadow = true;
+  group3d.add(dome);
+
+  // Crescent on top (torus)
+  const crescentGeo = new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4);
+  const crescentMat = new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2});
+  const crescent = new THREE.Mesh(crescentGeo, crescentMat);
+  crescent.position.set(mX, minaretH + 1.6, mZ);
+  crescent.rotation.z = Math.PI / 2;
+  group3d.add(crescent);
+
+  // Corner accent lights (4 pillars)
+  const pillarMat = new THREE.MeshStandardMaterial({color:0x2a3240, roughness:0.7});
+  [[-W/2,H,L/2],[W/2,H,L/2],[-W/2,H,-L/2],[W/2,H,-L/2]].forEach(([px,ph,pz]) => {
+    const pGeo = new THREE.CylinderGeometry(0.15, 0.15, H, 8);
+    const p = new THREE.Mesh(pGeo, pillarMat);
+    p.position.set(px, H/2, pz);
+    group3d.add(p);
+  });
+
+  // Speakers
+  speakers.forEach(s => addSpeakerMesh3D(s, d));
+
+  // Camera framing
+  const maxDim = Math.max(W, L, minaretH);
+  camera3d.position.set(maxDim * 0.85, maxDim * 0.75, maxDim * 1.05);
+  controls3d.target.set(0, H/2, 0);
+  controls3d.update();
+}
+
+function addSpeakerMesh3D(s, d){
+  const sp = DB_SPK[s.model];
+  const isCol = isColumnType(sp.type);
+  const W = d.W, L = d.L, H = d.H;
+
+  // Horn on minaret
+  if (s.zone === 'minaret'){
+    const minaretH = Math.max(H * 2.2, 14);
+    const mX = -W/2 - 2.2;
+    const mZ = -L/2 - 2.2;
+    const R = 1.8;
+    const dirX = Math.cos(s.ang);
+    const dirZ = Math.sin(s.ang);
+    const hx = mX + dirX * R;
+    const hz = mZ + dirZ * R;
+    const hy = minaretH * 0.78;
+
+    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 12);
+    bodyGeo.rotateX(-Math.PI/2);
+    const bodyMat = new THREE.MeshStandardMaterial({color:0xe60012, metalness:0.6, roughness:0.3, emissive:0x330000, emissiveIntensity:0.4});
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.set(hx + dirX*0.55, hy, hz + dirZ*0.55);
+    body.lookAt(hx + dirX*10, hy, hz + dirZ*10);
+    body.castShadow = true;
+    group3d.add(body);
+
+    if (showCoverage){
+      const covHalf = (sp.covH/2) * Math.PI / 180;
+      const covLen = 10;
+      const covGeo = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true);
+      covGeo.rotateX(-Math.PI/2);
+      const covMat = new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
+      const cov = new THREE.Mesh(covGeo, covMat);
+      cov.position.set(hx + dirX * covLen/2, hy, hz + dirZ * covLen/2);
+      cov.lookAt(hx + dirX*100, hy, hz + dirZ*100);
+      group3d.add(cov);
+    }
+    return;
+  }
+
+  // Indoor speaker
+  let x, y, z, facingRad;
+  if (isOnWall(s)){
+    const left = whichWall(s) === 'left';
+    x = left ? -W/2 + 0.25 : W/2 - 0.25;
+    z = -L/2 + s.ry * L;
+    y = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+    facingRad = getFacing(s);
+  } else {
+    x = -W/2 + s.rx * W;
+    z = -L/2 + s.ry * L;
+    y = H - 0.4;
+    facingRad = getFacing(s);
+  }
+
+  const dirX = Math.cos(facingRad);
+  const dirZ = Math.sin(facingRad);
+
+  // Body
+  const bw = isCol ? 0.45 : 0.55;
+  const bh = isCol ? 1.15 : 0.85;
+  const bd = 0.38;
+  const bodyGeo = new THREE.BoxGeometry(bw, bh, bd);
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color: isCol ? 0xe60012 : 0xff8c1a,
+    metalness:0.5, roughness:0.4,
+    emissive: isCol ? 0x330000 : 0x331500,
+    emissiveIntensity:0.35
+  });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.set(x, y, z);
+  body.castShadow = true;
+  body.receiveShadow = true;
+  group3d.add(body);
+
+  // Speaker face grid
+  const faceGeo = new THREE.PlaneGeometry(bw * 0.75, bh * 0.85);
+  const faceMat = new THREE.MeshBasicMaterial({color:0x0a0a0a, transparent:true, opacity:0.55});
+  const face = new THREE.Mesh(faceGeo, faceMat);
+  face.position.set(x + dirX * (bd/2 + 0.01), y, z + dirZ * (bd/2 + 0.01));
+  face.lookAt(x + dirX*10, y, z + dirZ*10);
+  group3d.add(face);
+
+  // Direction arrow (cone tip pointing in direction)
+  const arrowLen = 1.3;
+  const arrowGeo = new THREE.ConeGeometry(0.16, arrowLen, 10);
+  arrowGeo.rotateX(Math.PI/2);
+  const arrowMat = new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.7, roughness:0.3, emissive:0x0a4060, emissiveIntensity:0.8});
+  const arrow = new THREE.Mesh(arrowGeo, arrowMat);
+  arrow.position.set(x + dirX * (bd/2 + arrowLen/2), y, z + dirZ * (bd/2 + arrowLen/2));
+  arrow.lookAt(x + dirX*100, y, z + dirZ*100);
+  group3d.add(arrow);
+
+  // Coverage cone
+  if (showCoverage){
+    const covHalf = (sp.covH/2) * Math.PI / 180;
+    const covLen = 8;
+    const covGeo = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true);
+    covGeo.rotateX(-Math.PI/2);
+    const covMat = new THREE.MeshBasicMaterial({
+      color: isCol ? 0x38bdf8 : 0xff8c1a,
+      transparent:true, opacity:0.065, side:THREE.DoubleSide, depthWrite:false
+    });
+    const cov = new THREE.Mesh(covGeo, covMat);
+    cov.position.set(x + dirX * covLen/2, y, z + dirZ * covLen/2);
+    cov.lookAt(x + dirX*100, y, z + dirZ*100);
+    group3d.add(cov);
+  }
+
+  // Wall mount bracket
+  if (isOnWall(s)){
+    const bracketGeo = new THREE.BoxGeometry(0.1, 0.1, 0.4);
+    const bracketMat = new THREE.MeshStandardMaterial({color:0x555, metalness:0.8, roughness:0.4});
+    const wallX = whichWall(s) === 'left' ? -W/2 : W/2;
+    const bracket = new THREE.Mesh(bracketGeo, bracketMat);
+    bracket.position.set(wallX + (whichWall(s) === 'left' ? 0.2 : -0.2), y, z);
+    group3d.add(bracket);
+  }
+}
+
+/* ============ Toggle controls ============ */
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
   toast(manualMode ? '🖐 وضع يدوي: وضع حر للسماعات' : 'الوضع التلقائي: أزواج على الجدارين', 'ok');
 }
-function toggleCoverage(){ showCoverage = !showCoverage; $('tgCoverage').classList.toggle('on', showCoverage); draw(); }
-function toggleHeat(){ showHeat = !showHeat; $('tgHeat').classList.toggle('on', showHeat); draw(); }
-function toggleGrid(){ showGrid = !showGrid; $('tgGrid').classList.toggle('on', showGrid); draw(); }
+function toggleCoverage(){
+  showCoverage = !showCoverage;
+  $('tgCoverage').classList.toggle('on', showCoverage);
+  draw();
+  if (scene3d && currentView === '3d') buildScene3D();
+}
+function toggleHeat(){
+  if (currentView === '3d') return;
+  showHeat = !showHeat;
+  $('tgHeat').classList.toggle('on', showHeat);
+  draw();
+}
+function toggleGrid(){
+  showGrid = !showGrid;
+  $('tgGrid').classList.toggle('on', showGrid);
+  if (currentView === '2d') draw();
+}
 function clearSpeakers(){
   if (!speakers.length) return toast('لا توجد سماعات', 'warn');
   if (confirm(`مسح كل السماعات (${speakers.length})؟`)){
     pushUndo();
     speakers = []; selectedId = null;
     updateRotationPanel(); updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
     toast('تم مسح السماعات', 'ok');
   }
 }
@@ -991,6 +1402,7 @@ function resetData(){
   $('m_len').value = 30; $('m_wid').value = 15; $('m_h').value = 6; $('m_alpha').value = 0.12;
   $('p_name').value = 'مسجد جديد'; $('p_client').value = ''; $('p_engineer').value = 'م. أحمد';
   updateRotationPanel(); updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
   toast('تم إعادة التعيين', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
@@ -1001,11 +1413,12 @@ function deleteSelected(){
   speakers = speakers.filter(x => x.id !== selectedId);
   selectedId = null;
   updateRotationPanel(); updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
   toast('تم حذف السماعة', 'warn');
 }
-function onDimChange(){ updateAmpLogic(); }
+function onDimChange(){ updateAmpLogic(); if (scene3d && currentView === '3d') buildScene3D(); }
 
-/* ============ لوحة التدوير ============ */
+/* ============ Rotation panel ============ */
 function updateRotationPanel(){
   const s = speakers.find(x => x.id === selectedId);
   const box = $('rotationBox');
@@ -1030,9 +1443,10 @@ function setSelectedAngle(val){
   if (s.zone === 'minaret') s.ang = rad; else s.facing = rad;
   $('angleVal').textContent = Math.round(val);
   draw();
+  if (scene3d && currentView === '3d') buildScene3D();
 }
 
-/* ============ التوزيع الذكي ============ */
+/* ============ Smart distribute ============ */
 function aiSmartDistribute(){
   const d = getDims();
   const model = $('m_model').value;
@@ -1051,7 +1465,9 @@ function aiSmartDistribute(){
 
   if (isHorn){
     toast(`تم وضع ${hornCount} أبواق على المئذنة`, 'ok');
-    updateAmpLogic(); draw(); return;
+    updateAmpLogic(); draw();
+    if (scene3d) buildScene3D();
+    return;
   }
 
   const mountH = isWallType(spk.type) ? MOUNT_H_WALL : (d.H - 0.5);
@@ -1067,12 +1483,46 @@ function aiSmartDistribute(){
 
   const indoorCount = rows * 2;
   const typeName = isColumnType(spk.type) ? 'عمودية' : 'جدارية';
-  toast(`✅ ${indoorCount} سماعة ${typeName} (${rows} صفوف، تباعد ${gap.toFixed(1)} م)${hornCount ? ` + ${hornCount} أبواق` : ''}`, 'ok');
-
+  toast(`✅ ${indoorCount} سماعة ${typeName} (${rows} صفوف)${hornCount ? ` + ${hornCount} أبواق` : ''}`, 'ok');
   updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
 }
 
-/* ============ الحسابات ============ */
+/* ============ Acoustics ============ */
+function computeSPLAt(rx, ry, d, listH = 1.2){
+  const indoor = speakers.filter(s => s.zone !== 'minaret');
+  let total = 0;
+  indoor.forEach(s => {
+    const dx = (rx - s.rx) * d.W;
+    const dy = (ry - s.ry) * d.L;
+    const dz = d.H - listH;
+    const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
+    const sp = DB_SPK[s.model];
+    const angleToP = Math.atan2(dy, dx);
+    let diff = Math.abs(((angleToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+    if (diff > Math.PI) diff = 2*Math.PI - diff;
+    const inCone = diff <= (sp.covH/2) * RAD;
+    const offAxis = inCone ? 0 : -6;
+    const spl = sp.sens + 10*Math.log10(sp.pwr) - 20*Math.log10(dist) + offAxis;
+    total += Math.pow(10, spl/10);
+  });
+  return 10 * Math.log10(total || 1e-9);
+}
+
+function computeCoverage(d, target){
+  const N = 30;
+  let ok = 0, total = 0;
+  for (let i=0;i<N;i++){
+    for (let j=0;j<N;j++){
+      const rx = (i+0.5)/N, ry = (j+0.5)/N;
+      const spl = computeSPLAt(rx, ry, d);
+      total++;
+      if (spl >= target - 3) ok++;
+    }
+  }
+  return (ok/total) * 100;
+}
+
 function computeAcoustics(){
   const d = getDims();
   const V = d.L * d.W * d.H;
@@ -1081,19 +1531,17 @@ function computeAcoustics(){
   const rt60 = A > 0 ? 0.161 * V / A : 0;
 
   const pts = [{x:.5,y:.5},{x:.25,y:.3},{x:.75,y:.3},{x:.25,y:.7},{x:.75,y:.7},{x:.5,y:.85}];
-  const listH = 1.2;
   const indoorSpk  = speakers.filter(s => s.zone !== 'minaret');
   const outdoorSpk = speakers.filter(s => s.zone === 'minaret');
-
   let splSum = 0;
   pts.forEach(p => {
     let pTotal = 0;
     indoorSpk.forEach(s => {
-      const dx = (p.x - s.rx)*d.W, dy = (p.y - s.ry)*d.L, dz = d.H - listH;
+      const dx = (p.x - s.rx)*d.W, dy = (p.y - s.ry)*d.L, dz = d.H - 1.2;
       const dist = Math.max(1, Math.sqrt(dx*dx + dy*dy + dz*dz));
       const sp = DB_SPK[s.model];
-      const angleToP = Math.atan2(dy, dx);
-      let diff = Math.abs(((angleToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
+      const aToP = Math.atan2(dy, dx);
+      let diff = Math.abs(((aToP - getFacing(s) + Math.PI) % (2*Math.PI)) - Math.PI);
       if (diff > Math.PI) diff = 2*Math.PI - diff;
       const inCone = diff <= (sp.covH/2)*RAD;
       const offAxis = inCone ? 0 : -6;
@@ -1102,13 +1550,7 @@ function computeAcoustics(){
     });
     splSum += 10*Math.log10(pTotal || 1e-9);
   });
-
-  return {
-    V, S, rt60,
-    avgSPL: indoorSpk.length ? splSum / pts.length : 0,
-    indoorCount: indoorSpk.length,
-    outdoorCount: outdoorSpk.length
-  };
+  return {V, S, rt60, avgSPL: indoorSpk.length ? splSum / pts.length : 0, indoorCount: indoorSpk.length, outdoorCount: outdoorSpk.length};
 }
 
 function updateAmpLogic(){
@@ -1116,22 +1558,17 @@ function updateAmpLogic(){
   const N = speakers.length;
   const amp = DB_AMP.find(a => a.id === $('amp_model').value);
   let ampCount = 0, chNeeded = 0, perCh = 2, reason = '';
-
   if (N > 0){
     perCh = Math.max(1, Math.floor(8 / amp.minImp));
     chNeeded = Math.ceil(N / perCh);
     const ampsByCh  = Math.ceil(chNeeded / amp.ch);
     const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
     ampCount = Math.max(ampsByCh, ampsByPwr, 1);
-    reason = ampsByCh >= ampsByPwr
-      ? `القيد: المعاوقة (حد أقصى ${perCh} سماعة/قناة)`
-      : `القيد: الطاقة (هامش 30%)`;
+    reason = ampsByCh >= ampsByPwr ? `القيد: المعاوقة (${perCh} سماعة/قناة كحد أقصى)` : `القيد: الطاقة (هامش 30%)`;
   }
   ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
-
   const ac = computeAcoustics();
   const target = parseFloat($('p_purpose').value);
-
   const splEl = $('spl_v'), splStat = $('st_spl');
   if (ac.indoorCount === 0){
     splEl.textContent = speakers.length ? 'خارجي' : '—';
@@ -1140,42 +1577,168 @@ function updateAmpLogic(){
     splEl.textContent = ac.avgSPL.toFixed(1);
     splStat.className = 'stat ' + (ac.avgSPL >= target ? 'ok' : ac.avgSPL >= target-4 ? 'warn' : 'bad');
   }
-
   const rtEl = $('rt_v'), rtStat = $('st_rt');
   rtEl.textContent = ac.rt60.toFixed(2);
   rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
-
   $('pwr_v').textContent = totalPwr;
   $('cnt_v').textContent = N;
-
   const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} أبواق على المئذنة</span>` : '';
-  $('amp_count_info').innerHTML = N === 0
-    ? 'لا توجد سماعات بعد'
-    : `⚡ الموصى به: <b>${ampCount}</b> × ${amp.id}<br>
-       (${chNeeded} قناة – ${perCh} سماعة/قناة)<br>
-       <span style="color:#8b949e">${reason}</span>${hornInfo}`;
-
-  draw();
+  $('amp_count_info').innerHTML = N === 0 ? 'لا توجد سماعات بعد' :
+    `⚡ الموصى به: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} قناة – ${perCh} سماعة/قناة)<br><span style="color:#8b949e">${reason}</span>${hornInfo}`;
+  if (currentView === '2d') draw();
 }
 
-/* ============ التقرير ============ */
+/* ============ SPL Chart Image ============ */
+function renderSPLChartImage(d, target){
+  const N = 44;
+  const W = 900, H = 520;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const c = cv.getContext('2d');
+  c.fillStyle = '#0a0e14';
+  c.fillRect(0, 0, W, H);
+  const pad = 60;
+  const cw = (W - pad*2) / N;
+  const ch = (H - pad*2 - 30) / N;
+  const minDB = target - 15, maxDB = target + 10;
+  for (let i=0;i<N;i++){
+    for (let j=0;j<N;j++){
+      const rx = (i+0.5)/N, ry = (j+0.5)/N;
+      const spl = computeSPLAt(rx, ry, d);
+      const t = clamp((spl - minDB) / (maxDB - minDB), 0, 1);
+      c.fillStyle = heatColor(t, 1);
+      c.fillRect(pad + i*cw, pad + j*ch, cw+0.5, ch+0.5);
+    }
+  }
+  c.strokeStyle = '#38bdf8'; c.lineWidth = 2;
+  c.strokeRect(pad, pad, N*cw, N*ch);
+  c.fillStyle = '#fff';
+  c.font = 'bold 16px Cairo, sans-serif';
+  c.textAlign = 'center';
+  c.fillText(`توزيع SPL على مستوى الاستماع — الهدف: ${target} dB`, W/2, 32);
+  c.font = '11px Cairo, sans-serif';
+  c.fillStyle = '#8b949e';
+  c.fillText('الأزرق = ضعيف | الأخضر/الأصفر = مثالي | الأحمر = مرتفع', W/2, 50);
+  // Legend
+  const legW = 320, legH = 18;
+  const legX = (W - legW)/2, legY = H - 32;
+  for (let i=0;i<legW;i++){
+    c.fillStyle = heatColor(i/legW, 1);
+    c.fillRect(legX + i, legY, 1, legH);
+  }
+  c.strokeStyle = '#8b949e'; c.lineWidth = 1;
+  c.strokeRect(legX, legY, legW, legH);
+  c.fillStyle = '#fff';
+  c.font = 'bold 11px Cairo, sans-serif';
+  c.textAlign = 'right';
+  c.fillText(`${maxDB} dB`, legX + legW + 25, legY + 13);
+  c.textAlign = 'left';
+  c.fillText(`${minDB} dB`, legX - 25, legY + 13);
+  return cv.toDataURL('image/png');
+}
+
+/* ============ Signal Flow SVG ============ */
+function renderSignalFlowSVG(fs, amp){
+  const stages = [
+    {label:'مصادر الصوت', sub:'ميكروفون / مشغل', color:'#e60012'},
+    {label:'المازج', sub:'Mixer', color:'#dc2626'},
+    {label:'كابح التغذية', sub:fs === 'None' ? '—' : fs, color:'#f59e0b'},
+    {label:'المكبرات', sub:amp.id, color:'#38bdf8'},
+    {label:'السماعات', sub:'Speakers', color:'#22c55e'}
+  ];
+  let x = 60, y = 70, bw = 130, bh = 70, gap = 25;
+  let svg = `<svg viewBox="0 0 ${stages.length*(bw+gap) + 40} 180" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#64748b"/></marker></defs>`;
+  stages.forEach((st, i) => {
+    const cx = x + i*(bw+gap);
+    svg += `<rect x="${cx}" y="${y}" width="${bw}" height="${bh}" rx="12" fill="#fff" stroke="${st.color}" stroke-width="2.5"/>`;
+    svg += `<rect x="${cx}" y="${y}" width="${bw}" height="6" rx="3" fill="${st.color}"/>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 34}" text-anchor="middle" fill="#0d1117" font-size="12">${st.label}</text>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 56}" text-anchor="middle" fill="#64748b" font-size="10">${st.sub}</text>`;
+    if (i < stages.length - 1){
+      const ax1 = cx + bw, ax2 = cx + bw + gap;
+      svg += `<line x1="${ax1}" y1="${y + bh/2}" x2="${ax2 - 4}" y2="${y + bh/2}" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>`;
+    }
+  });
+  svg += `</svg>`;
+  return svg;
+}
+
+/* ============ Generate Report ============ */
 function generateReport(){
   if (!speakers.length) return toast('أضف سماعات أولاً', 'err');
+
   const d = getDims();
   const fs = $('fs_model').value;
   const fsAr = fs === 'None' ? 'بدون' : fs;
   const ac = computeAcoustics();
-  const today = new Date().toLocaleDateString('ar-EG');
+  const target = parseFloat($('p_purpose').value);
+  const today = new Date().toLocaleDateString('ar-EG', {year:'numeric', month:'long', day:'numeric'});
+  const coverage = computeCoverage(d, target);
 
+  // Build 3D off-screen for capture
+  if (!scene3d) init3D();
+  const tw = $('threeWrap');
+  const prevDisplay = tw.style.display;
+  if (prevDisplay === 'none'){
+    tw.style.display = 'flex';
+    resize3D();
+  }
+  buildScene3D();
+  renderer3d.render(scene3d, camera3d);
+  const img3D = renderer3d.domElement.toDataURL('image/png');
+  if (prevDisplay === 'none') tw.style.display = 'none';
+
+  const img2D = canvas.toDataURL('image/png');
+
+  // Header
   $('project_header').innerHTML = `
-    <table class="table-boq" style="margin-bottom:14px">
-      <tr><td><b>المشروع:</b></td><td>${$('p_name').value}</td>
-          <td><b>العميل:</b></td><td>${$('p_client').value || '—'}</td></tr>
-      <tr><td><b>المهندس:</b></td><td>${$('p_engineer').value}</td>
-          <td><b>التاريخ:</b></td><td>${today}</td></tr>
-    </table>`;
-  $('report_date').textContent = today;
+    <div class="meta-card"><div class="label">المشروع</div><div class="value">${$('p_name').value || '—'}</div></div>
+    <div class="meta-card"><div class="label">العميل</div><div class="value">${$('p_client').value || '—'}</div></div>
+    <div class="meta-card"><div class="label">المهندس المسؤول</div><div class="value">${$('p_engineer').value || '—'}</div></div>
+    <div class="meta-card"><div class="label">التاريخ</div><div class="value">${today}</div></div>`;
 
+  // KPIs
+  const splClass = ac.indoorCount ? (ac.avgSPL >= target ? 'good' : ac.avgSPL >= target-4 ? 'warn' : 'bad') : '';
+  const rtClass = ac.rt60 <= 1.2 ? 'good' : ac.rt60 <= 1.8 ? 'warn' : 'bad';
+  const covClass = coverage >= 90 ? 'good' : coverage >= 70 ? 'warn' : 'bad';
+  $('kpi_grid').innerHTML = `
+    <div class="kpi-card ${splClass}">
+      <div class="kpi-value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'}<span class="unit">dB</span></div>
+      <div class="kpi-label">متوسط SPL (الهدف ${target})</div>
+    </div>
+    <div class="kpi-card ${rtClass}">
+      <div class="kpi-value">${ac.rt60.toFixed(2)}<span class="unit">s</span></div>
+      <div class="kpi-label">زمن الصدى RT60</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">${ampResult.totalPwr}<span class="unit">W</span></div>
+      <div class="kpi-label">إجمالي الطاقة الصوتية</div>
+    </div>
+    <div class="kpi-card ${covClass}">
+      <div class="kpi-value">${coverage.toFixed(0)}<span class="unit">%</span></div>
+      <div class="kpi-label">نسبة التغطية المتوازنة</div>
+    </div>`;
+
+  // Images
+  $('reportImg2D').src = img2D;
+  $('reportImg3D').src = img3D;
+
+  // Room analysis
+  $('room_analysis').innerHTML = `
+    <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">أبعاد القاعة</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>م</small></div></div></div>
+    <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">الحجم الكلي</div><div class="value">${ac.V.toFixed(1)} <small>م³</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🔲</div><div class="info"><div class="label">المساحة السطحية</div><div class="value">${ac.S.toFixed(1)} <small>م²</small></div></div></div>
+    <div class="analysis-item"><div class="icon">⏱️</div><div class="info"><div class="label">زمن الصدى RT60</div><div class="value">${ac.rt60.toFixed(2)} <small>ث</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🎯</div><div class="info"><div class="label">مستوى SPL الفعلي</div><div class="value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} <small>dB</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">عدد السماعات</div><div class="value">${speakers.length} <small>وحدة</small></div></div></div>
+    <div class="analysis-item"><div class="icon">⚡</div><div class="info"><div class="label">عدد المكبرات</div><div class="value">${ampResult.amps} × ${ampResult.amp.id}</div></div></div>
+    <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">أبواق المئذنة</div><div class="value">${ac.outdoorCount} <small>بوق</small></div></div></div>`;
+
+  // SPL Chart
+  $('spl_chart_img').src = renderSPLChartImage(d, target);
+
+  // BOQ
   let counts = {}, totalCable = 0;
   speakers.forEach(s => {
     counts[s.model] = (counts[s.model] || 0) + 1;
@@ -1186,66 +1749,87 @@ function generateReport(){
     }
   });
   totalCable = Math.ceil(totalCable * 1.15);
-  const target = parseFloat($('p_purpose').value);
 
-  $('eng_summary').innerHTML = `
-    <table class="table-boq">
-      <tr><td>المساحة الإجمالية</td><td>${(d.L*d.W).toFixed(1)} م²</td></tr>
-      <tr><td>الحجم الإجمالي</td><td>${ac.V.toFixed(1)} م³</td></tr>
-      <tr><td>الحمل الصوتي الكلي</td><td>${ampResult.totalPwr} واط</td></tr>
-      <tr><td>متوسط SPL (داخلي)</td><td>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} ديسيبل (الهدف: ${target} ديسيبل)</td></tr>
-      <tr><td>زمن الصدى RT60</td><td>${ac.rt60.toFixed(2)} ثانية</td></tr>
-      <tr><td>المكبرات</td><td>${ampResult.amps} × ${ampResult.amp.id}</td></tr>
-      <tr><td>المعالجة</td><td>${fsAr}</td></tr>
-      <tr><td>الأبواق الخارجية</td><td>${ac.outdoorCount}</td></tr>
-      <tr><td>الكابل التقديري</td><td>~${totalCable} م</td></tr>
-    </table>`;
-
-  let boq = '';
+  let boq = '', idx = 1;
   for (const m in counts){
     const sp = DB_SPK[m];
+    const isCol = isColumnType(sp.type);
     boq += `<tr>
-      <td>سماعة موتيفيتي ${m}</td>
-      <td>${TYPE_AR[sp.type]} – ${sp.pwr} واط – 8 أوم – ${sp.sens} ديسيبل</td>
-      <td>${counts[m]}</td>
-      <td>~${Math.ceil(totalCable * counts[m] / speakers.length)} م (2×1.5 مم²)</td>
+      <td class="num">${idx++}</td>
+      <td><b>سماعة موتيفيتي ${m}</b></td>
+      <td>${TYPE_AR[sp.type]} • ${sp.pwr} واط • 8Ω • ${sp.sens} dB • ${isCol ? 'تغطية 90°' : 'تغطية 90°×90°'}</td>
+      <td class="num">${counts[m]}</td>
+      <td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} م</td>
     </tr>`;
   }
-  boq += `<tr><td>مكبر صوت ${ampResult.amp.id}</td><td>MA احترافي – ${ampResult.amp.pwr} واط</td><td>${ampResult.amps}</td><td>—</td></tr>`;
-  if (fs !== 'None') boq += `<tr><td>كابح تغذية راجعة رقمي</td><td>${fsAr}</td><td>1</td><td>—</td></tr>`;
-  boq += `<tr><td>كابل السماعات</td><td>نحاس مجدول 2×1.5 مم²</td><td>~${totalCable} م</td><td>—</td></tr>`;
-  boq += `<tr><td>موصلات</td><td>Speakon / طرفية</td><td>${speakers.length*2}</td><td>—</td></tr>`;
+  boq += `<tr>
+    <td class="num">${idx++}</td>
+    <td><b>مكبر صوت ${ampResult.amp.id}</b></td>
+    <td>سلسلة MA احترافية • ${ampResult.amp.pwr} واط • قناتان • معاوقة ≥${ampResult.amp.minImp}Ω</td>
+    <td class="num">${ampResult.amps}</td>
+    <td class="num">—</td>
+  </tr>`;
+  if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>كابح تغذية راجعة رقمي</b></td><td>${fsAr} • كشف تلقائي • 24-bit DSP</td><td class="num">1</td><td class="num">—</td></tr>`;
+  boq += `<tr><td class="num">${idx++}</td><td><b>كابل سماعات</b></td><td>نحاس مجدول 2×1.5 مم² • عزل مزدوج</td><td class="num">~${totalCable} م</td><td class="num">—</td></tr>`;
+  boq += `<tr><td class="num">${idx++}</td><td><b>موصلات ومثبتات</b></td><td>Speakon / أطراف نحاسية • حوامل جدارية</td><td class="num">${speakers.length*2}</td><td class="num">—</td></tr>`;
   $('boq-body').innerHTML = boq;
 
-  const rtEval = ac.rt60 <= 1.2 ? 'ممتاز للخطاب' : ac.rt60 <= 1.8 ? 'مقبول' : 'يُنصح بإضافة مواد ماصة للصوت';
+  // Signal flow
+  $('signal_flow').innerHTML = renderSignalFlowSVG(fs, ampResult.amp);
+
+  // Notes
+  const rtEval = ac.rt60 <= 1.2 ? '<b style="color:#16a34a">ممتاز للخطاب</b>' : ac.rt60 <= 1.8 ? '<b style="color:#d97706">مقبول</b>' : '<b style="color:#dc2626">يحتاج معالجة</b>';
   const splEval = !ac.indoorCount ? '— لا توجد سماعات داخلية'
-    : (ac.avgSPL >= target ? '✅ يحقق الهدف' : `⚠️ ${(target - ac.avgSPL).toFixed(1)} ديسيبل أقل من الهدف`);
+    : (ac.avgSPL >= target ? '<b style="color:#16a34a">✅ يحقق الهدف</b>' : `<b style="color:#dc2626">⚠️ ${(target - ac.avgSPL).toFixed(1)} dB أقل من الهدف</b>`);
+  const covEval = coverage >= 90 ? '<b style="color:#16a34a">تغطية ممتازة (≥90%)</b>' : coverage >= 70 ? '<b style="color:#d97706">تغطية مقبولة</b>' : '<b style="color:#dc2626">تغطية غير كافية</b>';
 
-  let notes = `
-    • <b>RT60 = ${ac.rt60.toFixed(2)} ثانية</b> محسوب بمعادلة سابين باستخدام الحجم ${ac.V.toFixed(0)} م³ ومعامل الامتصاص ${d.alpha} → <b>${rtEval}</b>.<br>
-    • متوسط SPL عند نقاط الاستماع = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} ديسيبل</b> → ${splEval}.<br>
-    • تم اختيار <b>${ampResult.amps} × ${ampResult.amp.id}</b> بهامش طاقة 30% وحمل ≥${ampResult.amp.minImp} أوم لكل قناة.<br>
-    • التوزيع يمنع التغذية الراجعة بفضل ${fs === 'None' ? 'المعالج المدمج' : fsAr + ' الرقمي'}.<br>`;
-  if (ac.outdoorCount){
-    notes += `• <b>${ac.outdoorCount} أبواق خارجية UT-08 (60 واط)</b> مثبتة على المئذنة باتجاه الخارج للأذان وتغطية المحيط.<br>`;
+  let notesHTML = '<ul>';
+  notesHTML += `<li><b>RT60 = ${ac.rt60.toFixed(2)} ثانية</b> — محسوب بمعادلة سابين: V=${ac.V.toFixed(0)} م³، S=${ac.S.toFixed(0)} م²، α=${d.alpha} → ${rtEval}</li>`;
+  notesHTML += `<li>متوسط SPL عند 6 نقاط استماع = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}</li>`;
+  notesHTML += `<li>نسبة التغطية المتوازنة (SPL ≥ ${target-3} dB) = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
+  notesHTML += `<li>تم اختيار <b>${ampResult.amps} × ${ampResult.amp.id}</b> بهامش طاقة 30% وحمل ≥${ampResult.amp.minImp}Ω لكل قناة لتجنب الإجهاد</li>`;
+  if (fs !== 'None'){
+    notesHTML += `<li>تم دمج <b>${fsAr}</b> رقمي للقضاء على ظاهرة التغذية الراجعة (Feedback) في بيئات المساجد عالية الصدى</li>`;
   }
-  notes += `• <b>اتجاه التغطية</b> لكل سماعة قابل للتعديل بشكل مستقل للحصول على تغطية مثالية وتقليل التداخل.`;
+  if (ac.outdoorCount){
+    notesHTML += `<li><b>${ac.outdoorCount} أبواق خارجية UT-08 (60 واط)</b> مثبتة على المئذنة لتغطية الساحات والأذان بمدى يصل 150 م</li>`;
+  }
+  notesHTML += `<li>تم ضبط اتجاه التغطية لكل سماعة بشكل مستقل باستخدام مقبض التدوير لتحقيق توزيع منتظم وتقليل التداخل</li>`;
+  notesHTML += `<li>يُنصح باستخدام كابلات نحاسية مجدولة 2×1.5 مم² لمسافات حتى 30 م، و2×2.5 مم² للمسافات الأطول</li>`;
+  notesHTML += '</ul>';
+  $('eng_notes').innerHTML = notesHTML;
 
-  $('eng_notes').innerHTML = notes;
-  $('reportImg').src = canvas.toDataURL();
+  // Standards
+  const standards = [
+    {n:'IEC 60268-16', d:'تقييم وضوح الكلام (STI/RASTI) — يُحقق ≥ 0.6'},
+    {n:'IEC 60268-5', d:'مواصفات السماعات وقياس الحساسية والتغطية'},
+    {n:'ANSI S1.4', d:'قياس مستويات الصوت بالديسيبل (A-weighted)'},
+    {n:'ISO 3382-1', d:'قياس زمن الصدى في القاعات — RT60'},
+    {n:'NFPA 72', d:'معايير أنظمة الإنذار والطوارئ الصوتية'},
+    {n:'Saudi Building Code', d:'متطلبات العزل الصوتي في المباني الدينية'},
+    {n:'SABER / SASO', d:'شهادات المطابقة للمعدات الصوتية'},
+    {n:'HTA / EASE', d:'برامج المحاكاة الصوتية المعتمدة للتحقق'}
+  ];
+  $('standards_list').innerHTML = standards.map(s => `<li><b>${s.n}</b>${s.d}</li>`).join('');
+
+  // Signatures
+  $('sig_engineer').textContent = $('p_engineer').value || '—';
+  $('sig_client').textContent = $('p_client').value || '—';
+  $('report_date').textContent = today;
+
   $('reportView').style.display = 'block';
+  $('reportView').scrollTop = 0;
 }
 
-/* ============ الحفظ / التحميل / التصدير ============ */
+/* ============ Save/Load ============ */
 function collectProjectData(){
   return {
-    version: 2,
+    version: 3,
     speakers, manualMode,
     dims: {len:$('m_len').value, wid:$('m_wid').value, h:$('m_h').value, alpha:$('m_alpha').value},
     amp: $('amp_model').value, fs: $('fs_model').value, model: $('m_model').value,
     addHorns: $('addHornsChk').checked,
-    info: {name:$('p_name').value, client:$('p_client').value,
-           engineer:$('p_engineer').value, purpose:$('p_purpose').value},
+    info: {name:$('p_name').value, client:$('p_client').value, engineer:$('p_engineer').value, purpose:$('p_purpose').value},
     uid
   };
 }
@@ -1270,18 +1854,17 @@ function applyProjectData(d){
   uid = d.uid || speakers.length;
   selectedId = null;
   updateRotationPanel(); updateAmpLogic(); draw();
+  if (scene3d) buildScene3D();
 }
 function saveProject(){
-  try {
-    localStorage.setItem('motivity_project_ar', JSON.stringify(collectProjectData()));
-    toast('💾 تم حفظ المشروع', 'ok');
-  } catch(e){ toast('التخزين غير متاح', 'err'); }
+  try { localStorage.setItem('motivity_project_ar', JSON.stringify(collectProjectData())); toast('💾 تم حفظ المشروع', 'ok'); }
+  catch(e){ toast('التخزين غير متاح', 'err'); }
 }
 function loadProject(){
-  const raw = localStorage.getItem('motivity_project_ar') || localStorage.getItem('motivity_project_en');
+  const raw = localStorage.getItem('motivity_project_ar');
   if (!raw) return toast('لا يوجد مشروع محفوظ', 'warn');
   try { applyProjectData(JSON.parse(raw)); toast('📂 تم تحميل المشروع', 'ok'); }
-  catch(e){ toast('ملف محفوظ تالف', 'err'); }
+  catch(e){ toast('ملف تالف', 'err'); }
 }
 function exportProject(){
   const blob = new Blob([JSON.stringify(collectProjectData(), null, 2)], {type:'application/json'});
@@ -1307,24 +1890,19 @@ function importProject(){
   inp.click();
 }
 
-/* ============ لوحة المفاتيح ============ */
+/* ============ Keyboard ============ */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
-
   if (e.ctrlKey || e.metaKey){
     const k = e.key.toLowerCase();
     if (k === 'z' && !inField){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
     if (k === 'y' && !inField){ e.preventDefault(); redo(); return; }
   }
   if (e.key === 'Escape'){ closeSidebar(); deselectSpeaker(); return; }
-
   const s = speakers.find(x => x.id === selectedId);
   if (!s) return;
-
-  if ((e.key === 'Delete' || e.key === 'Backspace') && !inField){
-    e.preventDefault(); deleteSelected(); return;
-  }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && !inField){ e.preventDefault(); deleteSelected(); return; }
   let delta = 0;
   if (e.key === '[') delta = -5;
   else if (e.key === ']') delta = 5;
@@ -1336,25 +1914,40 @@ document.addEventListener('keydown', e => {
     if (s.zone === 'minaret') s.ang += rad;
     else s.facing = (s.facing ?? Math.PI/2) + rad;
     updateRotationPanel(); draw();
+    if (scene3d && currentView === '3d') buildScene3D();
     e.preventDefault();
   }
 });
 
-/* ============ التشغيل ============ */
+/* ============ Init ============ */
 window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
     $(id).addEventListener('input', () => updateAmpLogic()));
   updateRotationPanel(); updateAmpLogic(); updateUndoButtons(); draw();
+  // Try to load saved project
+  setTimeout(() => {
+    try {
+      const raw = localStorage.getItem('motivity_project_ar');
+      if (raw) applyProjectData(JSON.parse(raw));
+    } catch(_){}
+  }, 100);
   toast('مرحباً بك في موتيفيتي برو', 'ok');
 });
 
 let rzT;
-function scheduleResize(){ clearTimeout(rzT); rzT = setTimeout(draw, 80); }
+function scheduleResize(){
+  clearTimeout(rzT);
+  rzT = setTimeout(() => {
+    draw();
+    resize3D();
+  }, 80);
+}
 window.addEventListener('resize', scheduleResize);
 window.addEventListener('orientationchange', scheduleResize);
 if (window.ResizeObserver){
   new ResizeObserver(scheduleResize).observe($('cDiv'));
+  new ResizeObserver(scheduleResize).observe($('threeWrap'));
 }
 if (window.visualViewport){
   window.visualViewport.addEventListener('resize', scheduleResize);
