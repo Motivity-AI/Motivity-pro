@@ -2017,7 +2017,7 @@ function drawScreenOverlays(cfg) {
   if (!isMob) {
     const lgW = 200;
     const items = [
-      { sym: 'spk', label: 'سماعة سقف' }, { sym: 'chair', label: 'وحدة رئيس' },
+      { sym: 'spk', label: 'سماعة جدارية' }, { sym: 'chair', label: 'وحدة رئيس' },
       { sym: 'del', label: 'وحدة عضو' }, { sym: 'wl', label: 'وحدة لاسلكية' },
       { sym: 'podium', label: 'منصة / شاشة' }, { sym: 'cam', label: 'كاميرا' },
       { sym: 'rack', label: 'رف' }
@@ -2742,7 +2742,7 @@ function generateReport() {
   const addRow = (it, m, q, s) => boq.push(`<tr><td>${rowNum++}</td><td>${it}</td><td>${m}</td><td>${q}</td><td>${s}</td></tr>`);
 
   addCat('🔊 أولاً: النظام الصوتي');
-  addRow('سماعات سقف', 'Motivity ' + cfg.modelKey, total, `${cfg.spk.pwr}W · ${cfg.spk.angle}°`);
+  addRow('سماعات جدارية', 'Motivity ' + cfg.modelKey, total, `${cfg.spk.pwr}W · ${cfg.spk.angle}°`);
   let ampModel = "MA-1000C", ampQty = 1, ampPower = 1000;
   if (totalW <= 350) { ampModel = "MA-350C"; ampPower = 350; }
   else if (totalW <= 450) { ampModel = "MA-450C"; ampPower = 450; }
