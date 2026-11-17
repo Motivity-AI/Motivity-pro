@@ -52,7 +52,7 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
 #threeWrap{position:relative}
 #threeWrap canvas{display:block;border:2px solid #333;border-radius:10px;touch-action:none}
-#threeWrap::after{content:'🖱️ اسحب للتدوير — عجلة الفأرة للتقريب';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
+#threeWrap::after{content:'🖱️ اسحب للتدوير — عجلة الفأرة للتقريب والدخول للقاعة';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
 canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
 #menuBtn{display:none;position:fixed;top:calc(10px + var(--safe-t));right:10px;z-index:200;width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;border:none;font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0}
 #menuBtn:active{transform:scale(.93)}
@@ -370,6 +370,28 @@ let ampResult = {amps:0}, currentView = '2d';
 /* ============ 3D ============ */
 let scene3d, camera3d, renderer3d, controls3d, group3d, autoRotate3D = false;
 
+/* ============ خامات AURALIS 3D ============ */
+const M3D = {
+  body:         () => new THREE.MeshStandardMaterial({color:0x151b2b, roughness:0.4,  metalness:0.6}),
+  dark:         () => new THREE.MeshStandardMaterial({color:0x080c14, roughness:0.8,  metalness:0.3}),
+  gray:         () => new THREE.MeshStandardMaterial({color:0x2c3548, roughness:0.5,  metalness:0.5}),
+  metal:        () => new THREE.MeshStandardMaterial({color:0xd0d8e8, roughness:0.2,  metalness:0.9}),
+  steel:        () => new THREE.MeshStandardMaterial({color:0x9ca3af, roughness:0.4,  metalness:0.7, side:THREE.DoubleSide}),
+  woodDark:     () => new THREE.MeshStandardMaterial({color:0x22150d, roughness:0.5,  metalness:0.1}),
+  woodAccent:   () => new THREE.MeshStandardMaterial({color:0x855233, roughness:0.6,  metalness:0.1}),
+  carpet:       () => new THREE.MeshStandardMaterial({color:0x111827, roughness:0.95, metalness:0.05}),
+  wallWoodPanel:() => new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.6,  metalness:0.1, side:THREE.DoubleSide}),
+  wallGlass:    () => new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.5,  metalness:0.15, transparent:true, opacity:0.88, side:THREE.DoubleSide}),
+  acousticPanel:() => new THREE.MeshStandardMaterial({color:0x1e2433, roughness:0.9,  metalness:0.1}),
+  ceiling:      () => new THREE.MeshStandardMaterial({color:0x0f172a, roughness:0.9,  metalness:0.05, side:THREE.DoubleSide}),
+  ceilingPanel: () => new THREE.MeshStandardMaterial({color:0xf8fafc, emissive:0xffffff, emissiveIntensity:0.5, roughness:0.6}),
+  gold:         () => new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.5, metalness:0.9, roughness:0.2}),
+  ledGreen:     () => new THREE.MeshStandardMaterial({color:0x10b981, emissive:0x10b981, emissiveIntensity:3}),
+  spkCol:       () => new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.4,  metalness:0.6, emissive:0x2a0004, emissiveIntensity:0.35}),
+  spkWall:      () => new THREE.MeshStandardMaterial({color:0xff8c1a, roughness:0.4,  metalness:0.55, emissive:0x2a1200, emissiveIntensity:0.35}),
+  spkCeil:      () => new THREE.MeshStandardMaterial({color:0xa78bfa, roughness:0.35, metalness:0.75, emissive:0x4c1d95, emissiveIntensity:0.5})
+};
+
 /* ============ Undo/Redo ============ */
 const MAX_UNDO = 40;
 let undoStack = [], redoStack = [], dragSnapshot = null;
@@ -592,7 +614,6 @@ function computeSPLAt(rx, ry, d, listH = LISTENER_H){
     const colAtt = columnBlocking(s.rx, s.ry, rx, ry, d);
     let spl;
     if (isCeilingType(sp.type)) {
-      // سماعة سقفية: تشع عمودياً للأسفل بمخروط
       const dz = d.H - listH;
       const horiz = Math.sqrt(dx*dx + dy*dy);
       const dist = Math.max(1, Math.sqrt(horiz*horiz + dz*dz));
@@ -688,7 +709,7 @@ function updateAmpLogic(){
   if (currentView === '2d') draw();
 }
 
-/* ============ رسم السماعات ============ */
+/* ============ رسم السماعات 2D ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
@@ -755,24 +776,19 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.fillText("موضع حر", lx, pos.y+18);
 }
 
-/* ============ سماعة السقف (2D) ============ */
 function drawCeilingSpeaker(pos, s, isSel){
   const r = isSel ? 14 : 11;
   const baseColor = "#a78bfa";
-  // هالة
   ctx.fillStyle = isSel ? "rgba(167,139,250,.35)" : "rgba(167,139,250,.18)";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
-  // الجسم
   ctx.fillStyle = isSel ? "#38bdf8" : baseColor;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "#000"; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
-  // حلقات الشبكة
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 1;
   for (let i = 1; i <= 3; i++){
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r * i / 4, 0, Math.PI*2); ctx.stroke();
   }
-  // خطوط شعاعية
   ctx.strokeStyle = "rgba(0,0,0,.4)";
   for (let a = 0; a < Math.PI*2; a += Math.PI/6){
     ctx.beginPath();
@@ -780,15 +796,12 @@ function drawCeilingSpeaker(pos, s, isSel){
     ctx.lineTo(pos.x + Math.cos(a) * r * 0.9, pos.y + Math.sin(a) * r * 0.9);
     ctx.stroke();
   }
-  // مركز
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI*2); ctx.fill();
-  // حلقة التحديد
   if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
   }
-  // سهم للأسفل
   ctx.strokeStyle = isSel ? "#fff" : "#a78bfa";
   ctx.lineWidth = 2.2;
   ctx.beginPath();
@@ -798,7 +811,6 @@ function drawCeilingSpeaker(pos, s, isSel){
   ctx.lineTo(pos.x, pos.y + r + 13);
   ctx.lineTo(pos.x + 4, pos.y + r + 9);
   ctx.stroke();
-  // اسم
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 22);
   ctx.font = "bold 12px Cairo, sans-serif";
@@ -833,7 +845,7 @@ function drawColumns2D(){
   });
 }
 
-/* ============ الرسم الرئيسي ============ */
+/* ============ الرسم الرئيسي 2D ============ */
 function draw(){
   const div = $('cDiv');
   if (!div.clientWidth || !div.clientHeight || currentView !== '2d') return;
@@ -897,7 +909,6 @@ function draw(){
   ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("المئذنة", mcx, mcy + mS*0.62);
 
-  // التغطية
   if (showCoverage){
     ctx.save(); pathHallShape(); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
@@ -905,7 +916,6 @@ function draw(){
       const isSel = s.id === selectedId;
       const pos = getSpeakerPos(s);
       if (isCeilingType(db.type)){
-        // بقعة دائرية على الأرض
         const covRadius = (d.H - LISTENER_H) * Math.tan((db.covH/2) * RAD) * layout.scale;
         ctx.fillStyle = isSel ? 'rgba(167,139,250,.28)' : 'rgba(167,139,250,.10)';
         ctx.beginPath();
@@ -928,7 +938,6 @@ function draw(){
     ctx.restore();
   }
 
-  // السماعات
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -965,7 +974,7 @@ function draw(){
   drawColumns2D();
 }
 
-/* ============ التفاعل ============ */
+/* ============ التفاعل 2D ============ */
 function getPointer(e){
   const r = canvas.getBoundingClientRect();
   const sx = canvas.width / r.width, sy = canvas.height / r.height;
@@ -1055,7 +1064,6 @@ function onPointerDown(e){
   const spk = DB_SPK[model];
   const type = spk.type;
 
-  // الوضع اليدوي
   if (manualMode){
     pushUndo();
     if (isMinaretArea(m)){
@@ -1077,7 +1085,6 @@ function onPointerDown(e){
     if (scene3d) buildScene3D(); return;
   }
 
-  // الوضع التلقائي
   if (isHornType(type)){
     if (isMinaretArea(m)){
       pushUndo();
@@ -1207,48 +1214,77 @@ function toggleAutoRotate3D(){
   $('autoRotBtn').classList.toggle('on', autoRotate3D);
 }
 
-/* ============ 3D ============ */
+/* ============ 3D (AURALIS Realistic Architecture) ============ */
 function init3D(){
   const c = $('threeWrap');
   if (!c || c.dataset.ready) return;
   c.dataset.ready = '1';
   const w = Math.max(c.clientWidth, 800), h = Math.max(c.clientHeight, 600);
+
   scene3d = new THREE.Scene();
-  scene3d.background = new THREE.Color(0x0a0e14);
-  scene3d.fog = new THREE.Fog(0x0a0e14, 100, 280);
-  camera3d = new THREE.PerspectiveCamera(45, w/h, 0.1, 500);
-  camera3d.position.set(35, 28, 42);
+  const skyColor = 0x0a0f1a;
+  scene3d.background = new THREE.Color(skyColor);
+  scene3d.fog = new THREE.Fog(skyColor, 60, 220);
+
+  camera3d = new THREE.PerspectiveCamera(50, w/h, 0.1, 500);
+
   renderer3d = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
   renderer3d.setSize(w, h);
   renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer3d.shadowMap.enabled = true;
   renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer3d.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer3d.toneMappingExposure = 1.25;
   c.appendChild(renderer3d.domElement);
+
   controls3d = new THREE.OrbitControls(camera3d, renderer3d.domElement);
-  controls3d.enableDamping = true; controls3d.dampingFactor = 0.08;
-  controls3d.minDistance = 8; controls3d.maxDistance = 200;
+  controls3d.enableDamping = true;
+  controls3d.dampingFactor = 0.08;
+  controls3d.minDistance = 2;
+  controls3d.maxDistance = 180;
   controls3d.maxPolarAngle = Math.PI/2 - 0.02;
-  controls3d.target.set(0, 4, 0);
-  scene3d.add(new THREE.HemisphereLight(0x38bdf8, 0x0a0a0a, 0.55));
-  const key = new THREE.DirectionalLight(0xffffff, 1.1);
-  key.position.set(30, 50, 30); key.castShadow = true;
-  key.shadow.mapSize.width = 2048; key.shadow.mapSize.height = 2048;
-  key.shadow.camera.left = -80; key.shadow.camera.right = 80;
-  key.shadow.camera.top = 80; key.shadow.camera.bottom = -80;
-  key.shadow.camera.far = 200;
-  scene3d.add(key);
-  const fill = new THREE.DirectionalLight(0xe60012, 0.35);
-  fill.position.set(-30, 25, -25); scene3d.add(fill);
-  const rim = new THREE.PointLight(0x38bdf8, 0.7, 120);
-  rim.position.set(0, 12, 0); scene3d.add(rim);
-  group3d = new THREE.Group(); scene3d.add(group3d);
+
+  // إضاءة AURALIS المتكاملة
+  scene3d.add(new THREE.AmbientLight(0xe0e8ff, 0.75));
+  scene3d.add(new THREE.HemisphereLight(0xc8d8ff, 0x1a1f30, 0.7));
+
+  const sun = new THREE.DirectionalLight(0xfff5e0, 1.35);
+  sun.position.set(18, 32, 16);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.left = -60; sun.shadow.camera.right = 60;
+  sun.shadow.camera.top = 60; sun.shadow.camera.bottom = -60;
+  sun.shadow.camera.near = 1; sun.shadow.camera.far = 160;
+  sun.shadow.bias = -0.0005;
+  scene3d.add(sun);
+
+  const fill = new THREE.DirectionalLight(0xa8b0ff, 0.55);
+  fill.position.set(-16, 20, -14);
+  scene3d.add(fill);
+
+  // إضاءة داخلية دافئة لإبراز تفاصيل المسجد من الداخل
+  const interiorLight = new THREE.PointLight(0xfff2dc, 0.9, 60);
+  interiorLight.position.set(0, 4.5, 0);
+  scene3d.add(interiorLight);
+
+  // شبكة الأرضية الخارجية (AURALIS Grid)
+  const grid = new THREE.GridHelper(220, 110, 0x3b82f6, 0x1a1f30);
+  grid.material.opacity = 0.14;
+  grid.material.transparent = true;
+  grid.position.y = 0.004;
+  scene3d.add(grid);
+
+  group3d = new THREE.Group();
+  scene3d.add(group3d);
   animate3D();
 }
+
 function animate3D(){
   requestAnimationFrame(animate3D);
   if (controls3d) controls3d.update();
   if (renderer3d && scene3d && camera3d) renderer3d.render(scene3d, camera3d);
 }
+
 function clear3D(){
   if (!group3d) return;
   while(group3d.children.length){
@@ -1261,13 +1297,15 @@ function clear3D(){
     }
   }
 }
-function addWallPlane(x1, z1, x2, z2, H, mat){
+
+function addWallBox3D(x1, z1, x2, z2, H, mat){
   const dx = x2 - x1, dz = z2 - z1;
   const len = Math.hypot(dx, dz);
-  const geo = new THREE.PlaneGeometry(len, H);
-  const mesh = new THREE.Mesh(geo, mat);
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, H, 0.22), mat);
   mesh.position.set((x1+x2)/2, H/2, (z1+z2)/2);
   mesh.rotation.y = -Math.atan2(dz, dx);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -1278,128 +1316,247 @@ function buildScene3D(){
   if (!d.L || !d.W) return;
   const W = d.W, L = d.L, H = d.H;
   const shape = getShape();
-  const floorMat = new THREE.MeshStandardMaterial({color:0x1a1f27, roughness:0.9, metalness:0.05});
-  const wallMat = new THREE.MeshStandardMaterial({color:0x38bdf8, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
-  const edgeMat = new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85});
 
-  if (shape === 'circle'){
+  const carpetMat = M3D.carpet();
+  const borderMat = M3D.dark();
+  const solidWallMat = M3D.wallWoodPanel(); // جدران خشبية صلبة واقعية مثل AURALIS
+  const cutWallMat = M3D.wallGlass();       // جدار أمامي/جانبي مائل للشفافية فقط عند النظر من الخارج أو نوافذ معمارية
+
+  // 1) الأرضية وإطارها الداكن (نمط AURALIS)
+  if (shape === 'circle' || shape === 'octagon'){
     const R = Math.min(W, L) / 2;
-    const fGeo = new THREE.CircleGeometry(R, 64); fGeo.rotateX(-Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat);
-    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
-    f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
-  } else if (shape === 'octagon'){
-    const R = Math.min(W, L) / 2;
-    const fGeo = new THREE.CircleGeometry(R, 8); fGeo.rotateX(-Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat);
-    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
-    f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const segs = shape === 'circle' ? 64 : 8;
+    const fl = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.08, segs), carpetMat);
+    fl.position.y = 0.04;
+    fl.scale.set(W/(2*R), 1, L/(2*R));
+    fl.receiveShadow = true;
+    group3d.add(fl);
+
+    const br = new THREE.Mesh(new THREE.CylinderGeometry(R+0.3, R+0.3, 0.06, segs), borderMat);
+    br.position.y = 0.03;
+    br.scale.set(W/(2*R), 1, L/(2*R));
+    group3d.add(br);
   } else if (shape === 'lshape'){
     const s = new THREE.Shape();
     s.moveTo(-W/2, -L/2); s.lineTo(W/2, -L/2); s.lineTo(W/2, 0);
     s.lineTo(0, 0); s.lineTo(0, L/2); s.lineTo(-W/2, L/2); s.closePath();
-    const fGeo = new THREE.ShapeGeometry(s); fGeo.rotateX(Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat); f.position.y = 0.001;
-    group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const fGeo = new THREE.ExtrudeGeometry(s, {depth:0.08, bevelEnabled:false});
+    fGeo.rotateX(Math.PI/2);
+    const fl = new THREE.Mesh(fGeo, carpetMat);
+    fl.position.y = 0.08;
+    fl.receiveShadow = true;
+    group3d.add(fl);
   } else {
-    const f = new THREE.Mesh(new THREE.PlaneGeometry(W, L), floorMat);
-    f.rotation.x = -Math.PI/2; f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const fl = new THREE.Mesh(new THREE.BoxGeometry(W, 0.08, L), carpetMat);
+    fl.position.set(0, 0.04, 0);
+    fl.receiveShadow = true;
+    group3d.add(fl);
+
+    const br = new THREE.Mesh(new THREE.BoxGeometry(W + 0.45, 0.06, L + 0.45), borderMat);
+    br.position.set(0, 0.03, 0);
+    group3d.add(br);
   }
 
+  // خطوط صفوف الصلاة الذهبية/الخشبية على السجاد
+  const rowStep = 1.25;
+  const lineMat = new THREE.MeshStandardMaterial({color:0xb8860b, roughness:0.6, metalness:0.3});
+  for (let z = -L/2 + 1.6; z < L/2 - 0.8; z += rowStep){
+    let rowW = W - 0.9;
+    let rowX = 0;
+    if (shape === 'circle' || shape === 'octagon'){
+      const normZ = z / (L/2);
+      if (Math.abs(normZ) >= 0.94) continue;
+      rowW = W * Math.sqrt(Math.max(0, 1 - normZ*normZ)) * 0.90;
+    } else if (shape === 'lshape' && z > 0){
+      rowW = W/2 - 0.7;
+      rowX = -W/4;
+    }
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(rowW, 0.01, 0.07), lineMat);
+    strip.position.set(rowX, 0.085, z);
+    group3d.add(strip);
+  }
+
+  // 2) الجدران المعمارية الكاملة (نمط AURALIS Wood Paneling + Acoustic Panels)
   if (shape === 'circle' || shape === 'octagon'){
     const R = Math.min(W, L) / 2;
     const sides = shape === 'circle' ? 64 : 8;
-    const wGeo = new THREE.CylinderGeometry(R, R, H, sides, 1, true);
-    const w = new THREE.Mesh(wGeo, wallMat);
-    w.position.y = H/2;
-    w.scale.x = W / (2 * R); w.scale.z = L / (2 * R);
-    group3d.add(w);
-    const topGeo = new THREE.RingGeometry(R * 0.99, R, sides); topGeo.rotateX(-Math.PI/2);
-    const topMesh = new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.6, side:THREE.DoubleSide}));
+    // نصف الجدار الخلفي صلب والنصف الأمامي شبه مفتوح للرؤية
+    const wSolid = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, sides, 1, true, Math.PI*0.5, Math.PI), solidWallMat);
+    wSolid.position.y = H/2;
+    wSolid.scale.set(W/(2*R), 1, L/(2*R));
+    wSolid.receiveShadow = true;
+    group3d.add(wSolid);
+
+    const wGlass = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, sides, 1, true, -Math.PI*0.5, Math.PI),
+      new THREE.MeshStandardMaterial({color:0x1e293b, transparent:true, opacity:0.25, side:THREE.DoubleSide, depthWrite:false}));
+    wGlass.position.y = H/2;
+    wGlass.scale.set(W/(2*R), 1, L/(2*R));
+    group3d.add(wGlass);
+
+    const topGeo = new THREE.RingGeometry(R * 0.97, R, sides);
+    topGeo.rotateX(-Math.PI/2);
+    const topMesh = new THREE.Mesh(topGeo, M3D.woodAccent());
     topMesh.position.y = H;
-    topMesh.scale.x = W / (2 * R); topMesh.scale.z = L / (2 * R);
+    topMesh.scale.set(W/(2*R), 1, L/(2*R));
     group3d.add(topMesh);
   } else if (shape === 'lshape'){
-    group3d.add(addWallPlane(-W/2, -L/2, W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(-W/2, L/2, -W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(0, L/2, -W/2, L/2, H, wallMat));
-    group3d.add(addWallPlane(W/2, 0, W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(0, 0, W/2, 0, H, wallMat));
-    group3d.add(addWallPlane(0, L/2, 0, 0, H, wallMat));
-    const pts = [[-W/2,-L/2,H],[W/2,-L/2,H],[W/2,0,H],[0,0,H],[0,L/2,H],[-W/2,L/2,H],[-W/2,-L/2,H]]
-      .map(([x,y,z]) => new THREE.Vector3(x, y, z));
-    const wg = new THREE.BufferGeometry().setFromPoints(pts);
-    group3d.add(new THREE.Line(wg, edgeMat));
+    group3d.add(addWallBox3D(-W/2, -L/2, W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(-W/2, L/2, -W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(0, L/2, -W/2, L/2, H, cutWallMat));
+    group3d.add(addWallBox3D(W/2, 0, W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(0, 0, W/2, 0, H, cutWallMat));
+    group3d.add(addWallBox3D(0, L/2, 0, 0, H, cutWallMat));
   } else {
-    const wGeoLR = new THREE.PlaneGeometry(L, H), wGeoFB = new THREE.PlaneGeometry(W, H);
-    const left = new THREE.Mesh(wGeoLR, wallMat); left.rotation.y = Math.PI/2; left.position.set(-W/2, H/2, 0); group3d.add(left);
-    const right = new THREE.Mesh(wGeoLR, wallMat); right.rotation.y = -Math.PI/2; right.position.set(W/2, H/2, 0); group3d.add(right);
-    const back = new THREE.Mesh(wGeoFB, wallMat); back.position.set(0, H/2, -L/2); group3d.add(back);
-    const front = new THREE.Mesh(wGeoFB, wallMat); front.rotation.y = Math.PI; front.position.set(0, H/2, L/2); group3d.add(front);
-    const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(W, H, L));
-    const wire = new THREE.LineSegments(boxEdges, edgeMat);
-    wire.position.set(0, H/2, 0); group3d.add(wire);
+    // جدار القبلة + الجدارين الجانبيين بخشب AURALIS الصلب
+    const qiblaWall = new THREE.Mesh(new THREE.BoxGeometry(W + 0.4, H, 0.25), solidWallMat);
+    qiblaWall.position.set(0, H/2, -L/2 - 0.12);
+    qiblaWall.castShadow = true; qiblaWall.receiveShadow = true;
+    group3d.add(qiblaWall);
+
+    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, H, L + 0.4), solidWallMat);
+    leftWall.position.set(-W/2 - 0.12, H/2, 0);
+    leftWall.castShadow = true; leftWall.receiveShadow = true;
+    group3d.add(leftWall);
+
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, H, L + 0.4), solidWallMat);
+    rightWall.position.set(W/2 + 0.12, H/2, 0);
+    rightWall.castShadow = true; rightWall.receiveShadow = true;
+    group3d.add(rightWall);
+
+    // الجدار الخلفي (مدخل المسجد) به أبواب ونوافذ زجاجية معمارية كما في AURALIS
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(W + 0.4, H, 0.22),
+      new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.6, metalness:0.1, transparent:true, opacity:0.35}));
+    backWall.position.set(0, H/2, L/2 + 0.11);
+    group3d.add(backWall);
+
+    // أبواب المسجد في الجدار الخلفي (AURALIS Doors)
+    [-W*0.28, W*0.28].forEach(dx => {
+      const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.8, Math.min(2.6, H*0.75), 0.28), M3D.steel());
+      doorFrame.position.set(dx, Math.min(2.6, H*0.75)/2, L/2 + 0.11);
+      group3d.add(doorFrame);
+      const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.6, Math.min(2.5, H*0.72), 0.30), M3D.body());
+      doorLeaf.position.set(dx, Math.min(2.5, H*0.72)/2, L/2 + 0.11);
+      group3d.add(doorLeaf);
+    });
+
+    // ألواح العزل الصوتي (Acoustic Panels) على جدار القبلة والجدران الجانبية
+    const qPanels = Math.max(2, Math.floor((W - 6) / 3.0));
+    for (let i = 0; i < qPanels; i++){
+      const px = -W/2 + 2.0 + i * ((W - 4.0) / Math.max(1, qPanels - 1));
+      if (Math.abs(px) < 3.6) continue;
+      const ac = new THREE.Mesh(new THREE.BoxGeometry(1.5, H * 0.65, 0.08), M3D.acousticPanel());
+      ac.position.set(px, H * 0.52, -L/2 + 0.04);
+      group3d.add(ac);
+    }
+    const sidePanels = Math.max(3, Math.floor((L - 4) / 3.5));
+    for (let i = 0; i < sidePanels; i++){
+      const pz = -L/2 + 2.5 + i * ((L - 5.0) / Math.max(1, sidePanels - 1));
+      [-1, 1].forEach(side => {
+        const ac = new THREE.Mesh(new THREE.BoxGeometry(0.08, H * 0.6, 1.8), M3D.acousticPanel());
+        ac.position.set(side * (W/2 - 0.04), H * 0.52, pz);
+        group3d.add(ac);
+      });
+    }
   }
 
-  // سقف شفاف (لإظهار السماعات السقفية)
-  const hasCeiling = speakers.some(s => isCeilingType(getModelType(s.model)));
-  if (hasCeiling){
-    const ceilGeo = new THREE.PlaneGeometry(W, L);
-    const ceilMat = new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.03, side:THREE.DoubleSide, depthWrite:false});
-    const ceilMesh = new THREE.Mesh(ceilGeo, ceilMat);
-    ceilMesh.rotation.x = Math.PI/2;
-    ceilMesh.position.y = H;
-    group3d.add(ceilMesh);
+  // 3) سقف AURALIS المعماري مع وحدات الإضاءة المضيئة (Ceiling Panels)
+  const ceilPanelMat = M3D.ceilingPanel();
+  const colsP = Math.max(2, Math.floor(W / 3.8));
+  const rowsP = Math.max(2, Math.floor(L / 3.8));
+  for (let i = 0; i < colsP; i++){
+    for (let j = 0; j < rowsP; j++){
+      const rx = (i + 0.5) / colsP;
+      const ry = (j + 0.5) / rowsP;
+      if (!isInsideShape(rx, ry, shape)) continue;
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.06, 1.5), M3D.dark());
+      frame.position.set((rx - 0.5) * W, H - 0.03, (ry - 0.5) * L);
+      group3d.add(frame);
+
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.04, 1.35), ceilPanelMat);
+      panel.position.set((rx - 0.5) * W, H - 0.05, (ry - 0.5) * L);
+      group3d.add(panel);
+    }
   }
 
-  // المحراب
+  // 4) المحراب والمنبر المعماري بجانب المحراب
+  const mFrame = new THREE.Mesh(new THREE.BoxGeometry(4.4, Math.min(H * 0.88, 4.8), 0.35), M3D.woodDark());
+  mFrame.position.set(0, Math.min(H * 0.88, 4.8)/2, -L/2 + 0.18);
+  mFrame.castShadow = true;
+  group3d.add(mFrame);
+
   const mShape = new THREE.Shape();
-  mShape.moveTo(-2.5, 0); mShape.lineTo(-2.5, 3.2);
-  mShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
-  mShape.quadraticCurveTo(2.5, 5.5, 2.5, 3.2);
-  mShape.lineTo(2.5, 0); mShape.lineTo(-2.5, 0);
-  const mihrab = new THREE.Mesh(new THREE.ShapeGeometry(mShape, 12),
-    new THREE.MeshStandardMaterial({color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7}));
-  mihrab.position.set(0, 0.1, -L/2 + 0.08); group3d.add(mihrab);
+  const mh = Math.min(H * 0.78, 4.2);
+  mShape.moveTo(-1.7, 0); mShape.lineTo(-1.7, mh * 0.62);
+  mShape.quadraticCurveTo(-1.7, mh, 0, mh);
+  mShape.quadraticCurveTo(1.7, mh, 1.7, mh * 0.62);
+  mShape.lineTo(1.7, 0); mShape.lineTo(-1.7, 0);
+  const mihrab = new THREE.Mesh(
+    new THREE.ShapeGeometry(mShape, 16),
+    new THREE.MeshStandardMaterial({color:0x1d4ed8, side:THREE.DoubleSide, emissive:0x1e3a8a, emissiveIntensity:0.55, roughness:0.3, metalness:0.4})
+  );
+  mihrab.position.set(0, 0.08, -L/2 + 0.37);
+  group3d.add(mihrab);
 
-  // المئذنة
+  // منبر الخطيب الخشبي بجانب المحراب (يمين المحراب)
+  if (W >= 8){
+    const minbarX = 3.2;
+    const minbarBase = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 2.4), M3D.woodAccent());
+    minbarBase.position.set(minbarX, 0.9, -L/2 + 1.3);
+    minbarBase.castShadow = true;
+    group3d.add(minbarBase);
+    // درجات المنبر
+    for (let st = 0; st < 4; st++){
+      const step = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.25, 0.45), M3D.woodDark());
+      step.position.set(minbarX, 0.15 + st * 0.35, -L/2 + 2.3 - st * 0.45);
+      group3d.add(step);
+    }
+  }
+
+  // 5) المئذنة
   const minaretH = Math.max(H * 2.2, 14);
-  const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
-  const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20),
-    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.55, metalness:0.25}));
-  minaret.position.set(mX, minaretH/2, mZ); minaret.castShadow = true; group3d.add(minaret);
-  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.3, 20),
-    new THREE.MeshStandardMaterial({color:0xb00010, roughness:0.6}));
-  balcony.position.set(mX, minaretH * 0.72, mZ); group3d.add(balcony);
-  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI*2, 0, Math.PI/2),
-    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.35, metalness:0.4, emissive:0x220000}));
-  dome.position.set(mX, minaretH, mZ); dome.castShadow = true; group3d.add(dome);
-  const crescent = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4),
-    new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2}));
-  crescent.position.set(mX, minaretH + 1.6, mZ); crescent.rotation.z = Math.PI / 2; group3d.add(crescent);
+  const mX = -W/2 - 2.4, mZ = -L/2 - 2.4;
+  const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 24), M3D.spkCol());
+  minaret.position.set(mX, minaretH/2, mZ);
+  minaret.castShadow = true;
+  group3d.add(minaret);
 
-  // الأعمدة
+  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.0, 0.35, 24), M3D.woodDark());
+  balcony.position.set(mX, minaretH * 0.72, mZ);
+  group3d.add(balcony);
+
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 16, 0, Math.PI*2, 0, Math.PI/2), M3D.spkCol());
+  dome.position.set(mX, minaretH, mZ);
+  dome.castShadow = true;
+  group3d.add(dome);
+
+  const crescent = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4), M3D.gold());
+  crescent.position.set(mX, minaretH + 1.6, mZ);
+  crescent.rotation.z = Math.PI / 2;
+  group3d.add(crescent);
+
+  // 6) الأعمدة مع قواعد وتيجان معدنية
   columns.forEach(c => {
     const cx = (c.rx - 0.5) * W, cz = (c.ry - 0.5) * L;
-    const geo = new THREE.CylinderGeometry(c.radius, c.radius, H, 16);
-    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x2a3240, roughness:0.75, metalness:0.15}));
-    mesh.position.set(cx, H/2, cz);
-    mesh.castShadow = true; mesh.receiveShadow = true; group3d.add(mesh);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.3, c.radius, 0.3, 16),
-      new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.6, roughness:0.3, emissive:0x0a2e45, emissiveIntensity:0.4}));
-    cap.position.set(cx, H - 0.15, cz); group3d.add(cap);
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(c.radius, c.radius, H, 20), M3D.gray());
+    shaft.position.set(cx, H/2, cz);
+    shaft.castShadow = true; shaft.receiveShadow = true;
+    group3d.add(shaft);
+
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.25, c.radius*1.3, 0.25, 20), M3D.dark());
+    base.position.set(cx, 0.15, cz);
+    group3d.add(base);
+
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.35, c.radius, 0.32, 20), M3D.metal());
+    cap.position.set(cx, H - 0.16, cz);
+    group3d.add(cap);
   });
 
-  // السماعات
+  // 7) السماعات ومخاريط التغطية
   speakers.forEach(s => addSpeakerMesh3D(s, d));
 
-  const maxDim = Math.max(W, L, minaretH);
-  camera3d.position.set(maxDim * 0.85, maxDim * 0.75, maxDim * 1.05);
-  controls3d.target.set(0, H/2, 0);
+  // زاوية كاميرا تتيح رؤية الداخل بوضوح عبر الواجهة الأمامية
+  camera3d.position.set(W * 0.55, H * 1.35, L * 0.95);
+  controls3d.target.set(0, H * 0.42, -L * 0.12);
   controls3d.update();
 }
 
@@ -1412,19 +1569,23 @@ function addSpeakerMesh3D(s, d){
   // بوق المئذنة
   if (s.zone === 'minaret'){
     const minaretH = Math.max(H * 2.2, 14);
-    const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
+    const mX = -W/2 - 2.4, mZ = -L/2 - 2.4;
     const R = 1.8;
     const dirX = Math.cos(s.ang), dirZ = Math.sin(s.ang);
     const hx = mX + dirX * R, hz = mZ + dirZ * R, hy = minaretH * 0.78;
-    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 12); bodyGeo.rotateX(-Math.PI/2);
-    const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({color:0xe60012, metalness:0.6, roughness:0.3, emissive:0x330000, emissiveIntensity:0.4}));
+    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 16);
+    bodyGeo.rotateX(-Math.PI/2);
+    const body = new THREE.Mesh(bodyGeo, M3D.spkCol());
     body.position.set(hx + dirX*0.55, hy, hz + dirZ*0.55);
     body.lookAt(hx + dirX*10, hy, hz + dirZ*10);
-    body.castShadow = true; group3d.add(body);
+    body.castShadow = true;
+    group3d.add(body);
+
     if (showCoverage){
       const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 10;
-      const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true); cg.rotateX(-Math.PI/2);
-      const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false}));
+      const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true);
+      cg.rotateX(-Math.PI/2);
+      const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.08, side:THREE.DoubleSide, depthWrite:false}));
       cov.position.set(hx + dirX * covLen/2, hy, hz + dirZ * covLen/2);
       cov.lookAt(hx + dirX*100, hy, hz + dirZ*100);
       group3d.add(cov);
@@ -1436,42 +1597,28 @@ function addSpeakerMesh3D(s, d){
   if (isCeilingType(sp.type)){
     const cx = (s.rx - 0.5) * W;
     const cz = (s.ry - 0.5) * L;
-    const cy = H - 0.05;
+    const cy = H - 0.04;
 
-    // حلقة خارجية
-    const bezelGeo = new THREE.CylinderGeometry(0.28, 0.30, 0.08, 24);
-    const bezel = new THREE.Mesh(bezelGeo, new THREE.MeshStandardMaterial({
-      color:0x8b949e, metalness:0.7, roughness:0.35, emissive:0x1a1f26, emissiveIntensity:0.2
-    }));
+    const bezel = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.30, 0.08, 24), M3D.metal());
     bezel.position.set(cx, cy, cz);
     group3d.add(bezel);
 
-    // الشبكة الداخلية
-    const grilleGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 24);
-    const grille = new THREE.Mesh(grilleGeo, new THREE.MeshStandardMaterial({
-      color:0x0a0e14, metalness:0.4, roughness:0.7
-    }));
+    const grille = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.03, 24), M3D.dark());
     grille.position.set(cx, cy - 0.055, cz);
     group3d.add(grille);
 
-    // حلقة بنفسجية مميزة
     const accentGeo = new THREE.TorusGeometry(0.26, 0.015, 8, 24);
     accentGeo.rotateX(Math.PI/2);
-    const accent = new THREE.Mesh(accentGeo, new THREE.MeshStandardMaterial({
-      color:0xa78bfa, emissive:0x4c1d95, emissiveIntensity:0.6, metalness:0.8, roughness:0.3
-    }));
+    const accent = new THREE.Mesh(accentGeo, M3D.spkCeil());
     accent.position.set(cx, cy - 0.05, cz);
     group3d.add(accent);
 
-    // مخروط التغطية للأسفل
     if (showCoverage){
       const covHalf = (sp.covH/2) * Math.PI / 180;
       const covLen = H - LISTENER_H;
       const covRadius = Math.tan(covHalf) * covLen;
       const covGeo = new THREE.ConeGeometry(covRadius, covLen, 32, 1, true);
-      const covMat = new THREE.MeshBasicMaterial({
-        color:0xa78bfa, transparent:true, opacity:0.07, side:THREE.DoubleSide, depthWrite:false
-      });
+      const covMat = new THREE.MeshBasicMaterial({color:0xa78bfa, transparent:true, opacity:0.09, side:THREE.DoubleSide, depthWrite:false});
       const cov = new THREE.Mesh(covGeo, covMat);
       cov.position.set(cx, (H + LISTENER_H) / 2, cz);
       group3d.add(cov);
@@ -1479,45 +1626,75 @@ function addSpeakerMesh3D(s, d){
     return;
   }
 
-  // سماعة جدارية/عمودية
+  // سماعة جدارية / عمودية (بتفاصيل AURALIS كاملة)
   let wx, wy, wz, facingRad;
   const onWall = isOnWall(s);
   if (onWall){
     if (shape === 'rect' || shape === 'lshape'){
       const left = s.rx < 0.5;
-      wx = left ? -W/2 : W/2;
+      wx = left ? -W/2 + 0.22 : W/2 - 0.22;
       wz = (s.ry - 0.5) * L;
-      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.65);
       facingRad = left ? 0 : Math.PI;
     } else {
       const angle = Math.atan2(s.ry - 0.5, s.rx - 0.5);
       const Rx = W / 2, Rz = L / 2;
-      wx = Rx * Math.cos(angle) * 0.96;
-      wz = Rz * Math.sin(angle) * 0.96;
-      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      wx = Rx * Math.cos(angle) * 0.95;
+      wz = Rz * Math.sin(angle) * 0.95;
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.65);
       facingRad = angle + Math.PI;
     }
   } else {
     wx = (s.rx - 0.5) * W;
     wz = (s.ry - 0.5) * L;
-    wy = H - 0.4;
+    wy = H - 0.65;
     facingRad = getFacing(s);
   }
 
+  const spkGrp = new THREE.Group();
+  spkGrp.position.set(wx, wy, wz);
+  spkGrp.rotation.y = -facingRad;
+
+  const bw = isCol ? 0.34 : 0.44;
+  const bh = isCol ? 1.15 : 0.78;
+  const bd = isCol ? 0.32 : 0.48;
+
+  const cabinet = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), M3D.body());
+  cabinet.castShadow = true;
+  cabinet.receiveShadow = true;
+  spkGrp.add(cabinet);
+
+  const grille = new THREE.Mesh(new THREE.BoxGeometry(0.03, bh * 0.92, bd * 0.88), M3D.dark());
+  grille.position.x = bw / 2 + 0.01;
+  spkGrp.add(grille);
+
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(bw * 0.85, bh * 0.96, 0.02), isCol ? M3D.spkCol() : M3D.spkWall());
+  stripe.position.z = bd / 2 + 0.008;
+  spkGrp.add(stripe);
+
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), M3D.ledGreen());
+  led.position.set(bw / 2 + 0.025, -bh / 2 + 0.07, 0);
+  spkGrp.add(led);
+
+  const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.16), M3D.metal());
+  bracket.position.x = -bw / 2 - 0.07;
+  spkGrp.add(bracket);
+
+  group3d.add(spkGrp);
+
   const dirX = Math.cos(facingRad), dirZ = Math.sin(facingRad);
-  const bw = isCol ? 0.45 : 0.55, bh = isCol ? 1.15 : 0.85, bd = 0.38;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd),
-    new THREE.MeshStandardMaterial({color: isCol ? 0xe60012 : 0xff8c1a, metalness:0.5, roughness:0.4, emissive: isCol ? 0x330000 : 0x331500, emissiveIntensity:0.35}));
-  body.position.set(wx, wy, wz); body.castShadow = true; body.receiveShadow = true; group3d.add(body);
-  const arrowGeo = new THREE.ConeGeometry(0.16, 1.3, 10); arrowGeo.rotateX(Math.PI/2);
-  const arrow = new THREE.Mesh(arrowGeo, new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.7, roughness:0.3, emissive:0x0a4060, emissiveIntensity:0.8}));
+  const arrowGeo = new THREE.ConeGeometry(0.14, 1.1, 12);
+  arrowGeo.rotateX(Math.PI/2);
+  const arrow = new THREE.Mesh(arrowGeo, M3D.metal());
   arrow.position.set(wx + dirX * 0.85, wy, wz + dirZ * 0.85);
   arrow.lookAt(wx + dirX*100, wy, wz + dirZ*100);
   group3d.add(arrow);
+
   if (showCoverage){
     const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 8;
-    const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true); cg.rotateX(-Math.PI/2);
-    const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color: isCol ? 0x38bdf8 : 0xff8c1a, transparent:true, opacity:0.065, side:THREE.DoubleSide, depthWrite:false}));
+    const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true);
+    cg.rotateX(-Math.PI/2);
+    const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color: isCol ? 0x38bdf8 : 0xff8c1a, transparent:true, opacity:0.08, side:THREE.DoubleSide, depthWrite:false}));
     cov.position.set(wx + dirX * covLen/2, wy, wz + dirZ * covLen/2);
     cov.lookAt(wx + dirX*100, wy, wz + dirZ*100);
     group3d.add(cov);
@@ -1726,7 +1903,6 @@ function aiSmartDistribute(){
     return;
   }
 
-  // سماعات السقف: شبكة منتظمة
   if (isCeil){
     const covRadius = (d.H - LISTENER_H) * Math.tan((spk.covH/2) * RAD);
     const spacing = covRadius * 1.8;
