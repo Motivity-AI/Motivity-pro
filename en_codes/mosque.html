@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0d1117">
-<title>Motivity Pro - Mosque Audio Design System</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Motivity Pro - Mosque Acoustic Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#e60012;--blue:#38bdf8;--bg:#0d1117;--panel:#161b22;--card:#21262d;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--purple:#a78bfa;--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box;font-family:'Cairo','Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;font-family:'Inter',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%}
 body{background:var(--bg);color:var(--text);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none}
 .wrapper{display:flex;flex:1;overflow:hidden;position:relative;min-height:0}
@@ -52,7 +52,7 @@ input[type=range]{width:100%;padding:0;background:transparent;accent-color:var(-
 .canvas-wrap{flex:1;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0}
 #threeWrap{position:relative}
 #threeWrap canvas{display:block;border:2px solid #333;border-radius:10px;touch-action:none}
-#threeWrap::after{content:'🖱️ Drag to rotate — scroll to zoom';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
+#threeWrap::after{content:'🖱️ Drag to rotate — Scroll to zoom & enter hall';position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#8b949e;padding:6px 14px;border-radius:20px;font-size:10.5px;pointer-events:none;white-space:nowrap;font-weight:600}
 canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;cursor:crosshair;width:100%;height:100%;max-width:1100px;max-height:850px;touch-action:none;user-select:none;-webkit-user-select:none;direction:ltr}
 #menuBtn{display:none;position:fixed;top:calc(10px + var(--safe-t));left:10px;z-index:200;width:46px;height:46px;min-height:0;border-radius:13px;background:var(--red);color:#fff;border:none;font-size:20px;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.6);padding:0}
 #menuBtn:active{transform:scale(.93)}
@@ -73,8 +73,8 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 .report-toolbar button{width:auto;padding:9px 20px;font-size:13px}
 .report-page{max-width:1080px;margin:20px auto;background:#fff;color:#1a2028;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15)}
 .report-hero{background:linear-gradient(135deg,#0d1117 0%,#1a2430 60%,#2a1a1f 100%);color:#fff;padding:44px 44px 36px;position:relative;overflow:hidden}
-.report-hero::before{content:'';position:absolute;top:-40%;left:-15%;width:70%;height:220%;background:radial-gradient(circle,rgba(230,0,18,.25),transparent 60%);pointer-events:none}
-.report-hero::after{content:'';position:absolute;bottom:-60%;right:-15%;width:60%;height:200%;background:radial-gradient(circle,rgba(56,189,248,.18),transparent 60%);pointer-events:none}
+.report-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:70%;height:220%;background:radial-gradient(circle,rgba(230,0,18,.25),transparent 60%);pointer-events:none}
+.report-hero::after{content:'';position:absolute;bottom:-60%;left:-15%;width:60%;height:200%;background:radial-gradient(circle,rgba(56,189,248,.18),transparent 60%);pointer-events:none}
 .hero-brand{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1;gap:20px;flex-wrap:wrap}
 .brand-logo{font-size:30px;font-weight:900;letter-spacing:2px;line-height:1}.brand-logo span{color:var(--red)}
 .brand-sub{font-size:11px;color:#8b949e;margin-top:6px;letter-spacing:2px}
@@ -118,7 +118,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 .data-table tr:last-child td{border-bottom:none}
 .data-table tr:nth-child(even) td{background:#fafbfc}
 .data-table .num{font-family:'JetBrains Mono',monospace;font-weight:700;color:#0d1117;text-align:center}
-.signal-flow{padding:20px;background:linear-gradient(135deg,#f8fafc,#eef2f7);border-radius:12px;border:1px solid #e1e8ed;overflow-x:auto}
+.signal-flow{padding:20px;background:linear-gradient(135deg,#f8fafc,#eef2f7);border-radius:12px;border:1px solid #e1e8ed;overflow-x:auto;direction:ltr}
 .signal-flow svg{display:block;margin:0 auto;max-width:100%;height:auto}
 .notes-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:12px;padding:20px;font-size:12.5px;line-height:2;color:#0c4a6e}
 .notes-box b{color:#0369a1}
@@ -133,10 +133,10 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 .sig-box{text-align:center}.sig-line{border-bottom:1.5px solid #94a3b8;height:50px;margin-bottom:8px}
 .sig-label{font-size:10.5px;color:#64748b;font-weight:700;margin-bottom:3px}
 .sig-name{font-size:12px;font-weight:800;color:#0d1117}
-#toast{position:fixed;bottom:calc(16px + var(--safe-b));right:16px;left:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+#toast{position:fixed;bottom:calc(16px + var(--safe-b));left:16px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:8px;align-items:flex-start;pointer-events:none}
 .toast{background:#21262d;color:#fff;padding:10px 16px;border-radius:8px;border-left:4px solid var(--blue);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:slideIn .3s ease;font-size:12.5px;font-weight:600;max-width:340px;text-align:left}
 .toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--bad)}.toast.warn{border-left-color:var(--warn)}
-@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideIn{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}
 @media print{
   @page{size:A4;margin:8mm}
   html,body{height:auto!important;overflow:visible!important;background:#fff!important;display:block!important}
@@ -164,7 +164,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 <div class="wrapper no-print">
   <aside class="sidebar" id="sidebar">
     <div class="side-head">
-      <h2>Motivity <span>Pro</span></h2>
+      <h2>MOTIVITY <span>PRO</span></h2>
       <button id="closeSide" onclick="closeSidebar()" aria-label="Close">✖</button>
     </div>
 
@@ -175,34 +175,34 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
       <input id="p_engineer" placeholder="Engineer Name" value="Eng. Ahmed">
       <select id="p_purpose">
         <option value="85">Regular Prayer (Target 85 dB)</option>
-        <option value="90" selected>Friday Sermon (Target 90 dB)</option>
+        <option value="90" selected>Friday Khutbah (Target 90 dB)</option>
         <option value="95">Emergency / Adhan (Target 95 dB)</option>
       </select>
     </div>
 
     <div class="box">
-      <h3>📐 Hall Dimensions (meters)</h3>
+      <h3>📐 Hall Dimensions (m)</h3>
       <div class="row">
         <input type="number" id="m_len" value="30" oninput="onDimChange()" placeholder="Length">
         <input type="number" id="m_wid" value="15" oninput="onDimChange()" placeholder="Width">
         <input type="number" id="m_h"   value="6"  oninput="onDimChange()" placeholder="Height">
       </div>
-      <label>Acoustic Absorption Coefficient (0.05 hard – 0.30 treated)</label>
+      <label>Absorption Coeff. (0.05 Hard – 0.30 Treated)</label>
       <input type="number" id="m_alpha" value="0.12" step="0.01" oninput="onDimChange()">
     </div>
 
     <div class="box" style="border-color:#e60012">
-      <h3>🏛️ Hall Shape &amp; Columns</h3>
+      <h3>🏛️ Hall Shape & Columns</h3>
       <label>Floor Plan Shape</label>
       <select id="m_shape" onchange="onShapeChange()">
         <option value="rect">Rectangle</option>
-        <option value="circle">Circular / Elliptical</option>
-        <option value="octagon">Octagonal</option>
+        <option value="circle">Circular / Oval</option>
+        <option value="octagon">Octagon</option>
         <option value="lshape">L-Shape</option>
       </select>
       <label class="checkbox-row" style="margin-top:10px">
         <input type="checkbox" id="colEnabled" checked onchange="onColumnToggle()">
-        <span>Include columns in acoustic calculations</span>
+        <span>Include columns in acoustic calculation</span>
       </label>
       <div class="row" style="margin-top:8px">
         <div>
@@ -214,52 +214,52 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
           <input type="number" id="col_spacing" value="6" step="0.5" min="3" max="15">
         </div>
       </div>
-      <button class="btn-outline" onclick="autoLayoutColumns()" style="margin-top:8px">🏗️ Auto-Layout Columns</button>
-      <button id="colModeBtn" class="btn-outline" onclick="toggleColumnMode()">➕ Manual Column Placement</button>
+      <button class="btn-outline" onclick="autoLayoutColumns()" style="margin-top:8px">🏗️ Auto Layout Columns</button>
+      <button id="colModeBtn" class="btn-outline" onclick="toggleColumnMode()">➕ Manual Column Mode</button>
       <button class="btn-reset" onclick="clearColumns()">🗑️ Clear All Columns</button>
-      <div class="hint" id="colInfo">0 columns placed</div>
-      <div class="hint" style="color:#ffb84d">⚠️ Each column blocks sound (up to −8 dB behind).</div>
+      <div class="hint" id="colInfo">0 columns</div>
+      <div class="hint" style="color:#ffb84d">⚠️ Each column creates acoustic shadowing (up to −8 dB behind it).</div>
     </div>
 
     <div class="box">
-      <h3>🔊 Audio Distribution</h3>
+      <h3>🔊 Sound Distribution</h3>
       <select id="m_model" onchange="updateAmpLogic()"></select>
       <label class="checkbox-row">
         <input type="checkbox" id="addHornsChk" checked>
-        <span>🕌 Auto-add UT-08 horns on the minaret</span>
+        <span>🕌 Add UT-08 horns on minaret automatically</span>
       </label>
-      <button class="btn-secondary" onclick="aiSmartDistribute()">✨ Smart Auto-Distribution</button>
-      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Mode</button>
-      <div class="hint">💡 Click inside hall to place • Click minaret for horn • Drag white handle to rotate</div>
+      <button class="btn-secondary" onclick="aiSmartDistribute()">✨ AI Smart Distribute</button>
+      <button id="manualBtn" class="btn-outline" onclick="toggleManualMode()">📍 Manual Placement</button>
+      <div class="hint">💡 Click inside hall to place speaker • Click minaret for horn • Drag white handle to rotate</div>
     </div>
 
     <div class="box" id="rotationBox" style="display:none;border-color:var(--blue)">
       <h3>🎯 Coverage Direction <span id="rotModel" style="color:var(--red);font-size:11px"></span></h3>
       <label>Angle: <span id="angleVal" style="color:var(--blue);font-size:15px;font-weight:900">0</span>°</label>
       <input type="range" id="angleSlider" min="-180" max="180" value="0" step="1" onpointerdown="pushUndo()" oninput="setSelectedAngle(this.value)">
-      <div class="hint" id="rotHint">↔️ Drag the slider or white handle</div>
+      <div class="hint" id="rotHint">↔️ Drag slider or white handle to rotate</div>
       <button class="btn-outline" onclick="deselectSpeaker()">✖ Deselect</button>
-      <button class="btn-reset" onclick="deleteSelected()">🗑️ Delete This Speaker</button>
+      <button class="btn-reset" onclick="deleteSelected()">🗑️ Delete Speaker</button>
     </div>
 
     <div class="box">
       <h3>📊 Acoustic Analysis</h3>
       <div class="stat-grid">
-        <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">Avg SPL (dB)</div></div>
-        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">Reverberation RT60 (s)</div></div>
-        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">Total Watts</div></div>
+        <div class="stat" id="st_spl"><div class="v" id="spl_v">—</div><div class="l">Average SPL (dB)</div></div>
+        <div class="stat" id="st_rt"><div class="v" id="rt_v">—</div><div class="l">RT60 Reverberation (s)</div></div>
+        <div class="stat" id="st_pwr"><div class="v" id="pwr_v">0</div><div class="l">Total Power (W)</div></div>
         <div class="stat" id="st_cnt"><div class="v" id="cnt_v">0</div><div class="l">Speaker Count</div></div>
       </div>
     </div>
 
     <div class="box">
-      <h3>🔌 Processing &amp; Power</h3>
+      <h3>🔌 Processing & Power</h3>
       <label>Feedback Suppressor</label>
       <select id="fs_model">
         <option value="FB-PRO 4.0">Motivity FB-PRO 4.0 (Digital)</option>
         <option value="None">None</option>
       </select>
-      <label>Amplifier (MA Series)</label>
+      <label>Power Amplifier (MA Series)</label>
       <select id="amp_model" onchange="updateAmpLogic()"></select>
       <div id="amp_count_info" style="color:var(--blue);font-size:11px;margin-top:6px;font-weight:700;line-height:1.8"></div>
     </div>
@@ -276,7 +276,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
   <div class="canvas-container">
     <div class="toolbar no-print">
       <button id="view2D" class="view-btn on" onclick="switchView('2d')">🗺️ 2D Plan</button>
-      <button id="view3D" class="view-btn" onclick="switchView('3d')">🎨 3D View</button>
+      <button id="view3D" class="view-btn" onclick="switchView('3d')">🎨 3D Perspective</button>
       <button id="undoBtn" class="hist" onclick="undo()" disabled>↶ Undo</button>
       <button id="redoBtn" class="hist" onclick="redo()" disabled>↷ Redo</button>
       <button id="tgCoverage" class="on" onclick="toggleCoverage()">🌐 Coverage</button>
@@ -298,11 +298,11 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
   <div class="report-page">
     <header class="report-hero">
       <div class="hero-brand">
-        <div><div class="brand-logo">Motivity<span>PRO</span></div><div class="brand-sub">MOSQUE AUDIO DESIGN SYSTEM</div></div>
+        <div><div class="brand-logo">MOTIVITY<span>PRO</span></div><div class="brand-sub">Mosque Acoustic Design System</div></div>
         <div class="doc-badge">Certified Technical Report</div>
       </div>
-      <h1 class="report-title">Integrated Audio System Design</h1>
-      <div class="report-subtitle">Acoustic Analysis • Bill of Quantities • Engineering Justification • 3D Perspective</div>
+      <h1 class="report-title">Integrated Sound System Design</h1>
+      <div class="report-subtitle">Acoustic Analysis • Bill of Quantities • Engineering Rationale • 3D View</div>
       <div class="report-meta" id="project_header"></div>
     </header>
     <div class="report-body">
@@ -311,14 +311,14 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
         <div class="view-card"><div class="view-label">📐 2D Floor Plan</div><img id="reportImg2D" alt="2D"></div>
         <div class="view-card"><div class="view-label">🎨 3D Perspective View</div><img id="reportImg3D" alt="3D"></div>
       </div>
-      <section class="rep-section"><h2>Room &amp; Acoustic Analysis</h2><div class="analysis-grid" id="room_analysis"></div></section>
-      <section class="rep-section"><h2>SPL Distribution (Heatmap)</h2><div style="text-align:center"><img id="spl_chart_img" style="max-width:100%;border-radius:10px;border:1px solid #e1e8ed"></div></section>
+      <section class="rep-section"><h2>Hall Analysis & Acoustics</h2><div class="analysis-grid" id="room_analysis"></div></section>
+      <section class="rep-section"><h2>SPL Heatmap</h2><div style="text-align:center"><img id="spl_chart_img" style="max-width:100%;border-radius:10px;border:1px solid #e1e8ed"></div></section>
       <section class="rep-section"><h2>Bill of Quantities (BOQ)</h2>
-        <table class="data-table"><thead><tr><th style="width:36px">#</th><th>Item</th><th>Specifications</th><th style="width:70px">Qty</th><th style="width:130px">Cable</th></tr></thead><tbody id="boq-body"></tbody></table>
+        <table class="data-table"><thead><tr><th style="width:36px">#</th><th>Item</th><th>Specifications</th><th style="width:70px">Qty</th><th style="width:130px">Cabling</th></tr></thead><tbody id="boq-body"></tbody></table>
       </section>
-      <section class="rep-section"><h2>Signal Flow Diagram</h2><div class="signal-flow" id="signal_flow"></div></section>
-      <section class="rep-section"><h2>Engineering Justification</h2><div class="notes-box" id="eng_notes"></div></section>
-      <section class="rep-section"><h2>Standards &amp; References</h2><ul class="standards-list" id="standards_list"></ul></section>
+      <section class="rep-section"><h2>Audio Signal Flow Diagram</h2><div class="signal-flow" id="signal_flow"></div></section>
+      <section class="rep-section"><h2>Engineering Rationale</h2><div class="notes-box" id="eng_notes"></div></section>
+      <section class="rep-section"><h2>Standards & References</h2><ul class="standards-list" id="standards_list"></ul></section>
       <div class="sig">
         <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Engineer Signature</div><div class="sig-name" id="sig_engineer">—</div></div>
         <div class="sig-box"><div class="sig-line"></div><div class="sig-label">Client Signature</div><div class="sig-name" id="sig_client">—</div></div>
@@ -333,7 +333,7 @@ canvas#mosqueCanvas{background:#0a0a0a;border:2px solid #333;border-radius:10px;
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-/* ============ DATABASES ============ */
+/* ============ DATABASE ============ */
 const DB_SPK = {
   "AT-08":  {pwr:250, sens:97, covH:90,  covV:60,  imp:8, type:"Column"},
   "AT-06":  {pwr:150, sens:95, covH:90,  covV:60,  imp:8, type:"Column"},
@@ -355,8 +355,8 @@ const isWallType = t => t==='Wall';
 const isHornType = t => t==='Outdoor Horn';
 const isColumnType = t => t==='Column';
 const isCeilingType = t => t==='Ceiling';
-const TYPE_EN = {Column:"Column", Wall:"Wall", "Outdoor Horn":"Outdoor Horn", Ceiling:"Ceiling"};
-const SHAPES_EN = {rect:'Rectangle', circle:'Circular', octagon:'Octagonal', lshape:'L-Shape'};
+const TYPE_AR = {Column:"Column", Wall:"Wall", "Outdoor Horn":"Outdoor Horn", Ceiling:"Ceiling"};
+const SHAPES_AR = {rect:'Rectangle', circle:'Circular', octagon:'Octagon', lshape:'L-Shape'};
 
 /* ============ STATE ============ */
 const canvas = document.getElementById('mosqueCanvas');
@@ -369,6 +369,28 @@ let ampResult = {amps:0}, currentView = '2d';
 
 /* ============ 3D ============ */
 let scene3d, camera3d, renderer3d, controls3d, group3d, autoRotate3D = false;
+
+/* ============ AURALIS 3D MATERIALS ============ */
+const M3D = {
+  body:         () => new THREE.MeshStandardMaterial({color:0x151b2b, roughness:0.4,  metalness:0.6}),
+  dark:         () => new THREE.MeshStandardMaterial({color:0x080c14, roughness:0.8,  metalness:0.3}),
+  gray:         () => new THREE.MeshStandardMaterial({color:0x2c3548, roughness:0.5,  metalness:0.5}),
+  metal:        () => new THREE.MeshStandardMaterial({color:0xd0d8e8, roughness:0.2,  metalness:0.9}),
+  steel:        () => new THREE.MeshStandardMaterial({color:0x9ca3af, roughness:0.4,  metalness:0.7, side:THREE.DoubleSide}),
+  woodDark:     () => new THREE.MeshStandardMaterial({color:0x22150d, roughness:0.5,  metalness:0.1}),
+  woodAccent:   () => new THREE.MeshStandardMaterial({color:0x855233, roughness:0.6,  metalness:0.1}),
+  carpet:       () => new THREE.MeshStandardMaterial({color:0x111827, roughness:0.95, metalness:0.05}),
+  wallWoodPanel:() => new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.6,  metalness:0.1, side:THREE.DoubleSide}),
+  wallGlass:    () => new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.5,  metalness:0.15, transparent:true, opacity:0.88, side:THREE.DoubleSide}),
+  acousticPanel:() => new THREE.MeshStandardMaterial({color:0x1e2433, roughness:0.9,  metalness:0.1}),
+  ceiling:      () => new THREE.MeshStandardMaterial({color:0x0f172a, roughness:0.9,  metalness:0.05, side:THREE.DoubleSide}),
+  ceilingPanel: () => new THREE.MeshStandardMaterial({color:0xf8fafc, emissive:0xffffff, emissiveIntensity:0.5, roughness:0.6}),
+  gold:         () => new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.5, metalness:0.9, roughness:0.2}),
+  ledGreen:     () => new THREE.MeshStandardMaterial({color:0x10b981, emissive:0x10b981, emissiveIntensity:3}),
+  spkCol:       () => new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.4,  metalness:0.6, emissive:0x2a0004, emissiveIntensity:0.35}),
+  spkWall:      () => new THREE.MeshStandardMaterial({color:0xff8c1a, roughness:0.4,  metalness:0.55, emissive:0x2a1200, emissiveIntensity:0.35}),
+  spkCeil:      () => new THREE.MeshStandardMaterial({color:0xa78bfa, roughness:0.35, metalness:0.75, emissive:0x4c1d95, emissiveIntensity:0.5})
+};
 
 /* ============ Undo/Redo ============ */
 const MAX_UNDO = 40;
@@ -403,7 +425,7 @@ function updateUndoButtons(){
   if (r) r.disabled = !redoStack.length;
 }
 
-/* ============ UTILS ============ */
+/* ============ UTILITIES ============ */
 const $ = id => document.getElementById(id);
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const DEG = 180/Math.PI, RAD = Math.PI/180;
@@ -424,7 +446,7 @@ function getDims(){
 function getShape(){ return $('m_shape') ? $('m_shape').value : 'rect'; }
 function getModelType(id){ return DB_SPK[id] ? DB_SPK[id].type : 'Column'; }
 
-/* ============ SHAPE HELPERS ============ */
+/* ============ SHAPE GEOMETRY ============ */
 function isInsideShape(rx, ry, shape){
   shape = shape || getShape();
   if (rx < 0 || rx > 1 || ry < 0 || ry > 1) return false;
@@ -523,7 +545,7 @@ function columnBlocking(rx_s, ry_s, rx_p, ry_p, d){
   return Math.min(att, 24);
 }
 
-/* ============ SPEAKER POSITION ============ */
+/* ============ SPEAKER POSITIONING ============ */
 function getSpeakerPos(s){
   if (s.zone === 'minaret')
     return {x: layout.mcx + Math.cos(s.ang)*(layout.mS*0.30),
@@ -546,23 +568,23 @@ function whichWall(s){
   return s.rx < 0.5 ? 'left' : 'right';
 }
 
-/* ============ Sidebar mobile ============ */
+/* ============ SIDEBAR MOBILE ============ */
 function openSidebar(){ $('sidebar').classList.add('open'); $('backdrop').classList.add('show'); }
 function closeSidebar(){ $('sidebar').classList.remove('open'); $('backdrop').classList.remove('show'); }
 
-/* ============ populate ============ */
+/* ============ POPULATE DROPDOWNS ============ */
 function populate(){
   const s1 = $('m_model'), s2 = $('amp_model');
   s1.innerHTML = ''; s2.innerHTML = '';
   for (const id in DB_SPK){
     const t = DB_SPK[id].type;
-    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_EN[t]} ${DB_SPK[id].pwr}W</option>`;
+    s1.innerHTML += `<option value="${id}">${id} — ${TYPE_AR[t]} ${DB_SPK[id].pwr}W</option>`;
   }
   DB_AMP.forEach(a => s2.innerHTML += `<option value="${a.id}">${a.id} (${a.pwr}W)</option>`);
   s2.value = "MA-800C";
 }
 
-/* ============ Crescent ============ */
+/* ============ CRESCENT ============ */
 function drawCrescent(cx, cy, r){
   ctx.fillStyle = "#e60012";
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
@@ -570,7 +592,7 @@ function drawCrescent(cx, cy, r){
   ctx.beginPath(); ctx.arc(cx + r*0.42, cy - r*0.12, r*0.85, 0, Math.PI*2); ctx.fill();
 }
 
-/* ============ Heat colors ============ */
+/* ============ HEATMAP COLORS ============ */
 function heatColor(t, a){
   let r,g,b;
   if (t < 0.25){ const k=t/0.25; r=0; g=k*255; b=255; }
@@ -580,7 +602,7 @@ function heatColor(t, a){
   return `rgba(${r|0},${g|0},${b|0},${a})`;
 }
 
-/* ============ SPL computation ============ */
+/* ============ SPL CALCULATION ============ */
 function computeSPLAt(rx, ry, d, listH = LISTENER_H){
   if (!isInsideShape(rx, ry)) return 0;
   const indoor = speakers.filter(s => s.zone !== 'minaret');
@@ -592,7 +614,6 @@ function computeSPLAt(rx, ry, d, listH = LISTENER_H){
     const colAtt = columnBlocking(s.rx, s.ry, rx, ry, d);
     let spl;
     if (isCeilingType(sp.type)) {
-      // Ceiling speaker: fires straight down with conical coverage
       const dz = d.H - listH;
       const horiz = Math.sqrt(dx*dx + dy*dy);
       const dist = Math.max(1, Math.sqrt(horiz*horiz + dz*dz));
@@ -659,14 +680,14 @@ function updateAmpLogic(){
     const ampsByCh  = Math.ceil(chNeeded / amp.ch);
     const ampsByPwr = Math.ceil((totalPwr * 1.3) / amp.pwr);
     ampCount = Math.max(ampsByCh, ampsByPwr, 1);
-    reason = ampsByCh >= ampsByPwr ? `Constraint: impedance (${perCh}/ch)` : `Constraint: power (30% headroom)`;
+    reason = ampsByCh >= ampsByPwr ? `Constraint: Impedance (${perCh}/ch)` : `Constraint: Power (30% margin)`;
   }
   ampResult = {amps:ampCount, chNeeded, perCh, totalPwr, amp};
   const ac = computeAcoustics();
   const target = parseFloat($('p_purpose').value);
   const splEl = $('spl_v'), splStat = $('st_spl');
   if (ac.indoorCount === 0){
-    splEl.textContent = speakers.length ? 'Ext.' : '—';
+    splEl.textContent = speakers.length ? 'Outdoor' : '—';
     splStat.className = 'stat';
   } else {
     splEl.textContent = ac.avgSPL.toFixed(1);
@@ -677,18 +698,18 @@ function updateAmpLogic(){
   rtStat.className = 'stat ' + (ac.rt60 <= 1.2 ? 'ok' : ac.rt60 <= 1.8 ? 'warn' : 'bad');
   $('pwr_v').textContent = totalPwr;
   $('cnt_v').textContent = N;
-  $('colInfo').textContent = `${columns.length} column${columns.length !== 1 ? 's' : ''} placed`;
+  $('colInfo').textContent = `${columns.length} columns`;
 
   const ceilCount = speakers.filter(s => isCeilingType(getModelType(s.model))).length;
-  const ceilInfo = ceilCount ? `<br><span style="color:#a78bfa">🔘 ${ceilCount} ceiling speakers (100V line recommended)</span>` : '';
+  const ceilInfo = ceilCount ? `<br><span style="color:#a78bfa">🔘 ${ceilCount} ceiling speakers (100V system recommended)</span>` : '';
   const colInfo = columns.length ? `<br><span style="color:#ff8c1a">🏛️ ${columns.length} columns (acoustic shadowing)</span>` : '';
   const hornInfo = ac.outdoorCount ? `<br><span style="color:#ffb020">🔔 ${ac.outdoorCount} minaret horns</span>` : '';
   $('amp_count_info').innerHTML = N === 0 ? 'No speakers added yet' :
-    `⚡ Recommended: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} ch – ${perCh} spk/ch)<br><span style="color:#8b949e">${reason}</span>${hornInfo}${ceilInfo}${colInfo}`;
+    `⚡ Recommended: <b>${ampCount}</b> × ${amp.id}<br>(${chNeeded} channels – ${perCh} speakers/ch)<br><span style="color:#8b949e">${reason}</span>${hornInfo}${ceilInfo}${colInfo}`;
   if (currentView === '2d') draw();
 }
 
-/* ============ Speaker drawing ============ */
+/* ============ 2D DRAWING ============ */
 function drawWallSpeaker(pos, s, isSel, db){
   const isLeft = whichWall(s) === 'left';
   const isCol = isColumnType(db.type);
@@ -715,13 +736,13 @@ function drawWallSpeaker(pos, s, isSel, db){
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(32,0); ctx.lineTo(24,-9); ctx.moveTo(32,0); ctx.lineTo(24,9); ctx.stroke();
   ctx.restore();
   const lx = isLeft ? wallX + boxW + 40 : wallX - boxW - 40;
-  ctx.font = "bold 12px Cairo, sans-serif";
+  ctx.font = "bold 12px Inter, sans-serif";
   ctx.textAlign = isLeft ? "left" : "right";
   const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.7)";
   ctx.fillRect(isLeft ? lx-5 : lx-tw+5, py-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, py+4);
-  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.font = "bold 9px Inter, sans-serif";
   ctx.fillStyle = isCol ? "#ff8c1a" : "#ffb84d";
   ctx.fillText(isCol ? "Column" : "Wall", lx, py+18);
 }
@@ -744,35 +765,30 @@ function drawFreeSpeaker(pos, s, isSel, db){
   ctx.restore();
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 34);
-  ctx.font = "bold 12px Cairo, sans-serif";
+  ctx.font = "bold 12px Inter, sans-serif";
   ctx.textAlign = rightSide ? "right" : "left";
   const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.75)";
   ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
-  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.font = "bold 9px Inter, sans-serif";
   ctx.fillStyle = "#a0aec0";
   ctx.fillText("Free", lx, pos.y+18);
 }
 
-/* ============ Ceiling speaker drawing (2D) ============ */
 function drawCeilingSpeaker(pos, s, isSel){
   const r = isSel ? 14 : 11;
   const baseColor = "#a78bfa";
-  // Outer glow
   ctx.fillStyle = isSel ? "rgba(167,139,250,.35)" : "rgba(167,139,250,.18)";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r+6, 0, Math.PI*2); ctx.fill();
-  // Body
   ctx.fillStyle = isSel ? "#38bdf8" : baseColor;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.fill();
   ctx.strokeStyle = "#000"; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2); ctx.stroke();
-  // Grille rings
   ctx.strokeStyle = "rgba(0,0,0,.5)"; ctx.lineWidth = 1;
   for (let i = 1; i <= 3; i++){
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r * i / 4, 0, Math.PI*2); ctx.stroke();
   }
-  // Radial grille lines
   ctx.strokeStyle = "rgba(0,0,0,.4)";
   for (let a = 0; a < Math.PI*2; a += Math.PI/6){
     ctx.beginPath();
@@ -780,15 +796,12 @@ function drawCeilingSpeaker(pos, s, isSel){
     ctx.lineTo(pos.x + Math.cos(a) * r * 0.9, pos.y + Math.sin(a) * r * 0.9);
     ctx.stroke();
   }
-  // Center
   ctx.fillStyle = "#fff";
   ctx.beginPath(); ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI*2); ctx.fill();
-  // Selection ring
   if (isSel){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.arc(pos.x, pos.y, r+4, 0, Math.PI*2); ctx.stroke();
   }
-  // Down arrow
   ctx.strokeStyle = isSel ? "#fff" : "#a78bfa";
   ctx.lineWidth = 2.2;
   ctx.beginPath();
@@ -798,16 +811,15 @@ function drawCeilingSpeaker(pos, s, isSel){
   ctx.lineTo(pos.x, pos.y + r + 13);
   ctx.lineTo(pos.x + 4, pos.y + r + 9);
   ctx.stroke();
-  // Label
   const rightSide = pos.x > layout.x0 + layout.W/2;
   const lx = pos.x + (rightSide ? -1 : 1) * (r + 22);
-  ctx.font = "bold 12px Cairo, sans-serif";
+  ctx.font = "bold 12px Inter, sans-serif";
   ctx.textAlign = rightSide ? "right" : "left";
   const tw = ctx.measureText(s.model).width + 10;
   ctx.fillStyle = "rgba(0,0,0,.75)";
   ctx.fillRect(rightSide ? lx-tw+5 : lx-5, pos.y-8, tw, 16);
   ctx.fillStyle = "#fff"; ctx.fillText(s.model, lx, pos.y+4);
-  ctx.font = "bold 9px Cairo, sans-serif";
+  ctx.font = "bold 9px Inter, sans-serif";
   ctx.fillStyle = "#a78bfa";
   ctx.fillText("Ceiling", lx, pos.y+18);
 }
@@ -825,7 +837,7 @@ function drawColumns2D(){
     ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1.5; ctx.stroke();
     if (r > 8){
       ctx.fillStyle = 'rgba(148,163,184,.8)';
-      ctx.font = `bold ${Math.max(8, r*0.8)}px Cairo, sans-serif`;
+      ctx.font = `bold ${Math.max(8, r*0.8)}px Inter, sans-serif`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('🏛', px, py);
       ctx.textBaseline = 'alphabetic';
@@ -833,7 +845,6 @@ function drawColumns2D(){
   });
 }
 
-/* ============ MAIN DRAW ============ */
 function draw(){
   const div = $('cDiv');
   if (!div.clientWidth || !div.clientHeight || currentView !== '2d') return;
@@ -879,14 +890,14 @@ function draw(){
 
   ctx.fillStyle = "#38bdf8";
   ctx.beginPath(); ctx.arc(x0 + W/2, y0, Math.max(14, scale*1.4), Math.PI, 0); ctx.fill();
-  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Cairo, sans-serif"; ctx.textAlign = "center";
+  ctx.fillStyle = "#fff"; ctx.font = "bold 14px Inter, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("Mihrab", x0 + W/2, y0 - scale*1.8);
-  ctx.fillText(`Width ${d.W} m`, x0 + W/2, y0 - 28);
+  ctx.fillText(`Width ${d.W}m`, x0 + W/2, y0 - 28);
   ctx.save(); ctx.translate(x0 - 32, y0 + L/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText(`Length ${d.L} m`, 0, 0); ctx.restore();
-  ctx.fillStyle = "#8b949e"; ctx.font = "bold 11px Cairo, sans-serif";
-  ctx.textAlign = "right";
-  ctx.fillText(SHAPES_EN[getShape()], x0 + W - 4, y0 + L + 20);
+  ctx.fillText(`Length ${d.L}m`, 0, 0); ctx.restore();
+  ctx.fillStyle = "#8b949e"; ctx.font = "bold 11px Inter, sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText(SHAPES_AR[getShape()], x0 + 4, y0 + L + 20);
 
   ctx.fillStyle = "rgba(230,0,18,0.08)"; ctx.strokeStyle = "#e60012"; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.rect(x0 - mS, y0, mS, mS); ctx.fill(); ctx.stroke();
@@ -894,10 +905,9 @@ function draw(){
   ctx.fillStyle = "rgba(230,0,18,0.22)"; ctx.fill();
   ctx.strokeStyle = "#ff4d4d"; ctx.lineWidth = 2; ctx.stroke();
   drawCrescent(mcx, mcy - mS*0.62, mS*0.14);
-  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Cairo, sans-serif"; ctx.textAlign = "center";
+  ctx.fillStyle = "#e60012"; ctx.font = "bold 12px Inter, sans-serif"; ctx.textAlign = "center";
   ctx.fillText("Minaret", mcx, mcy + mS*0.62);
 
-  // Coverage
   if (showCoverage){
     ctx.save(); pathHallShape(); ctx.clip();
     speakers.filter(s => s.zone !== 'minaret').forEach(s => {
@@ -905,7 +915,6 @@ function draw(){
       const isSel = s.id === selectedId;
       const pos = getSpeakerPos(s);
       if (isCeilingType(db.type)){
-        // Circular floor footprint
         const covRadius = (d.H - LISTENER_H) * Math.tan((db.covH/2) * RAD) * layout.scale;
         ctx.fillStyle = isSel ? 'rgba(167,139,250,.28)' : 'rgba(167,139,250,.10)';
         ctx.beginPath();
@@ -928,7 +937,6 @@ function draw(){
     ctx.restore();
   }
 
-  // Speakers
   speakers.forEach(s => {
     const isSel = s.id === selectedId;
     const pos = getSpeakerPos(s);
@@ -956,7 +964,7 @@ function draw(){
       ctx.setLineDash([]);
       ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(hx, hy, 13, 0, Math.PI*2); ctx.fill();
       ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = "#0d1117"; ctx.font = "bold 15px Cairo, sans-serif";
+      ctx.fillStyle = "#0d1117"; ctx.font = "bold 15px Inter, sans-serif";
       ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("↻", hx, hy+1);
       ctx.textBaseline = "alphabetic";
     }
@@ -965,7 +973,7 @@ function draw(){
   drawColumns2D();
 }
 
-/* ============ INTERACTION ============ */
+/* ============ 2D INTERACTION ============ */
 function getPointer(e){
   const r = canvas.getBoundingClientRect();
   const sx = canvas.width / r.width, sy = canvas.height / r.height;
@@ -1022,7 +1030,7 @@ function onPointerDown(e){
       pushUndo();
       columns = columns.filter(c => c.id !== colHit.id);
       updateAmpLogic(); draw(); if (scene3d) buildScene3D();
-      toast('Column removed', 'warn');
+      toast('Column deleted', 'warn');
     } else if (p.inside){
       pushUndo();
       const radius = parseFloat($('col_radius').value) || 0.35;
@@ -1055,15 +1063,14 @@ function onPointerDown(e){
   const spk = DB_SPK[model];
   const type = spk.type;
 
-  // Manual mode
   if (manualMode){
     pushUndo();
     if (isMinaretArea(m)){
       addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
-      toast('Horn added to minaret', 'ok');
+      toast('Minaret horn added', 'ok');
     } else if (isHornType(type)){
       undoStack.pop(); updateUndoButtons();
-      toast('Outdoor horns only on minaret', 'warn'); return;
+      toast('Horns can only be placed on minaret', 'warn'); return;
     } else if (!p.inside){
       undoStack.pop(); updateUndoButtons();
       toast('Click inside the hall', 'warn'); return;
@@ -1077,12 +1084,11 @@ function onPointerDown(e){
     if (scene3d) buildScene3D(); return;
   }
 
-  // Auto mode
   if (isHornType(type)){
     if (isMinaretArea(m)){
       pushUndo();
       addMinaretHorn(model, Math.atan2(m.my - layout.mcy, m.mx - layout.mcx));
-    } else { toast('Outdoor horns only on minaret', 'warn'); return; }
+    } else { toast('Horns can only be placed on minaret', 'warn'); return; }
   } else if (isCeilingType(type)){
     if (!p.inside) { toast('Click inside the hall', 'warn'); return; }
     pushUndo();
@@ -1106,7 +1112,7 @@ function onPointerDown(e){
   if (scene3d) buildScene3D();
 }
 
-function onPointerMove(e){
+function pointerMove(e){
   const m = getPointer(e);
   if (rotating){
     const pos = getSpeakerPos(rotating);
@@ -1135,7 +1141,7 @@ function onPointerMove(e){
   canvas.style.cursor = cursor;
 }
 
-function onPointerUp(e){
+function pointerUp(e){
   if ((dragging || rotating) && dragSnapshot){
     const after = snapshot();
     if (dragSnapshot !== after){
@@ -1153,9 +1159,9 @@ function onPointerUp(e){
   }
 }
 canvas.addEventListener('pointerdown', onPointerDown);
-canvas.addEventListener('pointermove', onPointerMove);
-canvas.addEventListener('pointerup', onPointerUp);
-canvas.addEventListener('pointercancel', onPointerUp);
+canvas.addEventListener('pointermove', pointerMove);
+canvas.addEventListener('pointerup', pointerUp);
+canvas.addEventListener('pointercancel', pointerUp);
 canvas.addEventListener('contextmenu', e => {
   e.preventDefault();
   const p = toLocal(getPointer(e));
@@ -1169,7 +1175,7 @@ canvas.addEventListener('contextmenu', e => {
   }
 });
 
-/* ============ VIEW TOGGLE ============ */
+/* ============ VIEW SWITCHING ============ */
 function switchView(mode){
   currentView = mode;
   if (mode === '3d'){
@@ -1207,48 +1213,74 @@ function toggleAutoRotate3D(){
   $('autoRotBtn').classList.toggle('on', autoRotate3D);
 }
 
-/* ============ 3D ============ */
+/* ============ 3D SCENE (AURALIS Realistic Architecture) ============ */
 function init3D(){
   const c = $('threeWrap');
   if (!c || c.dataset.ready) return;
   c.dataset.ready = '1';
   const w = Math.max(c.clientWidth, 800), h = Math.max(c.clientHeight, 600);
+
   scene3d = new THREE.Scene();
-  scene3d.background = new THREE.Color(0x0a0e14);
-  scene3d.fog = new THREE.Fog(0x0a0e14, 100, 280);
-  camera3d = new THREE.PerspectiveCamera(45, w/h, 0.1, 500);
-  camera3d.position.set(35, 28, 42);
+  const skyColor = 0x0a0f1a;
+  scene3d.background = new THREE.Color(skyColor);
+  scene3d.fog = new THREE.Fog(skyColor, 60, 220);
+
+  camera3d = new THREE.PerspectiveCamera(50, w/h, 0.1, 500);
+
   renderer3d = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
   renderer3d.setSize(w, h);
   renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer3d.shadowMap.enabled = true;
   renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer3d.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer3d.toneMappingExposure = 1.25;
   c.appendChild(renderer3d.domElement);
+
   controls3d = new THREE.OrbitControls(camera3d, renderer3d.domElement);
-  controls3d.enableDamping = true; controls3d.dampingFactor = 0.08;
-  controls3d.minDistance = 8; controls3d.maxDistance = 200;
+  controls3d.enableDamping = true;
+  controls3d.dampingFactor = 0.08;
+  controls3d.minDistance = 2;
+  controls3d.maxDistance = 180;
   controls3d.maxPolarAngle = Math.PI/2 - 0.02;
-  controls3d.target.set(0, 4, 0);
-  scene3d.add(new THREE.HemisphereLight(0x38bdf8, 0x0a0a0a, 0.55));
-  const key = new THREE.DirectionalLight(0xffffff, 1.1);
-  key.position.set(30, 50, 30); key.castShadow = true;
-  key.shadow.mapSize.width = 2048; key.shadow.mapSize.height = 2048;
-  key.shadow.camera.left = -80; key.shadow.camera.right = 80;
-  key.shadow.camera.top = 80; key.shadow.camera.bottom = -80;
-  key.shadow.camera.far = 200;
-  scene3d.add(key);
-  const fill = new THREE.DirectionalLight(0xe60012, 0.35);
-  fill.position.set(-30, 25, -25); scene3d.add(fill);
-  const rim = new THREE.PointLight(0x38bdf8, 0.7, 120);
-  rim.position.set(0, 12, 0); scene3d.add(rim);
-  group3d = new THREE.Group(); scene3d.add(group3d);
+
+  scene3d.add(new THREE.AmbientLight(0xe0e8ff, 0.75));
+  scene3d.add(new THREE.HemisphereLight(0xc8d8ff, 0x1a1f30, 0.7));
+
+  const sun = new THREE.DirectionalLight(0xfff5e0, 1.35);
+  sun.position.set(18, 32, 16);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.left = -60; sun.shadow.camera.right = 60;
+  sun.shadow.camera.top = 60; sun.shadow.camera.bottom = -60;
+  sun.shadow.camera.near = 1; sun.shadow.camera.far = 160;
+  sun.shadow.bias = -0.0005;
+  scene3d.add(sun);
+
+  const fill = new THREE.DirectionalLight(0xa8b0ff, 0.55);
+  fill.position.set(-16, 20, -14);
+  scene3d.add(fill);
+
+  const interiorLight = new THREE.PointLight(0xfff2dc, 0.9, 60);
+  interiorLight.position.set(0, 4.5, 0);
+  scene3d.add(interiorLight);
+
+  const grid = new THREE.GridHelper(220, 110, 0x3b82f6, 0x1a1f30);
+  grid.material.opacity = 0.14;
+  grid.material.transparent = true;
+  grid.position.y = 0.004;
+  scene3d.add(grid);
+
+  group3d = new THREE.Group();
+  scene3d.add(group3d);
   animate3D();
 }
+
 function animate3D(){
   requestAnimationFrame(animate3D);
   if (controls3d) controls3d.update();
   if (renderer3d && scene3d && camera3d) renderer3d.render(scene3d, camera3d);
 }
+
 function clear3D(){
   if (!group3d) return;
   while(group3d.children.length){
@@ -1261,13 +1293,15 @@ function clear3D(){
     }
   }
 }
-function addWallPlane(x1, z1, x2, z2, H, mat){
+
+function addWallBox3D(x1, z1, x2, z2, H, mat){
   const dx = x2 - x1, dz = z2 - z1;
   const len = Math.hypot(dx, dz);
-  const geo = new THREE.PlaneGeometry(len, H);
-  const mesh = new THREE.Mesh(geo, mat);
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(len, H, 0.22), mat);
   mesh.position.set((x1+x2)/2, H/2, (z1+z2)/2);
   mesh.rotation.y = -Math.atan2(dz, dx);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
   return mesh;
 }
 
@@ -1278,128 +1312,231 @@ function buildScene3D(){
   if (!d.L || !d.W) return;
   const W = d.W, L = d.L, H = d.H;
   const shape = getShape();
-  const floorMat = new THREE.MeshStandardMaterial({color:0x1a1f27, roughness:0.9, metalness:0.05});
-  const wallMat = new THREE.MeshStandardMaterial({color:0x38bdf8, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false});
-  const edgeMat = new THREE.LineBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.85});
 
-  if (shape === 'circle'){
+  const carpetMat = M3D.carpet();
+  const borderMat = M3D.dark();
+  const solidWallMat = M3D.wallWoodPanel();
+  const cutWallMat = M3D.wallGlass();
+
+  if (shape === 'circle' || shape === 'octagon'){
     const R = Math.min(W, L) / 2;
-    const fGeo = new THREE.CircleGeometry(R, 64); fGeo.rotateX(-Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat);
-    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
-    f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
-  } else if (shape === 'octagon'){
-    const R = Math.min(W, L) / 2;
-    const fGeo = new THREE.CircleGeometry(R, 8); fGeo.rotateX(-Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat);
-    f.scale.x = W / (2 * R); f.scale.z = L / (2 * R);
-    f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const segs = shape === 'circle' ? 64 : 8;
+    const fl = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 0.08, segs), carpetMat);
+    fl.position.y = 0.04;
+    fl.scale.set(W/(2*R), 1, L/(2*R));
+    fl.receiveShadow = true;
+    group3d.add(fl);
+
+    const br = new THREE.Mesh(new THREE.CylinderGeometry(R+0.3, R+0.3, 0.06, segs), borderMat);
+    br.position.y = 0.03;
+    br.scale.set(W/(2*R), 1, L/(2*R));
+    group3d.add(br);
   } else if (shape === 'lshape'){
     const s = new THREE.Shape();
     s.moveTo(-W/2, -L/2); s.lineTo(W/2, -L/2); s.lineTo(W/2, 0);
     s.lineTo(0, 0); s.lineTo(0, L/2); s.lineTo(-W/2, L/2); s.closePath();
-    const fGeo = new THREE.ShapeGeometry(s); fGeo.rotateX(Math.PI/2);
-    const f = new THREE.Mesh(fGeo, floorMat); f.position.y = 0.001;
-    group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const fGeo = new THREE.ExtrudeGeometry(s, {depth:0.08, bevelEnabled:false});
+    fGeo.rotateX(Math.PI/2);
+    const fl = new THREE.Mesh(fGeo, carpetMat);
+    fl.position.y = 0.08;
+    fl.receiveShadow = true;
+    group3d.add(fl);
   } else {
-    const f = new THREE.Mesh(new THREE.PlaneGeometry(W, L), floorMat);
-    f.rotation.x = -Math.PI/2; f.receiveShadow = true; group3d.add(f);
-    const g = new THREE.GridHelper(Math.max(W, L) * 1.1, 20, 0x1f2937, 0x161b22); g.position.y = 0.02; group3d.add(g);
+    const fl = new THREE.Mesh(new THREE.BoxGeometry(W, 0.08, L), carpetMat);
+    fl.position.set(0, 0.04, 0);
+    fl.receiveShadow = true;
+    group3d.add(fl);
+
+    const br = new THREE.Mesh(new THREE.BoxGeometry(W + 0.45, 0.06, L + 0.45), borderMat);
+    br.position.set(0, 0.03, 0);
+    group3d.add(br);
+  }
+
+  const rowStep = 1.25;
+  const lineMat = new THREE.MeshStandardMaterial({color:0xb8860b, roughness:0.6, metalness:0.3});
+  for (let z = -L/2 + 1.6; z < L/2 - 0.8; z += rowStep){
+    let rowW = W - 0.9;
+    let rowX = 0;
+    if (shape === 'circle' || shape === 'octagon'){
+      const normZ = z / (L/2);
+      if (Math.abs(normZ) >= 0.94) continue;
+      rowW = W * Math.sqrt(Math.max(0, 1 - normZ*normZ)) * 0.90;
+    } else if (shape === 'lshape' && z > 0){
+      rowW = W/2 - 0.7;
+      rowX = -W/4;
+    }
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(rowW, 0.01, 0.07), lineMat);
+    strip.position.set(rowX, 0.085, z);
+    group3d.add(strip);
   }
 
   if (shape === 'circle' || shape === 'octagon'){
     const R = Math.min(W, L) / 2;
     const sides = shape === 'circle' ? 64 : 8;
-    const wGeo = new THREE.CylinderGeometry(R, R, H, sides, 1, true);
-    const w = new THREE.Mesh(wGeo, wallMat);
-    w.position.y = H/2;
-    w.scale.x = W / (2 * R); w.scale.z = L / (2 * R);
-    group3d.add(w);
-    const topGeo = new THREE.RingGeometry(R * 0.99, R, sides); topGeo.rotateX(-Math.PI/2);
-    const topMesh = new THREE.Mesh(topGeo, new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.6, side:THREE.DoubleSide}));
+    const wSolid = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, sides, 1, true, Math.PI*0.5, Math.PI), solidWallMat);
+    wSolid.position.y = H/2;
+    wSolid.scale.set(W/(2*R), 1, L/(2*R));
+    wSolid.receiveShadow = true;
+    group3d.add(wSolid);
+
+    const wGlass = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, sides, 1, true, -Math.PI*0.5, Math.PI),
+      new THREE.MeshStandardMaterial({color:0x1e293b, transparent:true, opacity:0.25, side:THREE.DoubleSide, depthWrite:false}));
+    wGlass.position.y = H/2;
+    wGlass.scale.set(W/(2*R), 1, L/(2*R));
+    group3d.add(wGlass);
+
+    const topGeo = new THREE.RingGeometry(R * 0.97, R, sides);
+    topGeo.rotateX(-Math.PI/2);
+    const topMesh = new THREE.Mesh(topGeo, M3D.woodAccent());
     topMesh.position.y = H;
-    topMesh.scale.x = W / (2 * R); topMesh.scale.z = L / (2 * R);
+    topMesh.scale.set(W/(2*R), 1, L/(2*R));
     group3d.add(topMesh);
   } else if (shape === 'lshape'){
-    group3d.add(addWallPlane(-W/2, -L/2, W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(-W/2, L/2, -W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(0, L/2, -W/2, L/2, H, wallMat));
-    group3d.add(addWallPlane(W/2, 0, W/2, -L/2, H, wallMat));
-    group3d.add(addWallPlane(0, 0, W/2, 0, H, wallMat));
-    group3d.add(addWallPlane(0, L/2, 0, 0, H, wallMat));
-    const pts = [[-W/2,-L/2,H],[W/2,-L/2,H],[W/2,0,H],[0,0,H],[0,L/2,H],[-W/2,L/2,H],[-W/2,-L/2,H]]
-      .map(([x,y,z]) => new THREE.Vector3(x, y, z));
-    const wg = new THREE.BufferGeometry().setFromPoints(pts);
-    group3d.add(new THREE.Line(wg, edgeMat));
+    group3d.add(addWallBox3D(-W/2, -L/2, W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(-W/2, L/2, -W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(0, L/2, -W/2, L/2, H, cutWallMat));
+    group3d.add(addWallBox3D(W/2, 0, W/2, -L/2, H, solidWallMat));
+    group3d.add(addWallBox3D(0, 0, W/2, 0, H, cutWallMat));
+    group3d.add(addWallBox3D(0, L/2, 0, 0, H, cutWallMat));
   } else {
-    const wGeoLR = new THREE.PlaneGeometry(L, H), wGeoFB = new THREE.PlaneGeometry(W, H);
-    const left = new THREE.Mesh(wGeoLR, wallMat); left.rotation.y = Math.PI/2; left.position.set(-W/2, H/2, 0); group3d.add(left);
-    const right = new THREE.Mesh(wGeoLR, wallMat); right.rotation.y = -Math.PI/2; right.position.set(W/2, H/2, 0); group3d.add(right);
-    const back = new THREE.Mesh(wGeoFB, wallMat); back.position.set(0, H/2, -L/2); group3d.add(back);
-    const front = new THREE.Mesh(wGeoFB, wallMat); front.rotation.y = Math.PI; front.position.set(0, H/2, L/2); group3d.add(front);
-    const boxEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(W, H, L));
-    const wire = new THREE.LineSegments(boxEdges, edgeMat);
-    wire.position.set(0, H/2, 0); group3d.add(wire);
+    const qiblaWall = new THREE.Mesh(new THREE.BoxGeometry(W + 0.4, H, 0.25), solidWallMat);
+    qiblaWall.position.set(0, H/2, -L/2 - 0.12);
+    qiblaWall.castShadow = true; qiblaWall.receiveShadow = true;
+    group3d.add(qiblaWall);
+
+    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, H, L + 0.4), solidWallMat);
+    leftWall.position.set(-W/2 - 0.12, H/2, 0);
+    leftWall.castShadow = true; leftWall.receiveShadow = true;
+    group3d.add(leftWall);
+
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, H, L + 0.4), solidWallMat);
+    rightWall.position.set(W/2 + 0.12, H/2, 0);
+    rightWall.castShadow = true; rightWall.receiveShadow = true;
+    group3d.add(rightWall);
+
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(W + 0.4, H, 0.22),
+      new THREE.MeshStandardMaterial({color:0x2d1c12, roughness:0.6, metalness:0.1, transparent:true, opacity:0.35}));
+    backWall.position.set(0, H/2, L/2 + 0.11);
+    group3d.add(backWall);
+
+    [-W*0.28, W*0.28].forEach(dx => {
+      const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.8, Math.min(2.6, H*0.75), 0.28), M3D.steel());
+      doorFrame.position.set(dx, Math.min(2.6, H*0.75)/2, L/2 + 0.11);
+      group3d.add(doorFrame);
+      const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.6, Math.min(2.5, H*0.72), 0.30), M3D.body());
+      doorLeaf.position.set(dx, Math.min(2.5, H*0.72)/2, L/2 + 0.11);
+      group3d.add(doorLeaf);
+    });
+
+    const qPanels = Math.max(2, Math.floor((W - 6) / 3.0));
+    for (let i = 0; i < qPanels; i++){
+      const px = -W/2 + 2.0 + i * ((W - 4.0) / Math.max(1, qPanels - 1));
+      if (Math.abs(px) < 3.6) continue;
+      const ac = new THREE.Mesh(new THREE.BoxGeometry(1.5, H * 0.65, 0.08), M3D.acousticPanel());
+      ac.position.set(px, H * 0.52, -L/2 + 0.04);
+      group3d.add(ac);
+    }
+    const sidePanels = Math.max(3, Math.floor((L - 4) / 3.5));
+    for (let i = 0; i < sidePanels; i++){
+      const pz = -L/2 + 2.5 + i * ((L - 5.0) / Math.max(1, sidePanels - 1));
+      [-1, 1].forEach(side => {
+        const ac = new THREE.Mesh(new THREE.BoxGeometry(0.08, H * 0.6, 1.8), M3D.acousticPanel());
+        ac.position.set(side * (W/2 - 0.04), H * 0.52, pz);
+        group3d.add(ac);
+      });
+    }
   }
 
-  // Transparent ceiling (for ceiling speakers)
-  const hasCeiling = speakers.some(s => isCeilingType(getModelType(s.model)));
-  if (hasCeiling){
-    const ceilGeo = new THREE.PlaneGeometry(W, L);
-    const ceilMat = new THREE.MeshBasicMaterial({color:0x38bdf8, transparent:true, opacity:0.03, side:THREE.DoubleSide, depthWrite:false});
-    const ceilMesh = new THREE.Mesh(ceilGeo, ceilMat);
-    ceilMesh.rotation.x = Math.PI/2;
-    ceilMesh.position.y = H;
-    group3d.add(ceilMesh);
+  const ceilPanelMat = M3D.ceilingPanel();
+  const colsP = Math.max(2, Math.floor(W / 3.8));
+  const rowsP = Math.max(2, Math.floor(L / 3.8));
+  for (let i = 0; i < colsP; i++){
+    for (let j = 0; j < rowsP; j++){
+      const rx = (i + 0.5) / colsP;
+      const ry = (j + 0.5) / rowsP;
+      if (!isInsideShape(rx, ry, shape)) continue;
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.06, 1.5), M3D.dark());
+      frame.position.set((rx - 0.5) * W, H - 0.03, (ry - 0.5) * L);
+      group3d.add(frame);
+
+      const panel = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.04, 1.35), ceilPanelMat);
+      panel.position.set((rx - 0.5) * W, H - 0.05, (ry - 0.5) * L);
+      group3d.add(panel);
+    }
   }
 
-  // Mihrab
+  const mFrame = new THREE.Mesh(new THREE.BoxGeometry(4.4, Math.min(H * 0.88, 4.8), 0.35), M3D.woodDark());
+  mFrame.position.set(0, Math.min(H * 0.88, 4.8)/2, -L/2 + 0.18);
+  mFrame.castShadow = true;
+  group3d.add(mFrame);
+
   const mShape = new THREE.Shape();
-  mShape.moveTo(-2.5, 0); mShape.lineTo(-2.5, 3.2);
-  mShape.quadraticCurveTo(-2.5, 5.5, 0, 5.5);
-  mShape.quadraticCurveTo(2.5, 5.5, 2.5, 3.2);
-  mShape.lineTo(2.5, 0); mShape.lineTo(-2.5, 0);
-  const mihrab = new THREE.Mesh(new THREE.ShapeGeometry(mShape, 12),
-    new THREE.MeshStandardMaterial({color:0x38bdf8, side:THREE.DoubleSide, emissive:0x0a2e45, emissiveIntensity:0.7}));
-  mihrab.position.set(0, 0.1, -L/2 + 0.08); group3d.add(mihrab);
+  const mh = Math.min(H * 0.78, 4.2);
+  mShape.moveTo(-1.7, 0); mShape.lineTo(-1.7, mh * 0.62);
+  mShape.quadraticCurveTo(-1.7, mh, 0, mh);
+  mShape.quadraticCurveTo(1.7, mh, 1.7, mh * 0.62);
+  mShape.lineTo(1.7, 0); mShape.lineTo(-1.7, 0);
+  const mihrab = new THREE.Mesh(
+    new THREE.ShapeGeometry(mShape, 16),
+    new THREE.MeshStandardMaterial({color:0x1d4ed8, side:THREE.DoubleSide, emissive:0x1e3a8a, emissiveIntensity:0.55, roughness:0.3, metalness:0.4})
+  );
+  mihrab.position.set(0, 0.08, -L/2 + 0.37);
+  group3d.add(mihrab);
 
-  // Minaret
+  if (W >= 8){
+    const minbarX = 3.2;
+    const minbarBase = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.8, 2.4), M3D.woodAccent());
+    minbarBase.position.set(minbarX, 0.9, -L/2 + 1.3);
+    minbarBase.castShadow = true;
+    group3d.add(minbarBase);
+    for (let st = 0; st < 4; st++){
+      const step = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.25, 0.45), M3D.woodDark());
+      step.position.set(minbarX, 0.15 + st * 0.35, -L/2 + 2.3 - st * 0.45);
+      group3d.add(step);
+    }
+  }
+
   const minaretH = Math.max(H * 2.2, 14);
-  const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
-  const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 20),
-    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.55, metalness:0.25}));
-  minaret.position.set(mX, minaretH/2, mZ); minaret.castShadow = true; group3d.add(minaret);
-  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.3, 20),
-    new THREE.MeshStandardMaterial({color:0xb00010, roughness:0.6}));
-  balcony.position.set(mX, minaretH * 0.72, mZ); group3d.add(balcony);
-  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 16, 0, Math.PI*2, 0, Math.PI/2),
-    new THREE.MeshStandardMaterial({color:0xe60012, roughness:0.35, metalness:0.4, emissive:0x220000}));
-  dome.position.set(mX, minaretH, mZ); dome.castShadow = true; group3d.add(dome);
-  const crescent = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4),
-    new THREE.MeshStandardMaterial({color:0xffd700, emissive:0x554400, emissiveIntensity:0.6, metalness:0.9, roughness:0.2}));
-  crescent.position.set(mX, minaretH + 1.6, mZ); crescent.rotation.z = Math.PI / 2; group3d.add(crescent);
+  const mX = -W/2 - 2.4, mZ = -L/2 - 2.4;
+  const minaret = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.5, minaretH, 24), M3D.spkCol());
+  minaret.position.set(mX, minaretH/2, mZ);
+  minaret.castShadow = true;
+  group3d.add(minaret);
 
-  // Columns
+  const balcony = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.0, 0.35, 24), M3D.woodDark());
+  balcony.position.set(mX, minaretH * 0.72, mZ);
+  group3d.add(balcony);
+
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 16, 0, Math.PI*2, 0, Math.PI/2), M3D.spkCol());
+  dome.position.set(mX, minaretH, mZ);
+  dome.castShadow = true;
+  group3d.add(dome);
+
+  const crescent = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.12, 8, 20, Math.PI * 1.4), M3D.gold());
+  crescent.position.set(mX, minaretH + 1.6, mZ);
+  crescent.rotation.z = Math.PI / 2;
+  group3d.add(crescent);
+
   columns.forEach(c => {
     const cx = (c.rx - 0.5) * W, cz = (c.ry - 0.5) * L;
-    const geo = new THREE.CylinderGeometry(c.radius, c.radius, H, 16);
-    const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x2a3240, roughness:0.75, metalness:0.15}));
-    mesh.position.set(cx, H/2, cz);
-    mesh.castShadow = true; mesh.receiveShadow = true; group3d.add(mesh);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.3, c.radius, 0.3, 16),
-      new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.6, roughness:0.3, emissive:0x0a2e45, emissiveIntensity:0.4}));
-    cap.position.set(cx, H - 0.15, cz); group3d.add(cap);
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(c.radius, c.radius, H, 20), M3D.gray());
+    shaft.position.set(cx, H/2, cz);
+    shaft.castShadow = true; shaft.receiveShadow = true;
+    group3d.add(shaft);
+
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.25, c.radius*1.3, 0.25, 20), M3D.dark());
+    base.position.set(cx, 0.15, cz);
+    group3d.add(base);
+
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(c.radius*1.35, c.radius, 0.32, 20), M3D.metal());
+    cap.position.set(cx, H - 0.16, cz);
+    group3d.add(cap);
   });
 
-  // Speakers
   speakers.forEach(s => addSpeakerMesh3D(s, d));
 
-  const maxDim = Math.max(W, L, minaretH);
-  camera3d.position.set(maxDim * 0.85, maxDim * 0.75, maxDim * 1.05);
-  controls3d.target.set(0, H/2, 0);
+  camera3d.position.set(W * 0.55, H * 1.35, L * 0.95);
+  controls3d.target.set(0, H * 0.42, -L * 0.12);
   controls3d.update();
 }
 
@@ -1409,22 +1546,25 @@ function addSpeakerMesh3D(s, d){
   const W = d.W, L = d.L, H = d.H;
   const shape = getShape();
 
-  // Minaret horn
   if (s.zone === 'minaret'){
     const minaretH = Math.max(H * 2.2, 14);
-    const mX = -W/2 - 2.2, mZ = -L/2 - 2.2;
+    const mX = -W/2 - 2.4, mZ = -L/2 - 2.4;
     const R = 1.8;
     const dirX = Math.cos(s.ang), dirZ = Math.sin(s.ang);
     const hx = mX + dirX * R, hz = mZ + dirZ * R, hy = minaretH * 0.78;
-    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 12); bodyGeo.rotateX(-Math.PI/2);
-    const body = new THREE.Mesh(bodyGeo, new THREE.MeshStandardMaterial({color:0xe60012, metalness:0.6, roughness:0.3, emissive:0x330000, emissiveIntensity:0.4}));
+    const bodyGeo = new THREE.CylinderGeometry(0.15, 0.55, 1.1, 16);
+    bodyGeo.rotateX(-Math.PI/2);
+    const body = new THREE.Mesh(bodyGeo, M3D.spkCol());
     body.position.set(hx + dirX*0.55, hy, hz + dirZ*0.55);
     body.lookAt(hx + dirX*10, hy, hz + dirZ*10);
-    body.castShadow = true; group3d.add(body);
+    body.castShadow = true;
+    group3d.add(body);
+
     if (showCoverage){
       const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 10;
-      const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true); cg.rotateX(-Math.PI/2);
-      const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.06, side:THREE.DoubleSide, depthWrite:false}));
+      const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 20, 1, true);
+      cg.rotateX(-Math.PI/2);
+      const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color:0xe60012, transparent:true, opacity:0.08, side:THREE.DoubleSide, depthWrite:false}));
       cov.position.set(hx + dirX * covLen/2, hy, hz + dirZ * covLen/2);
       cov.lookAt(hx + dirX*100, hy, hz + dirZ*100);
       group3d.add(cov);
@@ -1432,46 +1572,31 @@ function addSpeakerMesh3D(s, d){
     return;
   }
 
-  // Ceiling speaker
   if (isCeilingType(sp.type)){
     const cx = (s.rx - 0.5) * W;
     const cz = (s.ry - 0.5) * L;
-    const cy = H - 0.05;
+    const cy = H - 0.04;
 
-    // Outer bezel
-    const bezelGeo = new THREE.CylinderGeometry(0.28, 0.30, 0.08, 24);
-    const bezel = new THREE.Mesh(bezelGeo, new THREE.MeshStandardMaterial({
-      color:0x8b949e, metalness:0.7, roughness:0.35, emissive:0x1a1f26, emissiveIntensity:0.2
-    }));
+    const bezel = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.30, 0.08, 24), M3D.metal());
     bezel.position.set(cx, cy, cz);
     group3d.add(bezel);
 
-    // Grille
-    const grilleGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.03, 24);
-    const grille = new THREE.Mesh(grilleGeo, new THREE.MeshStandardMaterial({
-      color:0x0a0e14, metalness:0.4, roughness:0.7
-    }));
+    const grille = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.03, 24), M3D.dark());
     grille.position.set(cx, cy - 0.055, cz);
     group3d.add(grille);
 
-    // Purple accent ring
     const accentGeo = new THREE.TorusGeometry(0.26, 0.015, 8, 24);
     accentGeo.rotateX(Math.PI/2);
-    const accent = new THREE.Mesh(accentGeo, new THREE.MeshStandardMaterial({
-      color:0xa78bfa, emissive:0x4c1d95, emissiveIntensity:0.6, metalness:0.8, roughness:0.3
-    }));
+    const accent = new THREE.Mesh(accentGeo, M3D.spkCeil());
     accent.position.set(cx, cy - 0.05, cz);
     group3d.add(accent);
 
-    // Downward coverage cone
     if (showCoverage){
       const covHalf = (sp.covH/2) * Math.PI / 180;
       const covLen = H - LISTENER_H;
       const covRadius = Math.tan(covHalf) * covLen;
       const covGeo = new THREE.ConeGeometry(covRadius, covLen, 32, 1, true);
-      const covMat = new THREE.MeshBasicMaterial({
-        color:0xa78bfa, transparent:true, opacity:0.07, side:THREE.DoubleSide, depthWrite:false
-      });
+      const covMat = new THREE.MeshBasicMaterial({color:0xa78bfa, transparent:true, opacity:0.09, side:THREE.DoubleSide, depthWrite:false});
       const cov = new THREE.Mesh(covGeo, covMat);
       cov.position.set(cx, (H + LISTENER_H) / 2, cz);
       group3d.add(cov);
@@ -1479,67 +1604,96 @@ function addSpeakerMesh3D(s, d){
     return;
   }
 
-  // Wall / Column speaker
   let wx, wy, wz, facingRad;
   const onWall = isOnWall(s);
   if (onWall){
     if (shape === 'rect' || shape === 'lshape'){
       const left = s.rx < 0.5;
-      wx = left ? -W/2 : W/2;
+      wx = left ? -W/2 + 0.22 : W/2 - 0.22;
       wz = (s.ry - 0.5) * L;
-      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.65);
       facingRad = left ? 0 : Math.PI;
     } else {
       const angle = Math.atan2(s.ry - 0.5, s.rx - 0.5);
       const Rx = W / 2, Rz = L / 2;
-      wx = Rx * Math.cos(angle) * 0.96;
-      wz = Rz * Math.sin(angle) * 0.96;
-      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.4);
+      wx = Rx * Math.cos(angle) * 0.95;
+      wz = Rz * Math.sin(angle) * 0.95;
+      wy = isWallType(sp.type) ? MOUNT_H_WALL : (H - 0.65);
       facingRad = angle + Math.PI;
     }
   } else {
     wx = (s.rx - 0.5) * W;
     wz = (s.ry - 0.5) * L;
-    wy = H - 0.4;
+    wy = H - 0.65;
     facingRad = getFacing(s);
   }
 
+  const spkGrp = new THREE.Group();
+  spkGrp.position.set(wx, wy, wz);
+  spkGrp.rotation.y = -facingRad;
+
+  const bw = isCol ? 0.34 : 0.44;
+  const bh = isCol ? 1.15 : 0.78;
+  const bd = isCol ? 0.32 : 0.48;
+
+  const cabinet = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), M3D.body());
+  cabinet.castShadow = true;
+  cabinet.receiveShadow = true;
+  spkGrp.add(cabinet);
+
+  const grille = new THREE.Mesh(new THREE.BoxGeometry(0.03, bh * 0.92, bd * 0.88), M3D.dark());
+  grille.position.x = bw / 2 + 0.01;
+  spkGrp.add(grille);
+
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(bw * 0.85, bh * 0.96, 0.02), isCol ? M3D.spkCol() : M3D.spkWall());
+  stripe.position.z = bd / 2 + 0.008;
+  spkGrp.add(stripe);
+
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), M3D.ledGreen());
+  led.position.set(bw / 2 + 0.025, -bh / 2 + 0.07, 0);
+  spkGrp.add(led);
+
+  const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.16), M3D.metal());
+  bracket.position.x = -bw / 2 - 0.07;
+  spkGrp.add(bracket);
+
+  group3d.add(spkGrp);
+
   const dirX = Math.cos(facingRad), dirZ = Math.sin(facingRad);
-  const bw = isCol ? 0.45 : 0.55, bh = isCol ? 1.15 : 0.85, bd = 0.38;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd),
-    new THREE.MeshStandardMaterial({color: isCol ? 0xe60012 : 0xff8c1a, metalness:0.5, roughness:0.4, emissive: isCol ? 0x330000 : 0x331500, emissiveIntensity:0.35}));
-  body.position.set(wx, wy, wz); body.castShadow = true; body.receiveShadow = true; group3d.add(body);
-  const arrowGeo = new THREE.ConeGeometry(0.16, 1.3, 10); arrowGeo.rotateX(Math.PI/2);
-  const arrow = new THREE.Mesh(arrowGeo, new THREE.MeshStandardMaterial({color:0x38bdf8, metalness:0.7, roughness:0.3, emissive:0x0a4060, emissiveIntensity:0.8}));
+  const arrowGeo = new THREE.ConeGeometry(0.14, 1.1, 12);
+  arrowGeo.rotateX(Math.PI/2);
+  const arrow = new THREE.Mesh(arrowGeo, M3D.metal());
   arrow.position.set(wx + dirX * 0.85, wy, wz + dirZ * 0.85);
   arrow.lookAt(wx + dirX*100, wy, wz + dirZ*100);
   group3d.add(arrow);
+
   if (showCoverage){
     const covHalf = (sp.covH/2) * Math.PI / 180, covLen = 8;
-    const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true); cg.rotateX(-Math.PI/2);
-    const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color: isCol ? 0x38bdf8 : 0xff8c1a, transparent:true, opacity:0.065, side:THREE.DoubleSide, depthWrite:false}));
+    const cg = new THREE.ConeGeometry(Math.tan(covHalf) * covLen, covLen, 24, 1, true);
+    cg.rotateX(-Math.PI/2);
+    const cov = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({color: isCol ? 0x38bdf8 : 0xff8c1a, transparent:true, opacity:0.08, side:THREE.DoubleSide, depthWrite:false}));
     cov.position.set(wx + dirX * covLen/2, wy, wz + dirZ * covLen/2);
     cov.lookAt(wx + dirX*100, wy, wz + dirZ*100);
     group3d.add(cov);
   }
 }
 
-/* ============ TOGGLES ============ */
+/* ============ BUTTON ACTIONS ============ */
 function toggleManualMode(){
   manualMode = !manualMode;
   $('manualBtn').classList.toggle('active-mode', manualMode);
-  toast(manualMode ? '🖐 Manual mode' : 'Auto mode', 'ok');
+  toast(manualMode ? 'Manual Mode On' : 'Automatic Mode', 'ok');
 }
 function toggleColumnMode(){
   columnMode = !columnMode;
   $('colModeBtn').classList.toggle('active-mode', columnMode);
-  if (columnMode) toast('Click to add or remove a column', 'ok');
+  if (columnMode) toast('Click to add or delete columns', 'ok');
 }
 function onColumnToggle(){ updateAmpLogic(); draw(); if (scene3d) buildScene3D(); }
 function onShapeChange(){
   updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
-  toast(`Shape: ${SHAPES_EN[getShape()]}`, 'ok');
+  toast(`Shape: ${SHAPES_AR[getShape()]}`, 'ok');
 }
 function toggleCoverage(){
   showCoverage = !showCoverage;
@@ -1559,7 +1713,7 @@ function toggleGrid(){
   if (currentView === '2d') draw();
 }
 function clearSpeakers(){
-  if (!speakers.length) return toast('No speakers', 'warn');
+  if (!speakers.length) return toast('No speakers found', 'warn');
   if (confirm(`Clear all speakers (${speakers.length})?`)){
     pushUndo();
     speakers = []; selectedId = null;
@@ -1569,7 +1723,7 @@ function clearSpeakers(){
   }
 }
 function clearColumns(){
-  if (!columns.length) return toast('No columns', 'warn');
+  if (!columns.length) return toast('No columns found', 'warn');
   if (confirm(`Clear all columns (${columns.length})?`)){
     pushUndo();
     columns = [];
@@ -1579,7 +1733,7 @@ function clearColumns(){
   }
 }
 function resetData(){
-  if (!confirm('Reset all data?')) return;
+  if (!confirm('Reset all project data?')) return;
   pushUndo();
   speakers = []; columns = []; selectedId = null; manualMode = false; columnMode = false;
   $('manualBtn').classList.remove('active-mode');
@@ -1589,7 +1743,7 @@ function resetData(){
   $('p_name').value = 'New Mosque'; $('p_client').value = ''; $('p_engineer').value = 'Eng. Ahmed';
   updateRotationPanel(); updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
-  toast('Reset done', 'ok');
+  toast('Data reset', 'ok');
 }
 function deselectSpeaker(){ selectedId = null; updateRotationPanel(); draw(); }
 function deleteSelected(){
@@ -1614,10 +1768,10 @@ function updateRotationPanel(){
   const isCeil = isCeilingType(type);
 
   let posLabel;
-  if (s.zone === 'minaret') posLabel = ' (Minaret horn)';
-  else if (isCeil) posLabel = ' (Ceiling, downward)';
-  else if (isOnWall(s)) posLabel = ` (${whichWall(s) === 'left' ? 'Left wall' : whichWall(s) === 'right' ? 'Right wall' : 'Curved wall'})`;
-  else posLabel = ' (Free)';
+  if (s.zone === 'minaret') posLabel = ' (Minaret Horn)';
+  else if (isCeil) posLabel = ' (Ceiling - Downward)';
+  else if (isOnWall(s)) posLabel = ` (${whichWall(s) === 'left' ? 'Left Wall' : whichWall(s) === 'right' ? 'Right Wall' : 'Curved Wall'})`;
+  else posLabel = ' (Free Position)';
   $('rotModel').textContent = `— ${s.model}${posLabel}`;
 
   const slider = $('angleSlider'), valEl = $('angleVal'), hint = $('rotHint');
@@ -1625,12 +1779,12 @@ function updateRotationPanel(){
     slider.disabled = true;
     slider.style.opacity = '0.3';
     valEl.textContent = 'N/A';
-    hint.textContent = '🔘 Ceiling speakers fire straight down — no rotation needed';
+    hint.textContent = '🔘 Ceiling speakers face straight down — no rotation needed';
     hint.style.color = '#a78bfa';
   } else {
     slider.disabled = false;
     slider.style.opacity = '1';
-    hint.textContent = '↔️ Drag the slider or white handle';
+    hint.textContent = '↔️ Drag slider or white handle to rotate';
     hint.style.color = '';
     let deg = getFacing(s) * DEG;
     while (deg > 180) deg -= 360;
@@ -1651,7 +1805,7 @@ function setSelectedAngle(val){
   if (scene3d && currentView === '3d') buildScene3D();
 }
 
-/* ============ AUTO-LAYOUT COLUMNS ============ */
+/* ============ COLUMN LAYOUT ============ */
 function autoLayoutColumns(){
   const d = getDims();
   const shape = getShape();
@@ -1699,10 +1853,10 @@ function autoLayoutColumns(){
   }
   updateAmpLogic(); draw();
   if (scene3d) buildScene3D();
-  toast(`✅ ${columns.length} columns placed`, 'ok');
+  toast(`✅ ${columns.length} columns added`, 'ok');
 }
 
-/* ============ SMART DISTRIBUTION ============ */
+/* ============ AI SMART DISTRIBUTE ============ */
 function aiSmartDistribute(){
   const d = getDims();
   const shape = getShape();
@@ -1720,13 +1874,12 @@ function aiSmartDistribute(){
     hornCount = 4;
   }
   if (isHorn){
-    toast(`${hornCount} horns on minaret`, 'ok');
+    toast(`${hornCount} minaret horns added`, 'ok');
     updateAmpLogic(); draw();
     if (scene3d) buildScene3D();
     return;
   }
 
-  // Ceiling speakers: grid layout
   if (isCeil){
     const covRadius = (d.H - LISTENER_H) * Math.tan((spk.covH/2) * RAD);
     const spacing = covRadius * 1.8;
@@ -1742,7 +1895,7 @@ function aiSmartDistribute(){
         placed++;
       }
     }
-    toast(`✅ ${placed} ceiling speakers in ${nx}×${ny} grid (${spacing.toFixed(1)}m spacing)${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
+    toast(`✅ ${placed} ceiling speakers (${nx}×${ny} grid, spacing ${spacing.toFixed(1)}m)${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
     updateAmpLogic(); draw();
     if (scene3d) buildScene3D();
     return;
@@ -1763,7 +1916,7 @@ function aiSmartDistribute(){
       if (!isInsideShape(rx, ry, shape)) continue;
       addSpeaker(rx, ry, model, angle + Math.PI);
     }
-    toast(`✅ ${n} speakers on perimeter${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
+    toast(`✅ ${n} perimeter speakers${hornCount ? ` + ${hornCount} horns` : ''}`, 'ok');
   } else if (shape === 'lshape'){
     const rows = Math.max(2, Math.ceil(d.L / spacing));
     const gap = d.L / rows;
@@ -1788,7 +1941,7 @@ function aiSmartDistribute(){
   if (scene3d) buildScene3D();
 }
 
-/* ============ SPL CHART ============ */
+/* ============ SPL HEATMAP IMAGE ============ */
 function renderSPLChartImage(d, target){
   const N = 44, W = 900, H = 520;
   const cv = document.createElement('canvas');
@@ -1808,9 +1961,9 @@ function renderSPLChartImage(d, target){
   }
   c.strokeStyle = '#38bdf8'; c.lineWidth = 2;
   c.strokeRect(pad, pad, N*cw, N*ch);
-  c.fillStyle = '#fff'; c.font = 'bold 16px Cairo, sans-serif'; c.textAlign = 'center';
-  c.fillText(`SPL Distribution — Target: ${target} dB  |  ${SHAPES_EN[getShape()]}`, W/2, 32);
-  c.font = '11px Cairo, sans-serif'; c.fillStyle = '#8b949e';
+  c.fillStyle = '#fff'; c.font = 'bold 16px Inter, sans-serif'; c.textAlign = 'center';
+  c.fillText(`SPL Distribution — Target: ${target} dB  |  ${SHAPES_AR[getShape()]}`, W/2, 32);
+  c.font = '11px Inter, sans-serif'; c.fillStyle = '#8b949e';
   c.fillText(`Columns: ${columns.length}`, W/2, 50);
   columns.forEach(col => {
     const cx = pad + col.rx * N * cw;
@@ -1824,20 +1977,20 @@ function renderSPLChartImage(d, target){
     c.fillStyle = heatColor(i/legW, 1); c.fillRect(legX + i, legY, 1, legH);
   }
   c.strokeStyle = '#8b949e'; c.strokeRect(legX, legY, legW, legH);
-  c.fillStyle = '#fff'; c.font = 'bold 11px Cairo, sans-serif';
+  c.fillStyle = '#fff'; c.font = 'bold 11px Inter, sans-serif';
   c.textAlign = 'right'; c.fillText(`${maxDB} dB`, legX + legW + 25, legY + 13);
   c.textAlign = 'left'; c.fillText(`${minDB} dB`, legX - 25, legY + 13);
   return cv.toDataURL('image/png');
 }
 
-/* ============ Signal flow ============ */
+/* ============ SIGNAL FLOW ============ */
 function renderSignalFlowSVG(fs, amp){
   const stages = [
-    {label:'Audio Sources', sub:'Mic / Player', color:'#e60012'},
-    {label:'Mixer', sub:'Console', color:'#dc2626'},
-    {label:'Feedback Killer', sub:fs === 'None' ? '—' : fs, color:'#f59e0b'},
+    {label:'Audio Sources', sub:'Microphone', color:'#e60012'},
+    {label:'Mixer', sub:'Mixer Console', color:'#dc2626'},
+    {label:'Feedback Supp.', sub:fs === 'None' ? '—' : fs, color:'#f59e0b'},
     {label:'Amplifiers', sub:amp.id, color:'#38bdf8'},
-    {label:'Speakers', sub:'Output', color:'#22c55e'}
+    {label:'Speakers', sub:'Speakers', color:'#22c55e'}
   ];
   let x = 60, y = 70, bw = 130, bh = 70, gap = 25;
   let svg = `<svg viewBox="0 0 ${stages.length*(bw+gap) + 40} 180" xmlns="http://www.w3.org/2000/svg">`;
@@ -1846,8 +1999,8 @@ function renderSignalFlowSVG(fs, amp){
     const cx = x + i*(bw+gap);
     svg += `<rect x="${cx}" y="${y}" width="${bw}" height="${bh}" rx="12" fill="#fff" stroke="${st.color}" stroke-width="2.5"/>`;
     svg += `<rect x="${cx}" y="${y}" width="${bw}" height="6" rx="3" fill="${st.color}"/>`;
-    svg += `<text x="${cx + bw/2}" y="${y + 34}" text-anchor="middle" fill="#0d1117" font-size="12" font-family="Cairo">${st.label}</text>`;
-    svg += `<text x="${cx + bw/2}" y="${y + 56}" text-anchor="middle" fill="#64748b" font-size="10" font-family="Cairo">${st.sub}</text>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 34}" text-anchor="middle" fill="#0d1117" font-size="12" font-family="Inter">${st.label}</text>`;
+    svg += `<text x="${cx + bw/2}" y="${y + 56}" text-anchor="middle" fill="#64748b" font-size="10" font-family="Inter">${st.sub}</text>`;
     if (i < stages.length - 1){
       svg += `<line x1="${cx + bw}" y1="${y + bh/2}" x2="${cx + bw + gap - 4}" y2="${y + bh/2}" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>`;
     }
@@ -1856,12 +2009,12 @@ function renderSignalFlowSVG(fs, amp){
   return svg;
 }
 
-/* ============ GENERATE REPORT ============ */
+/* ============ REPORT GENERATION ============ */
 function generateReport(){
-  if (!speakers.length) return toast('Add speakers first', 'err');
+  if (!speakers.length) return toast('Please add speakers first', 'err');
   const d = getDims();
   const fs = $('fs_model').value;
-  const fsTxt = fs === 'None' ? 'None' : fs;
+  const fsAr = fs === 'None' ? 'None' : fs;
   const ac = computeAcoustics();
   const target = parseFloat($('p_purpose').value);
   const today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'});
@@ -1888,31 +2041,31 @@ function generateReport(){
   const covClass = coverage >= 90 ? 'good' : coverage >= 70 ? 'warn' : 'bad';
   $('kpi_grid').innerHTML = `
     <div class="kpi-card ${splClass}"><div class="kpi-value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'}<span class="unit">dB</span></div><div class="kpi-label">Avg SPL (Target ${target})</div></div>
-    <div class="kpi-card ${rtClass}"><div class="kpi-value">${ac.rt60.toFixed(2)}<span class="unit">s</span></div><div class="kpi-label">RT60</div></div>
+    <div class="kpi-card ${rtClass}"><div class="kpi-value">${ac.rt60.toFixed(2)}<span class="unit">s</span></div><div class="kpi-label">RT60 Reverberation</div></div>
     <div class="kpi-card"><div class="kpi-value">${ampResult.totalPwr}<span class="unit">W</span></div><div class="kpi-label">Total Power</div></div>
-    <div class="kpi-card ${covClass}"><div class="kpi-value">${coverage.toFixed(0)}<span class="unit">%</span></div><div class="kpi-label">Coverage</div></div>`;
+    <div class="kpi-card ${covClass}"><div class="kpi-value">${coverage.toFixed(0)}<span class="unit">%</span></div><div class="kpi-label">Coverage Ratio</div></div>`;
 
   $('reportImg2D').src = img2D;
   $('reportImg3D').src = img3D;
 
-  const shapeName = SHAPES_EN[getShape()];
+  const shapeName = SHAPES_AR[getShape()];
   const ceilCount = speakers.filter(s => isCeilingType(getModelType(s.model))).length;
   const wallColCount = speakers.filter(s => s.zone !== 'minaret' && !isCeilingType(getModelType(s.model))).length;
   const ceilModels = [...new Set(speakers.filter(s => isCeilingType(getModelType(s.model))).map(s => s.model))].join(', ') || '—';
 
   $('room_analysis').innerHTML = `
-    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">HALL SHAPE</div><div class="value">${shapeName}</div></div></div>
-    <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">DIMENSIONS</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>m</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🔲</div><div class="info"><div class="label">FLOOR AREA</div><div class="value">${ac.area.toFixed(1)} <small>m²</small></div></div></div>
-    <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">VOLUME</div><div class="value">${ac.V.toFixed(1)} <small>m³</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">Hall Shape</div><div class="value">${shapeName}</div></div></div>
+    <div class="analysis-item"><div class="icon">📏</div><div class="info"><div class="label">Dimensions</div><div class="value">${d.L} × ${d.W} × ${d.H} <small>m</small></div></div></div>
+    <div class="analysis-item"><div class="icon">🔲</div><div class="info"><div class="label">Area</div><div class="value">${ac.area.toFixed(1)} <small>m²</small></div></div></div>
+    <div class="analysis-item"><div class="icon">📦</div><div class="info"><div class="label">Volume</div><div class="value">${ac.V.toFixed(1)} <small>m³</small></div></div></div>
     <div class="analysis-item"><div class="icon">⏱️</div><div class="info"><div class="label">RT60</div><div class="value">${ac.rt60.toFixed(2)} <small>s</small></div></div></div>
     <div class="analysis-item"><div class="icon">🎯</div><div class="info"><div class="label">SPL</div><div class="value">${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} <small>dB</small></div></div></div>
-    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">SPEAKERS (TOTAL)</div><div class="value">${speakers.length}</div></div></div>
-    <div class="analysis-item"><div class="icon">🔘</div><div class="info"><div class="label">CEILING SPEAKERS</div><div class="value">${ceilCount} <small>(${ceilModels})</small></div></div></div>
-    <div class="analysis-item"><div class="icon">📢</div><div class="info"><div class="label">WALL / COLUMN</div><div class="value">${wallColCount}</div></div></div>
-    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">COLUMNS</div><div class="value">${columns.length} <small>(active shadowing)</small></div></div></div>
-    <div class="analysis-item"><div class="icon">⚡</div><div class="info"><div class="label">AMPLIFIERS</div><div class="value">${ampResult.amps} × ${ampResult.amp.id}</div></div></div>
-    <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">MINARET HORNS</div><div class="value">${ac.outdoorCount}</div></div></div>`;
+    <div class="analysis-item"><div class="icon">🔊</div><div class="info"><div class="label">Total Speakers</div><div class="value">${speakers.length}</div></div></div>
+    <div class="analysis-item"><div class="icon">🔘</div><div class="info"><div class="label">Ceiling Speakers</div><div class="value">${ceilCount} <small>(${ceilModels})</small></div></div></div>
+    <div class="analysis-item"><div class="icon">📢</div><div class="info"><div class="label">Wall / Column</div><div class="value">${wallColCount}</div></div></div>
+    <div class="analysis-item"><div class="icon">🏛️</div><div class="info"><div class="label">Columns</div><div class="value">${columns.length} <small>(Active shadowing)</small></div></div></div>
+    <div class="analysis-item"><div class="icon">⚡</div><div class="info"><div class="label">Amplifiers</div><div class="value">${ampResult.amps} × ${ampResult.amp.id}</div></div></div>
+    <div class="analysis-item"><div class="icon">🕌</div><div class="info"><div class="label">Minaret Horns</div><div class="value">${ac.outdoorCount}</div></div></div>`;
 
   $('spl_chart_img').src = renderSPLChartImage(d, target);
 
@@ -1932,46 +2085,46 @@ function generateReport(){
   let boq = '', idx = 1;
   for (const m in counts){
     const sp = DB_SPK[m];
-    const suffix = isCeilingType(sp.type) ? ' • 100V line recommended for dense installs' : '';
-    boq += `<tr><td class="num">${idx++}</td><td><b>Motivity ${m}</b></td><td>${TYPE_EN[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB${suffix}</td><td class="num">${counts[m]}</td><td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} m</td></tr>`;
+    const suffix = isCeilingType(sp.type) ? ' • 100V system recommended for dense layouts' : '';
+    boq += `<tr><td class="num">${idx++}</td><td><b>Speaker ${m}</b></td><td>${TYPE_AR[sp.type]} • ${sp.pwr}W • 8Ω • ${sp.sens} dB${suffix}</td><td class="num">${counts[m]}</td><td class="num">~${Math.ceil(totalCable * counts[m] / speakers.length)} m</td></tr>`;
   }
   boq += `<tr><td class="num">${idx++}</td><td><b>Amplifier ${ampResult.amp.id}</b></td><td>MA • ${ampResult.amp.pwr}W • 2ch • ≥${ampResult.amp.minImp}Ω</td><td class="num">${ampResult.amps}</td><td class="num">—</td></tr>`;
-  if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>Feedback Suppressor</b></td><td>${fsTxt}</td><td class="num">1</td><td class="num">—</td></tr>`;
-  boq += `<tr><td class="num">${idx++}</td><td><b>Speaker Cable</b></td><td>2×1.5 mm² copper</td><td class="num">~${totalCable} m</td><td class="num">—</td></tr>`;
+  if (fs !== 'None') boq += `<tr><td class="num">${idx++}</td><td><b>Feedback Suppressor</b></td><td>${fsAr}</td><td class="num">1</td><td class="num">—</td></tr>`;
+  boq += `<tr><td class="num">${idx++}</td><td><b>Speaker Cable</b></td><td>2×1.5 mm² Copper</td><td class="num">~${totalCable} m</td><td class="num">—</td></tr>`;
   $('boq-body').innerHTML = boq;
 
   $('signal_flow').innerHTML = renderSignalFlowSVG(fs, ampResult.amp);
 
-  const rtEval = ac.rt60 <= 1.2 ? '<b style="color:#16a34a">Excellent</b>' : ac.rt60 <= 1.8 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Requires treatment</b>';
-  const splEval = !ac.indoorCount ? '—' : (ac.avgSPL >= target ? '<b style="color:#16a34a">✅ Meets target</b>' : `<b style="color:#dc2626">⚠️ ${(target - ac.avgSPL).toFixed(1)} dB short</b>`);
+  const rtEval = ac.rt60 <= 1.2 ? '<b style="color:#16a34a">Excellent</b>' : ac.rt60 <= 1.8 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Requires Treatment</b>';
+  const splEval = !ac.indoorCount ? '—' : (ac.avgSPL >= target ? '<b style="color:#16a34a">✅ Target Met</b>' : `<b style="color:#dc2626">⚠️ ${(target - ac.avgSPL).toFixed(1)} dB below target</b>`);
   const covEval = coverage >= 90 ? '<b style="color:#16a34a">Excellent</b>' : coverage >= 70 ? '<b style="color:#d97706">Acceptable</b>' : '<b style="color:#dc2626">Insufficient</b>';
 
   let notes = '<ul>';
-  notes += `<li><b>Hall shape: ${shapeName}</b> — floor area ${ac.area.toFixed(1)} m², volume ${ac.V.toFixed(0)} m³</li>`;
-  notes += `<li><b>${columns.length} structural columns</b> included in acoustic model: each column casts a shadow (up to −8 dB) on downstream seating</li>`;
+  notes += `<li><b>Hall Shape: ${shapeName}</b> — Area ${ac.area.toFixed(1)} m², Volume ${ac.V.toFixed(0)} m³</li>`;
+  notes += `<li><b>${columns.length} structural columns</b> included in acoustic simulation: each column shadows up to −8 dB behind it</li>`;
   if (ceilCount) {
-    notes += `<li><b>${ceilCount} ceiling speakers</b> (${ceilModels}) mounted at ${d.H}m height, firing downward with conical coverage onto the floor</li>`;
-    notes += `<li>⚠️ For large ceiling speaker grids (≥10 units), a <b>100V line system</b> is strongly recommended to allow many speakers per amplifier channel with minimal losses</li>`;
+    notes += `<li><b>${ceilCount} ceiling speakers</b> (${ceilModels}) mounted at height ${d.H}m facing downwards with floor coverage cones</li>`;
+    notes += `<li>⚠️ For large installations (≥10 ceiling speakers), a <b>100V line system</b> is strongly recommended</li>`;
   }
   notes += `<li>RT60 = <b>${ac.rt60.toFixed(2)} s</b> (Sabine) → ${rtEval}</li>`;
   notes += `<li>Average SPL = <b>${ac.indoorCount ? ac.avgSPL.toFixed(1) : '—'} dB</b> → ${splEval}</li>`;
-  notes += `<li>Balanced coverage = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
-  notes += `<li>${ampResult.amps} × ${ampResult.amp.id} selected with 30% headroom</li>`;
-  if (fs !== 'None') notes += `<li>${fsTxt} digital feedback suppressor engaged</li>`;
-  if (ac.outdoorCount) notes += `<li>${ac.outdoorCount} UT-08 horns on the minaret for outdoor coverage</li>`;
-  if (columns.length) notes += `<li>Recommend placing extra speakers near dense column rows to compensate for shadows</li>`;
+  notes += `<li>Coverage Ratio = <b>${coverage.toFixed(0)}%</b> → ${covEval}</li>`;
+  notes += `<li>${ampResult.amps} × ${ampResult.amp.id} with 30% power headroom</li>`;
+  if (fs !== 'None') notes += `<li>${fsAr} digital feedback suppressor enabled</li>`;
+  if (ac.outdoorCount) notes += `<li>${ac.outdoorCount} UT-08 horns mounted on the minaret</li>`;
+  if (columns.length) notes += `<li>Recommended to increase speaker density near column rows to compensate for acoustic shadows</li>`;
   notes += '</ul>';
   $('eng_notes').innerHTML = notes;
 
   const standards = [
-    {n:'IEC 60268-16', d:'Speech intelligibility (STI) ≥ 0.6'},
-    {n:'IEC 60268-5', d:'Loudspeaker specifications and sensitivity'},
-    {n:'ANSI S1.4', d:'Sound level measurement (A-weighted)'},
-    {n:'ISO 3382-1', d:'Reverberation time RT60 measurement'},
-    {n:'NFPA 72', d:'Voice alarm and emergency systems'},
-    {n:'IEC 60268-7', d:'Ceiling speaker reference specification'},
-    {n:'Saudi Building Code', d:'Acoustic insulation for religious buildings'},
-    {n:'SABER / SASO', d:'Audio equipment conformity certificates'}
+    {n:'IEC 60268-16', d:'Speech Transmission Index (STI) ≥ 0.6'},
+    {n:'IEC 60268-5', d:'Sound system equipment speaker specs'},
+    {n:'ANSI S1.4', d:'A-weighted sound level measurements'},
+    {n:'ISO 3382-1', d:'Measurement of room acoustic parameters (RT60)'},
+    {n:'NFPA 72', d:'Emergency communication systems'},
+    {n:'IEC 60268-7', d:'Ceiling speaker standards'},
+    {n:'Saudi Building Code', d:'Acoustic insulation requirements for religious buildings'},
+    {n:'SABER / SASO', d:'Equipment conformity certificates'}
   ];
   $('standards_list').innerHTML = standards.map(s => `<li><b>${s.n}</b>${s.d}</li>`).join('');
 
@@ -1982,7 +2135,7 @@ function generateReport(){
   $('reportView').scrollTop = 0;
 }
 
-/* ============ SAVE/LOAD ============ */
+/* ============ SAVE / LOAD / EXPORT ============ */
 function collectProjectData(){
   return {
     version: 5,
@@ -2022,14 +2175,14 @@ function applyProjectData(d){
   if (scene3d) buildScene3D();
 }
 function saveProject(){
-  try { localStorage.setItem('motivity_project_en', JSON.stringify(collectProjectData())); toast('💾 Saved', 'ok'); }
+  try { localStorage.setItem('motivity_project_en', JSON.stringify(collectProjectData())); toast('💾 Saved successfully', 'ok'); }
   catch(e){ toast('Storage unavailable', 'err'); }
 }
 function loadProject(){
   const raw = localStorage.getItem('motivity_project_en');
-  if (!raw) return toast('No saved project', 'warn');
-  try { applyProjectData(JSON.parse(raw)); toast('📂 Loaded', 'ok'); }
-  catch(e){ toast('Corrupt file', 'err'); }
+  if (!raw) return toast('No saved project found', 'warn');
+  try { applyProjectData(JSON.parse(raw)); toast('📂 Loaded successfully', 'ok'); }
+  catch(e){ toast('Corrupted file', 'err'); }
 }
 function exportProject(){
   const blob = new Blob([JSON.stringify(collectProjectData(), null, 2)], {type:'application/json'});
@@ -2038,7 +2191,7 @@ function exportProject(){
   a.download = ($('p_name').value || 'mosque').replace(/\s+/g,'_') + '.motivity.json';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
-  toast('⬇️ Exported', 'ok');
+  toast('⬇️ Exported successfully', 'ok');
 }
 function importProject(){
   const inp = document.createElement('input');
@@ -2047,7 +2200,7 @@ function importProject(){
     const f = e.target.files[0]; if (!f) return;
     const rd = new FileReader();
     rd.onload = () => {
-      try { applyProjectData(JSON.parse(rd.result)); toast('📂 Imported', 'ok'); }
+      try { applyProjectData(JSON.parse(rd.result)); toast('📂 Imported successfully', 'ok'); }
       catch(err){ toast('Invalid file', 'err'); }
     };
     rd.readAsText(f);
@@ -2055,7 +2208,7 @@ function importProject(){
   inp.click();
 }
 
-/* ============ KEYBOARD ============ */
+/* ============ KEYBOARD SHORTCUTS ============ */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const inField = (tag === 'input' || tag === 'textarea' || tag === 'select');
@@ -2085,7 +2238,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ============ INIT ============ */
+/* ============ INITIALIZATION ============ */
 window.addEventListener('load', () => {
   populate();
   ['m_len','m_wid','m_h','m_alpha','p_purpose'].forEach(id =>
