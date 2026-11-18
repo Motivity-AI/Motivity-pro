@@ -5,48 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<title>Motivity Master AI · القاعات المغلقة 2026</title>
+<title>Motivity Master AI · 2026 · 3D Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#e60012; --blue:#38bdf8; --green:#22c55e; --yellow:#e5c07b;
   --purple:#a855f7; --bg:#0d1117; --panel:#161b22; --card:#21262d;
-  --bd:#30363d; --mu:#8b949e;
+  --bd:#30363d; --mu:#8b949e; --gold:#fbbf24;
 }
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
-
-html,body{
-  height:100%;overflow:hidden;overscroll-behavior:none;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:#fff;display:flex;height:100dvh}
 
-/* ═══ الشريط الجانبي ═══ */
+/* ═══ Sidebar ═══ */
 .sidebar{
-  width:420px;background:linear-gradient(180deg,#161b22 0%,#0f141a 100%);
+  width:430px;background:linear-gradient(180deg,#161b22 0%,#0a0f16 100%);
   padding:16px;overflow-y:auto;border-left:3px solid var(--red);
-  flex-shrink:0;box-shadow:-8px 0 32px rgba(0,0,0,.5);
+  flex-shrink:0;box-shadow:-8px 0 32px rgba(0,0,0,.6);
   transition:max-height .3s ease;-webkit-overflow-scrolling:touch;
 }
 .sidebar::-webkit-scrollbar{width:8px}
 .sidebar::-webkit-scrollbar-thumb{background:#30363d;border-radius:4px}
 
-.brand{text-align:center;padding-bottom:12px;border-bottom:1px solid #222;margin-bottom:14px}
-.brand h2{font-size:19px;font-weight:900;color:var(--red);letter-spacing:1px}
-.brand p{font-size:10px;color:#666;letter-spacing:2px;margin-top:3px}
+.brand{text-align:center;padding-bottom:14px;border-bottom:1px solid #222;margin-bottom:14px;position:relative}
+.brand h2{font-size:20px;font-weight:900;color:var(--red);letter-spacing:1.5px;text-shadow:0 0 20px rgba(230,0,18,.4)}
+.brand p{font-size:10px;color:#666;letter-spacing:2.5px;margin-top:3px}
 .brand .mode-badge{
-  display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;
-  background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);
-  color:var(--blue);font-size:9px;font-weight:800;letter-spacing:1.5px;
+  display:inline-block;margin-top:7px;padding:4px 12px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(168,85,247,.15));
+  border:1px solid rgba(56,189,248,.35);color:var(--blue);
+  font-size:9.5px;font-weight:800;letter-spacing:1.5px;
 }
 
-.box{background:rgba(33,38,45,.75);padding:13px;border-radius:10px;margin-bottom:11px;border:1px solid rgba(56,189,248,.1)}
+.box{
+  background:rgba(33,38,45,.7);backdrop-filter:blur(10px);
+  padding:14px;border-radius:12px;margin-bottom:12px;
+  border:1px solid rgba(56,189,248,.12);
+  transition:border-color .3s;
+}
+.box:hover{border-color:rgba(56,189,248,.25)}
 .box h3{
-  font-size:12px;color:var(--blue);margin-bottom:10px;font-weight:800;
+  font-size:12.5px;color:var(--blue);margin-bottom:10px;font-weight:800;
   display:flex;align-items:center;gap:6px;flex-direction:row-reverse;justify-content:flex-end;
 }
 .box h3::before{content:'';width:3px;height:12px;background:var(--red);border-radius:2px}
+
 label{font-size:11px;color:var(--mu);display:block;margin-top:8px;font-weight:600}
 input,select{
   width:100%;padding:8px 10px;background:#0a0e13;color:#fff;
@@ -54,6 +57,16 @@ input,select{
   font-family:inherit;font-size:12.5px;transition:.2s;
 }
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+
+/* Band selector */
+.band-selector{display:flex;gap:4px;margin-top:10px;padding:4px;background:#0a0e13;border-radius:8px;border:1px solid var(--bd)}
+.band-selector button{
+  flex:1;background:transparent;color:var(--mu);border:none;
+  padding:6px 2px;border-radius:5px;font-size:10px;font-weight:800;
+  cursor:pointer;transition:.2s;font-family:inherit;
+}
+.band-selector button.active{background:var(--blue);color:#000;box-shadow:0 0 10px rgba(56,189,248,.4)}
+.band-selector button:hover:not(.active){background:rgba(56,189,248,.15);color:#fff}
 
 .btn{
   width:100%;padding:12px;border:none;border-radius:8px;
@@ -63,9 +76,10 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
   min-height:44px;touch-action:manipulation;
 }
 .btn:active{transform:scale(.97)}
-.btn-smart{background:linear-gradient(135deg,#e60012,#99000d);color:#fff;box-shadow:0 4px 12px rgba(230,0,18,.3)}
-.btn-blue{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 12px rgba(56,189,248,.3)}
+.btn-smart{background:linear-gradient(135deg,#e60012,#99000d);color:#fff;box-shadow:0 4px 14px rgba(230,0,18,.35)}
+.btn-blue{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:#000;box-shadow:0 4px 14px rgba(56,189,248,.3)}
 .btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-purple{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff}
 .btn-reset{background:#2a2f36;color:#ff4d4d;border:1px solid #444}
 
 .tool-btn{
@@ -73,93 +87,114 @@ input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 
   padding:9px 6px;font-size:11px;font-weight:700;cursor:pointer;
   border-radius:6px;flex:1;transition:.2s;font-family:inherit;min-height:44px;
 }
+.tool-btn:hover{border-color:var(--blue);color:#fff}
 .tool-btn.active{background:var(--blue);color:#000;border-color:var(--blue);box-shadow:0 0 12px rgba(56,189,248,.4)}
-
 .tool-grid{display:flex;gap:6px;margin-top:8px}
 
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
-.kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center}
-.kpi .v{font-size:14px;font-weight:900;color:var(--blue)}
+.kpi{background:linear-gradient(135deg,#0a0e13,#161b22);border:1px solid var(--bd);border-radius:8px;padding:9px;text-align:center}
+.kpi .v{font-size:15px;font-weight:900;color:var(--blue);direction:ltr;unicode-bidi:isolate}
 .kpi .l{font-size:9px;color:var(--mu);margin-top:2px}
 .kpi.ok .v{color:var(--green)}
 .kpi.warn .v{color:#f59e0b}
 .kpi.bad .v{color:#ef4444}
 
 .rt60-display{
-  margin-top:10px;padding:10px;border-radius:8px;text-align:center;
-  background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(168,85,247,.06));
-  border:1px solid rgba(56,189,248,.2);
+  margin-top:10px;padding:12px;border-radius:10px;text-align:center;
+  background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(168,85,247,.08));
+  border:1px solid rgba(56,189,248,.25);
 }
-.rt60-display .val{font-size:26px;font-weight:900;color:var(--blue);letter-spacing:1px}
+.rt60-display .val{font-size:28px;font-weight:900;color:var(--blue);letter-spacing:1px;direction:ltr;unicode-bidi:isolate}
 .rt60-display .lbl{font-size:10px;color:var(--mu);margin-top:2px}
-.rt60-display .status{
-  display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;
-  font-size:9.5px;font-weight:800;
-}
-.rt60-display .status.ok{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
-.rt60-display .status.warn{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
-.rt60-display .status.bad{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.rt60-display .status{display:inline-block;margin-top:7px;padding:4px 12px;border-radius:20px;font-size:9.5px;font-weight:800}
+.rt60-display .status.ok{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.35)}
+.rt60-display .status.warn{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.35)}
+.rt60-display .status.bad{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.35)}
 
-.info-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:6px 0;border-bottom:1px solid rgba(48,54,61,.5);
-  font-size:11px;
-}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(48,54,61,.5);font-size:11px}
 .info-row:last-child{border-bottom:none}
 .info-row span:first-child{color:var(--mu)}
-.info-row span:last-child{color:var(--blue);font-weight:800}
+.info-row span:last-child{color:var(--blue);font-weight:800;direction:ltr;unicode-bidi:isolate}
 
-/* ═══ العرض الرئيسي ═══ */
+/* ═══ Main view ═══ */
 .main-view{
   flex:1;display:flex;flex-direction:column;
-  background:radial-gradient(circle at 50% 50%,#0f151c 0%,#05080c 100%);
+  background:radial-gradient(circle at 50% 30%,#0f1a2a 0%,#05080c 100%);
   position:relative;overflow:hidden;min-width:0;min-height:0;
 }
 .canvas-wrap{
   flex:1;display:flex;align-items:center;justify-content:center;
-  padding:14px;overflow:hidden;min-height:0;
+  padding:14px;overflow:hidden;min-height:0;position:relative;
 }
 canvas{
   background:#050505;border-radius:12px;border:1px solid #222;
-  box-shadow:0 0 60px rgba(0,0,0,.8),0 0 100px rgba(56,189,248,.04);
+  box-shadow:0 0 80px rgba(0,0,0,.85),0 0 120px rgba(56,189,248,.06);
   display:block;touch-action:none;user-select:none;-webkit-user-select:none;
   -webkit-touch-callout:none;cursor:crosshair;max-width:100%;max-height:100%;
 }
+#canvas3d{display:none;cursor:grab}
+#canvas3d.dragging{cursor:grabbing}
 
 .toolbar{
   position:absolute;top:14px;left:14px;display:flex;gap:4px;flex-wrap:wrap;
-  max-width:calc(100% - 28px);background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:5px;z-index:10;
+  max-width:calc(100% - 28px);background:rgba(22,27,34,.92);backdrop-filter:blur(10px);
+  border:1px solid var(--bd);border-radius:12px;padding:5px;z-index:10;
 }
 .toolbar button{
-  background:transparent;color:#ccc;border:none;width:36px;height:36px;
-  border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;
+  background:transparent;color:#ccc;border:none;width:38px;height:38px;
+  border-radius:7px;cursor:pointer;font-size:15px;font-weight:700;
   transition:.2s;font-family:inherit;touch-action:manipulation;
 }
+.toolbar button:hover{background:rgba(56,189,248,.15)}
 .toolbar button.on{background:var(--blue);color:#000}
+.toolbar button.active-3d{background:linear-gradient(135deg,var(--purple),#7c3aed);color:#fff;box-shadow:0 0 16px rgba(168,85,247,.5)}
 #tgSidebar{display:none}
+
+.camera-presets{
+  position:absolute;top:60px;left:14px;display:none;gap:5px;
+  background:rgba(22,27,34,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--bd);border-radius:12px;padding:6px;z-index:10;
+  flex-wrap:wrap;max-width:calc(100% - 28px);
+}
+.camera-presets.on{display:flex}
+.camera-presets button{
+  background:transparent;color:#ccc;border:1px solid #333;
+  padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;
+  font-family:inherit;font-weight:700;transition:.2s;min-height:32px;
+}
+.camera-presets button:hover{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+.hint-3d{
+  position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+  background:rgba(22,27,34,.94);backdrop-filter:blur(10px);
+  border:1px solid var(--bd);border-radius:10px;padding:8px 16px;
+  font-size:11.5px;color:var(--mu);display:none;z-index:10;
+  white-space:nowrap;max-width:calc(100% - 28px);
+}
+.hint-3d.on{display:block}
+.hint-3d b{color:var(--purple)}
 
 .hint-bar{
   position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-  background:rgba(22,27,34,.9);border:1px solid var(--bd);
-  border-radius:10px;padding:6px 14px;font-size:11px;color:var(--mu);
-  z-index:10;display:flex;gap:14px;align-items:center;
-  max-width:calc(100% - 28px);flex-wrap:wrap;justify-content:center;
+  background:rgba(22,27,34,.92);backdrop-filter:blur(10px);
+  border:1px solid var(--bd);border-radius:10px;padding:6px 14px;
+  font-size:11px;color:var(--mu);z-index:10;display:flex;gap:14px;
+  align-items:center;max-width:calc(100% - 28px);flex-wrap:wrap;justify-content:center;
 }
 .hint-bar b{color:var(--blue)}
 
 .cursor-info{
-  position:absolute;bottom:14px;left:14px;background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:7px 14px;
-  font-size:11.5px;color:#fff;z-index:10;
+  position:absolute;bottom:14px;left:14px;background:rgba(22,27,34,.92);
+  backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:10px;
+  padding:7px 14px;font-size:11.5px;color:#fff;z-index:10;
 }
-.cursor-info b{color:var(--blue);font-weight:900}
+.cursor-info b{color:var(--blue);font-weight:900;direction:ltr;unicode-bidi:isolate}
 
 .beam-controls{
-  position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.95);
-  padding:10px;border-radius:10px;border:1px solid var(--bd);
-  display:none;gap:14px;align-items:center;z-index:10;
-  flex-wrap:wrap;max-width:calc(100% - 28px);
+  position:absolute;bottom:14px;right:14px;background:rgba(22,27,34,.96);
+  backdrop-filter:blur(10px);padding:10px;border-radius:12px;
+  border:1px solid var(--bd);display:none;gap:14px;align-items:center;
+  z-index:10;flex-wrap:wrap;max-width:calc(100% - 28px);
 }
 .beam-controls.on{display:flex}
 .beam-controls > div{min-width:100px}
@@ -170,7 +205,7 @@ canvas{
 }
 .beam-controls input[type=range]::-webkit-slider-thumb{
   -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-  background:var(--blue);cursor:pointer;
+  background:var(--blue);cursor:pointer;box-shadow:0 0 8px rgba(56,189,248,.6);
 }
 .beam-controls .name{
   font-weight:900;font-size:11px;color:var(--red);
@@ -183,40 +218,49 @@ canvas{
 }
 
 .legend{
-  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.9);
-  border:1px solid var(--bd);border-radius:10px;padding:10px 12px;
-  font-size:10.5px;z-index:10;color:#ddd;display:none;
+  position:absolute;top:14px;right:14px;background:rgba(22,27,34,.92);
+  backdrop-filter:blur(10px);border:1px solid var(--bd);border-radius:12px;
+  padding:11px 13px;font-size:10.5px;z-index:10;color:#ddd;display:none;
 }
 .legend.on{display:block}
-.legend .row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.legend .sw{width:16px;height:10px;border-radius:2px;display:inline-block}
+.legend .row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.legend .sw{width:18px;height:11px;border-radius:2px;display:inline-block;border:1px solid rgba(255,255,255,.1)}
+.legend .title{font-weight:800;color:var(--blue);margin-bottom:8px;font-size:11px}
 
-/* ═══ التقرير ═══ */
+/* Polar pattern */
+#polarCv{display:block;margin:10px auto 0;background:#0a0e13;border-radius:10px;border:1px solid var(--bd)}
+.polar-label{font-size:9.5px;color:var(--mu);text-align:center;margin-top:4px}
+
+/* A/B table */
+#abOut table{width:100%;font-size:11px;margin-top:8px;text-align:center;border-collapse:collapse}
+#abOut td{padding:4px 2px;border-bottom:1px solid rgba(48,54,61,.5);direction:ltr;unicode-bidi:isolate}
+#abOut th{font-size:10px;padding:4px}
+
+/* ═══ Report ═══ */
 #reportPage{
   display:none;position:fixed;inset:0;background:#fafbfc;z-index:9999;
   color:#222;overflow-y:auto;padding:30px;direction:rtl;text-align:right;
   -webkit-overflow-scrolling:touch;
 }
 .report-content{
-  max-width:1150px;margin:auto;padding:40px;background:#fff;
-  border-radius:10px;box-shadow:0 0 50px rgba(0,0,0,.1);
+  max-width:1180px;margin:auto;padding:44px;background:#fff;
+  border-radius:12px;box-shadow:0 0 60px rgba(0,0,0,.12);
   position:relative;border-top:10px solid var(--red);
 }
-
 .rep-header{
   display:flex;justify-content:space-between;align-items:flex-start;
   padding-bottom:18px;border-bottom:3px solid var(--red);
   margin-bottom:22px;gap:14px;flex-wrap:wrap;
 }
-.rep-header h1{color:var(--red);font-size:25px;font-weight:900}
+.rep-header h1{color:var(--red);font-size:26px;font-weight:900}
 .rep-header p{font-size:12px;color:#888;margin-top:4px}
 .rep-header .meta{text-align:left;font-size:12px;color:#555;line-height:1.9}
 .rep-header .meta b{color:var(--red)}
 
 .analysis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
 .analysis-card{
-  background:#f8f9fa;padding:16px;border-radius:10px;
-  border-top:4px solid var(--red);text-align:center;
+  background:linear-gradient(135deg,#f8f9fa,#fff);padding:16px;border-radius:10px;
+  border-top:4px solid var(--red);text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.04);
 }
 .analysis-card h4{color:var(--red);font-size:12px;margin-bottom:6px;font-weight:700}
 .analysis-card .val{font-size:22px;font-weight:900;color:#111;margin:5px 0}
@@ -257,8 +301,10 @@ canvas{
 .rep-table tr:last-child td{border-bottom:none}
 .rep-table tr:nth-child(even) td{background:#fafbfc}
 
-.rep-img{width:100%;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.15);border:1px solid #e5e7eb;margin-top:10px}
-
+.rep-img{
+  width:100%;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.15);
+  border:1px solid #e5e7eb;margin-top:10px;background:#050505;
+}
 .rep-controls{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .rep-controls button{
   padding:10px 20px;border:none;border-radius:8px;cursor:pointer;
@@ -276,80 +322,50 @@ canvas{
   html{overflow:visible}
 }
 
-/* ═══ اللوحي ═══ */
-@media (min-width: 901px) and (max-width: 1200px) {
+/* ═══ Responsive ═══ */
+@media (min-width:901px) and (max-width:1200px){
   .sidebar{width:340px;padding:12px}
   .brand h2{font-size:17px}
-  .kpi-row{grid-template-columns:repeat(2,1fr)}
   .analysis-grid{grid-template-columns:repeat(2,1fr)}
 }
-
-/* ═══ الجوال ═══ */
-@media (max-width: 900px) {
+@media (max-width:900px){
   body{flex-direction:column;height:100dvh}
   .sidebar{
     width:100%;border-left:none;border-top:3px solid var(--red);
-    order:2;max-height:48dvh;padding:12px;
-    border-radius:16px 16px 0 0;box-shadow:0 -8px 32px rgba(0,0,0,.5);
+    order:2;max-height:48dvh;padding:12px;border-radius:16px 16px 0 0;
+    box-shadow:0 -8px 32px rgba(0,0,0,.5);
   }
   .sidebar.collapsed{max-height:0;padding:0;overflow:hidden;border-top-width:0}
   .main-view{order:1;flex:1;min-height:52dvh}
   .canvas-wrap{padding:6px}
   .brand h2{font-size:16px}
-  .brand p{font-size:9px;letter-spacing:1px}
   .box{padding:10px}
-  .box h3{font-size:13px}
-  label{font-size:12px;margin-top:6px}
-  input,select{font-size:14px;padding:10px 12px;min-height:40px}
-  .kpi-row{grid-template-columns:repeat(2,1fr);gap:6px}
-  .kpi .v{font-size:15px}
-  .kpi .l{font-size:9.5px}
-  .rt60-display .val{font-size:22px}
   .toolbar{top:8px;left:8px;padding:4px;gap:3px}
   .toolbar button{width:40px;height:40px;font-size:16px}
   #tgSidebar{display:block}
-  .hint-bar{font-size:9.5px;padding:5px 10px;gap:8px;bottom:8px;max-width:calc(100% - 16px)}
+  .camera-presets{top:52px;left:8px;padding:4px;gap:3px}
+  .camera-presets button{padding:6px 8px;font-size:10px}
+  .hint-bar{font-size:9.5px;padding:5px 10px;bottom:8px;max-width:calc(100% - 16px)}
   .hint-bar span:nth-child(2){display:none}
   .cursor-info{bottom:auto;top:8px;left:8px;font-size:11px;padding:6px 10px}
-  .beam-controls{left:8px;right:8px;bottom:8px;flex-wrap:wrap;justify-content:center;gap:8px;padding:8px}
+  .beam-controls{left:8px;right:8px;bottom:8px;padding:8px;justify-content:center}
   .beam-controls > div{flex:1 1 40%;min-width:0}
   .beam-controls input[type=range]{width:100%;height:8px}
-  .beam-controls input[type=range]::-webkit-slider-thumb{width:22px;height:22px}
-  .beam-controls .name{font-size:11px;min-width:auto}
-  .beam-controls .del-btn{padding:10px 14px;min-height:40px;flex:1 1 100%}
-  .legend{top:58px;right:8px;font-size:9.5px;padding:6px 8px}
-  .legend .sw{width:12px;height:8px}
+  .legend{top:52px;right:8px;font-size:9.5px;padding:8px 10px}
+  .legend .sw{width:14px;height:9px}
   #reportPage{padding:10px}
   .report-content{padding:16px;border-top-width:6px}
-  .rep-header{flex-direction:column;gap:10px;margin-bottom:14px;padding-bottom:12px}
   .rep-header h1{font-size:18px}
-  .rep-header .meta{text-align:right;font-size:11px;line-height:1.7}
-  .analysis-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
-  .analysis-card{padding:12px}
-  .analysis-card .val{font-size:16px}
-  .kpi-cards{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
-  .kpi-card{padding:12px}
-  .kpi-card span{font-size:16px}
-  .decision-box,.acoustic-box{padding:14px;font-size:12.5px;line-height:1.85}
-  .rep-controls{gap:6px}
+  .analysis-grid,.kpi-cards{grid-template-columns:repeat(2,1fr);gap:10px}
+  .analysis-card .val,.kpi-card span{font-size:16px}
   .rep-controls button{flex:1;padding:12px 10px;font-size:12px}
   .rep-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
-  .rep-table{margin:0;min-width:520px;font-size:11px}
+  .rep-table{min-width:520px;font-size:11px;margin:0}
   .rep-table th,.rep-table td{padding:8px 6px;font-size:11px}
 }
-
-@media (max-width: 380px) {
-  .brand h2{font-size:14px}
-  .toolbar button{width:36px;height:36px;font-size:14px}
-  .hint-bar{font-size:9px}
-}
-
-@media (max-width: 900px) and (orientation: landscape) {
+@media (max-width:900px) and (orientation:landscape){
   body{flex-direction:row}
-  .sidebar{
-    order:2;width:320px;max-height:100dvh;
-    border-top:none;border-left:3px solid var(--red);border-radius:0;
-  }
+  .sidebar{order:2;width:320px;max-height:100dvh;border-top:none;border-left:3px solid var(--red);border-radius:0}
   .main-view{order:1;min-height:auto}
   .hint-bar{display:none}
 }
@@ -357,14 +373,15 @@ canvas{
 </head>
 <body>
 
+<!-- ═══ Sidebar ═══ -->
 <div class="sidebar no-print" id="sidebar">
   <div class="brand">
     <h2>MOTIVITY MASTER AI</h2>
-    <p>INDOOR HALLS 2026</p>
-    <div class="mode-badge">🏛️ القاعات المغلقة</div>
+    <p>INDOOR HALLS · 2026 STUDIO</p>
+    <div class="mode-badge">🏛️ 2D + 3D · MULTI-BAND</div>
   </div>
 
-  <!-- أبعاد القاعة -->
+  <!-- Room -->
   <div class="box">
     <h3>📏 أبعاد القاعة والمسرح</h3>
     <div style="display:flex;gap:6px">
@@ -373,36 +390,42 @@ canvas{
       <div style="flex:1"><label>الارتفاع (م)</label><input type="number" id="room_h" value="10" min="2.5" max="40" oninput="debouncedUpdate()"></div>
     </div>
     <div style="display:flex;gap:6px">
-      <div style="flex:1"><label>عرض المسرح (م)</label><input type="number" id="stage_w" value="14" min="2" max="80" oninput="debouncedUpdate()"></div>
-      <div style="flex:1"><label>عمق المسرح (م)</label><input type="number" id="stage_d" value="8" min="2" max="40" oninput="debouncedUpdate()"></div>
-    </div>
-    <div style="display:flex;gap:6px">
+      <div style="flex:1"><label>عرض المسرح</label><input type="number" id="stage_w" value="14" min="2" max="80" oninput="debouncedUpdate()"></div>
+      <div style="flex:1"><label>عمق المسرح</label><input type="number" id="stage_d" value="8" min="2" max="40" oninput="debouncedUpdate()"></div>
       <div style="flex:1"><label>هدف SPL (dB)</label><input type="number" id="spl_target" value="98" min="70" max="130" oninput="updateKPI()"></div>
     </div>
   </div>
 
-  <!-- الخصائص الصوتية للأسطح -->
+  <!-- Materials + Bands -->
   <div class="box">
-    <h3>🏛️ الخصائص الصوتية للأسطح</h3>
+    <h3>🏛️ الخصائص الصوتية (متعددة الأوكتاف)</h3>
+    <div class="band-selector" id="bandSelector">
+      <button data-band="0" onclick="setBand(0)">125</button>
+      <button data-band="1" onclick="setBand(1)">250</button>
+      <button data-band="2" onclick="setBand(2)">500</button>
+      <button data-band="3" class="active" onclick="setBand(3)">1k</button>
+      <button data-band="4" onclick="setBand(4)">2k</button>
+      <button data-band="5" onclick="setBand(5)">4k</button>
+    </div>
     <div style="display:flex;gap:6px">
       <div style="flex:1">
         <label>أرضية</label>
         <select id="floor_mat" onchange="debouncedUpdate()">
-          <option value="concrete">خرسانة (0.02)</option>
-          <option value="wood" selected>خشب (0.10)</option>
-          <option value="carpet">سجاد (0.30)</option>
-          <option value="tile">بلاط (0.01)</option>
+          <option value="concrete">خرسانة</option>
+          <option value="wood" selected>خشب</option>
+          <option value="carpet">سجاد</option>
+          <option value="tile">بلاط</option>
         </select>
       </div>
       <div style="flex:1">
         <label>جدران</label>
         <select id="wall_mat" onchange="debouncedUpdate()">
-          <option value="concrete">خرسانة (0.02)</option>
-          <option value="brick">طوب (0.04)</option>
-          <option value="drywall" selected>جبسوم (0.10)</option>
-          <option value="wood">خشب (0.10)</option>
-          <option value="acoustic_panel">بانل صوتي (0.80)</option>
-          <option value="curtain">ستائر (0.50)</option>
+          <option value="concrete">خرسانة</option>
+          <option value="brick">طوب</option>
+          <option value="drywall" selected>جبسوم</option>
+          <option value="wood">خشب</option>
+          <option value="acoustic_panel">بانل صوتي</option>
+          <option value="curtain">ستائر</option>
         </select>
       </div>
     </div>
@@ -410,34 +433,35 @@ canvas{
       <div style="flex:1">
         <label>سقف</label>
         <select id="ceiling_mat" onchange="debouncedUpdate()">
-          <option value="concrete">خرسانة (0.02)</option>
-          <option value="drywall" selected>جبسوم (0.10)</option>
-          <option value="acoustic_tile">بلاط صوتي (0.60)</option>
-          <option value="metal">معدن (0.05)</option>
+          <option value="concrete">خرسانة</option>
+          <option value="drywall" selected>جبسوم</option>
+          <option value="acoustic_tile">بلاط صوتي</option>
+          <option value="metal">معدن</option>
         </select>
       </div>
       <div style="flex:1">
         <label>الجمهور</label>
         <select id="audience_type" onchange="debouncedUpdate()">
-          <option value="0.10">مقاعد فارغة</option>
-          <option value="0.35">جمهور 50%</option>
-          <option value="0.55" selected>جمهور كامل</option>
+          <option value="0.10">فارغ</option>
+          <option value="0.35">50%</option>
+          <option value="0.55" selected>كامل</option>
         </select>
       </div>
     </div>
 
-    <!-- عرض RT60 -->
     <div class="rt60-display">
       <div class="val" id="rt60Value">—</div>
-      <div class="lbl">زمن الارتداد RT60 (ثانية) · Sabine</div>
+      <div class="lbl" id="rt60BandLabel">RT60 Sabine عند 1 kHz</div>
       <div class="status ok" id="rt60Status">جارٍ الحساب</div>
     </div>
     <div style="margin-top:8px">
       <div class="info-row"><span>حجم القاعة V</span><span id="infoVolume">—</span></div>
       <div class="info-row"><span>الامتصاص الكلي A</span><span id="infoAbs">—</span></div>
-      <div class="info-row"><span>متوسط معامل الامتصاص α</span><span id="infoAlpha">—</span></div>
-      <div class="info-row"><span>مسافة الحرجة Dc</span><span id="infoDc">—</span></div>
+      <div class="info-row"><span>RT60 Eyring</span><span id="infoEyring">—</span></div>
+      <div class="info-row"><span>متوسط α</span><span id="infoAlpha">—</span></div>
+      <div class="info-row"><span>Dc الحرجة</span><span id="infoDc">—</span></div>
       <div class="info-row"><span>تردد شرودر f<sub>s</sub></span><span id="infoFs">—</span></div>
+      <div class="info-row"><span>STI (تقديري)</span><span id="infoSTI">—</span></div>
     </div>
   </div>
 
@@ -447,18 +471,18 @@ canvas{
     <div class="kpi-row">
       <div class="kpi" id="kpiSpk"><div class="v" id="kpiSpkV">0</div><div class="l">السماعات</div></div>
       <div class="kpi" id="kpiPwr"><div class="v" id="kpiPwrV">0</div><div class="l">إجمالي الواط</div></div>
-      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">نسبة التغطية</div></div>
+      <div class="kpi" id="kpiCov"><div class="v" id="kpiCovV">—</div><div class="l">التغطية</div></div>
       <div class="kpi" id="kpiSpl"><div class="v" id="kpiSplV">—</div><div class="l">أقصى SPL</div></div>
-      <div class="kpi" id="kpiUni"><div class="v" id="kpiUniV">—</div><div class="l">فرق التوحيد (dB)</div></div>
+      <div class="kpi" id="kpiUni"><div class="v" id="kpiUniV">—</div><div class="l">التوحيد (dB)</div></div>
       <div class="kpi" id="kpiAmp"><div class="v" id="kpiAmpV">—</div><div class="l">قنوات المضخم</div></div>
     </div>
   </div>
 
-  <!-- نوع الفعالية -->
+  <!-- Event type -->
   <div class="box">
     <h3>🎯 نوع الفعالية</h3>
     <select id="event_type" onchange="applySmartLayout()">
-      <option value="auto">كشف تلقائي (حسب المساحة)</option>
+      <option value="auto">كشف تلقائي</option>
       <option value="wedding">حفل زفاف</option>
       <option value="concert">حفل موسيقي (Line Array)</option>
       <option value="conference">مؤتمر / محاضرة</option>
@@ -466,9 +490,9 @@ canvas{
     </select>
   </div>
 
-  <!-- الكتالوج -->
+  <!-- Catalog -->
   <div class="box">
-    <h3>🔊 الكتالوج الكامل 2026</h3>
+    <h3>🔊 الكتالوج الكامل</h3>
     <label>1. الأنظمة الرئيسية والجانبية</label>
     <select id="sel_main">
       <optgroup label="Point Source">
@@ -476,27 +500,25 @@ canvas{
         <option value="DB-25 3G">DB-25 3G (1000W / 130dB)</option>
         <option value="MTL-700 3G">MTL-700 3G (500W)</option>
       </optgroup>
-      <optgroup label="Line Array Series">
+      <optgroup label="Line Array">
         <option value="MLA212">MLA212 (Dual 12" - 900W)</option>
         <option value="MLA210">MLA210 (Dual 10" - 700W)</option>
         <option value="M10-LA">M10-LA (Compact 700W)</option>
         <option value="MLA208">MLA208 (Dual 8")</option>
       </optgroup>
-      <optgroup label="Active Series">
+      <optgroup label="Active">
         <option value="HD315A">HD315A (1000W Active)</option>
         <option value="HD312A">HD312A (1000W Active)</option>
       </optgroup>
     </select>
-
-    <label>2. الترددات المنخفضة والمراقبات</label>
+    <label>2. الصب والمراقبات</label>
     <select id="sel_extra">
       <option value="DB-218 3G">DB-218 3G (Dual 18" - 1400W)</option>
-      <option value="QX-218">QX-218 (Dual 18" Touring)</option>
-      <option value="HD-SUB-18A">HD-SUB-18A (Active Sub)</option>
-      <option value="DB-15M 3G">DB-15M 3G (Stage Monitor)</option>
+      <option value="QX-218">QX-218 (Touring Sub)</option>
+      <option value="HD-SUB-18A">HD-SUB-18A (Active)</option>
+      <option value="DB-15M 3G">DB-15M 3G (Monitor)</option>
       <option value="MTL-152">MTL-152 (KTV/Monitor)</option>
     </select>
-
     <div class="tool-grid">
       <button class="tool-btn active" id="btn_main" onclick="setMode('main')">➕ رئيسية</button>
       <button class="tool-btn" id="btn_sub" onclick="setMode('sub')">➕ صب</button>
@@ -504,8 +526,28 @@ canvas{
     </div>
   </div>
 
+  <!-- Advanced tools -->
+  <div class="box">
+    <h3>🧪 أدوات متقدمة</h3>
+    <div class="tool-grid">
+      <button class="tool-btn" onclick="autoDelay()">⏳ تأخير Haas</button>
+      <button class="tool-btn" onclick="mirrorSel()">⇋ تناظر L/R</button>
+    </div>
+    <canvas id="polarCv"></canvas>
+    <div class="polar-label">المخطط القطبي للسماعة المحددة</div>
+    <div class="tool-grid">
+      <button class="tool-btn" onclick="saveScen('A')">💾 حفظ A</button>
+      <button class="tool-btn" onclick="saveScen('B')">💾 حفظ B</button>
+    </div>
+    <div class="tool-grid">
+      <button class="tool-btn" onclick="loadScen('A')">📂 فتح A</button>
+      <button class="tool-btn" onclick="loadScen('B')">📂 فتح B</button>
+    </div>
+    <div id="abOut"></div>
+  </div>
+
   <button class="btn btn-smart" onclick="applySmartLayout()">🚀 توزيع ذكي تلقائي</button>
-  <button class="btn btn-blue" onclick="generateReport()">📄 توليد التقرير الهندسي</button>
+  <button class="btn btn-purple" onclick="generateReport()">📄 توليد التقرير الهندسي</button>
   <button class="btn btn-green" onclick="saveMapPNG()">🖼️ حفظ الخريطة PNG</button>
   <button class="btn btn-blue" onclick="saveProjectJSON()">💾 حفظ المشروع JSON</button>
   <button class="btn btn-blue" onclick="document.getElementById('loadFile').click()">📂 فتح مشروع JSON</button>
@@ -513,30 +555,47 @@ canvas{
   <button class="btn btn-reset" onclick="resetCanvas()">🔄 تصفير المخطط</button>
 </div>
 
+<!-- ═══ Main view ═══ -->
 <div class="main-view no-print">
   <div class="canvas-wrap" id="canvasWrap">
     <canvas id="mainCanvas"></canvas>
+    <canvas id="canvas3d"></canvas>
   </div>
 
   <div class="toolbar">
     <button id="tgSidebar" onclick="toggleSidebar()" title="القائمة">☰</button>
     <button id="tgWaves" class="on" onclick="toggle('waves')" title="الموجات">🔊</button>
     <button id="tgHeat" onclick="toggle('heat')" title="خريطة SPL">🌡️</button>
-    <button id="tgBeams" class="on" onclick="toggle('beams')" title="أشعة التغطية">🌐</button>
+    <button id="tgBeams" class="on" onclick="toggle('beams')" title="الأشعة">🌐</button>
     <button id="tgGrid" class="on" onclick="toggle('grid')" title="الشبكة">▦</button>
     <button id="tgLabels" class="on" onclick="toggle('labels')" title="التسميات">🏷️</button>
-    <button id="tgDc" onclick="toggle('dcCircle')" title="دائرة المسافة الحرجة">🎯</button>
+    <button id="tgDc" onclick="toggle('dcCircle')" title="المسافة الحرجة">🎯</button>
+    <button id="tgAudience" class="on" onclick="toggle('audience')" title="الجمهور">👥</button>
+    <button id="tg3D" onclick="toggle3D()" title="عرض 3D">🎥</button>
     <button onclick="undo()" title="تراجع">↶</button>
     <button onclick="redo()" title="إعادة">↷</button>
   </div>
 
+  <div class="camera-presets" id="cameraPresets">
+    <button onclick="setViewPreset('iso')">ISO</button>
+    <button onclick="setViewPreset('front')">أمامي</button>
+    <button onclick="setViewPreset('top')">علوي</button>
+    <button onclick="setViewPreset('side')">جانبي</button>
+    <button onclick="setViewPreset('audience')">جمهور</button>
+    <button onclick="setViewPreset('reset')">🔄</button>
+  </div>
+
+  <div class="hint-3d" id="hint3D">
+    🖱️ <b>اسحب</b> للدوران · <b>عجلة</b> للتقريب · <b>نقرة</b> للتحديد
+  </div>
+
   <div class="legend" id="legend">
-    <div style="font-weight:800;color:var(--blue);margin-bottom:6px">مقياس SPL (dB)</div>
-    <div class="row"><span class="sw" style="background:rgba(15,25,45,0.55);border:1px solid #333"></span>&lt; 60</div>
-    <div class="row"><span class="sw" style="background:rgba(30,80,140,0.7)"></span>60 – 70</div>
-    <div class="row"><span class="sw" style="background:rgba(34,197,94,0.7)"></span>70 – 80</div>
-    <div class="row"><span class="sw" style="background:rgba(132,204,22,0.7)"></span>80 – 90</div>
-    <div class="row"><span class="sw" style="background:rgba(245,158,11,0.7)"></span>90 – 100</div>
+    <div class="title">SPL (dB) @ <span id="legendBand">1k</span>Hz</div>
+    <div class="row"><span class="sw" style="background:rgba(15,25,45,0.7)"></span>&lt; 60</div>
+    <div class="row"><span class="sw" style="background:rgba(30,80,140,0.7)"></span>60–70</div>
+    <div class="row"><span class="sw" style="background:rgba(34,197,94,0.7)"></span>70–80</div>
+    <div class="row"><span class="sw" style="background:rgba(132,204,22,0.7)"></span>80–90</div>
+    <div class="row"><span class="sw" style="background:rgba(245,158,11,0.75)"></span>90–100</div>
     <div class="row"><span class="sw" style="background:rgba(239,68,68,0.75)"></span>≥ 100</div>
   </div>
 
@@ -558,777 +617,245 @@ canvas{
   </div>
 
   <div class="hint-bar">
-    <span>👆 <b>انقر</b> لإضافة · <b>اسحب</b> للتحريك · <b>ضغط مطوّل</b> للحذف</span>
-    <span>⌨️ <b>Ctrl+Z</b> · <b>Ctrl+Y</b> · <b>Delete</b></span>
+    <span>👆 <b>انقر</b> إضافة · <b>اسحب</b> تحريك · <b>مطوّل</b> حذف</span>
+    <span>⌨️ <b>Ctrl+Z</b>/<b>Ctrl+Y</b> · <b>Delete</b> · <b>3</b></span>
   </div>
 
   <div class="cursor-info">
-    <span>SPL عند المؤشر: <b id="cursorSPL">—</b></span>
+    <span>SPL: <b id="cursorSPL">—</b></span>
   </div>
 </div>
 
+<!-- ═══ Report ═══ -->
 <div id="reportPage">
   <div class="report-content">
     <div class="rep-controls no-print">
-      <button class="close" onclick="closeReport()">← العودة للتصميم</button>
+      <button class="close" onclick="closeReport()">← العودة</button>
       <button class="print" onclick="window.print()">🖨️ طباعة</button>
     </div>
 
     <div class="rep-header">
       <div>
         <h1>تقرير التحليل الصوتي الهندسي 2026</h1>
-        <p>موتيفيتي ماستر AI · القاعات المغلقة · Indoor Halls</p>
+        <p>موتيفيتي ماستر AI · القاعات المغلقة · 2D + 3D + Multi-Band</p>
       </div>
       <div class="meta">
-        <b>رقم المشروع:</b> MOT-2026-IN<br>
+        <b>رقم المشروع:</b> MOT-2026-IN-3D<br>
         <b>التاريخ:</b> <span id="repDate">—</span><br>
         <b>المعيار:</b> ISO 3382 · IEC 60268-5
       </div>
     </div>
 
-    <!-- 4 بطاقات تحليل رئيسية -->
     <div class="analysis-grid">
-      <div class="analysis-card">
-        <h4>⏱️ RT60 (Sabine)</h4>
-        <div class="val" id="rep_rt60_val">— s</div>
-        <small>زمن الارتداد</small>
-      </div>
-      <div class="analysis-card">
-        <h4>🎯 المسافة الحرجة</h4>
-        <div class="val" id="rep_dc_val">— m</div>
-        <small>حدود الحقل المباشر</small>
-      </div>
-      <div class="analysis-card">
-        <h4>🔊 SPL أقصى</h4>
-        <div class="val" id="rep_spl_val">— dB</div>
-        <small>عند أبعد نقطة</small>
-      </div>
-      <div class="analysis-card">
-        <h4>⏳ زمن التأخير</h4>
-        <div class="val" id="rep_delay_val">— ms</div>
-        <small>لمزامنة مناطق التأخير</small>
-      </div>
+      <div class="analysis-card"><h4>⏱️ RT60 (Sabine)</h4><div class="val" id="rep_rt60_val">—</div><small>زمن الارتداد</small></div>
+      <div class="analysis-card"><h4>🎯 المسافة الحرجة</h4><div class="val" id="rep_dc_val">—</div><small>حدود الحقل المباشر</small></div>
+      <div class="analysis-card"><h4>🔊 SPL أقصى</h4><div class="val" id="rep_spl_val">—</div><small>عند أبعد نقطة</small></div>
+      <div class="analysis-card"><h4>🗣️ STI</h4><div class="val" id="rep_sti_val">—</div><small>وضوح الكلام</small></div>
     </div>
 
     <div class="kpi-cards" id="repKPI"></div>
 
-    <!-- التحليل الصوتي للقاعة -->
+    <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🎼 التحليل الترددي متعدد الأوكتاف</h3>
+    <div class="rep-table-wrap" id="bandSection"></div>
+
     <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🏛️ التحليل الصوتي للقاعة</h3>
     <div id="acousticSection"></div>
 
-    <!-- BOQ والقرار الهندسي -->
     <div id="boqSection"></div>
 
     <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">📋 جدول التوزيع التفصيلي</h3>
     <div class="rep-table-wrap" id="detailSection"></div>
 
-    <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ خريطة المحاكاة الصوتية</h3>
+    <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ خريطة المحاكاة الصوتية (2D)</h3>
     <img id="reportImg" class="rep-img">
+
+    <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🎥 العرض ثلاثي الأبعاد (3D)</h3>
+    <img id="reportImg3D" class="rep-img">
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   الحالة العامة
-   ═══════════════════════════════════════════════════════════ */
-const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
+/* ═══════════════════════════════════════════════════════════════
+   1. CONSTANTS & DATA
+   ═══════════════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
-
-let points = [];
-let currentMode = 'main';
-let selectedPoint = null;
-let dragTarget = null;
-let dragOffset = { x: 0, y: 0 };
-let history = [];
-let redoStack = [];
-let animT = 0;
-let cursorSPL = null, cursorX = null, cursorY = null;
-let layers = { waves: true, heat: false, beams: true, grid: true, labels: true, dcCircle: false };
-let worldBox = { x0: 0, y0: 0, W: 0, H: 0, scale: 1 };
-
-let heatCanvas = null;
-let heatDirty = true;
-let lastKpiT = 0;
-
+const log10 = Math.log10;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
-/* ═══════════════════════════════════════════════════════════
-   كتالوج المنتجات
-   ═══════════════════════════════════════════════════════════ */
-const CATALOG = Object.freeze({
-  "DB-25 NW":    Object.freeze({ spl: 133, hAngle: 100, vAngle: 70, watt: 1000 }),
-  "DB-25 3G":    Object.freeze({ spl: 130, hAngle: 100, vAngle: 60, watt: 1000 }),
-  "MTL-700 3G":  Object.freeze({ spl: 126, hAngle: 90,  vAngle: 60, watt: 500 }),
-  "MLA212":      Object.freeze({ spl: 138, hAngle: 90,  vAngle: 10, watt: 900 }),
-  "MLA210":      Object.freeze({ spl: 135, hAngle: 90,  vAngle: 10, watt: 700 }),
-  "M10-LA":      Object.freeze({ spl: 132, hAngle: 100, vAngle: 10, watt: 700 }),
-  "MLA208":      Object.freeze({ spl: 130, hAngle: 100, vAngle: 10, watt: 500 }),
-  "HD315A":      Object.freeze({ spl: 131, hAngle: 90,  vAngle: 60, watt: 1000 }),
-  "HD312A":      Object.freeze({ spl: 128, hAngle: 90,  vAngle: 60, watt: 1000 }),
-  "DB-218 3G":   Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 1400 }),
-  "QX-218":      Object.freeze({ spl: 140, hAngle: 180, vAngle: 60, watt: 2000 }),
-  "HD-SUB-18A":  Object.freeze({ spl: 136, hAngle: 180, vAngle: 60, watt: 1200 }),
-  "DB-15M 3G":   Object.freeze({ spl: 128, hAngle: 90,  vAngle: 60, watt: 500 }),
-  "MTL-152":     Object.freeze({ spl: 125, hAngle: 90,  vAngle: 60, watt: 400 })
-});
+const BANDS = [125, 250, 500, 1000, 2000, 4000];
 
-/* ═══════════════════════════════════════════════════════════
-   معاملات الامتصاص لكل مادة (عند 1 kHz، متوسط)
-   ═══════════════════════════════════════════════════════════ */
-const MATERIALS = Object.freeze({
-  concrete:       Object.freeze({ name: 'خرسانة',        alpha: 0.02, color: '#4a4a4a' }),
-  brick:          Object.freeze({ name: 'طوب',           alpha: 0.04, color: '#8b4a3a' }),
-  drywall:        Object.freeze({ name: 'جبسوم بورد',    alpha: 0.10, color: '#c9c4b8' }),
-  wood:           Object.freeze({ name: 'خشب',           alpha: 0.10, color: '#8b6f47' }),
-  acoustic_panel: Object.freeze({ name: 'بانل صوتي',     alpha: 0.80, color: '#2d3748' }),
-  curtain:        Object.freeze({ name: 'ستائر ثقيلة',   alpha: 0.50, color: '#6b2c5e' }),
-  acoustic_tile:  Object.freeze({ name: 'بلاط صوتي',     alpha: 0.60, color: '#d1d5db' }),
-  metal:          Object.freeze({ name: 'معدن',          alpha: 0.05, color: '#6b7280' }),
-  carpet:         Object.freeze({ name: 'سجاد',          alpha: 0.30, color: '#7c3aed' }),
-  tile:           Object.freeze({ name: 'بلاط',          alpha: 0.01, color: '#5a6c7d' })
-});
+const ABS = {
+  concrete:[.01,.01,.015,.02,.02,.02],
+  brick:[.03,.03,.03,.04,.05,.07],
+  drywall:[.29,.10,.05,.04,.07,.09],
+  wood:[.15,.11,.10,.07,.06,.07],
+  acoustic_panel:[.30,.70,.90,.85,.80,.75],
+  curtain:[.07,.31,.49,.75,.70,.60],
+  acoustic_tile:[.20,.45,.70,.80,.75,.65],
+  metal:[.05,.05,.05,.05,.05,.05],
+  carpet:[.02,.06,.14,.37,.60,.65],
+  tile:[.01,.01,.01,.01,.02,.02]
+};
+const AUD_F = [.6,.75,.9,1,1.05,1.05];
+const AIR_M = [.0001,.0003,.0006,.0011,.0026,.0094];
 
-const AIR_ABS_DB_PER_M = 0.005;
+const MATERIALS = {
+  concrete:{name:'خرسانة',alpha:.02,color:'#4a4a4a'},
+  brick:{name:'طوب',alpha:.04,color:'#8b4a3a'},
+  drywall:{name:'جبسوم',alpha:.10,color:'#c9c4b8'},
+  wood:{name:'خشب',alpha:.10,color:'#8b6f47'},
+  acoustic_panel:{name:'بانل',alpha:.80,color:'#2d3748'},
+  curtain:{name:'ستائر',alpha:.50,color:'#6b2c5e'},
+  acoustic_tile:{name:'بلاط صوتي',alpha:.60,color:'#d1d5db'},
+  metal:{name:'معدن',alpha:.05,color:'#6b7280'},
+  carpet:{name:'سجاد',alpha:.30,color:'#7c3aed'},
+  tile:{name:'بلاط',alpha:.01,color:'#5a6c7d'}
+};
 
-/* ═══════════════════════════════════════════════════════════
-   الحسابات الصوتية للقاعة
-   ═══════════════════════════════════════════════════════════ */
-function getRoomAcoustics() {
+const CATALOG = {
+  "DB-25 NW":{spl:133,hAngle:100,vAngle:70,watt:1000},
+  "DB-25 3G":{spl:130,hAngle:100,vAngle:60,watt:1000},
+  "MTL-700 3G":{spl:126,hAngle:90,vAngle:60,watt:500},
+  "MLA212":{spl:138,hAngle:90,vAngle:10,watt:900},
+  "MLA210":{spl:135,hAngle:90,vAngle:10,watt:700},
+  "M10-LA":{spl:132,hAngle:100,vAngle:10,watt:700},
+  "MLA208":{spl:130,hAngle:100,vAngle:10,watt:500},
+  "HD315A":{spl:131,hAngle:90,vAngle:60,watt:1000},
+  "HD312A":{spl:128,hAngle:90,vAngle:60,watt:1000},
+  "DB-218 3G":{spl:140,hAngle:180,vAngle:60,watt:1400},
+  "QX-218":{spl:140,hAngle:180,vAngle:60,watt:2000},
+  "HD-SUB-18A":{spl:136,hAngle:180,vAngle:60,watt:1200},
+  "DB-15M 3G":{spl:128,hAngle:90,vAngle:60,watt:500},
+  "MTL-152":{spl:125,hAngle:90,vAngle:60,watt:400}
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   2. STATE
+   ═══════════════════════════════════════════════════════════════ */
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+
+let points = [];
+let selectedPoint = null;
+let dragTarget = null;
+let dragOffset = { x:0, y:0 };
+let history = [], redoStack = [];
+let animT = 0;
+let cursorSPL = null, cursorX = null, cursorY = null;
+let layers = { waves:true, heat:false, beams:true, grid:true, labels:true, dcCircle:false, audience:true };
+let worldBox = { x0:0, y0:0, W:0, H:0, scale:1 };
+let heatCanvas = null, heatDirty = true;
+let currentMode = 'main';
+let currentBand = 3;
+let roomBase = null;
+let lastKpiT = 0;
+
+const view3D = {
+  enabled:false, theta:Math.PI*0.3, phi:Math.PI*0.35, radius:60,
+  focal:600, cx:0, cy:0, cam:null, dirty:true,
+  dragging:null, lastX:0, lastY:0,
+  pointers:new Map(), pinchDist:0,
+  clickCandidate:null, clickStartT:0,
+  canvas:document.getElementById('canvas3d'),
+  ctx:null
+};
+view3D.ctx = view3D.canvas ? view3D.canvas.getContext('2d') : null;
+
+const scen = {};
+
+/* ═══════════════════════════════════════════════════════════════
+   3. ROOM ACOUSTICS (multi-band, Sabine + Eyring)
+   ═══════════════════════════════════════════════════════════════ */
+function calcBase() {
   const L = +$('room_l').value || 40;
   const W = +$('room_w').value || 25;
   const H = +$('room_h').value || 10;
-
-  const V = L * W * H;
-  const S_floor = L * W;
-  const S_ceiling = L * W;
-  const S_walls = 2 * (L + W) * H;
-
-  const matFloor = MATERIALS[$('floor_mat').value] || MATERIALS.wood;
-  const matWall = MATERIALS[$('wall_mat').value] || MATERIALS.drywall;
-  const matCeil = MATERIALS[$('ceiling_mat').value] || MATERIALS.drywall;
-
-  // امتصاص الجمهور (60% من الأرضية مخصصة للجمهور)
-  const audienceArea = S_floor * 0.60;
-  const audienceAbs = parseFloat($('audience_type').value) * audienceArea;
-
-  const A = S_floor * matFloor.alpha
-          + S_ceiling * matCeil.alpha
-          + S_walls * matWall.alpha
-          + audienceAbs;
-
-  const S_total = S_floor + S_ceiling + S_walls;
-  const alpha_avg = A / S_total;
-
-  // Sabine RT60
-  const RT60 = 0.161 * V / Math.max(1, A);
-
-  // ثابت الغرفة (Room Constant)
-  const R = A / Math.max(0.01, 1 - alpha_avg);
-
-  // المسافة الحرجة (بافتراض Q≈4 لنظام موجه)
-  const Q = 4;
-  const Dc = 0.141 * Math.sqrt(Q * R);
-
-  // تردد شرودر (Schroeder Frequency)
-  const f_s = 2000 * Math.sqrt(RT60 / V);
-
-  return { V, A, RT60, R, alpha_avg, Dc, f_s, S_total, Q };
-}
-
-/* ═══════════════════════════════════════════════════════════
-   Sidebar toggle
-   ═══════════════════════════════════════════════════════════ */
-function toggleSidebar() {
-  $('sidebar').classList.toggle('collapsed');
-  setTimeout(() => { setupCanvasSize(); draw(); }, 320);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   أدوات عامة
-   ═══════════════════════════════════════════════════════════ */
-function setMode(m) {
-  currentMode = m;
-  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-  $('btn_' + m).classList.add('active');
-}
-
-function toggle(key) {
-  layers[key] = !layers[key];
-  const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
-  if (btn) btn.classList.toggle('on', layers[key]);
-  if (key === 'heat') $('legend').classList.toggle('on', layers.heat);
-  if (key === 'dcCircle') invalidateHeat();
-  draw();
-}
-
-function invalidateHeat() { heatDirty = true; }
-
-function pushHistory() {
-  history.push(JSON.stringify(points));
-  if (history.length > 60) history.shift();
-  redoStack = [];
-}
-
-function undo() {
-  if (!history.length) return;
-  redoStack.push(JSON.stringify(points));
-  points = JSON.parse(history.pop());
-  selectedPoint = null;
-  $('beamControls').classList.remove('on');
-  invalidateHeat(); draw(); updateKPI();
-}
-
-function redo() {
-  if (!redoStack.length) return;
-  history.push(JSON.stringify(points));
-  points = JSON.parse(redoStack.pop());
-  selectedPoint = null;
-  $('beamControls').classList.remove('on');
-  invalidateHeat(); draw(); updateKPI();
-}
-
-function deleteSelected() {
-  if (!selectedPoint) return;
-  pushHistory();
-  points = points.filter(p => p !== selectedPoint);
-  selectedPoint = null;
-  $('sel_name').innerText = '-- اختر --';
-  $('beamControls').classList.remove('on');
-  invalidateHeat(); draw(); updateKPI(); autosave();
-}
-
-function resetCanvas() {
-  if (!confirm('تصفير المخطط بالكامل؟')) return;
-  pushHistory();
-  points = [];
-  selectedPoint = null;
-  $('sel_name').innerText = '-- اختر --';
-  $('beamControls').classList.remove('on');
-  invalidateHeat(); draw(); updateKPI(); autosave();
-}
-
-/* ═══════════════════════════════════════════════════════════
-   لوحة المفاتيح
-   ═══════════════════════════════════════════════════════════ */
-window.addEventListener('keydown', e => {
-  const tag = (e.target.tagName || '').toLowerCase();
-  if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
-    e.preventDefault(); undo();
-  } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
-    e.preventDefault(); redo();
-  } else if (e.key === 'Delete' && selectedPoint) {
-    deleteSelected();
-  }
-});
-
-/* ═══════════════════════════════════════════════════════════
-   تحديث السماعة المحددة
-   ═══════════════════════════════════════════════════════════ */
-function updateSelected() {
-  if (!selectedPoint) return;
-  selectedPoint.angle = parseInt($('beam_angle').value);
-  const rangeM = parseInt($('beam_range').value);
-  selectedPoint.rangeM = rangeM;
-  selectedPoint.range = rangeM * worldBox.scale;
-  if (selectedPoint.isLineArray) {
-    selectedPoint.elements = parseInt($('la_elements').value);
-  }
-  $('sel_name').innerText = selectedPoint.name + ' · ' + selectedPoint.angle + '°';
-  invalidateHeat(); draw(); updateKPI(); autosave();
-}
-
-function showBeamControls(p) {
-  $('sel_name').innerText = p.name + ' · ' + p.angle + '°';
-  $('beam_angle').value = p.angle;
-  $('beam_range').value = Math.round(p.rangeM ?? (p.range / worldBox.scale));
-  $('laCtrl').style.display = p.isLineArray ? 'block' : 'none';
-  if (p.isLineArray) $('la_elements').value = p.elements;
-  $('beamControls').classList.add('on');
-}
-
-/* ═══════════════════════════════════════════════════════════
-   World Box
-   ═══════════════════════════════════════════════════════════ */
-function getWorldBox() {
-  const L = +$('room_l').value || 40, W = +$('room_w').value || 25;
-  const Wc = canvas._logicalW || canvas.width;
-  const Hc = canvas._logicalH || canvas.height;
-  const pad = Math.min(60, Wc * 0.06);
-  const scale = Math.min((Wc - pad * 2) / L, (Hc - pad * 2) / W);
-  const roomW = L * scale, roomH = W * scale;
+  const V = L*W*H, Sf = L*W, Sw = 2*(L+W)*H, St = 2*Sf+Sw;
+  const fl = ABS[$('floor_mat').value] || ABS.wood;
+  const wa = ABS[$('wall_mat').value] || ABS.drywall;
+  const ce = ABS[$('ceiling_mat').value] || ABS.drywall;
+  const aud = parseFloat($('audience_type').value) * Sf * 0.6;
+  const Ab = BANDS.map((_, i) => Sf*fl[i] + Sf*ce[i] + Sw*wa[i] + aud*AUD_F[i]);
+  const sab = Ab.map((a, i) => .161*V/(a + 4*AIR_M[i]*V));
+  const eyr = Ab.map((a, i) => .161*V/(-St*Math.log(1-Math.min(.95, a/St)) + 4*AIR_M[i]*V));
+  const A = Ab[currentBand];
+  const al = A/St;
   return {
-    x0: (Wc - roomW) / 2,
-    y0: (Hc - roomH) / 2,
-    W: roomW, H: roomH, scale
+    V, S_total:St, A, Abands:Ab, sab, eyr,
+    alpha_avg:al, RT60:sab[currentBand], RT60_eyring:eyr[currentBand],
+    R: A/Math.max(.01, 1-al)
   };
 }
-
-/* ═══════════════════════════════════════════════════════════
-   كشف نوع الفعالية
-   ═══════════════════════════════════════════════════════════ */
-function getEventProfile() {
-  const type = $('event_type').value;
-  const L = +$('room_l').value;
-  let load = 'light';
-  if (L > 30) load = 'heavy';
-  else if (L > 18) load = 'medium';
-
-  if (type === 'auto') {
-    if (L > 30) return { type: 'concert', load };
-    if (L > 20) return { type: 'theater', load };
-    return { type: 'conference', load };
-  }
-  return { type, load };
-}
-
-/* ═══════════════════════════════════════════════════════════
-   التوزيع الذكي
-   ═══════════════════════════════════════════════════════════ */
-function applySmartLayout() {
-  pushHistory();
-  points = [];
-  selectedPoint = null;
-  $('beamControls').classList.remove('on');
-
-  const profile = getEventProfile();
-  if (profile.type === 'concert') deployLineArraySystem(profile);
-  else if (profile.type === 'conference') deployConferenceSystem(profile);
-  else if (profile.type === 'theater') deployTheaterSystem(profile);
-  else deployPointSourceSystem(profile);
-
-  invalidateHeat(); draw(); updateKPI(); autosave();
-}
-
-function deployLineArraySystem(profile) {
-  const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
-
-  let elementsPerSide = Math.max(6, Math.ceil(L / 8) * 2);
-  if (elementsPerSide % 2 !== 0) elementsPerSide++;
-  const toeIn = 8;
-
-  // Line Arrays L + R
-  points.push({
-    x: stX - 25, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'MLA212 يسار',
-    angle: 90 + toeIn, range: L * b.scale * 0.95, rangeM: L * 0.95,
-    spl: 138, hAngle: 90, vAngle: 10, watt: 900,
-    isLineArray: true, elements: elementsPerSide / 2
-  });
-  points.push({
-    x: stX + sW * b.scale + 25, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'MLA212 يمين',
-    angle: 90 - toeIn, range: L * b.scale * 0.95, rangeM: L * 0.95,
-    spl: 138, hAngle: 90, vAngle: 10, watt: 900,
-    isLineArray: true, elements: elementsPerSide / 2
-  });
-
-  // Sub Cardioid Array
-  const subCount = profile.load === 'heavy' ? 6 : 4;
-  for (let i = 0; i < subCount; i++) {
-    points.push({
-      x: stX + (sW * b.scale / Math.max(1, subCount - 1)) * i,
-      y: b.y0 + sD * b.scale + 20,
-      type: 'sub', name: 'DB-218 3G',
-      angle: 90, range: 200 * b.scale, rangeM: 200,
-      spl: 140, hAngle: 180, vAngle: 60, watt: 1400
-    });
-  }
-
-  // Side Fills
-  const sideCount = profile.load === 'heavy' ? 3 : 2;
-  for (let i = 0; i < sideCount; i++) {
-    const yPos = b.y0 + (W * b.scale / (sideCount + 1)) * (i + 1);
-    points.push({
-      x: b.x0 + 12, y: yPos, type: 'side', name: 'HD315A يسار',
-      angle: 0, range: W * b.scale * 0.5, rangeM: W * 0.5,
-      spl: 131, hAngle: 90, vAngle: 60, watt: 1000
-    });
-    points.push({
-      x: b.x0 + L * b.scale - 12, y: yPos, type: 'side', name: 'HD315A يمين',
-      angle: 180, range: W * b.scale * 0.5, rangeM: W * 0.5,
-      spl: 131, hAngle: 90, vAngle: 60, watt: 1000
-    });
-  }
-
-  // Monitors
-  const monCount = sW > 12 ? 6 : 4;
-  for (let i = 0; i < monCount; i++) {
-    points.push({
-      x: stX + (sW * b.scale / Math.max(1, monCount - 1)) * i,
-      y: b.y0 + sD * b.scale - 8,
-      type: 'sub', name: 'DB-15M 3G',
-      angle: 270, range: 120 * b.scale, rangeM: 120,
-      spl: 128, hAngle: 90, vAngle: 60, watt: 500
-    });
-  }
-}
-
-function deployPointSourceSystem(profile) {
-  const b = getWorldBox();
-  const L = +$('room_l').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
-
-  points.push({
-    x: stX - 15, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'DB-25 NW يسار',
-    angle: 75, range: L * b.scale * 0.9, rangeM: L * 0.9,
-    spl: 133, hAngle: 100, vAngle: 70, watt: 1000
-  });
-  points.push({
-    x: stX + sW * b.scale + 15, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'DB-25 NW يمين',
-    angle: 105, range: L * b.scale * 0.9, rangeM: L * 0.9,
-    spl: 133, hAngle: 100, vAngle: 70, watt: 1000
-  });
-
-  // صب ستيريو
-  for (let i = 0; i < 2; i++) {
-    points.push({
-      x: stX + (sW * b.scale) * i + 40,
-      y: b.y0 + sD * b.scale + 20,
-      type: 'sub', name: 'DB-218 3G',
-      angle: 90, range: 150 * b.scale, rangeM: 150,
-      spl: 140, hAngle: 180, vAngle: 60, watt: 1400
-    });
-  }
-
-  for (let i = 0; i < 4; i++) {
-    points.push({
-      x: stX + (sW * b.scale / 3) * i,
-      y: b.y0 + sD * b.scale - 8,
-      type: 'sub', name: 'DB-15M 3G',
-      angle: 270, range: 100 * b.scale, rangeM: 100,
-      spl: 128, hAngle: 90, vAngle: 60, watt: 500
-    });
-  }
-}
-
-function deployTheaterSystem(profile) {
-  const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const stX = b.x0 + (L * b.scale - sW * b.scale) / 2;
-
-  // بروscenium L/C/R
-  points.push({
-    x: stX, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'MLA210 وسط',
-    angle: 90, range: L * b.scale * 0.85, rangeM: L * 0.85,
-    spl: 135, hAngle: 90, vAngle: 10, watt: 700,
-    isLineArray: true, elements: 6
-  });
-  points.push({
-    x: stX - 25, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'HD315A يسار',
-    angle: 80, range: L * b.scale * 0.85, rangeM: L * 0.85,
-    spl: 131, hAngle: 90, vAngle: 60, watt: 1000
-  });
-  points.push({
-    x: stX + sW * b.scale + 25, y: b.y0 + sD * b.scale / 2,
-    type: 'main', name: 'HD315A يمين',
-    angle: 100, range: L * b.scale * 0.85, rangeM: L * 0.85,
-    spl: 131, hAngle: 90, vAngle: 60, watt: 1000
-  });
-
-  // صب
-  for (let i = 0; i < 3; i++) {
-    points.push({
-      x: stX + (sW * b.scale / 2) * i,
-      y: b.y0 + sD * b.scale + 20,
-      type: 'sub', name: 'DB-218 3G',
-      angle: 90, range: 150 * b.scale, rangeM: 150,
-      spl: 140, hAngle: 180, vAngle: 60, watt: 1400
-    });
-  }
-}
-
-function deployConferenceSystem(profile) {
-  const b = getWorldBox();
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const rows = 3, cols = 4;
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      points.push({
-        x: b.x0 + (L * b.scale / (cols + 1)) * (c + 1),
-        y: b.y0 + 80 + (W * b.scale - 120) / Math.max(1, rows - 1) * r,
-        type: 'main', name: 'MTL-700 3G',
-        angle: 90, range: 150 * b.scale, rangeM: 150,
-        spl: 126, hAngle: 90, vAngle: 60, watt: 500
-      });
-    }
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   حلقة الرسم
-   ═══════════════════════════════════════════════════════════ */
-function loop(t) {
-  animT += 0.02;
-  draw();
-  if (t - lastKpiT > 400) { updateKPI(); lastKpiT = t; }
-  requestAnimationFrame(loop);
-}
-
-function draw() {
-  const L = +$('room_l').value, W = +$('room_w').value;
-  const sW = +$('stage_w').value, sD = +$('stage_d').value;
-  const H = +$('room_h').value;
-
-  const Wc = canvas._logicalW || canvas.width;
-  const Hc = canvas._logicalH || canvas.height;
-
-  // خلفية داكنة
-  ctx.fillStyle = '#050505';
-  ctx.fillRect(0, 0, Wc, Hc);
-
-  const b = getWorldBox();
-  worldBox = b;
-
-  // أرضية القاعة
-  ctx.fillStyle = '#0a1420';
-  ctx.fillRect(b.x0, b.y0, b.W, b.H);
-
-  // خطوط الرؤية (رسم بلاط القاعة)
-  if (layers.grid) {
-    ctx.strokeStyle = 'rgba(56,189,248,0.08)';
-    ctx.lineWidth = 1;
-    const gridM = 5;
-    for (let x = 0; x <= L; x += gridM) {
-      ctx.beginPath();
-      ctx.moveTo(b.x0 + x * b.scale, b.y0);
-      ctx.lineTo(b.x0 + x * b.scale, b.y0 + b.H);
-      ctx.stroke();
-    }
-    for (let y = 0; y <= W; y += gridM) {
-      ctx.beginPath();
-      ctx.moveTo(b.x0, b.y0 + y * b.scale);
-      ctx.lineTo(b.x0 + b.W, b.y0 + y * b.scale);
-      ctx.stroke();
-    }
-  }
-
-  // خريطة الحرارة
-  if (layers.heat && points.length) drawHeatmap(b);
-
-  // المسرح
-  drawStage(b, sW, sD);
-
-  // دوائر المسافة الحرجة
-  if (layers.dcCircle) drawCriticalCircles(b);
-
-  // الموجات
-  if (layers.waves) drawWaves();
-
-  // الأشعة
-  if (layers.beams) points.forEach(p => drawBeam(p));
-
-  // الجدران (مع ألوان المواد)
-  drawWalls(b, L, W, H);
-
-  // السماعات
-  points.forEach(p => drawSpeaker(p));
-
-  // الأبعاد
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 12px Cairo';
-  ctx.textAlign = 'center';
-  ctx.direction = 'rtl';
-  ctx.fillText(L + ' م', b.x0 + b.W / 2, b.y0 - 12);
-  ctx.save();
-  ctx.translate(b.x0 - 18, b.y0 + b.H / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText(W + ' م', 0, 0);
-  ctx.restore();
-
-  // ارتفاعات جدارية (RTL)
-  ctx.fillStyle = 'rgba(168,85,247,0.7)';
-  ctx.font = 'bold 10px Cairo';
-  ctx.textAlign = 'center';
-  ctx.fillText('H = ' + H + ' م', b.x0 + b.W + 30, b.y0 + b.H / 2);
-
-  // خطوط المؤشر
-  if (cursorSPL !== null) {
-    ctx.strokeStyle = 'rgba(56,189,248,0.3)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-    ctx.beginPath();
-    ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, Hc);
-    ctx.moveTo(0, cursorY); ctx.lineTo(Wc, cursorY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   رسم الجدران مع لون المادة
-   ═══════════════════════════════════════════════════════════ */
-function drawWalls(b, L, W, H) {
-  const matWall = MATERIALS[$('wall_mat').value] || MATERIALS.drywall;
-  const matCeil = MATERIALS[$('ceiling_mat').value] || MATERIALS.drywall;
-  const matFloor = MATERIALS[$('floor_mat').value] || MATERIALS.wood;
-
-  // الجدران الأربعة (سماكة ترمز للمادة)
-  ctx.lineWidth = 6;
-  ctx.strokeStyle = matWall.color;
-
-  // جدار أعلى (خلفي) - يرمز للسقف بلون مختلف
-  ctx.beginPath();
-  ctx.moveTo(b.x0, b.y0);
-  ctx.lineTo(b.x0 + b.W, b.y0);
-  ctx.strokeStyle = matCeil.color;
-  ctx.stroke();
-
-  // جدار سفلي (أمامي)
-  ctx.beginPath();
-  ctx.moveTo(b.x0, b.y0 + b.H);
-  ctx.lineTo(b.x0 + b.W, b.y0 + b.H);
-  ctx.strokeStyle = matWall.color;
-  ctx.stroke();
-
-  // جدار يسار
-  ctx.beginPath();
-  ctx.moveTo(b.x0, b.y0);
-  ctx.lineTo(b.x0, b.y0 + b.H);
-  ctx.strokeStyle = matWall.color;
-  ctx.stroke();
-
-  // جدار يمين
-  ctx.beginPath();
-  ctx.moveTo(b.x0 + b.W, b.y0);
-  ctx.lineTo(b.x0 + b.W, b.y0 + b.H);
-  ctx.strokeStyle = matWall.color;
-  ctx.stroke();
-
-  // مؤشرات امتصاص جانبية (نقاط على الجدران الجانبية)
-  const wallAlpha = matWall.alpha;
-  if (wallAlpha > 0.1) {
-    const dotCount = Math.floor(wallAlpha * 30);
-    ctx.fillStyle = matWall.color;
-    ctx.globalAlpha = 0.5;
-    for (let i = 0; i < dotCount; i++) {
-      const y1 = b.y0 + Math.random() * b.H;
-      const y2 = b.y0 + Math.random() * b.H;
-      ctx.fillRect(b.x0 - 3, y1, 3, 4);
-      ctx.fillRect(b.x0 + b.W, y2, 3, 4);
-    }
-    ctx.globalAlpha = 1;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   دوائر المسافة الحرجة
-   ═══════════════════════════════════════════════════════════ */
-function drawCriticalCircles(b) {
-  const room = getRoomAcoustics();
-  const Dc = room.Dc;
-
-  ctx.strokeStyle = 'rgba(168,85,247,0.5)';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([3, 5]);
-
-  points.forEach(p => {
-    if (p.type !== 'main') return;
-    const radiusPx = Dc * b.scale;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, radiusPx, 0, Math.PI * 2);
-    ctx.stroke();
-  });
-  ctx.setLineDash([]);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   المسرح
-   ═══════════════════════════════════════════════════════════ */
-function drawStage(b, sW, sD) {
-  const stX = b.x0 + (b.W - sW * b.scale) / 2;
-  const stY = b.y0;
-
-  const g = ctx.createLinearGradient(0, stY, 0, stY + sD * b.scale);
-  g.addColorStop(0, 'rgba(230,0,18,0.25)');
-  g.addColorStop(1, 'rgba(230,0,18,0.08)');
-  ctx.fillStyle = g;
-  ctx.fillRect(stX, stY, sW * b.scale, sD * b.scale);
-
-  ctx.strokeStyle = '#e60012';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(stX, stY, sW * b.scale, sD * b.scale);
-
-  ctx.fillStyle = 'rgba(230,0,18,0.75)';
-  ctx.font = 'bold 14px Cairo';
-  ctx.textAlign = 'center';
-  ctx.fillText('المرحلة', stX + sW * b.scale / 2, stY + sD * b.scale / 2 + 5);
-}
-
-/* ═══════════════════════════════════════════════════════════
-   الشعاع
-   ═══════════════════════════════════════════════════════════ */
-function drawBeam(p) {
-  if (!p.range) return;
-  const ang = p.angle * Math.PI / 180;
-  const spread = (p.hAngle || 100) * Math.PI / 180;
-  const range = p.range;
-
-  let c0, c1;
-  if (p.type === 'main') { c0 = 'rgba(56,189,248,0.5)'; c1 = 'rgba(56,189,248,0)'; }
-  else if (p.type === 'sub') { c0 = 'rgba(229,192,123,0.5)'; c1 = 'rgba(229,192,123,0)'; }
-  else { c0 = 'rgba(34,197,94,0.5)'; c1 = 'rgba(34,197,94,0)'; }
-
-  const g = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, range);
-  g.addColorStop(0, c0);
-  g.addColorStop(1, c1);
-  ctx.fillStyle = g;
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
-  ctx.arc(p.x, p.y, range, ang - spread / 2, ang + spread / 2);
-  ctx.closePath();
-  ctx.fill();
-
-  if (p === selectedPoint) {
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([6, 4]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   الموجات
-   ═══════════════════════════════════════════════════════════ */
-function drawWaves() {
-  points.forEach((p, i) => {
-    const maxR = p.type === 'main' ? 70 : p.type === 'sub' ? 50 : 60;
-    const c = p.type === 'main' ? '56,189,248' : p.type === 'sub' ? '229,192,123' : '34,197,94';
-    for (let r = 0; r < 3; r++) {
-      const off = (animT + r * 0.33 + i * 0.07) % 1;
-      const radius = off * maxR;
-      const alpha = (1 - off) * 0.45;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${c},${alpha})`;
-      ctx.lineWidth = 1.5;
-      ctx.shadowColor = `rgba(${c},${alpha * 0.7})`;
-      ctx.shadowBlur = 8;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-    }
+const qOf = p => Math.min(60, Math.max(1, 41253/((p.hAngle||90)*(p.vAngle||60))));
+function getRoomAcoustics() {
+  if (!roomBase) roomBase = calcBase();
+  const m = points.filter(p => p.type === 'main');
+  const Q = m.length ? m.reduce((s,p) => s+qOf(p), 0)/m.length : 4;
+  return Object.assign({}, roomBase, {
+    Q, Dc: .141*Math.sqrt(Q*roomBase.R),
+    f_s: 2000*Math.sqrt(roomBase.RT60/roomBase.V)
   });
 }
 
-/* ═══════════════════════════════════════════════════════════
-   خريطة SPL (Offscreen Cache)
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   4. SPL & STI PHYSICS
+   ═══════════════════════════════════════════════════════════════ */
+function splParts(px, py) {
+  const room = (roomBase || (roomBase = calcBase()));
+  const R = room.R, airAbs = AIR_M[currentBand], sc = worldBox.scale || 1;
+  let D = 0, Pw = 0;
+  for (const p of points) {
+    const dM = Math.max(1, Math.hypot(px-p.x, py-p.y)/sc);
+    let dl = Math.abs(Math.atan2(py-p.y, px-p.x)*180/Math.PI - p.angle);
+    dl = ((dl % 360) + 360) % 360;
+    if (dl > 180) dl = 360 - dl;
+    const half = (p.hAngle || 100)/2;
+    const dirDb = -Math.min(40, 6*(dl/half)**2);
+    let att;
+    if (p.isLineArray) {
+      const Lm = (p.elements || 6)*.3, r0 = Lm*Lm/(2*.34);
+      att = dM <= r0 ? -10*log10(dM) : -10*log10(r0) - 20*log10(dM/r0);
+    } else att = -20*log10(dM);
+    const bonus = p.isLineArray ? 10*log10(Math.max(1, (p.elements||6)/4)) : 0;
+    D += 10**(((p.spl||120) + att - airAbs*dM + bonus + dirDb)/10);
+    Pw += 10**(((p.spl||120) + 11 - 10*log10(qOf(p)) + bonus)/10);
+  }
+  const direct = D > 0 ? 10*log10(D) : 0;
+  const reverb = Pw > 0 ? 10*log10(Pw) + 10*log10(4/Math.max(.1, R)) : 0;
+  return { direct, reverb, total: 10*log10(10**(direct/10) + 10**(reverb/10)) };
+}
+function computeSPLAt(x, y) { return points.length ? splParts(x, y).total : 0; }
+function computeDirectReverbAt(x, y) { return points.length ? splParts(x, y) : {direct:0, reverb:0, total:0}; }
+
+function stiAt(px, py) {
+  const srcs = points.filter(p => p.type !== 'sub');
+  if (!srcs.length) return null;
+  const room = getRoomAcoustics(), sc = worldBox.scale || 1;
+  let best = null, bd = 1e9;
+  srcs.forEach(p => { const d = Math.hypot(px-p.x, py-p.y)/sc; if (d < bd) { bd = d; best = p; } });
+  const d = Math.max(1, bd), RT = room.RT60;
+  const al = d > 3.16*room.Dc ? 9*RT : Math.min(100, 200*d*d*RT*RT/(room.V*qOf(best)));
+  return Math.max(0, Math.min(1, .9482 - .1845*Math.log(Math.max(1, al))));
+}
+const stiLabel = s => s >= .75 ? 'ممتاز' : s >= .6 ? 'جيد' : s >= .45 ? 'مقبول' : 'ضعيف';
+
+/* ═══════════════════════════════════════════════════════════════
+   5. HEATMAP
+   ═══════════════════════════════════════════════════════════════ */
+function splColor(spl) {
+  if (spl < 60) return 'rgba(15,25,45,0.7)';
+  if (spl < 70) return 'rgba(30,80,140,0.65)';
+  if (spl < 80) return 'rgba(34,197,94,0.6)';
+  if (spl < 90) return 'rgba(132,204,22,0.6)';
+  if (spl < 100) return 'rgba(245,158,11,0.65)';
+  return 'rgba(239,68,68,0.72)';
+}
+function invalidateHeat() { heatDirty = true; if (view3D) view3D.dirty = true; }
+
 function drawHeatmap(b) {
   const wC = Math.max(1, Math.ceil(b.W));
   const hC = Math.max(1, Math.ceil(b.H));
-
   if (!heatCanvas || heatCanvas.width !== wC || heatCanvas.height !== hC || heatDirty) {
     if (!heatCanvas) heatCanvas = document.createElement('canvas');
     heatCanvas.width = wC;
@@ -1348,105 +875,244 @@ function drawHeatmap(b) {
   ctx.drawImage(heatCanvas, b.x0, b.y0);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   حساب SPL — مع Reverberation (Indoor)
-   ═══════════════════════════════════════════════════════════ */
-function computeSPLAt(px, py) {
-  if (!points.length) return 0;
+/* ═══════════════════════════════════════════════════════════════
+   6. 2D RENDERING
+   ═══════════════════════════════════════════════════════════════ */
+function getWorldBox() {
+  const L = +$('room_l').value || 40, W = +$('room_w').value || 25;
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
+  const pad = Math.min(60, Wc*0.06);
+  const scale = Math.min((Wc - pad*2)/L, (Hc - pad*2)/W);
+  const roomW = L*scale, roomH = W*scale;
+  return { x0:(Wc-roomW)/2, y0:(Hc-roomH)/2, W:roomW, H:roomH, scale };
+}
 
-  const room = getRoomAcoustics();
-  const R = room.R;
-  let totalPower = 0;
+function draw() {
+  if (view3D.enabled) return;
+  const L = +$('room_l').value, W = +$('room_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const H = +$('room_h').value;
+  const Wc = canvas._logicalW || canvas.width;
+  const Hc = canvas._logicalH || canvas.height;
 
-  points.forEach(p => {
-    const dx = px - p.x, dy = py - p.y;
-    const dPx = Math.hypot(dx, dy);
-    const dM = Math.max(1, dPx / (worldBox.scale || 1));
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0, 0, Wc, Hc);
 
-    // زاوية النقطة بالنسبة لاتجاه السماعة
-    const angleTo = Math.atan2(dy, dx) * 180 / Math.PI;
-    let delta = Math.abs(angleTo - p.angle);
-    if (delta > 180) delta = 360 - delta;
+  const b = getWorldBox();
+  worldBox = b;
 
-    const halfH = (p.hAngle || 100) / 2;
-    let directivityGain = 1;
-    if (delta > halfH) {
-      const over = delta - halfH;
-      directivityGain = Math.max(0, 1 - over / 60);
+  ctx.fillStyle = '#0a1420';
+  ctx.fillRect(b.x0, b.y0, b.W, b.H);
+
+  if (layers.grid) {
+    ctx.strokeStyle = 'rgba(56,189,248,0.08)';
+    ctx.lineWidth = 1;
+    const gridM = 5;
+    for (let x = 0; x <= L; x += gridM) {
+      ctx.beginPath(); ctx.moveTo(b.x0+x*b.scale, b.y0); ctx.lineTo(b.x0+x*b.scale, b.y0+b.H); ctx.stroke();
     }
+    for (let y = 0; y <= W; y += gridM) {
+      ctx.beginPath(); ctx.moveTo(b.x0, b.y0+y*b.scale); ctx.lineTo(b.x0+b.W, b.y0+y*b.scale); ctx.stroke();
+    }
+  }
 
-    // ===== الحقل المباشر =====
-    const atten = p.isLineArray
-      ? -10 * Math.log10(dM)
-      : -20 * Math.log10(dM);
-    const airLoss = AIR_ABS_DB_PER_M * dM;
-    const laBonus = p.isLineArray ? 10 * Math.log10(Math.max(1, p.elements / 4)) : 0;
-    const directSPL = (p.spl || 120) + atten - airLoss + laBonus +
-                      10 * Math.log10(Math.max(0.0001, directivityGain));
+  if (layers.heat && points.length) drawHeatmap(b);
 
-    // ===== الحقل المرتد (Diffuse/Reverberant) =====
-    // SPL_rev = Lw + 10·log10(4/R)
-    // Lw ≈ SPL_1m - 11 (لمصدر شبه كروي Q≈1 في حقل حر)
-    // تصحيح بسيط لـ Q=4: نضيف ثابت
-    const reverbSPL = (p.spl || 120) - 11 + 10 * Math.log10(4 / Math.max(0.1, R));
+  if (layers.audience) drawAudience2D(b, L, W);
 
-    // دمج الحقلين (تربيعي - غير مترابطين)
-    const combined = 10 * Math.log10(
-      Math.pow(10, directSPL / 10) + Math.pow(10, reverbSPL / 10)
-    );
-    totalPower += Math.pow(10, combined / 10);
-  });
+  drawStage(b, sW, sD);
 
-  return totalPower > 0 ? 10 * Math.log10(totalPower) : 0;
+  if (layers.dcCircle) drawCriticalCircles(b);
+
+  if (layers.waves) drawWaves();
+
+  if (layers.beams) points.forEach(p => drawBeam(p));
+
+  drawWalls(b, L, W, H);
+
+  if (points.length) drawDelayLines();
+
+  points.forEach(p => drawSpeaker(p));
+
+  // Dimensions
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Cairo';
+  ctx.textAlign = 'center';
+  ctx.fillText(L + ' م', b.x0 + b.W/2, b.y0 - 12);
+  ctx.save();
+  ctx.translate(b.x0 - 18, b.y0 + b.H/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText(W + ' م', 0, 0);
+  ctx.restore();
+  ctx.fillStyle = 'rgba(168,85,247,0.7)';
+  ctx.font = 'bold 10px Cairo';
+  ctx.fillText('H = ' + H + ' م', b.x0 + b.W + 30, b.y0 + b.H/2);
+
+  if (cursorSPL !== null) {
+    ctx.strokeStyle = 'rgba(56,189,248,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cursorX, 0); ctx.lineTo(cursorX, Hc);
+    ctx.moveTo(0, cursorY); ctx.lineTo(Wc, cursorY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
 }
 
-/* يحسب SPL المباشر والمرتد منفصلين (للتقرير) */
-function computeDirectReverbAt(px, py) {
-  if (!points.length) return { direct: 0, reverb: 0, total: 0 };
+function drawAudience2D(b, L, W) {
+  const startZ = Math.max(3, +$('stage_d').value + 2);
+  const usableD = W - startZ - 2;
+  const usableW = L - 6;
+  if (usableD < 2 || usableW < 2) return;
+  const rowSpacing = Math.max(0.8, usableD / 15);
+  const seatSpacing = Math.max(0.6, usableW / 25);
+  const rows = Math.floor(usableD / rowSpacing);
+  const cols = Math.floor(usableW / seatSpacing);
+  ctx.fillStyle = 'rgba(139,148,158,0.35)';
+  const dotR = Math.max(1.2, b.scale * 0.18);
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = b.x0 + (3 + c*seatSpacing) * b.scale;
+      const y = b.y0 + (startZ + r*rowSpacing) * b.scale;
+      ctx.beginPath();
+      ctx.arc(x, y, dotR, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+}
+
+function drawWalls(b, L, W, H) {
+  const mw = MATERIALS[$('wall_mat').value] || MATERIALS.drywall;
+  const mc = MATERIALS[$('ceiling_mat').value] || MATERIALS.drywall;
+  ctx.lineWidth = 6;
+  const edge = (x1, y1, x2, y2, c) => {
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.strokeStyle = c; ctx.stroke();
+  };
+  edge(b.x0, b.y0, b.x0+b.W, b.y0, mc.color);
+  edge(b.x0, b.y0+b.H, b.x0+b.W, b.y0+b.H, mw.color);
+  edge(b.x0, b.y0, b.x0, b.y0+b.H, mw.color);
+  edge(b.x0+b.W, b.y0, b.x0+b.W, b.y0+b.H, mw.color);
+  if (mw.alpha > .1) {
+    ctx.fillStyle = mw.color;
+    ctx.globalAlpha = .5;
+    const n = Math.floor(mw.alpha*30);
+    for (let i = 0; i < n; i++) {
+      ctx.fillRect(b.x0-3, b.y0+((i*.618034)%1)*b.H, 3, 4);
+      ctx.fillRect(b.x0+b.W, b.y0+((i*.381966+.3)%1)*b.H, 3, 4);
+    }
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawStage(b, sW, sD) {
+  const x = b.x0+(b.W-sW*b.scale)/2, y = b.y0, w = sW*b.scale, h = sD*b.scale;
+  const g = ctx.createLinearGradient(0, y, 0, y+h);
+  g.addColorStop(0, 'rgba(230,0,18,.28)');
+  g.addColorStop(1, 'rgba(230,0,18,.08)');
+  ctx.fillStyle = g;
+  ctx.fillRect(x, y, w, h);
+  ctx.strokeStyle = '#e60012';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = 'rgba(230,0,18,.8)';
+  ctx.font = 'bold 14px Cairo';
+  ctx.textAlign = 'center';
+  ctx.fillText('المرحلة', x+w/2, y+h/2+5);
+}
+
+function drawCriticalCircles(b) {
   const room = getRoomAcoustics();
-  const R = room.R;
-  let totalDirect = 0;
-  let totalReverb = 0;
-
+  ctx.strokeStyle = 'rgba(168,85,247,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 5]);
   points.forEach(p => {
-    const dPx = Math.hypot(px - p.x, py - p.y);
-    const dM = Math.max(1, dPx / (worldBox.scale || 1));
-
-    const angleTo = Math.atan2(py - p.y, px - p.x) * 180 / Math.PI;
-    let delta = Math.abs(angleTo - p.angle);
-    if (delta > 180) delta = 360 - delta;
-    const halfH = (p.hAngle || 100) / 2;
-    let directivityGain = delta > halfH ? Math.max(0, 1 - (delta - halfH) / 60) : 1;
-
-    const atten = p.isLineArray ? -10 * Math.log10(dM) : -20 * Math.log10(dM);
-    const airLoss = AIR_ABS_DB_PER_M * dM;
-    const laBonus = p.isLineArray ? 10 * Math.log10(Math.max(1, p.elements / 4)) : 0;
-    const direct = (p.spl || 120) + atten - airLoss + laBonus +
-                   10 * Math.log10(Math.max(0.0001, directivityGain));
-    const reverb = (p.spl || 120) - 11 + 10 * Math.log10(4 / Math.max(0.1, R));
-
-    totalDirect += Math.pow(10, direct / 10);
-    totalReverb += Math.pow(10, reverb / 10);
+    if (p.type !== 'main') return;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, room.Dc*b.scale, 0, Math.PI*2);
+    ctx.stroke();
   });
-
-  const direct = totalDirect > 0 ? 10 * Math.log10(totalDirect) : 0;
-  const reverb = totalReverb > 0 ? 10 * Math.log10(totalReverb) : 0;
-  const total = 10 * Math.log10(Math.pow(10, direct / 10) + Math.pow(10, reverb / 10));
-  return { direct, reverb, total };
+  ctx.setLineDash([]);
 }
 
-function splColor(spl) {
-  if (spl < 60) return 'rgba(15,25,45,0.55)';
-  if (spl < 70) return 'rgba(30,80,140,0.5)';
-  if (spl < 80) return 'rgba(34,197,94,0.4)';
-  if (spl < 90) return 'rgba(132,204,22,0.4)';
-  if (spl < 100) return 'rgba(245,158,11,0.42)';
-  return 'rgba(239,68,68,0.5)';
+function drawBeam(p) {
+  if (!p.range) return;
+  const ang = p.angle*Math.PI/180;
+  const spread = (p.hAngle || 100)*Math.PI/180;
+  const range = p.range;
+  let c0, c1;
+  if (p.delay) { c0 = 'rgba(251,191,36,0.5)'; c1 = 'rgba(251,191,36,0)'; }
+  else if (p.type === 'main') { c0 = 'rgba(56,189,248,0.5)'; c1 = 'rgba(56,189,248,0)'; }
+  else if (p.type === 'sub') { c0 = 'rgba(229,192,123,0.5)'; c1 = 'rgba(229,192,123,0)'; }
+  else { c0 = 'rgba(34,197,94,0.5)'; c1 = 'rgba(34,197,94,0)'; }
+  const g = ctx.createRadialGradient(p.x, p.y, 4, p.x, p.y, range);
+  g.addColorStop(0, c0);
+  g.addColorStop(1, c1);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.arc(p.x, p.y, range, ang-spread/2, ang+spread/2);
+  ctx.closePath();
+  ctx.fill();
+  if (p === selectedPoint) {
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   رسم السماعات
-   ═══════════════════════════════════════════════════════════ */
+function drawWaves() {
+  points.forEach((p, i) => {
+    const maxR = p.type === 'main' ? 70 : p.type === 'sub' ? 50 : 60;
+    const c = p.delay ? '251,191,36' : p.type === 'main' ? '56,189,248' : p.type === 'sub' ? '229,192,123' : '34,197,94';
+    for (let r = 0; r < 2; r++) {
+      const off = (animT + r*0.5 + i*0.07) % 1;
+      const radius = off*maxR;
+      const alpha = (1-off)*0.5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(${c},${alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  });
+}
+
+function drawDelayLines() {
+  const delays = points.filter(p => p.delay);
+  if (!delays.length) return;
+  const mains = points.filter(p => p.type === 'main');
+  if (!mains.length) return;
+  delays.forEach(d => {
+    const nm = mains.reduce((a, b) =>
+      Math.hypot(a.x-d.x, a.y-d.y) < Math.hypot(b.x-d.x, b.y-d.y) ? a : b);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(251,191,36,0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(nm.x, nm.y);
+    ctx.lineTo(d.x, d.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const mx = (nm.x+d.x)/2, my = (nm.y+d.y)/2;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(mx-24, my-9, 48, 16);
+    ctx.strokeStyle = 'rgba(251,191,36,0.6)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(mx-24, my-9, 48, 16);
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 9px Cairo';
+    ctx.textAlign = 'center';
+    ctx.fillText((d.delayMs || 0) + ' ms', mx, my+3);
+    ctx.restore();
+  });
+}
+
 function drawSpeaker(p) {
   if (p.isLineArray) drawLineArrayIcon(p);
   else drawRegularSpeakerIcon(p);
@@ -1454,97 +1120,478 @@ function drawSpeaker(p) {
 
 function drawRegularSpeakerIcon(p) {
   const sel = p === selectedPoint;
-  const color = p.type === 'main' ? '#38bdf8' : p.type === 'sub' ? '#e5c07b' : '#22c55e';
+  const color = p.delay ? '#fbbf24' :
+    p.type === 'main' ? '#38bdf8' :
+    p.type === 'sub' ? '#e5c07b' : '#22c55e';
   const r = isTouch ? 12 : 9;
-
   if (sel) {
+    const pulse = 1 + 0.15*Math.sin(animT*4);
     ctx.beginPath();
-    ctx.arc(p.x, p.y, r + 7, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.arc(p.x, p.y, (r+7)*pulse, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
     ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
-
   ctx.beginPath();
-  ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+  ctx.arc(p.x, p.y, r, 0, Math.PI*2);
   ctx.fillStyle = sel ? '#fff' : color;
   ctx.fill();
   ctx.strokeStyle = '#fff';
   ctx.lineWidth = 2;
   ctx.stroke();
-
   ctx.beginPath();
-  ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+  ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
   ctx.fillStyle = '#000';
   ctx.fill();
-
   if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 10px Cairo';
     ctx.textAlign = 'right';
-    ctx.fillText(p.name, p.x - 13, p.y + 3);
+    ctx.fillText(p.name, p.x-13, p.y+3);
   }
 }
 
 function drawLineArrayIcon(p) {
   const sel = p === selectedPoint;
   const unitW = 12, unitH = 7, spacing = 2;
-  const ang = p.angle * Math.PI / 180;
-  const totalH = p.elements * (unitH + spacing);
-
+  const ang = p.angle*Math.PI/180;
+  const totalH = p.elements*(unitH+spacing);
   ctx.save();
   ctx.translate(p.x, p.y);
-  ctx.rotate(ang - Math.PI / 2);
-
+  ctx.rotate(ang - Math.PI/2);
   for (let i = 0; i < p.elements; i++) {
     ctx.fillStyle = sel ? '#fff' : 'rgba(56,189,248,0.9)';
-    ctx.fillRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
+    ctx.fillRect(-unitW/2, -(i*(unitH+spacing))-unitH/2, unitW, unitH);
     ctx.strokeStyle = '#0d1117';
     ctx.lineWidth = 1;
-    ctx.strokeRect(-unitW / 2, -(i * (unitH + spacing)) - unitH / 2, unitW, unitH);
+    ctx.strokeRect(-unitW/2, -(i*(unitH+spacing))-unitH/2, unitW, unitH);
   }
   ctx.restore();
-
   if (layers.labels && p.name && !isTouch) {
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 10px Cairo';
     ctx.textAlign = 'right';
-    ctx.fillText(p.name + ' (' + p.elements + ')', p.x - 14, p.y - totalH / 2 + 4);
+    ctx.fillText(p.name + ' (' + p.elements + ')', p.x-14, p.y-totalH/2+4);
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Pointer Events موحّد
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   7. 3D ENGINE
+   ═══════════════════════════════════════════════════════════════ */
+function getCamera3D() {
+  const L = +$('room_l').value || 40;
+  const W = +$('room_w').value || 25;
+  const H = +$('room_h').value || 10;
+  const tx = L/2, ty = H/2, tz = W/2;
+  const r = view3D.radius;
+  const cx = tx + r*Math.sin(view3D.phi)*Math.cos(view3D.theta);
+  const cy = ty + r*Math.cos(view3D.phi);
+  const cz = tz + r*Math.sin(view3D.phi)*Math.sin(view3D.theta);
+  let fx = tx-cx, fy = ty-cy, fz = tz-cz;
+  const flen = Math.hypot(fx, fy, fz) || 1;
+  fx /= flen; fy /= flen; fz /= flen;
+  let rx = -fz, ry = 0, rz = fx;
+  const rlen = Math.hypot(rx, ry, rz) || 1;
+  rx /= rlen; ry /= rlen; rz /= rlen;
+  const ux = ry*fz - rz*fy;
+  const uy = rz*fx - rx*fz;
+  const uz = rx*fy - ry*fx;
+  return { cx, cy, cz, fx, fy, fz, rx, ry, rz, ux, uy, uz };
+}
+
+function project3D(p, cam) {
+  const dx = p.x-cam.cx, dy = p.y-cam.cy, dz = p.z-cam.cz;
+  const camX = dx*cam.rx + dy*cam.ry + dz*cam.rz;
+  const camY = dx*cam.ux + dy*cam.uy + dz*cam.uz;
+  const camZ = dx*cam.fx + dy*cam.fy + dz*cam.fz;
+  if (camZ < 0.15) return null;
+  const f = view3D.focal;
+  return {
+    x: view3D.cx + camX*f/camZ,
+    y: view3D.cy - camY*f/camZ,
+    depth: camZ,
+    scale: f/camZ
+  };
+}
+
+function roomCoords2D(px, py) {
+  return {
+    x: (px-worldBox.x0)/worldBox.scale,
+    z: (py-worldBox.y0)/worldBox.scale
+  };
+}
+
+function getElevation(sp) {
+  const H = +$('room_h').value || 10;
+  if (sp.delay) return Math.max(2, H*0.42);
+  if (sp.isLineArray) return H*0.55;
+  if (sp.type === 'sub') return 0.45;
+  if (sp.type === 'side') return H*0.35;
+  if (sp.name.includes('15M') || sp.name.includes('152')) return 1.1;
+  return 2.5;
+}
+
+function speaker3DPosition(sp) {
+  const rc = roomCoords2D(sp.x, sp.y);
+  return { x: rc.x, y: getElevation(sp), z: rc.z };
+}
+
+function computeSPLAtRoom(rx, rz) {
+  return computeSPLAt(worldBox.x0 + rx*worldBox.scale, worldBox.y0 + rz*worldBox.scale);
+}
+
+function shadeColor3D(hex, factor) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${(r*factor)|0},${(g*factor)|0},${(b*factor)|0},0.95)`;
+}
+
+function buildSpeakerBox3D(sp) {
+  const pos = speaker3DPosition(sp);
+  const color = sp.delay ? '#fbbf24' :
+    sp.type === 'main' ? '#38bdf8' :
+    sp.type === 'sub' ? '#e5c07b' : '#22c55e';
+  let w, h, d;
+  if (sp.isLineArray) { w = 0.9; d = 0.5; h = 0.4 + (sp.elements||6)*0.13; }
+  else if (sp.type === 'sub') {
+    if (sp.name.includes('15M') || sp.name.includes('152')) { w = 0.6; h = 0.5; d = 0.5; }
+    else { w = 1.1; h = 1.0; d = 0.8; }
+  }
+  else if (sp.type === 'side') { w = 0.6; h = 0.9; d = 0.6; }
+  else { w = 0.8; h = 1.0; d = 0.7; }
+
+  const hw = w/2, hh = h/2, hd = d/2;
+  const p = pos;
+  const corners = [
+    { x:p.x-hw, y:p.y-hh, z:p.z-hd }, { x:p.x+hw, y:p.y-hh, z:p.z-hd },
+    { x:p.x+hw, y:p.y-hh, z:p.z+hd }, { x:p.x-hw, y:p.y-hh, z:p.z+hd },
+    { x:p.x-hw, y:p.y+hh, z:p.z-hd }, { x:p.x+hw, y:p.y+hh, z:p.z-hd },
+    { x:p.x+hw, y:p.y+hh, z:p.z+hd }, { x:p.x-hw, y:p.y+hh, z:p.z+hd }
+  ];
+  const faceDefs = [
+    { pts:[corners[0], corners[1], corners[5], corners[4]], shade:0.55 },
+    { pts:[corners[3], corners[2], corners[6], corners[7]], shade:0.7 },
+    { pts:[corners[0], corners[3], corners[7], corners[4]], shade:0.6 },
+    { pts:[corners[1], corners[2], corners[6], corners[5]], shade:0.65 },
+    { pts:[corners[4], corners[5], corners[6], corners[7]], shade:0.95 },
+    { pts:[corners[0], corners[1], corners[2], corners[3]], shade:0.4 }
+  ];
+  const stroke = sp.delay ? 'rgba(255,215,0,0.9)' : 'rgba(255,255,255,0.35)';
+  return faceDefs.map(f => ({
+    pts: f.pts,
+    fill: shadeColor3D(color, f.shade),
+    stroke,
+    strokeWidth: sp.delay ? 1.2 : 0.8,
+    category: 'speaker'
+  }));
+}
+
+function buildSpeakerCone3D(sp) {
+  const pos = speaker3DPosition(sp);
+  const range = sp.rangeM || 50;
+  const yaw = sp.angle*Math.PI/180;
+  const pitch = -15*Math.PI/180;
+  const fx = Math.cos(yaw)*Math.cos(pitch);
+  const fy = Math.sin(pitch);
+  const fz = Math.sin(yaw)*Math.cos(pitch);
+  let rx = -fz, ry = 0, rz = fx;
+  const rlen = Math.hypot(rx, ry, rz) || 1;
+  rx /= rlen; ry /= rlen; rz /= rlen;
+  const ux = fy*rz - fz*ry;
+  const uy = fz*rx - fx*rz;
+  const uz = fx*ry - fy*rx;
+  const hHalf = (sp.hAngle || 100)/2 * Math.PI/180;
+  const vHalf = (sp.vAngle || 60)/2 * Math.PI/180;
+  const farH = Math.tan(hHalf)*range;
+  const farV = Math.tan(vHalf)*range;
+  const farCenter = {
+    x: pos.x + fx*range, y: pos.y + fy*range, z: pos.z + fz*range
+  };
+  const corners = [
+    { x:farCenter.x-rx*farH-ux*farV, y:farCenter.y-ry*farH-uy*farV, z:farCenter.z-rz*farH-uz*farV },
+    { x:farCenter.x+rx*farH-ux*farV, y:farCenter.y+ry*farH-uy*farV, z:farCenter.z+rz*farH-uz*farV },
+    { x:farCenter.x+rx*farH+ux*farV, y:farCenter.y+ry*farH+uy*farV, z:farCenter.z+rz*farH+uz*farV },
+    { x:farCenter.x-rx*farH+ux*farV, y:farCenter.y-ry*farH+uy*farV, z:farCenter.z-rz*farH+uz*farV }
+  ];
+  const c = sp.delay ? '251,191,36' :
+    sp.type === 'main' ? '56,189,248' :
+    sp.type === 'sub' ? '229,192,123' : '34,197,94';
+  const faces = [];
+  for (let i = 0; i < 4; i++) {
+    const next = (i+1) % 4;
+    faces.push({
+      pts:[pos, corners[i], corners[next]],
+      fill:`rgba(${c},0.05)`,
+      stroke:`rgba(${c},0.35)`,
+      strokeWidth:0.5,
+      category:'cone'
+    });
+  }
+  faces.push({
+    pts: corners,
+    fill:`rgba(${c},0.1)`,
+    stroke:`rgba(${c},0.45)`,
+    strokeWidth:0.8,
+    category:'cone'
+  });
+  return faces;
+}
+
+function splColor3D(spl) {
+  if (spl < 60) return 'rgba(15,25,45,0.7)';
+  if (spl < 70) return 'rgba(30,80,140,0.65)';
+  if (spl < 80) return 'rgba(34,197,94,0.65)';
+  if (spl < 90) return 'rgba(132,204,22,0.65)';
+  if (spl < 100) return 'rgba(245,158,11,0.7)';
+  return 'rgba(239,68,68,0.75)';
+}
+
+function draw3D() {
+  if (!view3D.enabled || !view3D.canvas || !view3D.ctx) return;
+  const ctx3 = view3D.ctx;
+  const Wc = view3D.canvas._logicalW;
+  const Hc = view3D.canvas._logicalH;
+  const L = +$('room_l').value || 40;
+  const RW = +$('room_w').value || 25;
+  const RH = +$('room_h').value || 10;
+  const sW = +$('stage_w').value || 14;
+  const sD = +$('stage_d').value || 8;
+
+  // Background gradient
+  const bg = ctx3.createLinearGradient(0, 0, 0, Hc);
+  bg.addColorStop(0, '#0a1420');
+  bg.addColorStop(1, '#05080c');
+  ctx3.fillStyle = bg;
+  ctx3.fillRect(0, 0, Wc, Hc);
+
+  // Stars
+  ctx3.fillStyle = 'rgba(56,189,248,0.12)';
+  for (let i = 0; i < 50; i++) {
+    const x = (i*137.5) % Wc;
+    const y = (i*89.3) % Hc;
+    ctx3.fillRect(x, y, 1, 1);
+  }
+
+  const cam = getCamera3D();
+  view3D.cam = cam;
+  const faces = [];
+
+  // Floor with heatmap
+  const useHeat = layers.heat && points.length > 0;
+  if (useHeat) {
+    const cols = 26, rows = 18;
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        const x0 = (i/cols)*L, x1 = ((i+1)/cols)*L;
+        const z0 = (j/rows)*RW, z1 = ((j+1)/rows)*RW;
+        const spl = computeSPLAtRoom((x0+x1)/2, (z0+z1)/2);
+        faces.push({
+          pts:[{x:x0,y:0,z:z0},{x:x1,y:0,z:z0},{x:x1,y:0,z:z1},{x:x0,y:0,z:z1}],
+          fill: splColor3D(spl),
+          category:'floor'
+        });
+      }
+    }
+  } else {
+    faces.push({
+      pts:[{x:0,y:0,z:0},{x:L,y:0,z:0},{x:L,y:0,z:RW},{x:0,y:0,z:RW}],
+      fill:'rgba(10,20,32,0.92)',
+      stroke:'rgba(56,189,248,0.15)',
+      strokeWidth:1,
+      category:'floor'
+    });
+  }
+
+  // Walls
+  const wallFill = 'rgba(56,189,248,0.07)';
+  const wallStroke = 'rgba(56,189,248,0.55)';
+  faces.push({ pts:[{x:0,y:0,z:0},{x:0,y:RH,z:0},{x:0,y:RH,z:RW},{x:0,y:0,z:RW}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
+  faces.push({ pts:[{x:L,y:0,z:0},{x:L,y:RH,z:0},{x:L,y:RH,z:RW},{x:L,y:0,z:RW}], fill:'rgba(56,189,248,0.03)', stroke:'rgba(56,189,248,0.35)', strokeWidth:1, category:'wall' });
+  faces.push({ pts:[{x:0,y:0,z:0},{x:L,y:0,z:0},{x:L,y:RH,z:0},{x:0,y:RH,z:0}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
+  faces.push({ pts:[{x:0,y:0,z:RW},{x:L,y:0,z:RW},{x:L,y:RH,z:RW},{x:0,y:RH,z:RW}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
+
+  // Ceiling
+  faces.push({
+    pts:[{x:0,y:RH,z:0},{x:L,y:RH,z:0},{x:L,y:RH,z:RW},{x:0,y:RH,z:RW}],
+    fill:'rgba(56,189,248,0.02)',
+    stroke:'rgba(56,189,248,0.2)',
+    strokeWidth:1,
+    category:'ceiling'
+  });
+
+  // Stage
+  const stX0 = (L-sW)/2, stX1 = stX0 + sW, stH = 0.8;
+  faces.push({
+    pts:[{x:stX0,y:stH,z:0},{x:stX1,y:stH,z:0},{x:stX1,y:stH,z:sD},{x:stX0,y:stH,z:sD}],
+    fill:'rgba(230,0,18,0.35)',
+    stroke:'rgba(230,0,18,0.9)',
+    strokeWidth:2,
+    category:'stage'
+  });
+  faces.push({
+    pts:[{x:stX0,y:0,z:sD},{x:stX1,y:0,z:sD},{x:stX1,y:stH,z:sD},{x:stX0,y:stH,z:sD}],
+    fill:'rgba(230,0,18,0.22)',
+    stroke:'rgba(230,0,18,0.6)',
+    strokeWidth:1.5,
+    category:'stage'
+  });
+
+  // Audience cubes (if enabled)
+  if (layers.audience) {
+    const startZ = Math.max(3, sD+2);
+    const usableD = RW - startZ - 2;
+    const usableW = L - 6;
+    if (usableD > 2 && usableW > 2) {
+      const rowSp = Math.max(0.9, usableD/14);
+      const seatSp = Math.max(0.7, usableW/22);
+      const rows = Math.floor(usableD/rowSp);
+      const cols = Math.floor(usableW/seatSp);
+      const cubeH = 0.7, cubeW = 0.35;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cx = 3 + c*seatSp, cz = startZ + r*rowSp;
+          // top face
+          faces.push({
+            pts:[
+              {x:cx-cubeW,y:cubeH,z:cz-cubeW},{x:cx+cubeW,y:cubeH,z:cz-cubeW},
+              {x:cx+cubeW,y:cubeH,z:cz+cubeW},{x:cx-cubeW,y:cubeH,z:cz+cubeW}
+            ],
+            fill:'rgba(139,148,158,0.25)',
+            category:'audience'
+          });
+        }
+      }
+    }
+  }
+
+  // Cones
+  if (layers.beams) {
+    points.forEach(sp => {
+      buildSpeakerCone3D(sp).forEach(f => faces.push(f));
+    });
+  }
+
+  // Speakers
+  points.forEach(sp => {
+    buildSpeakerBox3D(sp).forEach(f => faces.push(f));
+  });
+
+  // Project & sort
+  const visible = [];
+  for (const f of faces) {
+    const proj = [];
+    let ok = true;
+    for (const p of f.pts) {
+      const pr = project3D(p, cam);
+      if (!pr) { ok = false; break; }
+      proj.push(pr);
+    }
+    if (!ok) continue;
+    let depth = 0;
+    for (const p of proj) depth += p.depth;
+    depth /= proj.length;
+    visible.push({
+      pts:f.pts, fill:f.fill, stroke:f.stroke, strokeWidth:f.strokeWidth,
+      category:f.category, proj, depth
+    });
+  }
+  visible.sort((a, b) => b.depth - a.depth);
+
+  // Render
+  for (const f of visible) {
+    ctx3.beginPath();
+    ctx3.moveTo(f.proj[0].x, f.proj[0].y);
+    for (let i = 1; i < f.proj.length; i++) ctx3.lineTo(f.proj[i].x, f.proj[i].y);
+    ctx3.closePath();
+    ctx3.fillStyle = f.fill;
+    ctx3.fill();
+    if (f.stroke) {
+      ctx3.strokeStyle = f.stroke;
+      ctx3.lineWidth = f.strokeWidth || 1;
+      ctx3.stroke();
+    }
+  }
+
+  // Labels
+  if (layers.labels) {
+    points.forEach(sp => {
+      const pos = speaker3DPosition(sp);
+      const pr = project3D(pos, cam);
+      if (!pr) return;
+      ctx3.fillStyle = sp.delay ? 'rgba(251,191,36,0.95)' : 'rgba(255,255,255,0.9)';
+      ctx3.font = 'bold 10px Cairo';
+      ctx3.textAlign = 'center';
+      ctx3.fillText(sp.name, pr.x, pr.y-15);
+    });
+  }
+
+  // HUD
+  const room = getRoomAcoustics();
+  ctx3.fillStyle = 'rgba(22,27,34,0.92)';
+  ctx3.fillRect(10, 10, 220, 130);
+  ctx3.strokeStyle = 'rgba(56,189,248,0.3)';
+  ctx3.lineWidth = 1;
+  ctx3.strokeRect(10, 10, 220, 130);
+  ctx3.fillStyle = '#38bdf8';
+  ctx3.font = 'bold 11px Cairo';
+  ctx3.textAlign = 'right';
+  ctx3.fillText('الأبعاد: ' + L + '×' + RW + '×' + RH + ' م', 218, 30);
+  ctx3.fillStyle = '#fff';
+  ctx3.font = '10px Cairo';
+  ctx3.fillText('الحجم: ' + room.V.toFixed(0) + ' م³', 218, 48);
+  ctx3.fillText('RT60 @ ' + BANDS[currentBand] + 'Hz: ' + room.RT60.toFixed(2) + ' s', 218, 64);
+  ctx3.fillText('Dc: ' + room.Dc.toFixed(1) + ' م', 218, 80);
+  ctx3.fillText('السماعات: ' + points.length, 218, 96);
+  const sti = stiAt(worldBox.x0+30, worldBox.y0+worldBox.H-30);
+  ctx3.fillStyle = sti != null && sti >= 0.6 ? '#22c55e' : '#f59e0b';
+  ctx3.fillText('STI: ' + (sti != null ? sti.toFixed(2) : '—'), 218, 112);
+  ctx3.fillStyle = 'rgba(168,85,247,0.85)';
+  ctx3.font = 'bold 10px Cairo';
+  ctx3.fillText('🎥 عرض ثلاثي الأبعاد', 218, 130);
+
+  // Camera info
+  ctx3.fillStyle = 'rgba(139,148,158,0.6)';
+  ctx3.font = '9px Cairo';
+  ctx3.textAlign = 'left';
+  ctx3.fillText('θ=' + (view3D.theta*180/Math.PI).toFixed(0) + '°  φ=' + (view3D.phi*180/Math.PI).toFixed(0) + '°  r=' + view3D.radius.toFixed(0) + 'm', 12, Hc-10);
+
+  view3D.dirty = false;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. 2D POINTER CONTROLS
+   ═══════════════════════════════════════════════════════════════ */
 function getPos(e) {
   const r = canvas.getBoundingClientRect();
   const Wc = canvas._logicalW || canvas.width;
   const Hc = canvas._logicalH || canvas.height;
   return {
-    x: (e.clientX - r.left) * (Wc / r.width),
-    y: (e.clientY - r.top) * (Hc / r.height)
+    x: (e.clientX-r.left)*(Wc/r.width),
+    y: (e.clientY-r.top)*(Hc/r.height)
   };
 }
 
 function clampToRoom(x, y) {
   const b = worldBox;
   return {
-    x: Math.max(b.x0 + 8, Math.min(b.x0 + b.W - 8, x)),
-    y: Math.max(b.y0 + 8, Math.min(b.y0 + b.H - 8, y))
+    x: Math.max(b.x0+8, Math.min(b.x0+b.W-8, x)),
+    y: Math.max(b.y0+8, Math.min(b.y0+b.H-8, y))
   };
 }
 
 const pointerState = {
-  isDown: false, isDragging: false,
-  startX: 0, startY: 0, startTime: 0,
-  longPressTimer: null, activeId: null
+  isDown:false, isDragging:false, startX:0, startY:0,
+  startTime:0, longPressTimer:null, activeId:null
 };
-
 function hitRadius() { return isTouch ? 26 : 16; }
 
 function findHit(pos) {
   let best = null, bestDist = hitRadius();
   for (const p of points) {
-    const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+    const d = Math.hypot(p.x-pos.x, p.y-pos.y);
     if (d < bestDist) { bestDist = d; best = p; }
   }
   return best;
@@ -1552,27 +1599,24 @@ function findHit(pos) {
 
 function addNewSpeaker(pos) {
   pushHistory();
-  let sel;
-  if (currentMode === 'main' || currentMode === 'side') sel = $('sel_main');
-  else sel = $('sel_extra');
-
+  const sel = (currentMode === 'main' || currentMode === 'side') ? $('sel_main') : $('sel_extra');
   const val = sel.value;
-  const cat = CATALOG[val] || { spl: 120, hAngle: 100, vAngle: 60, watt: 500 };
+  const cat = CATALOG[val] || {spl:120, hAngle:100, vAngle:60, watt:500};
   const newP = {
-    x: pos.x, y: pos.y,
-    type: currentMode,
-    name: (currentMode === 'side' ? 'جانبي: ' : '') + val,
-    angle: 90,
-    range: 60 * worldBox.scale, rangeM: 60,
-    spl: cat.spl, hAngle: cat.hAngle, vAngle: cat.vAngle, watt: cat.watt,
+    x:pos.x, y:pos.y, type:currentMode,
+    name:(currentMode === 'side' ? 'جانبي: ' : '') + val,
+    angle:90, range:60*worldBox.scale, rangeM:60,
+    spl:cat.spl, hAngle:cat.hAngle, vAngle:cat.vAngle, watt:cat.watt,
     isLineArray: val.startsWith('MLA') || val.startsWith('M10')
   };
   if (newP.isLineArray) newP.elements = 6;
   points.push(newP);
   selectedPoint = newP;
   showBeamControls(newP);
-  invalidateHeat(); draw(); updateKPI(); autosave();
-
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
   if (navigator.vibrate) navigator.vibrate(30);
 }
 
@@ -1586,12 +1630,14 @@ function beginLongPress(p) {
       points = points.filter(q => q !== p);
       selectedPoint = null;
       $('beamControls').classList.remove('on');
-      invalidateHeat(); draw(); updateKPI(); autosave();
+      invalidateHeat();
+      draw();
+      updateKPI();
+      autosave();
       if (navigator.vibrate) navigator.vibrate(50);
     }
   }, 700);
 }
-
 function cancelLongPress() {
   if (pointerState.longPressTimer) {
     clearTimeout(pointerState.longPressTimer);
@@ -1600,24 +1646,22 @@ function cancelLongPress() {
 }
 
 canvas.addEventListener('pointerdown', e => {
+  if (view3D.enabled) return;
   if (e.button !== undefined && e.button !== 0) return;
   e.preventDefault();
-  try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+  try { canvas.setPointerCapture(e.pointerId); } catch(_) {}
   pointerState.activeId = e.pointerId;
-
   const pos = getPos(e);
   const hit = findHit(pos);
-
   pointerState.isDown = true;
   pointerState.isDragging = false;
   pointerState.startX = pos.x;
   pointerState.startY = pos.y;
   pointerState.startTime = Date.now();
-
   if (hit) {
     selectedPoint = hit;
     dragTarget = hit;
-    dragOffset = { x: pos.x - hit.x, y: pos.y - hit.y };
+    dragOffset = { x:pos.x-hit.x, y:pos.y-hit.y };
     showBeamControls(hit);
     beginLongPress(hit);
   } else {
@@ -1627,26 +1671,24 @@ canvas.addEventListener('pointerdown', e => {
 });
 
 canvas.addEventListener('pointermove', e => {
+  if (view3D.enabled) return;
   const pos = getPos(e);
-
   if (pointerState.isDown) {
-    const moved = Math.hypot(pos.x - pointerState.startX, pos.y - pointerState.startY);
-    if (moved > 8) {
-      pointerState.isDragging = true;
-      cancelLongPress();
-    }
+    const moved = Math.hypot(pos.x-pointerState.startX, pos.y-pointerState.startY);
+    if (moved > 8) { pointerState.isDragging = true; cancelLongPress(); }
   }
-
   if (dragTarget && pointerState.isDown) {
-    const c = clampToRoom(pos.x - dragOffset.x, pos.y - dragOffset.y);
+    const c = clampToRoom(pos.x-dragOffset.x, pos.y-dragOffset.y);
     dragTarget.x = c.x;
     dragTarget.y = c.y;
-    invalidateHeat(); draw();
+    invalidateHeat();
+    draw();
   } else if (!pointerState.isDown && !isTouch) {
     const b = worldBox;
-    if (pos.x >= b.x0 && pos.x <= b.x0 + b.W && pos.y >= b.y0 && pos.y <= b.y0 + b.H) {
+    if (pos.x >= b.x0 && pos.x <= b.x0+b.W && pos.y >= b.y0 && pos.y <= b.y0+b.H) {
       cursorSPL = computeSPLAt(pos.x, pos.y);
-      cursorX = pos.x; cursorY = pos.y;
+      cursorX = pos.x;
+      cursorY = pos.y;
       $('cursorSPL').textContent = cursorSPL.toFixed(1) + ' dB';
     } else {
       cursorSPL = null;
@@ -1656,13 +1698,12 @@ canvas.addEventListener('pointermove', e => {
 });
 
 canvas.addEventListener('pointerup', e => {
-  try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+  if (view3D.enabled) return;
+  try { canvas.releasePointerCapture(e.pointerId); } catch(_) {}
   const wasDown = pointerState.isDown;
   const wasDrag = pointerState.isDragging;
   const hadDragTarget = !!dragTarget;
-
   cancelLongPress();
-
   if (wasDown && !wasDrag && !hadDragTarget) {
     const dt = Date.now() - pointerState.startTime;
     if (dt < 500) {
@@ -1671,12 +1712,7 @@ canvas.addEventListener('pointerup', e => {
       if (!hit) addNewSpeaker(pos);
     }
   }
-
-  if (dragTarget) {
-    dragTarget = null;
-    updateKPI(); autosave();
-  }
-
+  if (dragTarget) { dragTarget = null; updateKPI(); autosave(); }
   pointerState.isDown = false;
   pointerState.isDragging = false;
   pointerState.activeId = null;
@@ -1690,49 +1726,570 @@ canvas.addEventListener('pointercancel', () => {
   pointerState.isDragging = false;
   pointerState.activeId = null;
 });
-
 canvas.addEventListener('pointerleave', () => {
   if (!isTouch) { cursorSPL = null; $('cursorSPL').textContent = '—'; }
 });
-
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-canvas.addEventListener('mousedown', e => {
-  if (e.button === 2) {
+/* ═══════════════════════════════════════════════════════════════
+   9. 3D CAMERA CONTROLS
+   ═══════════════════════════════════════════════════════════════ */
+function toggle3D() {
+  view3D.enabled = !view3D.enabled;
+  const c2 = canvas, c3 = view3D.canvas;
+  if (view3D.enabled) {
+    c2.style.display = 'none';
+    c3.style.display = 'block';
+    $('cameraPresets').classList.add('on');
+    $('hint3D').classList.add('on');
+    document.querySelector('.hint-bar').style.display = 'none';
+    document.querySelector('.cursor-info').style.display = 'none';
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const H = +$('room_h').value || 10;
+    if (!view3D.radius || view3D.radius < 10) view3D.radius = Math.max(L, W, H)*1.4;
+    view3D.dirty = true;
+    draw3D();
+  } else {
+    c2.style.display = 'block';
+    c3.style.display = 'none';
+    $('cameraPresets').classList.remove('on');
+    $('hint3D').classList.remove('on');
+    document.querySelector('.hint-bar').style.display = '';
+    document.querySelector('.cursor-info').style.display = '';
+    draw();
+  }
+  const btn = $('tg3D');
+  if (btn) btn.classList.toggle('active-3d', view3D.enabled);
+}
+
+function setViewPreset(name) {
+  if (!view3D.enabled) return;
+  const L = +$('room_l').value, W = +$('room_w').value, H = +$('room_h').value;
+  switch (name) {
+    case 'iso': view3D.theta = Math.PI*0.3; view3D.phi = Math.PI*0.35; view3D.radius = Math.max(L, W, H)*1.4; break;
+    case 'front': view3D.theta = -Math.PI/2; view3D.phi = Math.PI/2; view3D.radius = L*1.7; break;
+    case 'top': view3D.theta = 0; view3D.phi = 0.12; view3D.radius = Math.max(L, W)*1.5; break;
+    case 'side': view3D.theta = 0; view3D.phi = Math.PI/2; view3D.radius = W*2; break;
+    case 'audience': view3D.theta = Math.PI/2; view3D.phi = Math.PI*0.48; view3D.radius = L*0.95; break;
+    case 'reset':
+    default: view3D.theta = Math.PI*0.3; view3D.phi = Math.PI*0.35; view3D.radius = Math.max(L, W, H)*1.4;
+  }
+  view3D.dirty = true;
+  draw3D();
+}
+
+function attach3DControls() {
+  const c = view3D.canvas;
+  if (!c) return;
+  c.addEventListener('pointerdown', e => {
+    if (!view3D.enabled) return;
     e.preventDefault();
-    const pos = getPos(e);
-    const hit = findHit(pos);
-    if (hit) {
-      pushHistory();
-      points = points.filter(p => p !== hit);
-      selectedPoint = null;
-      $('beamControls').classList.remove('on');
-      invalidateHeat(); draw(); updateKPI(); autosave();
+    try { c.setPointerCapture(e.pointerId); } catch(_) {}
+    view3D.pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    view3D.clickStartT = Date.now();
+    view3D.clickCandidate = { x:e.clientX, y:e.clientY };
+    if (view3D.pointers.size === 1) {
+      view3D.dragging = 'orbit';
+      view3D.lastX = e.clientX;
+      view3D.lastY = e.clientY;
+      c.classList.add('dragging');
+    } else if (view3D.pointers.size === 2) {
+      const pts = Array.from(view3D.pointers.values());
+      view3D.pinchDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
+      view3D.dragging = 'pinch';
+      view3D.clickCandidate = null;
+    }
+  });
+
+  c.addEventListener('pointermove', e => {
+    if (!view3D.enabled) return;
+    if (!view3D.pointers.has(e.pointerId)) return;
+    view3D.pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    if (view3D.clickCandidate) {
+      const dx = e.clientX-view3D.clickCandidate.x;
+      const dy = e.clientY-view3D.clickCandidate.y;
+      if (Math.hypot(dx, dy) > 6) view3D.clickCandidate = null;
+    }
+    if (view3D.dragging === 'orbit' && view3D.pointers.size === 1) {
+      const dx = e.clientX-view3D.lastX;
+      const dy = e.clientY-view3D.lastY;
+      view3D.theta += dx*0.008;
+      view3D.phi = Math.max(0.12, Math.min(Math.PI-0.12, view3D.phi-dy*0.008));
+      view3D.lastX = e.clientX;
+      view3D.lastY = e.clientY;
+      view3D.dirty = true;
+    } else if (view3D.dragging === 'pinch' && view3D.pointers.size === 2) {
+      const pts = Array.from(view3D.pointers.values());
+      const dist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
+      if (view3D.pinchDist > 0) {
+        view3D.radius = Math.max(8, Math.min(400, view3D.radius * (view3D.pinchDist/dist)));
+      }
+      view3D.pinchDist = dist;
+      view3D.dirty = true;
+    }
+  });
+
+  c.addEventListener('pointerup', e => {
+    if (!view3D.enabled) return;
+    try { c.releasePointerCapture(e.pointerId); } catch(_) {}
+    view3D.pointers.delete(e.pointerId);
+    c.classList.remove('dragging');
+    if (view3D.pointers.size === 0) {
+      if (view3D.clickCandidate && (Date.now()-view3D.clickStartT) < 400) {
+        const rect = c.getBoundingClientRect();
+        const lx = (e.clientX-rect.left)*(c._logicalW/rect.width);
+        const ly = (e.clientY-rect.top)*(c._logicalH/rect.height);
+        hitTest3D(lx, ly);
+      }
+      view3D.dragging = null;
+      view3D.clickCandidate = null;
+    } else if (view3D.pointers.size === 1) {
+      const p = Array.from(view3D.pointers.values())[0];
+      view3D.lastX = p.x;
+      view3D.lastY = p.y;
+      view3D.dragging = 'orbit';
+    }
+  });
+
+  c.addEventListener('pointercancel', e => {
+    view3D.pointers.delete(e.pointerId);
+    if (view3D.pointers.size === 0) {
+      view3D.dragging = null;
+      view3D.clickCandidate = null;
+      c.classList.remove('dragging');
+    }
+  });
+
+  c.addEventListener('wheel', e => {
+    if (!view3D.enabled) return;
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 1.1 : 0.9;
+    view3D.radius = Math.max(8, Math.min(400, view3D.radius*factor));
+    view3D.dirty = true;
+  }, { passive:false });
+
+  c.addEventListener('contextmenu', e => e.preventDefault());
+}
+
+function hitTest3D(lx, ly) {
+  if (!view3D.cam) return;
+  let best = null, bestDist = 35;
+  points.forEach(sp => {
+    const pos = speaker3DPosition(sp);
+    const pr = project3D(pos, view3D.cam);
+    if (!pr) return;
+    const d = Math.hypot(pr.x-lx, pr.y-ly);
+    if (d < bestDist) { bestDist = d; best = sp; }
+  });
+  if (best) {
+    selectedPoint = best;
+    showBeamControls(best);
+    $('beamControls').classList.add('on');
+    view3D.dirty = true;
+    draw3D();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. SPEAKER OPS (add, delete, mirror, delay)
+   ═══════════════════════════════════════════════════════════════ */
+function updateSelected() {
+  if (!selectedPoint) return;
+  selectedPoint.angle = parseInt($('beam_angle').value);
+  const rangeM = parseInt($('beam_range').value);
+  selectedPoint.rangeM = rangeM;
+  selectedPoint.range = rangeM*worldBox.scale;
+  if (selectedPoint.isLineArray) selectedPoint.elements = parseInt($('la_elements').value);
+  $('sel_name').innerText = selectedPoint.name + ' · ' + selectedPoint.angle + '°';
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+  drawPolar();
+}
+
+function showBeamControls(p) {
+  $('sel_name').innerText = p.name + ' · ' + p.angle + '°';
+  $('beam_angle').value = p.angle;
+  $('beam_range').value = Math.round(p.rangeM ?? (p.range/worldBox.scale));
+  $('laCtrl').style.display = p.isLineArray ? 'block' : 'none';
+  if (p.isLineArray) $('la_elements').value = p.elements;
+  $('beamControls').classList.add('on');
+  drawPolar();
+}
+
+function deleteSelected() {
+  if (!selectedPoint) return;
+  pushHistory();
+  points = points.filter(p => p !== selectedPoint);
+  selectedPoint = null;
+  $('sel_name').innerText = '-- اختر --';
+  $('beamControls').classList.remove('on');
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+  drawPolar();
+}
+
+function autoDelay() {
+  const mains = points.filter(p => p.type === 'main');
+  if (!mains.length) return alert('وزّع النظام الرئيسي أولاً');
+  const W = +$('room_w').value, sD = +$('stage_d').value;
+  if (W-sD < 15) return alert('عمق الجمهور أقل من 15م — التأخير غير ضروري');
+  pushHistory();
+  points = points.filter(p => !p.delay);
+  const b = getWorldBox();
+  const y = b.y0 + b.H*0.55;
+  [0.25, 0.75].forEach(f => {
+    const x = b.x0 + b.W*f;
+    const dm = Math.min(...mains.map(m => Math.hypot(x-m.x, y-m.y)))/b.scale;
+    points.push({
+      x, y, type:'side', name:'HD315A تأخير', angle:90,
+      range:W*b.scale*0.45, rangeM:W*0.45,
+      spl:131, hAngle:90, vAngle:60, watt:1000,
+      delay:true, delayMs:+(dm/343*1000+10).toFixed(1)
+    });
+  });
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+}
+
+function mirrorSel() {
+  const p = selectedPoint;
+  if (!p) return alert('اختر سماعة أولاً');
+  pushHistory();
+  const q = JSON.parse(JSON.stringify(p));
+  const b = worldBox;
+  q.x = 2*(b.x0 + b.W/2) - p.x;
+  q.angle = ((180-p.angle) % 360 + 360) % 360;
+  q.name = p.name.replace('يسار','§').replace('يمين','يسار').replace('§','يمين');
+  points.push(q);
+  selectedPoint = q;
+  showBeamControls(q);
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+}
+
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.tool-btn[id^="btn_"]').forEach(b => b.classList.remove('active'));
+  $('btn_' + m).classList.add('active');
+}
+
+function toggle(key) {
+  layers[key] = !layers[key];
+  const btn = $('tg' + key.charAt(0).toUpperCase() + key.slice(1));
+  if (btn) btn.classList.toggle('on', layers[key]);
+  if (key === 'heat') $('legend').classList.toggle('on', layers.heat);
+  invalidateHeat();
+  if (view3D.enabled) { view3D.dirty = true; draw3D(); }
+  else draw();
+}
+
+function toggleSidebar() {
+  $('sidebar').classList.toggle('collapsed');
+  setTimeout(() => { setupCanvasSize(); draw(); }, 320);
+}
+
+function pushHistory() {
+  history.push(JSON.stringify(points));
+  if (history.length > 60) history.shift();
+  redoStack = [];
+}
+function undo() {
+  if (!history.length) return;
+  redoStack.push(JSON.stringify(points));
+  points = JSON.parse(history.pop());
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  invalidateHeat();
+  draw();
+  updateKPI();
+}
+function redo() {
+  if (!redoStack.length) return;
+  history.push(JSON.stringify(points));
+  points = JSON.parse(redoStack.pop());
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  invalidateHeat();
+  draw();
+  updateKPI();
+}
+function resetCanvas() {
+  if (!confirm('تصفير المخطط بالكامل؟')) return;
+  pushHistory();
+  points = [];
+  selectedPoint = null;
+  $('sel_name').innerText = '-- اختر --';
+  $('beamControls').classList.remove('on');
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. A/B SCENARIOS
+   ═══════════════════════════════════════════════════════════════ */
+function metrics() {
+  const b = worldBox;
+  const t = +$('spl_target').value || 98;
+  const s = [];
+  for (let py = 30; py < b.H-30; py += 40)
+    for (let px = 30; px < b.W-30; px += 40)
+      s.push(computeSPLAt(b.x0+px, b.y0+py));
+  const room = getRoomAcoustics();
+  return {
+    n: points.length,
+    W: points.reduce((a,p) => a+(p.watt||0)*(p.isLineArray?p.elements:1), 0),
+    cov: s.length ? s.filter(v => v >= t-3 && v <= t+6).length/s.length*100 : 0,
+    uni: s.length ? Math.max(...s)-Math.min(...s) : 0,
+    sti: stiAt(b.x0+30, b.y0+b.H-30),
+    rt: room.RT60
+  };
+}
+function saveScen(k) {
+  scen[k] = {
+    pts: JSON.parse(JSON.stringify(points)),
+    m: metrics(),
+    cam: { theta:view3D.theta, phi:view3D.phi, radius:view3D.radius }
+  };
+  showAB();
+  if (navigator.vibrate) navigator.vibrate(20);
+}
+function loadScen(k) {
+  if (!scen[k]) return;
+  pushHistory();
+  points = JSON.parse(JSON.stringify(scen[k].pts));
+  if (scen[k].cam) Object.assign(view3D, scen[k].cam);
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  invalidateHeat();
+  if (view3D.enabled) draw3D(); else draw();
+  updateKPI();
+}
+function showAB() {
+  const A = scen.A?.m, B = scen.B?.m;
+  const f = (m,k,d=0) => m && m[k] != null ? m[k].toFixed(d) : '—';
+  const row = (l,k,d) => `<tr><td>${l}</td><td>${f(A,k,d)}</td><td>${f(B,k,d)}</td></tr>`;
+  $('abOut').innerHTML = `<table>
+    <tr style="color:#38bdf8"><th></th><th>A</th><th>B</th></tr>
+    ${row('سماعات','n')}${row('واط','W')}${row('تغطية%','cov')}${row('توحيد dB','uni',1)}${row('STI','sti',2)}${row('RT60','rt',2)}
+  </table>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   12. POLAR PATTERN
+   ═══════════════════════════════════════════════════════════════ */
+const POLAR_SIZE = 170;
+function setupPolarDPI() {
+  const c = $('polarCv');
+  if (!c || c._dpi) return;
+  c.width = POLAR_SIZE*DPR;
+  c.height = POLAR_SIZE*DPR;
+  c.style.width = POLAR_SIZE + 'px';
+  c.style.height = POLAR_SIZE + 'px';
+  c.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0);
+  c._dpi = true;
+}
+function drawPolar() {
+  const c = $('polarCv');
+  if (!c) return;
+  setupPolarDPI();
+  const g = c.getContext('2d');
+  const S = POLAR_SIZE, cx = S/2, cy = S/2, R = S/2-16;
+  g.clearRect(0, 0, S, S);
+  g.strokeStyle = '#30363d';
+  g.fillStyle = '#8b949e';
+  g.font = '9px Cairo';
+  g.lineWidth = 1;
+  g.textAlign = 'left';
+  [0, 10, 20, 30].forEach(db => {
+    g.beginPath();
+    g.arc(cx, cy, R*(40-db)/40, 0, 7);
+    g.stroke();
+    g.fillText('-' + db, cx+2, cy - R*(40-db)/40 + 9);
+  });
+  const p = selectedPoint;
+  if (!p) {
+    g.fillStyle = 'rgba(139,148,158,0.5)';
+    g.font = '11px Cairo';
+    g.textAlign = 'center';
+    g.fillText('اختر سماعة', cx, cy+4);
+    return;
+  }
+  const half = (p.hAngle || 100)/2;
+  g.beginPath();
+  for (let a = -180; a <= 180; a += 2) {
+    const r = R*(40 - Math.min(40, 6*(Math.abs(a)/half)**2))/40;
+    const t = (a-90)*Math.PI/180;
+    g[a === -180 ? 'moveTo' : 'lineTo'](cx + r*Math.cos(t), cy + r*Math.sin(t));
+  }
+  g.closePath();
+  g.strokeStyle = '#38bdf8';
+  g.lineWidth = 2;
+  g.stroke();
+  g.fillStyle = 'rgba(56,189,248,0.15)';
+  g.fill();
+  // Direction indicator
+  const th = (p.angle-90)*Math.PI/180;
+  g.strokeStyle = 'rgba(255,255,255,0.5)';
+  g.lineWidth = 1.5;
+  g.beginPath();
+  g.moveTo(cx, cy);
+  g.lineTo(cx + R*Math.cos(th), cy + R*Math.sin(th));
+  g.stroke();
+  g.fillStyle = '#fff';
+  g.font = 'bold 10px Cairo';
+  g.textAlign = 'center';
+  g.fillText(p.angle + '°', cx + (R-8)*Math.cos(th), cy + (R-8)*Math.sin(th) + 4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. SMART LAYOUTS
+   ═══════════════════════════════════════════════════════════════ */
+function getEventProfile() {
+  const type = $('event_type').value;
+  const L = +$('room_l').value;
+  let load = 'light';
+  if (L > 30) load = 'heavy';
+  else if (L > 18) load = 'medium';
+  if (type === 'auto') {
+    if (L > 30) return { type:'concert', load };
+    if (L > 20) return { type:'theater', load };
+    return { type:'conference', load };
+  }
+  return { type, load };
+}
+
+function applySmartLayout() {
+  pushHistory();
+  points = [];
+  selectedPoint = null;
+  $('beamControls').classList.remove('on');
+  const profile = getEventProfile();
+  if (profile.type === 'concert') deployLineArray(profile);
+  else if (profile.type === 'conference') deployConference(profile);
+  else if (profile.type === 'theater') deployTheater(profile);
+  else deployPointSource(profile);
+  invalidateHeat();
+  draw();
+  updateKPI();
+  autosave();
+}
+
+function deployLineArray(profile) {
+  const b = getWorldBox();
+  const L = +$('room_l').value, W = +$('room_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const stX = b.x0 + (L*b.scale - sW*b.scale)/2;
+  let elementsPerSide = Math.max(6, Math.ceil(L/8)*2);
+  if (elementsPerSide % 2 !== 0) elementsPerSide++;
+  points.push({ x:stX-25, y:b.y0+sD*b.scale/2, type:'main', name:'MLA212 يسار',
+    angle:98, range:L*b.scale*0.95, rangeM:L*0.95, spl:138, hAngle:90, vAngle:10,
+    watt:900, isLineArray:true, elements:elementsPerSide/2 });
+  points.push({ x:stX+sW*b.scale+25, y:b.y0+sD*b.scale/2, type:'main', name:'MLA212 يمين',
+    angle:82, range:L*b.scale*0.95, rangeM:L*0.95, spl:138, hAngle:90, vAngle:10,
+    watt:900, isLineArray:true, elements:elementsPerSide/2 });
+  const subCount = profile.load === 'heavy' ? 6 : 4;
+  for (let i = 0; i < subCount; i++) {
+    points.push({ x:stX+(sW*b.scale/Math.max(1, subCount-1))*i,
+      y:b.y0+sD*b.scale+20, type:'sub', name:'DB-218 3G', angle:90,
+      range:200*b.scale, rangeM:200, spl:140, hAngle:180, vAngle:60, watt:1400 });
+  }
+  const sideCount = profile.load === 'heavy' ? 3 : 2;
+  for (let i = 0; i < sideCount; i++) {
+    const yPos = b.y0 + (W*b.scale/(sideCount+1))*(i+1);
+    points.push({ x:b.x0+12, y:yPos, type:'side', name:'HD315A يسار',
+      angle:0, range:W*b.scale*0.5, rangeM:W*0.5, spl:131, hAngle:90, vAngle:60, watt:1000 });
+    points.push({ x:b.x0+L*b.scale-12, y:yPos, type:'side', name:'HD315A يمين',
+      angle:180, range:W*b.scale*0.5, rangeM:W*0.5, spl:131, hAngle:90, vAngle:60, watt:1000 });
+  }
+  const monCount = sW > 12 ? 6 : 4;
+  for (let i = 0; i < monCount; i++) {
+    points.push({ x:stX+(sW*b.scale/Math.max(1, monCount-1))*i,
+      y:b.y0+sD*b.scale-8, type:'sub', name:'DB-15M 3G', angle:270,
+      range:120*b.scale, rangeM:120, spl:128, hAngle:90, vAngle:60, watt:500 });
+  }
+}
+
+function deployPointSource(profile) {
+  const b = getWorldBox();
+  const L = +$('room_l').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const stX = b.x0 + (L*b.scale - sW*b.scale)/2;
+  points.push({ x:stX-15, y:b.y0+sD*b.scale/2, type:'main', name:'DB-25 NW يسار',
+    angle:75, range:L*b.scale*0.9, rangeM:L*0.9, spl:133, hAngle:100, vAngle:70, watt:1000 });
+  points.push({ x:stX+sW*b.scale+15, y:b.y0+sD*b.scale/2, type:'main', name:'DB-25 NW يمين',
+    angle:105, range:L*b.scale*0.9, rangeM:L*0.9, spl:133, hAngle:100, vAngle:70, watt:1000 });
+  for (let i = 0; i < 2; i++) {
+    points.push({ x:stX+(sW*b.scale)*i+40, y:b.y0+sD*b.scale+20, type:'sub',
+      name:'DB-218 3G', angle:90, range:150*b.scale, rangeM:150, spl:140, hAngle:180, vAngle:60, watt:1400 });
+  }
+  for (let i = 0; i < 4; i++) {
+    points.push({ x:stX+(sW*b.scale/3)*i, y:b.y0+sD*b.scale-8, type:'sub',
+      name:'DB-15M 3G', angle:270, range:100*b.scale, rangeM:100, spl:128, hAngle:90, vAngle:60, watt:500 });
+  }
+}
+
+function deployTheater(profile) {
+  const b = getWorldBox();
+  const L = +$('room_l').value, W = +$('room_w').value;
+  const sW = +$('stage_w').value, sD = +$('stage_d').value;
+  const stX = b.x0 + (L*b.scale - sW*b.scale)/2;
+  points.push({ x:stX+sW*b.scale/2, y:b.y0+sD*b.scale/2, type:'main', name:'MLA210 وسط',
+    angle:90, range:L*b.scale*0.85, rangeM:L*0.85, spl:135, hAngle:90, vAngle:10,
+    watt:700, isLineArray:true, elements:6 });
+  points.push({ x:stX-25, y:b.y0+sD*b.scale/2, type:'main', name:'HD315A يسار',
+    angle:80, range:L*b.scale*0.85, rangeM:L*0.85, spl:131, hAngle:90, vAngle:60, watt:1000 });
+  points.push({ x:stX+sW*b.scale+25, y:b.y0+sD*b.scale/2, type:'main', name:'HD315A يمين',
+    angle:100, range:L*b.scale*0.85, rangeM:L*0.85, spl:131, hAngle:90, vAngle:60, watt:1000 });
+  for (let i = 0; i < 3; i++) {
+    points.push({ x:stX+(sW*b.scale/2)*i, y:b.y0+sD*b.scale+20, type:'sub',
+      name:'DB-218 3G', angle:90, range:150*b.scale, rangeM:150, spl:140, hAngle:180, vAngle:60, watt:1400 });
+  }
+}
+
+function deployConference(profile) {
+  const b = getWorldBox();
+  const L = +$('room_l').value, W = +$('room_w').value;
+  const rows = 3, cols = 4;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      points.push({ x:b.x0+(L*b.scale/(cols+1))*(c+1),
+        y:b.y0+80+(W*b.scale-120)/Math.max(1, rows-1)*r,
+        type:'main', name:'MTL-700 3G', angle:90, range:150*b.scale, rangeM:150,
+        spl:126, hAngle:90, vAngle:60, watt:500 });
     }
   }
-});
+}
 
-/* ═══════════════════════════════════════════════════════════
-   KPI + التوحيد + RT60
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   14. KPIs
+   ═══════════════════════════════════════════════════════════════ */
 function computeUniformity() {
   if (!points.length) return null;
   const b = worldBox;
   const samples = [];
   const step = isTouch ? 70 : 50;
-  for (let py = 40; py < b.H - 40; py += step) {
-    for (let px = 40; px < b.W - 40; px += step) {
-      samples.push(computeSPLAt(b.x0 + px, b.y0 + py));
-    }
-  }
+  for (let py = 40; py < b.H-40; py += step)
+    for (let px = 40; px < b.W-40; px += step)
+      samples.push(computeSPLAt(b.x0+px, b.y0+py));
   if (!samples.length) return null;
-  return Math.max(...samples) - Math.min(...samples);
+  return Math.max(...samples)-Math.min(...samples);
 }
 
 function computeAmpChannels() {
   let ch = 0;
   points.forEach(p => {
-    if (p.isLineArray) ch += Math.ceil(p.elements / 3);
+    if (p.isLineArray) ch += Math.ceil(p.elements/3);
     else if (p.watt >= 1000) ch += 1;
     else ch += 0.5;
   });
@@ -1741,32 +2298,35 @@ function computeAmpChannels() {
 
 function getRT60Target() {
   const t = $('event_type').value;
-  if (t === 'conference') return { min: 0.4, max: 0.8, ideal: 'محاضرة/مؤتمر' };
-  if (t === 'theater') return { min: 0.8, max: 1.2, ideal: 'مسرح' };
-  if (t === 'concert') return { min: 1.2, max: 1.6, ideal: 'حفل موسيقي' };
-  if (t === 'wedding') return { min: 0.8, max: 1.2, ideal: 'زفاف' };
-  return { min: 0.8, max: 1.4, ideal: 'متعدد الاستخدام' };
+  if (t === 'conference') return { min:0.4, max:0.8, ideal:'محاضرة' };
+  if (t === 'theater') return { min:0.8, max:1.2, ideal:'مسرح' };
+  if (t === 'concert') return { min:1.2, max:1.6, ideal:'حفل موسيقي' };
+  if (t === 'wedding') return { min:0.8, max:1.2, ideal:'زفاف' };
+  return { min:0.8, max:1.4, ideal:'متعدد' };
 }
 
 function updateRoomInfo() {
   const room = getRoomAcoustics();
   const target = getRT60Target();
-
   $('rt60Value').textContent = room.RT60.toFixed(2) + ' s';
+  $('rt60BandLabel').textContent = 'RT60 Sabine عند ' + BANDS[currentBand] + ' Hz';
   $('infoVolume').textContent = room.V.toFixed(0) + ' م³';
   $('infoAbs').textContent = room.A.toFixed(1) + ' Sabins';
+  $('infoEyring').textContent = room.RT60_eyring.toFixed(2) + ' s';
   $('infoAlpha').textContent = room.alpha_avg.toFixed(3);
   $('infoDc').textContent = room.Dc.toFixed(2) + ' م';
   $('infoFs').textContent = room.f_s.toFixed(0) + ' Hz';
+  const sti = stiAt(worldBox.x0+30, worldBox.y0+worldBox.H-30);
+  $('infoSTI').textContent = sti != null ? sti.toFixed(2) + ' ' + stiLabel(sti) : '—';
 
   const statusEl = $('rt60Status');
   statusEl.className = 'status';
   if (room.RT60 < target.min) {
     statusEl.classList.add('warn');
-    statusEl.textContent = '⚠️ قصير جداً (' + target.ideal + ': ' + target.min + '–' + target.max + 's)';
+    statusEl.textContent = '⚠️ قصير (' + target.ideal + ')';
   } else if (room.RT60 > target.max) {
     statusEl.classList.add('bad');
-    statusEl.textContent = '❌ طويل (صدى مفرط)';
+    statusEl.textContent = '❌ طويل (صدى)';
   } else {
     statusEl.classList.add('ok');
     statusEl.textContent = '✅ مناسب لـ' + target.ideal;
@@ -1775,166 +2335,152 @@ function updateRoomInfo() {
 
 function updateKPI() {
   updateRoomInfo();
-
   let totalW = 0, maxSpl = 0;
   points.forEach(p => {
-    totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1);
+    totalW += (p.watt||0)*(p.isLineArray?p.elements:1);
     maxSpl = Math.max(maxSpl, p.spl || 0);
   });
-
   const target = +$('spl_target').value || 98;
   let coverage = 0;
   if (points.length) {
     const b = worldBox;
     let good = 0, total = 0;
     const step = isTouch ? 55 : 40;
-    for (let py = 30; py < b.H - 30; py += step) {
-      for (let px = 30; px < b.W - 30; px += step) {
-        const spl = computeSPLAt(b.x0 + px, b.y0 + py);
+    for (let py = 30; py < b.H-30; py += step) {
+      for (let px = 30; px < b.W-30; px += step) {
+        const spl = computeSPLAt(b.x0+px, b.y0+py);
         total++;
-        // Indoor: نطاق أضيق ±3 dB
-        if (spl >= target - 3 && spl <= target + 6) good++;
+        if (spl >= target-3 && spl <= target+6) good++;
       }
     }
-    coverage = total ? (good / total) * 100 : 0;
+    coverage = total ? (good/total)*100 : 0;
   }
-
   const uni = computeUniformity();
   const amps = computeAmpChannels();
-
   $('kpiSpkV').textContent = points.length;
   $('kpiPwrV').textContent = totalW.toLocaleString();
   $('kpiCovV').textContent = points.length ? coverage.toFixed(0) + '%' : '—';
   $('kpiSplV').textContent = points.length ? maxSpl + ' dB' : '—';
   $('kpiUniV').textContent = uni !== null ? uni.toFixed(1) : '—';
   $('kpiAmpV').textContent = points.length ? amps : '—';
-
   $('kpiCov').className = 'kpi ' + (!points.length ? '' : coverage >= 75 ? 'ok' : 'warn');
   $('kpiSpl').className = 'kpi ' + (!points.length ? '' : maxSpl >= 130 ? 'ok' : 'warn');
   $('kpiUni').className = 'kpi ' + (uni === null ? '' : uni <= 6 ? 'ok' : 'warn');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   القرار الهندسي
-   ═══════════════════════════════════════════════════════════ */
+function setBand(i) {
+  currentBand = i;
+  document.querySelectorAll('.band-selector button').forEach(b => {
+    b.classList.toggle('active', +b.dataset.band === i);
+  });
+  $('legendBand').textContent = BANDS[i] >= 1000 ? (BANDS[i]/1000) + 'k' : BANDS[i];
+  roomBase = null;
+  invalidateHeat();
+  if (view3D.enabled) { view3D.dirty = true; draw3D(); }
+  else draw();
+  updateKPI();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   15. ENGINEERING DECISION + REPORT
+   ═══════════════════════════════════════════════════════════════ */
 function buildEngineeringDecision() {
   const profile = getEventProfile();
   const L = +$('room_l').value, W = +$('room_w').value, H = +$('room_h').value;
   const room = getRoomAcoustics();
-
   const mainCount = points.filter(p => p.type === 'main').length;
-  const sideCount = points.filter(p => p.type === 'side').length;
+  const sideCount = points.filter(p => p.type === 'side' && !p.delay).length;
   const subCount = points.filter(p => p.type === 'sub' && p.name.includes('218')).length;
-  const monitorCount = points.filter(p => p.name.includes('15M') || p.name.includes('152')).length;
+  const delayCount = points.filter(p => p.delay).length;
   const hasLineArray = points.some(p => p.isLineArray);
-
   let totalW = 0;
-  points.forEach(p => { totalW += (p.watt || 0) * (p.isLineArray ? p.elements : 1); });
-  const ampRec = Math.ceil(totalW * 1.3);
-
-  const farX = worldBox.x0 + 30;
-  const farY = worldBox.y0 + worldBox.H - 30;
-  const dr = points.length ? computeDirectReverbAt(farX, farY) : { direct: 0, reverb: 0, total: 0 };
-
-  const delayMs = ((L * 0.5) / 343) * 1000;
-
-  const mainSpk = points.find(p => p.type === 'main') || points[0];
-  const hAngle = mainSpk ? mainSpk.hAngle : 90;
-  const vAngle = mainSpk ? mainSpk.vAngle : 60;
-
+  points.forEach(p => { totalW += (p.watt||0)*(p.isLineArray?p.elements:1); });
+  const ampRec = Math.ceil(totalW*1.3);
+  const farX = worldBox.x0+30, farY = worldBox.y0+worldBox.H-30;
+  const dr = points.length ? computeDirectReverbAt(farX, farY) : {direct:0, reverb:0, total:0};
+  const sti = points.length ? stiAt(farX, farY) : null;
   return {
-    eventText: `تم تصميم النظام لفعالية (<b>${profile.type === 'concert' ? 'حفل موسيقي' : profile.type === 'conference' ? 'مؤتمر/محاضرة' : profile.type === 'theater' ? 'مسرح' : 'حفل زفاف'}</b>) داخل قاعة مغلقة بأبعاد <b>${L}م × ${W}م × ${H}م</b> وحجم <b>${room.V.toFixed(0)} م³</b>.`,
+    eventText: `تصميم لفعالية <b>${profile.type}</b> في قاعة <b>${L}م × ${W}م × ${H}م</b>، حجم <b>${room.V.toFixed(0)} م³</b>.`,
     systemText: hasLineArray
-      ? `بنية <b>Line Array</b> مع <b>${mainCount}</b> عنقود رئيسي و<b>${sideCount}</b> حشو جانبي.`
-      : `بنية <b>Point Source</b> مع <b>${mainCount}</b> سماعة رئيسية و<b>${sideCount}</b> حشو جانبي.`,
-    subText: `<b>${subCount}</b> صبة عالية القدرة (يُفضّل ترتيب Cardioid لتقليل الطاقة خلف المسرح).`,
-    monitorText: `<b>${monitorCount}</b> مراقب مسرح.`,
-    powerText: `القدرة الإجمالية: <b>${totalW.toLocaleString()} واط</b> · المضخم: <b>${ampRec.toLocaleString()} واط</b> (هامش 30%).`,
-    alternativeText: hasLineArray
-      ? 'يمكن استخدام Point Source + Delay Speakers في القاعات الطويلة.'
-      : 'يمكن استخدام Line Array لتقليل عدد الكبائن في القاعات الكبيرة.',
-    spl: dr.total,
-    direct: dr.direct,
-    reverb: dr.reverb,
-    delay: delayMs,
-    hAngle, vAngle,
-    totalW, ampRec,
-    room
+      ? `<b>Line Array</b>: ${mainCount} عنقود رئيسي + ${sideCount} حشو جانبي.`
+      : `<b>Point Source</b>: ${mainCount} رئيسية + ${sideCount} جانبية.`,
+    subText: `${subCount} صبة عالية القدرة (يُفضّل Cardioid).`,
+    delayText: delayCount > 0 ? `${delayCount} سماعة تأخير Haas.` : 'لا حاجة لسماعات تأخير.',
+    powerText: `القدرة: <b>${totalW.toLocaleString()} W</b> · المضخم: <b>${ampRec.toLocaleString()} W</b> (هامش 30%).`,
+    spl: dr.total, direct: dr.direct, reverb: dr.reverb, sti, totalW, ampRec, room
   };
 }
 
-/* ═══════════════════════════════════════════════════════════
-   توليد التقرير
-   ═══════════════════════════════════════════════════════════ */
 function generateReport() {
   if (!points.length) { alert('أضف سماعات أولاً'); return; }
-
   const decision = buildEngineeringDecision();
   const room = decision.room;
   const target = getRT60Target();
   const uni = computeUniformity();
 
+  $('rep_rt60_val').textContent = room.RT60.toFixed(2) + ' s';
+  $('rep_dc_val').textContent = room.Dc.toFixed(2) + ' m';
+  $('rep_spl_val').textContent = decision.spl.toFixed(1) + ' dB';
+  $('rep_sti_val').textContent = decision.sti != null ? decision.sti.toFixed(2) + ' (' + stiLabel(decision.sti) + ')' : '—';
+  $('repDate').textContent = new Date().toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
+
+  $('repKPI').innerHTML = `
+    <div class="kpi-card"><h4>حجم القاعة</h4><span>${room.V.toFixed(0)} م³</span></div>
+    <div class="kpi-card"><h4>عدد السماعات</h4><span>${points.length}</span></div>
+    <div class="kpi-card ok"><h4>القدرة</h4><span>${decision.totalW.toLocaleString()} واط</span></div>
+    <div class="kpi-card ${uni !== null && uni <= 6 ? 'ok' : 'warn'}"><h4>التوحيد</h4><span>${uni !== null ? uni.toFixed(1) : '—'} dB</span></div>
+  `;
+
+  // Multi-band table
+  $('bandSection').innerHTML = `
+    <table class="rep-table">
+      <thead><tr><th>التردد (Hz)</th>${BANDS.map(f => `<th>${f}</th>`).join('')}</tr></thead>
+      <tbody>
+        <tr><td><b>RT60 Sabine</b></td>${room.sab.map(v => `<td>${v.toFixed(2)}</td>`).join('')}</tr>
+        <tr><td><b>RT60 Eyring</b></td>${room.eyr.map(v => `<td>${v.toFixed(2)}</td>`).join('')}</tr>
+        <tr><td><b>الامتصاص A</b></td>${room.Abands.map(v => `<td>${v.toFixed(0)}</td>`).join('')}</tr>
+      </tbody>
+    </table>
+  `;
+
+  const rt60Ok = room.RT60 >= target.min && room.RT60 <= target.max;
+  const drRatio = decision.direct - decision.reverb;
+  const delays = points.filter(p => p.delay);
+  $('acousticSection').innerHTML = `
+    <div class="acoustic-box">
+      <p><strong>📐 الحجم V:</strong> ${room.V.toFixed(1)} م³ · <strong>المساحة S:</strong> ${room.S_total.toFixed(1)} م²</p>
+      <p><strong>🎯 الامتصاص A:</strong> ${room.A.toFixed(1)} Sabins · <strong>ᾱ:</strong> ${room.alpha_avg.toFixed(3)}</p>
+      <p><strong>⏱️ RT60 @ ${BANDS[currentBand]}Hz (Sabine):</strong>
+         <span style="color:${rt60Ok ? '#16a34a' : '#dc2626'};font-weight:900;font-size:14px">${room.RT60.toFixed(2)} ث</span>
+         ${rt60Ok ? '✅' : '⚠️'} — النطاق الموصى به: ${target.min}–${target.max} ث</p>
+      <p><strong>⏱️ RT60 Eyring:</strong> ${room.RT60_eyring.toFixed(2)} ث
+         ${room.alpha_avg > 0.2 ? '(Eyring أدق للأسطح عالية الامتصاص)' : '(متقاربان)'}</p>
+      <p><strong>📏 Dc الحرجة:</strong> ${room.Dc.toFixed(2)} م</p>
+      <p><strong>🔊 تردد شرودر f<sub>s</sub>:</strong> ${room.f_s.toFixed(0)} Hz</p>
+      <p><strong>🎚️ التوازن D/R عند أبعد نقطة:</strong> مباشر ${decision.direct.toFixed(1)} · مرتد ${decision.reverb.toFixed(1)} · الفرق ${drRatio.toFixed(1)} dB ${drRatio > 0 ? '✅' : '⚠️'}</p>
+      <p><strong>🗣️ STI (Peutz):</strong> ${decision.sti != null ? decision.sti.toFixed(2) + ' (' + stiLabel(decision.sti) + ')' : '—'} ·
+         <strong>Q المتوسط:</strong> ${room.Q.toFixed(1)}</p>
+      ${delays.length ? `<p><strong>⏳ التأخير Haas:</strong> ${delays.map(d => d.delayMs + ' ms').join(' · ')}</p>` : ''}
+      <p style="font-size:11px;color:#666">STI وSPL تقديرية بنموذج مبسّط — ليست بديلاً عن القياس الميداني.</p>
+    </div>
+  `;
+
+  // BOQ
   const counts = {};
   points.forEach(p => {
     const key = p.isLineArray ? p.name + ' (' + p.elements + ' وحدات)' : p.name;
     counts[key] = (counts[key] || 0) + 1;
   });
-
-  const L = +$('room_l').value, W = +$('room_w').value, H = +$('room_h').value;
-
-  // بطاقات التحليل
-  $('rep_rt60_val').textContent = room.RT60.toFixed(2) + ' s';
-  $('rep_dc_val').textContent = room.Dc.toFixed(2) + ' m';
-  $('rep_spl_val').textContent = decision.spl.toFixed(1) + ' dB';
-  $('rep_delay_val').textContent = decision.delay.toFixed(1) + ' ms';
-  $('repDate').textContent = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-
-  // KPIs
-  $('repKPI').innerHTML = `
-    <div class="kpi-card"><h4>حجم القاعة</h4><span>${room.V.toFixed(0)} م³</span></div>
-    <div class="kpi-card"><h4>عدد السماعات</h4><span>${points.length}</span></div>
-    <div class="kpi-card ok"><h4>القدرة الإجمالية</h4><span>${decision.totalW.toLocaleString()} واط</span></div>
-    <div class="kpi-card ${uni !== null && uni <= 6 ? 'ok' : 'warn'}"><h4>فرق التوحيد</h4><span>${uni !== null ? uni.toFixed(1) : '—'} dB</span></div>
-  `;
-
-  // قسم التحليل الصوتي
-  const rt60Ok = room.RT60 >= target.min && room.RT60 <= target.max;
-  const drRatio = decision.direct - decision.reverb;
-  $('acousticSection').innerHTML = `
-    <div class="acoustic-box">
-      <p><strong>📐 حجم القاعة (V):</strong> ${room.V.toFixed(1)} م³ &nbsp;·&nbsp;
-         <strong>المساحة السطحية الكلية (S):</strong> ${room.S_total.toFixed(1)} م²</p>
-      <p><strong>🎯 الامتصاص الكلي (A):</strong> ${room.A.toFixed(1)} Sabins &nbsp;·&nbsp;
-         <strong>متوسط معامل الامتصاص (ᾱ):</strong> ${room.alpha_avg.toFixed(3)}</p>
-      <p><strong>⏱️ زمن الارتداد RT60 (Sabine):</strong>
-         <span style="color:${rt60Ok ? '#16a34a' : '#dc2626'};font-weight:900;font-size:14px">${room.RT60.toFixed(2)} ث</span>
-         ${rt60Ok ? '✅' : '⚠️'} — النطاق الموصى به لـ${target.ideal}: ${target.min}–${target.max} ث</p>
-      <p><strong>📏 المسافة الحرجة (Dc):</strong> ${room.Dc.toFixed(2)} م —
-         عندها يتساوى الحقل المباشر مع المرتد</p>
-      <p><strong>🔊 تردد شرودر (f<sub>s</sub>):</strong> ${room.f_s.toFixed(0)} Hz —
-         تحته تتحكم أنماط الغرفة (Room Modes)</p>
-      <p><strong>🎚️ التوازن عند أبعد نقطة:</strong>
-         مباشر: <b>${decision.direct.toFixed(1)} dB</b> ·
-         مرتد: <b>${decision.reverb.toFixed(1)} dB</b> ·
-         الفرق D/R: <b>${drRatio.toFixed(1)} dB</b>
-         ${drRatio > 0 ? '✅ المباشر مسيطر' : '⚠️ الارتجاع مسيطر — قلل RT60'}</p>
-      ${room.f_s > 300 ? `<p><strong>⚠️ تحذير أنماط الغرفة:</strong> تردد شرودر ${room.f_s.toFixed(0)} Hz عالٍ — القاعة صغيرة، ركّب Traps في الزوايا.</p>` : ''}
-    </div>
-  `;
-
-  // BOQ والقرار
   $('boqSection').innerHTML = `
     <div class="decision-box">
       <h3 style="border:none;padding:0;color:#0c4a6e;font-size:15px;margin-bottom:10px">📘 ملخص القرار الهندسي</h3>
       <p>${decision.eventText}</p>
-      <p><strong>بنية النظام:</strong> ${decision.systemText}</p>
-      <p><strong>الترددات المنخفضة:</strong> ${decision.subText}</p>
-      <p><strong>مراقبة المسرح:</strong> ${decision.monitorText}</p>
-      <p><strong>القدرة والتضخيم:</strong> ${decision.powerText}</p>
+      <p><strong>البنية:</strong> ${decision.systemText}</p>
+      <p><strong>الصب:</strong> ${decision.subText}</p>
+      <p><strong>التأخير:</strong> ${decision.delayText}</p>
+      <p><strong>القدرة:</strong> ${decision.powerText}</p>
       <p><strong>قنوات المضخم:</strong> ${computeAmpChannels()} قناة</p>
-      <p><strong>السيناريو البديل:</strong> ${decision.alternativeText}</p>
     </div>
-
     <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">📦 جدول الكميات (BOQ)</h3>
     <div class="rep-table-wrap">
       <table class="rep-table">
@@ -1942,7 +2488,8 @@ function generateReport() {
         <tbody>
           ${Object.entries(counts).map(([name, qty]) => {
             const sample = points.find(p => (p.isLineArray ? p.name + ' (' + p.elements + ' وحدات)' : p.name) === name);
-            const cat = sample.type === 'main' ? 'النظام الرئيسي'
+            const cat = sample.delay ? 'تأخير Haas'
+                      : sample.type === 'main' ? 'النظام الرئيسي'
                       : sample.type === 'sub' ? (sample.name.includes('218') ? 'صبة' : 'مراقبة')
                       : 'حشو جانبي';
             return `<tr><td><b>${name}</b></td><td>${qty}</td><td>${cat}</td></tr>`;
@@ -1952,28 +2499,25 @@ function generateReport() {
     </div>
   `;
 
-  // جدول التوزيع التفصيلي
+  // Detail table
   $('detailSection').innerHTML = `
     <table class="rep-table">
-      <thead>
-        <tr>
-          <th>#</th><th>المنتج</th><th>X (م)</th><th>Y (م)</th>
-          <th>الاتجاه</th><th>المدى (م)</th><th>SPL</th><th>Watt</th>
-        </tr>
-      </thead>
+      <thead><tr><th>#</th><th>المنتج</th><th>X (م)</th><th>Y (م)</th><th>Z (م)</th><th>الاتجاه</th><th>المدى</th><th>SPL</th><th>Watt</th><th>تأخير</th></tr></thead>
       <tbody>
         ${points.map((p, i) => {
-          const xM = ((p.x - worldBox.x0) / worldBox.scale).toFixed(1);
-          const yM = ((p.y - worldBox.y0) / worldBox.scale).toFixed(1);
-          const watt = p.isLineArray ? (p.watt * p.elements) : p.watt;
+          const xM = ((p.x-worldBox.x0)/worldBox.scale).toFixed(1);
+          const zM = ((p.y-worldBox.y0)/worldBox.scale).toFixed(1);
+          const yM = getElevation(p).toFixed(1);
+          const watt = p.isLineArray ? (p.watt*p.elements) : p.watt;
           return `<tr>
-            <td>${i + 1}</td>
+            <td>${i+1}</td>
             <td>${p.name}${p.isLineArray ? ' × ' + p.elements : ''}</td>
-            <td>${xM}</td><td>${yM}</td>
+            <td>${xM}</td><td>${zM}</td><td>${yM}</td>
             <td>${p.angle}°</td>
-            <td>${p.rangeM ?? (p.range / worldBox.scale).toFixed(0)}</td>
+            <td>${p.rangeM ?? (p.range/worldBox.scale).toFixed(0)} م</td>
             <td>${p.spl} dB</td>
             <td>${watt}</td>
+            <td>${p.delay ? (p.delayMs||0) + ' ms' : '—'}</td>
           </tr>`;
         }).join('')}
       </tbody>
@@ -1981,19 +2525,37 @@ function generateReport() {
   `;
 
   $('reportImg').src = canvas.toDataURL('image/png');
+
+  // 3D snapshot
+  if (view3D.canvas && view3D.ctx) {
+    const wasEnabled = view3D.enabled;
+    const wasDirty = view3D.dirty;
+    view3D.enabled = true;
+    if (!view3D.canvas._logicalW) setupCanvasSize();
+    draw3D();
+    $('reportImg3D').src = view3D.canvas.toDataURL('image/png');
+    view3D.enabled = wasEnabled;
+    view3D.dirty = wasDirty;
+    if (!wasEnabled) {
+      view3D.canvas.style.display = 'none';
+      canvas.style.display = 'block';
+    }
+  }
+
   $('reportPage').style.display = 'block';
   window.scrollTo(0, 0);
 }
 
 function closeReport() { $('reportPage').style.display = 'none'; }
 
-/* ═══════════════════════════════════════════════════════════
-   الحفظ والتحميل
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   16. SAVE / LOAD
+   ═══════════════════════════════════════════════════════════════ */
 function saveMapPNG() {
+  const src = view3D.enabled ? view3D.canvas : canvas;
   const link = document.createElement('a');
-  link.href = canvas.toDataURL('image/png');
-  link.download = 'Motivity_Indoor_' + Date.now() + '.png';
+  link.href = src.toDataURL('image/png');
+  link.download = 'Motivity_' + (view3D.enabled ? '3D_' : '2D_') + Date.now() + '.png';
   link.click();
 }
 
@@ -2001,12 +2563,10 @@ function getSettings() {
   return {
     L: $('room_l').value, W: $('room_w').value, H: $('room_h').value,
     sW: $('stage_w').value, sD: $('stage_d').value,
-    event: $('event_type').value,
-    splTarget: $('spl_target').value,
-    floor_mat: $('floor_mat').value,
-    wall_mat: $('wall_mat').value,
-    ceiling_mat: $('ceiling_mat').value,
-    audience_type: $('audience_type').value
+    event: $('event_type').value, splTarget: $('spl_target').value,
+    floor_mat: $('floor_mat').value, wall_mat: $('wall_mat').value,
+    ceiling_mat: $('ceiling_mat').value, audience_type: $('audience_type').value,
+    currentBand, cam3D: view3D.enabled ? { theta:view3D.theta, phi:view3D.phi, radius:view3D.radius } : null
   };
 }
 
@@ -2023,11 +2583,33 @@ function applySettings(s) {
   if (s.wall_mat) $('wall_mat').value = s.wall_mat;
   if (s.ceiling_mat) $('ceiling_mat').value = s.ceiling_mat;
   if (s.audience_type) $('audience_type').value = s.audience_type;
+  if (s.currentBand != null) setBand(s.currentBand);
+  if (s.cam3D) { view3D.theta = s.cam3D.theta; view3D.phi = s.cam3D.phi; view3D.radius = s.cam3D.radius; }
+}
+
+function sanitizePts(arr) {
+  const num = (v, d, lo, hi) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+  return (Array.isArray(arr) ? arr : []).slice(0, 500).map(p => ({
+    x: num(p.x, 0, -1e4, 1e4), y: num(p.y, 0, -1e4, 1e4),
+    type: ['main','sub','side'].includes(p.type) ? p.type : 'main',
+    name: String(p.name || '').replace(/[<>&"'`]/g, '').slice(0, 40),
+    angle: num(p.angle, 90, -720, 720),
+    range: num(p.range, 100, 0, 1e5),
+    rangeM: num(p.rangeM, 60, 0, 500),
+    spl: num(p.spl, 120, 60, 150),
+    hAngle: num(p.hAngle, 90, 5, 360),
+    vAngle: num(p.vAngle, 60, 5, 180),
+    watt: num(p.watt, 500, 0, 1e4),
+    isLineArray: !!p.isLineArray,
+    elements: num(p.elements, 6, 2, 24),
+    delay: !!p.delay,
+    delayMs: num(p.delayMs, 0, 0, 500)
+  }));
 }
 
 function saveProjectJSON() {
-  const data = { points, settings: getSettings(), version: '2026.1-indoor' };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const data = { points, settings: getSettings(), version: '2026.3-indoor-3d-studio' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = 'Motivity_Indoor_' + Date.now() + '.json';
@@ -2041,12 +2623,16 @@ function loadProjectJSON(e) {
   reader.onload = evt => {
     try {
       const data = JSON.parse(evt.target.result);
-      points = Array.isArray(data.points) ? data.points : [];
+      points = sanitizePts(data.points);
       applySettings(data.settings);
       selectedPoint = null;
+      roomBase = null;
       $('beamControls').classList.remove('on');
       setupCanvasSize();
-      invalidateHeat(); draw(); updateKPI(); autosave();
+      invalidateHeat();
+      draw();
+      updateKPI();
+      autosave();
     } catch (err) { alert('ملف غير صالح'); }
   };
   reader.readAsText(file);
@@ -2055,7 +2641,7 @@ function loadProjectJSON(e) {
 
 function autosave() {
   try {
-    localStorage.setItem('motivity_indoor_draft', JSON.stringify({
+    localStorage.setItem('motivity_indoor_3d_v3', JSON.stringify({
       points, settings: getSettings(), ts: Date.now()
     }));
   } catch (_) {}
@@ -2063,105 +2649,155 @@ function autosave() {
 
 function restoreDraft() {
   try {
-    const raw = localStorage.getItem('motivity_indoor_draft');
+    const raw = localStorage.getItem('motivity_indoor_3d_v3');
     if (!raw) return false;
     const data = JSON.parse(raw);
     if (!data.points || !data.points.length) return false;
-    points = data.points;
+    points = sanitizePts(data.points);
     applySettings(data.settings);
     return true;
   } catch (_) { return false; }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   Debounce
-   ═══════════════════════════════════════════════════════════ */
 const debouncedUpdate = (() => {
   let t;
   return () => {
     clearTimeout(t);
     t = setTimeout(() => {
+      roomBase = null;
       setupCanvasSize();
-      invalidateHeat(); draw(); updateKPI(); autosave();
+      invalidateHeat();
+      if (view3D.enabled) { view3D.dirty = true; draw3D(); }
+      else draw();
+      updateKPI();
+      autosave();
     }, 150);
   };
 })();
 
-/* ═══════════════════════════════════════════════════════════
-   حجم Canvas تلقائي (متجاوب + HiDPI)
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   17. CANVAS SIZING
+   ═══════════════════════════════════════════════════════════════ */
 function setupCanvasSize() {
   const wrap = $('canvasWrap');
   const rect = wrap.getBoundingClientRect();
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
   const L = +$('room_l').value || 40;
   const W = +$('room_w').value || 25;
-  const ratio = L / W;
-
+  const ratio = L/W;
   const pad = 16;
   const availW = Math.max(200, rect.width - pad);
   const availH = Math.max(150, rect.height - pad);
-
   let logicalW, logicalH;
-  if (availW / availH > ratio) {
+  if (availW/availH > ratio) {
     logicalH = availH;
-    logicalW = logicalH * ratio;
+    logicalW = logicalH*ratio;
   } else {
     logicalW = availW;
-    logicalH = logicalW / ratio;
+    logicalH = logicalW/ratio;
   }
-
   logicalW = Math.floor(Math.max(300, logicalW));
   logicalH = Math.floor(Math.max(220, logicalH));
 
   canvas.style.width = logicalW + 'px';
   canvas.style.height = logicalH + 'px';
-  canvas.width = Math.floor(logicalW * dpr);
-  canvas.height = Math.floor(logicalH * dpr);
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
+  canvas.width = Math.floor(logicalW*DPR);
+  canvas.height = Math.floor(logicalH*DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   canvas._logicalW = logicalW;
   canvas._logicalH = logicalH;
-  canvas._dpr = dpr;
+  canvas._dpr = DPR;
+
+  if (view3D.canvas && view3D.ctx) {
+    view3D.canvas.style.width = logicalW + 'px';
+    view3D.canvas.style.height = logicalH + 'px';
+    view3D.canvas.width = Math.floor(logicalW*DPR);
+    view3D.canvas.height = Math.floor(logicalH*DPR);
+    view3D.ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    view3D.canvas._logicalW = logicalW;
+    view3D.canvas._logicalH = logicalH;
+    view3D.cx = logicalW/2;
+    view3D.cy = logicalH/2;
+    view3D.focal = Math.min(logicalW, logicalH)*0.95;
+    view3D.dirty = true;
+  }
 
   heatCanvas = null;
   heatDirty = true;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   إعادة الحجم
-   ═══════════════════════════════════════════════════════════ */
 let resizeTimer = null;
 function handleResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     setupCanvasSize();
     invalidateHeat();
-    draw();
+    if (!view3D.enabled) draw();
   }, 120);
 }
 window.addEventListener('resize', handleResize);
 window.addEventListener('orientationchange', () => setTimeout(handleResize, 250));
 
-/* ═══════════════════════════════════════════════════════════
-   التشغيل
-   ═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   18. LOOP + INIT
+   ═══════════════════════════════════════════════════════════════ */
+function loop(t) {
+  animT += 0.02;
+  if (view3D.enabled) {
+    if (view3D.dirty) draw3D();
+  } else {
+    draw();
+  }
+  if (t - lastKpiT > 400) { updateKPI(); lastKpiT = t; }
+  requestAnimationFrame(loop);
+}
+
+// Keyboard
+window.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+    e.preventDefault(); undo();
+  } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
+    e.preventDefault(); redo();
+  } else if (e.key === 'Delete' && selectedPoint) {
+    deleteSelected();
+  } else if (e.key === '3') {
+    toggle3D();
+  } else if (e.key === 'Escape') {
+    selectedPoint = null;
+    $('beamControls').classList.remove('on');
+    draw();
+    drawPolar();
+  }
+});
+
+// Init
 window.addEventListener('load', () => {
   setupCanvasSize();
+  attach3DControls();
 
   const restored = restoreDraft();
-  if (restored) { invalidateHeat(); draw(); updateKPI(); }
-  else applySmartLayout();
+  if (restored) {
+    invalidateHeat();
+    draw();
+    updateKPI();
+  } else {
+    applySmartLayout();
+  }
 
   setTimeout(() => {
     setupCanvasSize();
-    invalidateHeat(); draw(); updateKPI();
+    invalidateHeat();
+    draw();
+    updateKPI();
+    drawPolar();
   }, 100);
 
   requestAnimationFrame(loop);
   document.addEventListener('gesturestart', e => e.preventDefault());
+
+  showAB();
+  drawPolar();
 });
 
 window.addEventListener('beforeunload', autosave);
