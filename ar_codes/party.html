@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Motivity Master AI · 2026 · 3D Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
 :root{
   --red:#e60012; --blue:#38bdf8; --green:#22c55e; --yellow:#e5c07b;
@@ -132,8 +134,8 @@ canvas{
   display:block;touch-action:none;user-select:none;-webkit-user-select:none;
   -webkit-touch-callout:none;cursor:crosshair;max-width:100%;max-height:100%;
 }
-#canvas3d{display:none;cursor:grab}
-#canvas3d.dragging{cursor:grabbing}
+#canvas3d{display:none;cursor:grab;width:100%;height:100%}
+#canvas3d:active{cursor:grabbing}
 
 .toolbar{
   position:absolute;top:14px;left:14px;display:flex;gap:4px;flex-wrap:wrap;
@@ -151,7 +153,7 @@ canvas{
 #tgSidebar{display:none}
 
 .camera-presets{
-  position:absolute;top:60px;left:14px;display:none;gap:5px;
+  position:absolute;top:62px;left:14px;display:none;gap:5px;
   background:rgba(22,27,34,.94);backdrop-filter:blur(10px);
   border:1px solid var(--bd);border-radius:12px;padding:6px;z-index:10;
   flex-wrap:wrap;max-width:calc(100% - 28px);
@@ -164,10 +166,24 @@ canvas{
 }
 .camera-presets button:hover{background:var(--purple);color:#fff;border-color:var(--purple)}
 
+/* 3D HUD Overlay */
+.hud-3d{
+  position:absolute;top:112px;left:14px;display:none;
+  background:rgba(13,17,23,.88);backdrop-filter:blur(10px);
+  border:1px solid rgba(56,189,248,.3);border-radius:12px;
+  padding:12px 15px;z-index:9;min-width:215px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);pointer-events:none;
+}
+.hud-3d.on{display:block}
+.hud-3d .hud-title{font-size:11.5px;font-weight:900;color:var(--purple);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.hud-3d .hud-line{font-size:10.5px;color:#e6edf3;display:flex;justify-content:space-between;margin-top:4px;gap:12px}
+.hud-3d .hud-line span:first-child{color:var(--mu)}
+.hud-3d .hud-line span:last-child{font-weight:800;color:var(--blue);direction:ltr;unicode-bidi:isolate}
+
 .hint-3d{
-  position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:76px;left:50%;transform:translateX(-50%);
   background:rgba(22,27,34,.94);backdrop-filter:blur(10px);
-  border:1px solid var(--bd);border-radius:10px;padding:8px 16px;
+  border:1px solid var(--bd);border-radius:10px;padding:7px 16px;
   font-size:11.5px;color:var(--mu);display:none;z-index:10;
   white-space:nowrap;max-width:calc(100% - 28px);
 }
@@ -226,6 +242,32 @@ canvas{
 .legend .row{display:flex;align-items:center;gap:7px;margin-bottom:4px}
 .legend .sw{width:18px;height:11px;border-radius:2px;display:inline-block;border:1px solid rgba(255,255,255,.1)}
 .legend .title{font-weight:800;color:var(--blue);margin-bottom:8px;font-size:11px}
+
+/* Custom Toast / Confirm Modal (Zero alert/confirm usage) */
+.toast-msg{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);
+  background:rgba(22,27,34,.96);border:1px solid var(--blue);color:#fff;
+  padding:10px 22px;border-radius:10px;font-size:12.5px;font-weight:700;
+  z-index:10000;box-shadow:0 10px 30px rgba(0,0,0,.6);transition:transform .3s ease;
+  pointer-events:none;
+}
+.toast-msg.show{transform:translateX(-50%) translateY(0)}
+
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);z-index:10001;align-items:center;justify-content:center;
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:#161b22;border:1px solid var(--bd);border-top:4px solid var(--red);
+  border-radius:12px;padding:22px;max-width:360px;width:90%;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+}
+.modal-box p{font-size:14px;font-weight:700;margin-bottom:18px;color:#fff}
+.modal-actions{display:flex;gap:10px}
+.modal-actions button{flex:1;padding:10px;border:none;border-radius:8px;font-weight:800;cursor:pointer;font-family:inherit}
+.modal-confirm{background:var(--red);color:#fff}
+.modal-cancel{background:#30363d;color:#ccc}
 
 /* Polar pattern */
 #polarCv{display:block;margin:10px auto 0;background:#0a0e13;border-radius:10px;border:1px solid var(--bd)}
@@ -345,6 +387,7 @@ canvas{
   #tgSidebar{display:block}
   .camera-presets{top:52px;left:8px;padding:4px;gap:3px}
   .camera-presets button{padding:6px 8px;font-size:10px}
+  .hud-3d{display:none!important}
   .hint-bar{font-size:9.5px;padding:5px 10px;bottom:8px;max-width:calc(100% - 16px)}
   .hint-bar span:nth-child(2){display:none}
   .cursor-info{bottom:auto;top:8px;left:8px;font-size:11px;padding:6px 10px}
@@ -373,12 +416,24 @@ canvas{
 </head>
 <body>
 
+<!-- Toast & Custom Confirm Modal -->
+<div id="toastMsg" class="toast-msg"></div>
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-box">
+    <p id="confirmText">هل أنت متأكد؟</p>
+    <div class="modal-actions">
+      <button class="modal-confirm" id="confirmYes">نعم، تنفيذ</button>
+      <button class="modal-cancel" id="confirmNo">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ Sidebar ═══ -->
 <div class="sidebar no-print" id="sidebar">
   <div class="brand">
     <h2>MOTIVITY MASTER AI</h2>
     <p>INDOOR HALLS · 2026 STUDIO</p>
-    <div class="mode-badge">🏛️ 2D + 3D · MULTI-BAND</div>
+    <div class="mode-badge">🏛️ 2D + REAL 3D WEBGL · MULTI-BAND</div>
   </div>
 
   <!-- Room -->
@@ -582,11 +637,22 @@ canvas{
     <button onclick="setViewPreset('top')">علوي</button>
     <button onclick="setViewPreset('side')">جانبي</button>
     <button onclick="setViewPreset('audience')">جمهور</button>
+    <button onclick="setViewPreset('stage')">منظور المسرح</button>
     <button onclick="setViewPreset('reset')">🔄</button>
   </div>
 
+  <div class="hud-3d" id="hud3D">
+    <div class="hud-title">🎥 WebGL 3D Acoustic Studio</div>
+    <div class="hud-line"><span>الأبعاد:</span><span id="hudDim">40×25×10 م</span></div>
+    <div class="hud-line"><span>الحجم V:</span><span id="hudVol">10000 م³</span></div>
+    <div class="hud-line"><span>RT60:</span><span id="hudRT60">—</span></div>
+    <div class="hud-line"><span>Dc الحرجة:</span><span id="hudDc">—</span></div>
+    <div class="hud-line"><span>السماعات:</span><span id="hudSpk">0</span></div>
+    <div class="hud-line"><span>STI:</span><span id="hudSTI">—</span></div>
+  </div>
+
   <div class="hint-3d" id="hint3D">
-    🖱️ <b>اسحب</b> للدوران · <b>عجلة</b> للتقريب · <b>نقرة</b> للتحديد
+    🖱️ <b>سحب أيسر</b> للدوران · <b>عجلة</b> للتقريب · <b>سحب أيمن</b> للتحريك · <b>نقرة</b> لتحديد السماعة
   </div>
 
   <div class="legend" id="legend">
@@ -637,7 +703,7 @@ canvas{
     <div class="rep-header">
       <div>
         <h1>تقرير التحليل الصوتي الهندسي 2026</h1>
-        <p>موتيفيتي ماستر AI · القاعات المغلقة · 2D + 3D + Multi-Band</p>
+        <p>موتيفيتي ماستر AI · القاعات المغلقة · 2D + Real WebGL 3D + Multi-Band</p>
       </div>
       <div class="meta">
         <b>رقم المشروع:</b> MOT-2026-IN-3D<br>
@@ -669,19 +735,40 @@ canvas{
     <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🗺️ خريطة المحاكاة الصوتية (2D)</h3>
     <img id="reportImg" class="rep-img">
 
-    <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🎥 العرض ثلاثي الأبعاد (3D)</h3>
+    <h3 style="border-right:5px solid var(--purple);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🎥 العرض ثلاثي الأبعاد الواقعي (3D WebGL)</h3>
     <img id="reportImg3D" class="rep-img">
   </div>
 </div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   1. CONSTANTS & DATA
+   1. CONSTANTS, UI HELPERS & DATA
    ═══════════════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
 const log10 = Math.log10;
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+function showToast(msg) {
+  const t = $('toastMsg');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function showConfirmModal(text, onConfirm) {
+  const modal = $('confirmModal');
+  $('confirmText').textContent = text;
+  modal.classList.add('show');
+  const cleanup = () => {
+    modal.classList.remove('show');
+    $('confirmYes').onclick = null;
+    $('confirmNo').onclick = null;
+  };
+  $('confirmYes').onclick = () => { cleanup(); onConfirm(); };
+  $('confirmNo').onclick = cleanup;
+}
 
 const BANDS = [125, 250, 500, 1000, 2000, 4000];
 
@@ -752,15 +839,10 @@ let roomBase = null;
 let lastKpiT = 0;
 
 const view3D = {
-  enabled:false, theta:Math.PI*0.3, phi:Math.PI*0.35, radius:60,
-  focal:600, cx:0, cy:0, cam:null, dirty:true,
-  dragging:null, lastX:0, lastY:0,
-  pointers:new Map(), pinchDist:0,
-  clickCandidate:null, clickStartT:0,
-  canvas:document.getElementById('canvas3d'),
-  ctx:null
+  enabled: false,
+  dirty: true,
+  canvas: document.getElementById('canvas3d')
 };
-view3D.ctx = view3D.canvas ? view3D.canvas.getContext('2d') : null;
 
 const scen = {};
 
@@ -851,7 +933,12 @@ function splColor(spl) {
   if (spl < 100) return 'rgba(245,158,11,0.65)';
   return 'rgba(239,68,68,0.72)';
 }
-function invalidateHeat() { heatDirty = true; if (view3D) view3D.dirty = true; }
+function invalidateHeat() {
+  heatDirty = true;
+  if (typeof WebGL3D !== 'undefined' && WebGL3D.initialized) {
+    WebGL3D.updateHeatmapTexture();
+  }
+}
 
 function drawHeatmap(b) {
   const wC = Math.max(1, Math.ceil(b.W));
@@ -1177,388 +1264,1007 @@ function drawLineArrayIcon(p) {
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   7. 3D ENGINE
-   ═══════════════════════════════════════════════════════════════ */
-function getCamera3D() {
-  const L = +$('room_l').value || 40;
-  const W = +$('room_w').value || 25;
-  const H = +$('room_h').value || 10;
-  const tx = L/2, ty = H/2, tz = W/2;
-  const r = view3D.radius;
-  const cx = tx + r*Math.sin(view3D.phi)*Math.cos(view3D.theta);
-  const cy = ty + r*Math.cos(view3D.phi);
-  const cz = tz + r*Math.sin(view3D.phi)*Math.sin(view3D.theta);
-  let fx = tx-cx, fy = ty-cy, fz = tz-cz;
-  const flen = Math.hypot(fx, fy, fz) || 1;
-  fx /= flen; fy /= flen; fz /= flen;
-  let rx = -fz, ry = 0, rz = fx;
-  const rlen = Math.hypot(rx, ry, rz) || 1;
-  rx /= rlen; ry /= rlen; rz /= rlen;
-  const ux = ry*fz - rz*fy;
-  const uy = rz*fx - rx*fz;
-  const uz = rx*fy - ry*fx;
-  return { cx, cy, cz, fx, fy, fz, rx, ry, rz, ux, uy, uz };
-}
-
-function project3D(p, cam) {
-  const dx = p.x-cam.cx, dy = p.y-cam.cy, dz = p.z-cam.cz;
-  const camX = dx*cam.rx + dy*cam.ry + dz*cam.rz;
-  const camY = dx*cam.ux + dy*cam.uy + dz*cam.uz;
-  const camZ = dx*cam.fx + dy*cam.fy + dz*cam.fz;
-  if (camZ < 0.15) return null;
-  const f = view3D.focal;
-  return {
-    x: view3D.cx + camX*f/camZ,
-    y: view3D.cy - camY*f/camZ,
-    depth: camZ,
-    scale: f/camZ
-  };
-}
-
-function roomCoords2D(px, py) {
-  return {
-    x: (px-worldBox.x0)/worldBox.scale,
-    z: (py-worldBox.y0)/worldBox.scale
-  };
-}
-
 function getElevation(sp) {
   const H = +$('room_h').value || 10;
-  if (sp.delay) return Math.max(2, H*0.42);
-  if (sp.isLineArray) return H*0.55;
-  if (sp.type === 'sub') return 0.45;
-  if (sp.type === 'side') return H*0.35;
-  if (sp.name.includes('15M') || sp.name.includes('152')) return 1.1;
-  return 2.5;
+  if (sp.delay) return Math.max(2.6, H*0.42);
+  if (sp.isLineArray) return Math.max(3.5, H*0.62);
+  if (sp.type === 'sub') return 0.0;
+  if (sp.type === 'side') return Math.max(2.4, H*0.36);
+  if (sp.name.includes('15M') || sp.name.includes('152')) return 0.8; // Stage height
+  return 2.2;
 }
 
-function speaker3DPosition(sp) {
-  const rc = roomCoords2D(sp.x, sp.y);
-  return { x: rc.x, y: getElevation(sp), z: rc.z };
-}
+/* ═══════════════════════════════════════════════════════════════
+   7. REAL 3D WEBGL ENGINE (THREE.JS PBR + ARCHITECTURAL + PRO-AUDIO)
+   ═══════════════════════════════════════════════════════════════ */
+const WebGL3D = {
+  initialized: false,
+  scene: null,
+  camera: null,
+  renderer: null,
+  controls: null,
+  raycaster: null,
+  mouse: null,
+  roomGroup: null,
+  audienceGroup: null,
+  speakersGroup: null,
+  acousticGroup: null,
+  selectionRing: null,
+  heatMesh: null,
+  heatTex: null,
+  waveRings: [],
+  speakerMeshes: [],
+  texCache: {},
 
-function computeSPLAtRoom(rx, rz) {
-  return computeSPLAt(worldBox.x0 + rx*worldBox.scale, worldBox.y0 + rz*worldBox.scale);
-}
+  init() {
+    if (this.initialized || typeof THREE === 'undefined') return;
+    const c = view3D.canvas;
+    if (!c) return;
 
-function shadeColor3D(hex, factor) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${(r*factor)|0},${(g*factor)|0},${(b*factor)|0},0.95)`;
-}
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x060a10);
+    this.scene.fog = new THREE.FogExp2(0x060a10, 0.0055);
 
-function buildSpeakerBox3D(sp) {
-  const pos = speaker3DPosition(sp);
-  const color = sp.delay ? '#fbbf24' :
-    sp.type === 'main' ? '#38bdf8' :
-    sp.type === 'sub' ? '#e5c07b' : '#22c55e';
-  let w, h, d;
-  if (sp.isLineArray) { w = 0.9; d = 0.5; h = 0.4 + (sp.elements||6)*0.13; }
-  else if (sp.type === 'sub') {
-    if (sp.name.includes('15M') || sp.name.includes('152')) { w = 0.6; h = 0.5; d = 0.5; }
-    else { w = 1.1; h = 1.0; d = 0.8; }
-  }
-  else if (sp.type === 'side') { w = 0.6; h = 0.9; d = 0.6; }
-  else { w = 0.8; h = 1.0; d = 0.7; }
+    this.camera = new THREE.PerspectiveCamera(48, 16/9, 0.2, 600);
+    this.camera.position.set(45, 22, 45);
 
-  const hw = w/2, hh = h/2, hd = d/2;
-  const p = pos;
-  const corners = [
-    { x:p.x-hw, y:p.y-hh, z:p.z-hd }, { x:p.x+hw, y:p.y-hh, z:p.z-hd },
-    { x:p.x+hw, y:p.y-hh, z:p.z+hd }, { x:p.x-hw, y:p.y-hh, z:p.z+hd },
-    { x:p.x-hw, y:p.y+hh, z:p.z-hd }, { x:p.x+hw, y:p.y+hh, z:p.z-hd },
-    { x:p.x+hw, y:p.y+hh, z:p.z+hd }, { x:p.x-hw, y:p.y+hh, z:p.z+hd }
-  ];
-  const faceDefs = [
-    { pts:[corners[0], corners[1], corners[5], corners[4]], shade:0.55 },
-    { pts:[corners[3], corners[2], corners[6], corners[7]], shade:0.7 },
-    { pts:[corners[0], corners[3], corners[7], corners[4]], shade:0.6 },
-    { pts:[corners[1], corners[2], corners[6], corners[5]], shade:0.65 },
-    { pts:[corners[4], corners[5], corners[6], corners[7]], shade:0.95 },
-    { pts:[corners[0], corners[1], corners[2], corners[3]], shade:0.4 }
-  ];
-  const stroke = sp.delay ? 'rgba(255,215,0,0.9)' : 'rgba(255,255,255,0.35)';
-  return faceDefs.map(f => ({
-    pts: f.pts,
-    fill: shadeColor3D(color, f.shade),
-    stroke,
-    strokeWidth: sp.delay ? 1.2 : 0.8,
-    category: 'speaker'
-  }));
-}
-
-function buildSpeakerCone3D(sp) {
-  const pos = speaker3DPosition(sp);
-  const range = sp.rangeM || 50;
-  const yaw = sp.angle*Math.PI/180;
-  const pitch = -15*Math.PI/180;
-  const fx = Math.cos(yaw)*Math.cos(pitch);
-  const fy = Math.sin(pitch);
-  const fz = Math.sin(yaw)*Math.cos(pitch);
-  let rx = -fz, ry = 0, rz = fx;
-  const rlen = Math.hypot(rx, ry, rz) || 1;
-  rx /= rlen; ry /= rlen; rz /= rlen;
-  const ux = fy*rz - fz*ry;
-  const uy = fz*rx - fx*rz;
-  const uz = fx*ry - fy*rx;
-  const hHalf = (sp.hAngle || 100)/2 * Math.PI/180;
-  const vHalf = (sp.vAngle || 60)/2 * Math.PI/180;
-  const farH = Math.tan(hHalf)*range;
-  const farV = Math.tan(vHalf)*range;
-  const farCenter = {
-    x: pos.x + fx*range, y: pos.y + fy*range, z: pos.z + fz*range
-  };
-  const corners = [
-    { x:farCenter.x-rx*farH-ux*farV, y:farCenter.y-ry*farH-uy*farV, z:farCenter.z-rz*farH-uz*farV },
-    { x:farCenter.x+rx*farH-ux*farV, y:farCenter.y+ry*farH-uy*farV, z:farCenter.z+rz*farH-uz*farV },
-    { x:farCenter.x+rx*farH+ux*farV, y:farCenter.y+ry*farH+uy*farV, z:farCenter.z+rz*farH+uz*farV },
-    { x:farCenter.x-rx*farH+ux*farV, y:farCenter.y-ry*farH+uy*farV, z:farCenter.z-rz*farH+uz*farV }
-  ];
-  const c = sp.delay ? '251,191,36' :
-    sp.type === 'main' ? '56,189,248' :
-    sp.type === 'sub' ? '229,192,123' : '34,197,94';
-  const faces = [];
-  for (let i = 0; i < 4; i++) {
-    const next = (i+1) % 4;
-    faces.push({
-      pts:[pos, corners[i], corners[next]],
-      fill:`rgba(${c},0.05)`,
-      stroke:`rgba(${c},0.35)`,
-      strokeWidth:0.5,
-      category:'cone'
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: c,
+      antialias: true,
+      preserveDrawingBuffer: true,
+      powerPreference: 'high-performance'
     });
-  }
-  faces.push({
-    pts: corners,
-    fill:`rgba(${c},0.1)`,
-    stroke:`rgba(${c},0.45)`,
-    strokeWidth:0.8,
-    category:'cone'
-  });
-  return faces;
-}
+    this.renderer.setPixelRatio(DPR);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.15;
 
-function splColor3D(spl) {
-  if (spl < 60) return 'rgba(15,25,45,0.7)';
-  if (spl < 70) return 'rgba(30,80,140,0.65)';
-  if (spl < 80) return 'rgba(34,197,94,0.65)';
-  if (spl < 90) return 'rgba(132,204,22,0.65)';
-  if (spl < 100) return 'rgba(245,158,11,0.7)';
-  return 'rgba(239,68,68,0.75)';
-}
+    if (THREE.OrbitControls) {
+      this.controls = new THREE.OrbitControls(this.camera, c);
+      this.controls.enableDamping = true;
+      this.controls.dampingFactor = 0.06;
+      this.controls.maxPolarAngle = Math.PI * 0.49;
+      this.controls.minDistance = 4;
+      this.controls.maxDistance = 240;
+    }
 
-function draw3D() {
-  if (!view3D.enabled || !view3D.canvas || !view3D.ctx) return;
-  const ctx3 = view3D.ctx;
-  const Wc = view3D.canvas._logicalW;
-  const Hc = view3D.canvas._logicalH;
-  const L = +$('room_l').value || 40;
-  const RW = +$('room_w').value || 25;
-  const RH = +$('room_h').value || 10;
-  const sW = +$('stage_w').value || 14;
-  const sD = +$('stage_d').value || 8;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
 
-  // Background gradient
-  const bg = ctx3.createLinearGradient(0, 0, 0, Hc);
-  bg.addColorStop(0, '#0a1420');
-  bg.addColorStop(1, '#05080c');
-  ctx3.fillStyle = bg;
-  ctx3.fillRect(0, 0, Wc, Hc);
+    // Global Lighting
+    const hemiLight = new THREE.HemisphereLight(0x88ccff, 0x161b22, 0.65);
+    this.scene.add(hemiLight);
 
-  // Stars
-  ctx3.fillStyle = 'rgba(56,189,248,0.12)';
-  for (let i = 0; i < 50; i++) {
-    const x = (i*137.5) % Wc;
-    const y = (i*89.3) % Hc;
-    ctx3.fillRect(x, y, 1, 1);
-  }
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.75);
+    dirLight.position.set(30, 50, 20);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    dirLight.shadow.camera.near = 2;
+    dirLight.shadow.camera.far = 160;
+    const d = 55;
+    dirLight.shadow.camera.left = -d;
+    dirLight.shadow.camera.right = d;
+    dirLight.shadow.camera.top = d;
+    dirLight.shadow.camera.bottom = -d;
+    dirLight.shadow.bias = -0.0005;
+    this.scene.add(dirLight);
 
-  const cam = getCamera3D();
-  view3D.cam = cam;
-  const faces = [];
+    this.roomGroup = new THREE.Group();
+    this.audienceGroup = new THREE.Group();
+    this.speakersGroup = new THREE.Group();
+    this.acousticGroup = new THREE.Group();
 
-  // Floor with heatmap
-  const useHeat = layers.heat && points.length > 0;
-  if (useHeat) {
-    const cols = 26, rows = 18;
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        const x0 = (i/cols)*L, x1 = ((i+1)/cols)*L;
-        const z0 = (j/rows)*RW, z1 = ((j+1)/rows)*RW;
-        const spl = computeSPLAtRoom((x0+x1)/2, (z0+z1)/2);
-        faces.push({
-          pts:[{x:x0,y:0,z:z0},{x:x1,y:0,z:z0},{x:x1,y:0,z:z1},{x:x0,y:0,z:z1}],
-          fill: splColor3D(spl),
-          category:'floor'
-        });
+    this.scene.add(this.roomGroup);
+    this.scene.add(this.audienceGroup);
+    this.scene.add(this.speakersGroup);
+    this.scene.add(this.acousticGroup);
+
+    // Selection Ring Gizmo
+    const ringGeo = new THREE.RingGeometry(0.9, 1.15, 36);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9
+    });
+    this.selectionRing = new THREE.Mesh(ringGeo, ringMat);
+    this.selectionRing.rotation.x = -Math.PI / 2;
+    this.selectionRing.visible = false;
+    this.scene.add(this.selectionRing);
+
+    // Raycast click listener
+    let downPos = { x:0, y:0 };
+    c.addEventListener('pointerdown', e => {
+      downPos = { x: e.clientX, y: e.clientY };
+    });
+    c.addEventListener('pointerup', e => {
+      if (!view3D.enabled) return;
+      const dist = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+      if (dist > 6) return;
+      const rect = c.getBoundingClientRect();
+      this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      const hits = this.raycaster.intersectObjects(this.speakerMeshes, true);
+      if (hits.length > 0) {
+        let obj = hits[0].object;
+        while (obj && !obj.userData.speakerRef) obj = obj.parent;
+        if (obj && obj.userData.speakerRef) {
+          selectedPoint = obj.userData.speakerRef;
+          showBeamControls(selectedPoint);
+          $('beamControls').classList.add('on');
+          this.updateSelectionRing();
+          showToast('تم تحديد: ' + selectedPoint.name);
+        }
+      }
+    });
+
+    this.initialized = true;
+    this.rebuildAll();
+  },
+
+  /* Procedural PBR Textures */
+  getProceduralTexture(type, repeatX = 1, repeatY = 1) {
+    const key = `${type}_${repeatX}_${repeatY}`;
+    if (this.texCache[key]) return this.texCache[key];
+
+    const cv = document.createElement('canvas');
+    cv.width = 256;
+    cv.height = 256;
+    const g = cv.getContext('2d');
+
+    if (type === 'wood') {
+      g.fillStyle = '#5c4028';
+      g.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 8; i++) {
+        const y = i * 32;
+        g.fillStyle = i % 2 === 0 ? '#68492e' : '#503620';
+        g.fillRect(0, y, 256, 30);
+        g.fillStyle = 'rgba(20,10,5,0.45)';
+        g.fillRect(0, y + 30, 256, 2);
+        // wood grain
+        g.strokeStyle = 'rgba(35,18,8,0.22)';
+        g.lineWidth = 1;
+        for (let k = 0; k < 5; k++) {
+          g.beginPath();
+          g.moveTo(0, y + 5 + k*5);
+          g.bezierCurveTo(85, y + 3 + k*5, 170, y + 8 + k*5, 256, y + 5 + k*5);
+          g.stroke();
+        }
+      }
+    } else if (type === 'carpet') {
+      g.fillStyle = '#3b1d5e';
+      g.fillRect(0, 0, 256, 256);
+      for (let y = 0; y < 256; y += 4) {
+        for (let x = 0; x < 256; x += 4) {
+          g.fillStyle = ((x + y) % 8 === 0) ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.12)';
+          g.fillRect(x, y, 3, 3);
+        }
+      }
+    } else if (type === 'tile') {
+      g.fillStyle = '#2d3748';
+      g.fillRect(0, 0, 256, 256);
+      g.strokeStyle = '#1a202c';
+      g.lineWidth = 4;
+      for (let i = 0; i <= 256; i += 64) {
+        g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 256); g.stroke();
+        g.beginPath(); g.moveTo(0, i); g.lineTo(256, i); g.stroke();
+      }
+    } else if (type === 'concrete') {
+      g.fillStyle = '#3a3f47';
+      g.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 600; i++) {
+        g.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.07)';
+        g.fillRect((i*73)%256, (i*139)%256, 3, 3);
+      }
+    } else if (type === 'brick') {
+      g.fillStyle = '#6e3427';
+      g.fillRect(0, 0, 256, 256);
+      g.fillStyle = '#4a4542';
+      for (let row = 0; row < 8; row++) {
+        const y = row * 32;
+        g.fillRect(0, y, 256, 3);
+        const offset = (row % 2) * 32;
+        for (let col = 0; col < 4; col++) {
+          g.fillRect((col * 64 + offset) % 256, y, 3, 32);
+        }
+      }
+    } else if (type === 'acoustic_panel' || type === 'acoustic_tile') {
+      g.fillStyle = type === 'acoustic_panel' ? '#1e2530' : '#4b5563';
+      g.fillRect(0, 0, 256, 256);
+      // Wedge foam ridges
+      for (let i = 0; i < 16; i++) {
+        g.fillStyle = i % 2 === 0 ? 'rgba(56,189,248,0.14)' : 'rgba(0,0,0,0.35)';
+        g.fillRect(i * 16, 0, 8, 256);
+      }
+    } else if (type === 'curtain') {
+      const grad = g.createLinearGradient(0, 0, 256, 0);
+      for (let i = 0; i <= 16; i++) {
+        grad.addColorStop(i/16, i % 2 === 0 ? '#4c1d45' : '#260c22');
+      }
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 256, 256);
+    } else if (type === 'grille') {
+      g.fillStyle = '#111418';
+      g.fillRect(0, 0, 256, 256);
+      g.fillStyle = '#050608';
+      for (let y = 4; y < 256; y += 8) {
+        for (let x = 4; x < 256; x += 8) {
+          g.beginPath();
+          g.arc(x + ((y/8)%2)*4, y, 2.4, 0, Math.PI*2);
+          g.fill();
+        }
+      }
+    } else {
+      // drywall / metal
+      g.fillStyle = type === 'metal' ? '#525866' : '#8b8e94';
+      g.fillRect(0, 0, 256, 256);
+    }
+
+    const tex = new THREE.CanvasTexture(cv);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(repeatX, repeatY);
+    this.texCache[key] = tex;
+    return tex;
+  },
+
+  clearGroup(group) {
+    while (group.children.length > 0) {
+      const obj = group.children[0];
+      group.remove(obj);
+      if (obj.geometry) obj.geometry.dispose();
+    }
+  },
+
+  /* Build Hall, Stage, Trusses, Spotlights & Materials */
+  buildRoom() {
+    if (!this.initialized) return;
+    this.clearGroup(this.roomGroup);
+
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const H = +$('room_h').value || 10;
+    const sW = +$('stage_w').value || 14;
+    const sD = +$('stage_d').value || 8;
+
+    const floorMatVal = $('floor_mat').value;
+    const wallMatVal = $('wall_mat').value;
+    const ceilMatVal = $('ceiling_mat').value;
+
+    // 1. Floor
+    const floorTex = this.getProceduralTexture(floorMatVal, Math.max(1, Math.round(L/4)), Math.max(1, Math.round(W/4)));
+    const floorMat = new THREE.MeshStandardMaterial({
+      map: floorTex,
+      roughness: floorMatVal === 'carpet' ? 0.92 : floorMatVal === 'tile' ? 0.25 : 0.55,
+      metalness: 0.08
+    });
+    const floorMesh = new THREE.Mesh(new THREE.PlaneGeometry(L, W), floorMat);
+    floorMesh.rotation.x = -Math.PI / 2;
+    floorMesh.position.set(L/2, 0, W/2);
+    floorMesh.receiveShadow = true;
+    this.roomGroup.add(floorMesh);
+
+    // Architectural Grid on Floor
+    if (layers.grid) {
+      const gridHelper = new THREE.GridHelper(Math.max(L, W), Math.round(Math.max(L, W)/2), 0x38bdf8, 0x1e293b);
+      gridHelper.position.set(L/2, 0.015, W/2);
+      gridHelper.scale.set(L/Math.max(L, W), 1, W/Math.max(L, W));
+      gridHelper.material.transparent = true;
+      gridHelper.material.opacity = 0.28;
+      this.roomGroup.add(gridHelper);
+    }
+
+    // 2. Walls (Back stage wall opaque, side/front walls semi-translucent architectural glass + acoustic panels)
+    const wallTex = this.getProceduralTexture(wallMatVal, Math.max(1, Math.round(L/5)), Math.max(1, Math.round(H/3)));
+    const stageWallMat = new THREE.MeshStandardMaterial({
+      map: wallTex,
+      roughness: 0.75,
+      metalness: 0.1
+    });
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(L, H, 0.35), stageWallMat);
+    backWall.position.set(L/2, H/2, -0.17);
+    backWall.receiveShadow = true;
+    this.roomGroup.add(backWall);
+
+    // Translucent Side & Audience-Back Architectural Walls
+    const glassWallMat = new THREE.MeshPhysicalMaterial({
+      map: wallTex,
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.22,
+      roughness: 0.25,
+      metalness: 0.15,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(W, H), glassWallMat);
+    leftWall.rotation.y = Math.PI / 2;
+    leftWall.position.set(0, H/2, W/2);
+    this.roomGroup.add(leftWall);
+
+    const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(W, H), glassWallMat);
+    rightWall.rotation.y = -Math.PI / 2;
+    rightWall.position.set(L, H/2, W/2);
+    this.roomGroup.add(rightWall);
+
+    const frontWall = new THREE.Mesh(new THREE.PlaneGeometry(L, H), glassWallMat);
+    frontWall.rotation.y = Math.PI;
+    frontWall.position.set(L/2, H/2, W);
+    this.roomGroup.add(frontWall);
+
+    // Acoustic Absorber Wall Panels (if acoustic_panel or curtain selected)
+    if (wallMatVal === 'acoustic_panel' || wallMatVal === 'curtain') {
+      const panelTex = this.getProceduralTexture(wallMatVal, 1, 2);
+      const panelMat = new THREE.MeshStandardMaterial({ map: panelTex, roughness: 0.9 });
+      const count = Math.floor(W / 3.5);
+      for (let i = 1; i < count; i++) {
+        const zPos = i * 3.5;
+        const pL = new THREE.Mesh(new THREE.BoxGeometry(0.15, H*0.65, 1.4), panelMat);
+        pL.position.set(0.1, H*0.48, zPos);
+        this.roomGroup.add(pL);
+
+        const pR = pL.clone();
+        pR.position.set(L - 0.1, H*0.48, zPos);
+        this.roomGroup.add(pR);
       }
     }
-  } else {
-    faces.push({
-      pts:[{x:0,y:0,z:0},{x:L,y:0,z:0},{x:L,y:0,z:RW},{x:0,y:0,z:RW}],
-      fill:'rgba(10,20,32,0.92)',
-      stroke:'rgba(56,189,248,0.15)',
-      strokeWidth:1,
-      category:'floor'
+
+    // Structural Steel Columns & Glowing Trim Frame
+    const beamMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.25 });
+    const neonTrimMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+    const colPositions = [[0,0],[L,0],[0,W],[L,W],[0,W/2],[L,W/2]];
+    colPositions.forEach(([cx, cz]) => {
+      const col = new THREE.Mesh(new THREE.BoxGeometry(0.35, H, 0.35), beamMat);
+      col.position.set(cx, H/2, cz);
+      this.roomGroup.add(col);
+
+      const strip = new THREE.Mesh(new THREE.BoxGeometry(0.06, H, 0.06), neonTrimMat);
+      strip.position.set(cx === 0 ? 0.18 : cx - 0.18, H/2, cz);
+      this.roomGroup.add(strip);
     });
-  }
 
-  // Walls
-  const wallFill = 'rgba(56,189,248,0.07)';
-  const wallStroke = 'rgba(56,189,248,0.55)';
-  faces.push({ pts:[{x:0,y:0,z:0},{x:0,y:RH,z:0},{x:0,y:RH,z:RW},{x:0,y:0,z:RW}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
-  faces.push({ pts:[{x:L,y:0,z:0},{x:L,y:RH,z:0},{x:L,y:RH,z:RW},{x:L,y:0,z:RW}], fill:'rgba(56,189,248,0.03)', stroke:'rgba(56,189,248,0.35)', strokeWidth:1, category:'wall' });
-  faces.push({ pts:[{x:0,y:0,z:0},{x:L,y:0,z:0},{x:L,y:RH,z:0},{x:0,y:RH,z:0}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
-  faces.push({ pts:[{x:0,y:0,z:RW},{x:L,y:0,z:RW},{x:L,y:RH,z:RW},{x:0,y:RH,z:RW}], fill:wallFill, stroke:wallStroke, strokeWidth:1.2, category:'wall' });
+    // 3. Ceiling + Aluminum Rigging Trusses
+    const ceilTex = this.getProceduralTexture(ceilMatVal, Math.max(1, Math.round(L/4)), Math.max(1, Math.round(W/4)));
+    const ceilMat = new THREE.MeshStandardMaterial({
+      map: ceilTex,
+      transparent: true,
+      opacity: 0.35,
+      roughness: 0.6,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const ceilMesh = new THREE.Mesh(new THREE.PlaneGeometry(L, W), ceilMat);
+    ceilMesh.rotation.x = Math.PI / 2;
+    ceilMesh.position.set(L/2, H, W/2);
+    this.roomGroup.add(ceilMesh);
 
-  // Ceiling
-  faces.push({
-    pts:[{x:0,y:RH,z:0},{x:L,y:RH,z:0},{x:L,y:RH,z:RW},{x:0,y:RH,z:RW}],
-    fill:'rgba(56,189,248,0.02)',
-    stroke:'rgba(56,189,248,0.2)',
-    strokeWidth:1,
-    category:'ceiling'
-  });
+    // Aluminum Box Trusses across ceiling
+    const trussMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.2 });
+    const trussZPositions = [sD * 0.65, Math.min(W - 3, sD + 2.5), W * 0.55];
+    trussZPositions.forEach(tz => {
+      if (tz >= W) return;
+      const trussLen = Math.min(L - 2, sW + 8);
+      const tGroup = new THREE.Group();
+      const railOffsets = [[-0.22, -0.22], [0.22, -0.22], [-0.22, 0.22], [0.22, 0.22]];
+      railOffsets.forEach(([oy, oz]) => {
+        const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, trussLen, 8), trussMat);
+        rail.rotation.z = Math.PI / 2;
+        rail.position.set(0, oy, oz);
+        tGroup.add(rail);
+      });
+      // Cross braces
+      const steps = Math.floor(trussLen / 0.8);
+      for (let s = -steps/2; s <= steps/2; s++) {
+        const brace = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.44, 0.44), trussMat);
+        brace.position.set(s * 0.8, 0, 0);
+        tGroup.add(brace);
+      }
+      tGroup.position.set(L/2, H - 0.6, tz);
+      this.roomGroup.add(tGroup);
+    });
 
-  // Stage
-  const stX0 = (L-sW)/2, stX1 = stX0 + sW, stH = 0.8;
-  faces.push({
-    pts:[{x:stX0,y:stH,z:0},{x:stX1,y:stH,z:0},{x:stX1,y:stH,z:sD},{x:stX0,y:stH,z:sD}],
-    fill:'rgba(230,0,18,0.35)',
-    stroke:'rgba(230,0,18,0.9)',
-    strokeWidth:2,
-    category:'stage'
-  });
-  faces.push({
-    pts:[{x:stX0,y:0,z:sD},{x:stX1,y:0,z:sD},{x:stX1,y:stH,z:sD},{x:stX0,y:stH,z:sD}],
-    fill:'rgba(230,0,18,0.22)',
-    stroke:'rgba(230,0,18,0.6)',
-    strokeWidth:1.5,
-    category:'stage'
-  });
+    // 4. Raised Stage with Wooden Deck, Front Steps & LED Trim
+    const stH = 0.85;
+    const stageDeckTex = this.getProceduralTexture('wood', Math.max(1, Math.round(sW/2)), Math.max(1, Math.round(sD/2)));
+    const stageMat = new THREE.MeshStandardMaterial({ map: stageDeckTex, roughness: 0.45, metalness: 0.1 });
+    const stageMesh = new THREE.Mesh(new THREE.BoxGeometry(sW, stH, sD), stageMat);
+    stageMesh.position.set(L/2, stH/2, sD/2);
+    stageMesh.castShadow = true;
+    stageMesh.receiveShadow = true;
+    this.roomGroup.add(stageMesh);
 
-  // Audience cubes (if enabled)
-  if (layers.audience) {
-    const startZ = Math.max(3, sD+2);
-    const usableD = RW - startZ - 2;
-    const usableW = L - 6;
-    if (usableD > 2 && usableW > 2) {
-      const rowSp = Math.max(0.9, usableD/14);
-      const seatSp = Math.max(0.7, usableW/22);
-      const rows = Math.floor(usableD/rowSp);
-      const cols = Math.floor(usableW/seatSp);
-      const cubeH = 0.7, cubeW = 0.35;
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const cx = 3 + c*seatSp, cz = startZ + r*rowSp;
-          // top face
-          faces.push({
-            pts:[
-              {x:cx-cubeW,y:cubeH,z:cz-cubeW},{x:cx+cubeW,y:cubeH,z:cz-cubeW},
-              {x:cx+cubeW,y:cubeH,z:cz+cubeW},{x:cx-cubeW,y:cubeH,z:cz+cubeW}
-            ],
-            fill:'rgba(139,148,158,0.25)',
-            category:'audience'
-          });
+    // Stage Red/Gold Front LED Fascia
+    const ledStripMat = new THREE.MeshBasicMaterial({ color: 0xe60012 });
+    const frontLed = new THREE.Mesh(new THREE.BoxGeometry(sW + 0.04, 0.08, 0.06), ledStripMat);
+    frontLed.position.set(L/2, stH - 0.05, sD + 0.01);
+    this.roomGroup.add(frontLed);
+
+    const goldTrimMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
+    const sideLedL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, sD), goldTrimMat);
+    sideLedL.position.set(L/2 - sW/2 - 0.01, stH - 0.04, sD/2);
+    this.roomGroup.add(sideLedL);
+    const sideLedR = sideLedL.clone();
+    sideLedR.position.set(L/2 + sW/2 + 0.01, stH - 0.04, sD/2);
+    this.roomGroup.add(sideLedR);
+
+    // Stage Front Steps
+    const stepMat = new THREE.MeshStandardMaterial({ color: 0x181c24, roughness: 0.7 });
+    for (let st = 0; st < 2; st++) {
+      const step = new THREE.Mesh(new THREE.BoxGeometry(2.4, stH*(0.66 - st*0.33), 0.45), stepMat);
+      step.position.set(L/2, stH*(0.33 - st*0.165), sD + 0.22 + st*0.45);
+      step.receiveShadow = true;
+      this.roomGroup.add(step);
+    }
+
+    // Stage Spotlights on Front Truss
+    const spotPositions = [L/2 - sW*0.35, L/2, L/2 + sW*0.35];
+    spotPositions.forEach((sx, idx) => {
+      const housing = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, 0.42, 12), beamMat);
+      housing.position.set(sx, H - 0.95, Math.min(W - 3, sD + 2.5));
+      housing.rotation.x = Math.PI * 0.35;
+      this.roomGroup.add(housing);
+
+      const spotLight = new THREE.SpotLight(idx === 1 ? 0xfff5e6 : 0x38bdf8, 1.35, H * 2.5, Math.PI / 5, 0.45, 1);
+      spotLight.position.set(sx, H - 1.0, Math.min(W - 3, sD + 2.5));
+      spotLight.target.position.set(sx, stH, sD * 0.5);
+      if (idx === 1) spotLight.castShadow = true;
+      this.roomGroup.add(spotLight);
+      this.roomGroup.add(spotLight.target);
+    });
+  },
+
+  /* Detailed 3D Audience Chairs + Seated Figures */
+  buildAudience() {
+    if (!this.initialized) return;
+    this.clearGroup(this.audienceGroup);
+    if (!layers.audience) return;
+
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const sD = +$('stage_d').value || 8;
+    const occ = parseFloat($('audience_type').value) || 0.55;
+
+    const startZ = Math.max(3, sD + 2.2);
+    const usableD = W - startZ - 2.2;
+    const usableW = L - 5.0;
+    if (usableD < 2 || usableW < 2) return;
+
+    const rowSpacing = Math.max(1.05, usableD / 14);
+    const seatSpacing = Math.max(0.85, usableW / 20);
+    const rows = Math.floor(usableD / rowSpacing);
+    const cols = Math.floor(usableW / seatSpacing);
+    const totalSeats = rows * cols;
+    if (totalSeats <= 0) return;
+
+    // InstancedMesh for high-FPS detailed chairs & people
+    const chairMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.65, metalness: 0.2 });
+    const cushionMat = new THREE.MeshStandardMaterial({ color: 0x7f1d1d, roughness: 0.8 });
+    const torsoMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
+    const headMat = new THREE.MeshStandardMaterial({ color: 0xd9a077, roughness: 0.5 });
+
+    const seatGeo = new THREE.BoxGeometry(0.46, 0.08, 0.44);
+    const backGeo = new THREE.BoxGeometry(0.46, 0.48, 0.07);
+    const torsoGeo = new THREE.CylinderGeometry(0.16, 0.19, 0.46, 8);
+    const headGeo = new THREE.SphereGeometry(0.12, 10, 10);
+
+    const seatInst = new THREE.InstancedMesh(seatGeo, cushionMat, totalSeats);
+    const backInst = new THREE.InstancedMesh(backGeo, chairMat, totalSeats);
+    const torsoInst = new THREE.InstancedMesh(torsoGeo, torsoMat, totalSeats);
+    const headInst = new THREE.InstancedMesh(headGeo, headMat, totalSeats);
+
+    seatInst.castShadow = true;
+    seatInst.receiveShadow = true;
+
+    const dummy = new THREE.Object3D();
+    let idx = 0;
+    let personIdx = 0;
+    const fillRatio = occ <= 0.12 ? 0 : occ <= 0.4 ? 0.5 : 0.92;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        // Center aisle
+        if (Math.abs((c - cols/2)) < 0.8) continue;
+
+        const x = 2.5 + c * seatSpacing + seatSpacing/2;
+        const z = startZ + r * rowSpacing;
+
+        // Seat cushion
+        dummy.position.set(x, 0.44, z);
+        dummy.rotation.set(0, 0, 0);
+        dummy.updateMatrix();
+        seatInst.setMatrixAt(idx, dummy.matrix);
+
+        // Chair backrest (facing stage at z=0 -> backrest at +z side)
+        dummy.position.set(x, 0.70, z + 0.20);
+        dummy.updateMatrix();
+        backInst.setMatrixAt(idx, dummy.matrix);
+        idx++;
+
+        // Deterministic pseudo-random occupancy
+        const hash = ((r * 31 + c * 17) % 100) / 100;
+        if (hash < fillRatio) {
+          dummy.position.set(x, 0.72, z + 0.04);
+          dummy.updateMatrix();
+          torsoInst.setMatrixAt(personIdx, dummy.matrix);
+
+          dummy.position.set(x, 1.06, z + 0.02);
+          dummy.updateMatrix();
+          headInst.setMatrixAt(personIdx, dummy.matrix);
+          personIdx++;
         }
       }
     }
-  }
 
-  // Cones
-  if (layers.beams) {
-    points.forEach(sp => {
-      buildSpeakerCone3D(sp).forEach(f => faces.push(f));
-    });
-  }
+    seatInst.count = idx;
+    backInst.count = idx;
+    torsoInst.count = personIdx;
+    headInst.count = personIdx;
 
-  // Speakers
-  points.forEach(sp => {
-    buildSpeakerBox3D(sp).forEach(f => faces.push(f));
-  });
-
-  // Project & sort
-  const visible = [];
-  for (const f of faces) {
-    const proj = [];
-    let ok = true;
-    for (const p of f.pts) {
-      const pr = project3D(p, cam);
-      if (!pr) { ok = false; break; }
-      proj.push(pr);
+    this.audienceGroup.add(seatInst);
+    this.audienceGroup.add(backInst);
+    if (personIdx > 0) {
+      this.audienceGroup.add(torsoInst);
+      this.audienceGroup.add(headInst);
     }
-    if (!ok) continue;
-    let depth = 0;
-    for (const p of proj) depth += p.depth;
-    depth /= proj.length;
-    visible.push({
-      pts:f.pts, fill:f.fill, stroke:f.stroke, strokeWidth:f.strokeWidth,
-      category:f.category, proj, depth
-    });
-  }
-  visible.sort((a, b) => b.depth - a.depth);
+  },
 
-  // Render
-  for (const f of visible) {
-    ctx3.beginPath();
-    ctx3.moveTo(f.proj[0].x, f.proj[0].y);
-    for (let i = 1; i < f.proj.length; i++) ctx3.lineTo(f.proj[i].x, f.proj[i].y);
-    ctx3.closePath();
-    ctx3.fillStyle = f.fill;
-    ctx3.fill();
-    if (f.stroke) {
-      ctx3.strokeStyle = f.stroke;
-      ctx3.lineWidth = f.strokeWidth || 1;
-      ctx3.stroke();
+  /* Detailed 3D Motivity Pro-Audio Speaker Models */
+  createSpeakerMesh(sp) {
+    const H = +$('room_h').value || 10;
+    const root = new THREE.Group();
+    const pos2D = {
+      x: (sp.x - worldBox.x0) / (worldBox.scale || 1),
+      z: (sp.y - worldBox.y0) / (worldBox.scale || 1)
+    };
+    const elev = getElevation(sp);
+    root.position.set(pos2D.x, elev, pos2D.z);
+
+    // Yaw rotation: In 2D, angle=90 points down (+Z in 3D). angle=0 points right (+X in 3D).
+    // Local speaker front is +Z. When yaw=0, +Z points along +Z (angle=90).
+    const yawRad = (90 - sp.angle) * Math.PI / 180;
+    root.rotation.y = yawRad;
+
+    const cabMat = new THREE.MeshStandardMaterial({ color: 0x14171c, roughness: 0.45, metalness: 0.35 });
+    const grilleTex = this.getProceduralTexture('grille', 3, 3);
+    const grilleMat = new THREE.MeshStandardMaterial({ map: grilleTex, color: 0x22262e, roughness: 0.35, metalness: 0.75 });
+    const coneMat = new THREE.MeshStandardMaterial({ color: 0x0b0d10, roughness: 0.6, metalness: 0.2 });
+    const steelMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.25, metalness: 0.9 });
+    const badgeColor = sp.delay ? 0xfbbf24 : sp.type === 'sub' ? 0xe5c07b : 0xe60012;
+    const badgeMat = new THREE.MeshBasicMaterial({ color: badgeColor });
+
+    if (sp.isLineArray) {
+      // 1. LINE ARRAY J-CURVE RIGGING + INDIVIDUAL BOXES
+      const elements = sp.elements || 6;
+      const boxW = 0.96, boxH = 0.28, boxD = 0.54;
+
+      // Top Steel Flybar Frame
+      const flybar = new THREE.Mesh(new THREE.BoxGeometry(boxW + 0.14, 0.08, boxD + 0.25), steelMat);
+      flybar.position.y = 0.18;
+      flybar.castShadow = true;
+      root.add(flybar);
+
+      // Suspension Rigging Cables up to Ceiling Truss
+      const cableLen = Math.max(0.5, (H - 0.6) - elev);
+      const cableGeo = new THREE.CylinderGeometry(0.015, 0.015, cableLen, 6);
+      [-boxW*0.42, boxW*0.42].forEach(cx => {
+        const cable = new THREE.Mesh(cableGeo, steelMat);
+        cable.position.set(cx, 0.18 + cableLen/2, 0);
+        root.add(cable);
+      });
+
+      // Curved J-Array Boxes
+      let curY = 0;
+      let curZ = 0;
+      let curPitch = 0.04; // initial downward tilt
+      for (let i = 0; i < elements; i++) {
+        const boxGrp = new THREE.Group();
+        const cab = new THREE.Mesh(new THREE.BoxGeometry(boxW, boxH - 0.02, boxD), cabMat);
+        cab.castShadow = true;
+        boxGrp.add(cab);
+
+        const grille = new THREE.Mesh(new THREE.BoxGeometry(boxW - 0.06, boxH - 0.05, 0.03), grilleMat);
+        grille.position.z = boxD/2 + 0.01;
+        boxGrp.add(grille);
+
+        // Dual visible woofers behind grille + center waveguide
+        [-boxW*0.26, boxW*0.26].forEach(wx => {
+          const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.06, 0.04, 16), coneMat);
+          woofer.rotation.x = Math.PI / 2;
+          woofer.position.set(wx, 0, boxD/2 - 0.01);
+          boxGrp.add(woofer);
+        });
+
+        // Motivity Glowing Side Badges
+        const badgeL = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.10, 0.16), badgeMat);
+        badgeL.position.set(-boxW/2 - 0.01, 0, 0.08);
+        boxGrp.add(badgeL);
+        const badgeR = badgeL.clone();
+        badgeR.position.x = boxW/2 + 0.01;
+        boxGrp.add(badgeR);
+
+        boxGrp.position.set(0, curY, curZ);
+        boxGrp.rotation.x = curPitch;
+        root.add(boxGrp);
+
+        curY -= Math.cos(curPitch) * (boxH + 0.01);
+        curZ += Math.sin(curPitch) * (boxH + 0.01);
+        curPitch += 0.055; // Progressive J-curve splay
+      }
+    } else if (sp.name.includes('15M') || sp.name.includes('152')) {
+      // 2. STAGE FLOOR WEDGE MONITOR
+      const wedgeGrp = new THREE.Group();
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.36, 0.48), cabMat);
+      cab.rotation.x = -Math.PI * 0.22; // Angled upwards toward performer
+      cab.position.y = 0.20;
+      cab.castShadow = true;
+      wedgeGrp.add(cab);
+
+      const grille = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.30, 0.02), grilleMat);
+      grille.rotation.x = -Math.PI * 0.22;
+      grille.position.set(0, 0.29, 0.18);
+      wedgeGrp.add(grille);
+
+      const woofer = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.08, 0.04, 18), coneMat);
+      woofer.rotation.x = Math.PI/2 - Math.PI*0.22;
+      woofer.position.set(-0.12, 0.28, 0.17);
+      wedgeGrp.add(woofer);
+
+      root.add(wedgeGrp);
+    } else if (sp.type === 'sub') {
+      // 3. HEAVY DUAL-18" / SINGLE-18" SUBWOOFER
+      const isDual = sp.name.includes('218');
+      const subW = isDual ? 1.18 : 0.68;
+      const subH = 0.64;
+      const subD = 0.78;
+
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(subW, subH, subD), cabMat);
+      cab.position.y = subH / 2;
+      cab.castShadow = true;
+      cab.receiveShadow = true;
+      root.add(cab);
+
+      const grille = new THREE.Mesh(new THREE.BoxGeometry(subW - 0.08, subH - 0.08, 0.03), grilleMat);
+      grille.position.set(0, subH / 2, subD/2 + 0.01);
+      root.add(grille);
+
+      // Large 18" Woofer Cones
+      const offsets = isDual ? [-subW*0.24, subW*0.24] : [0];
+      offsets.forEach(ox => {
+        const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.12, 0.06, 24), coneMat);
+        cone.rotation.x = Math.PI / 2;
+        cone.position.set(ox, subH / 2, subD/2 - 0.01);
+        root.add(cone);
+
+        const cap = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), cabMat);
+        cap.position.set(ox, subH / 2, subD/2 + 0.01);
+        root.add(cap);
+      });
+
+      const logo = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.05, 0.02), badgeMat);
+      logo.position.set(0, subH - 0.07, subD/2 + 0.025);
+      root.add(logo);
+    } else {
+      // 4. POINT SOURCE / ACTIVE TOPS (ON TRIPOD STAND OR WALL BRACKET)
+      const isDual15 = sp.name.includes('DB-25');
+      const cabW = 0.50;
+      const cabH = isDual15 ? 1.05 : 0.72;
+      const cabD = 0.46;
+
+      const cab = new THREE.Mesh(new THREE.BoxGeometry(cabW, cabH, cabD), cabMat);
+      cab.position.y = cabH / 2;
+      cab.castShadow = true;
+      root.add(cab);
+
+      const grille = new THREE.Mesh(new THREE.BoxGeometry(cabW - 0.06, cabH - 0.06, 0.03), grilleMat);
+      grille.position.set(0, cabH / 2, cabD/2 + 0.01);
+      root.add(grille);
+
+      // Horn Waveguide
+      const horn = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.16, 0.04), steelMat);
+      horn.position.set(0, cabH - 0.18, cabD/2);
+      root.add(horn);
+
+      // Woofer Cones
+      const wYs = isDual15 ? [cabH*0.24, cabH*0.54] : [cabH*0.34];
+      wYs.forEach(wy => {
+        const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.09, 0.05, 20), coneMat);
+        cone.rotation.x = Math.PI / 2;
+        cone.position.set(0, wy, cabD/2 - 0.01);
+        root.add(cone);
+      });
+
+      // Power LED Indicator
+      const led = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 8), new THREE.MeshBasicMaterial({ color: sp.delay ? 0xfbbf24 : 0x38bdf8 }));
+      led.position.set(0, 0.07, cabD/2 + 0.025);
+      root.add(led);
+
+      // Heavy-duty Tripod Stand down to floor (for non-flown tops)
+      if (elev > 0.5 && elev <= 3.0) {
+        const poleH = elev;
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, poleH, 10), steelMat);
+        pole.position.y = -poleH / 2;
+        pole.castShadow = true;
+        root.add(pole);
+
+        // 3 Tripod Legs
+        for (let leg = 0; leg < 3; leg++) {
+          const ang = (leg * 120) * Math.PI / 180;
+          const legMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.75, 8), steelMat);
+          legMesh.position.set(Math.sin(ang)*0.24, -poleH + 0.25, Math.cos(ang)*0.24);
+          legMesh.rotation.z = -Math.sin(ang)*0.65;
+          legMesh.rotation.x = Math.cos(ang)*0.65;
+          root.add(legMesh);
+        }
+      } else if (elev > 3.0) {
+        // Wall / Truss Rigging Bracket
+        const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.5, 0.55), steelMat);
+        bracket.position.set(0, cabH/2, -0.2);
+        root.add(bracket);
+      }
     }
-  }
 
-  // Labels
-  if (layers.labels) {
+    root.userData.speakerRef = sp;
+    return root;
+  },
+
+  buildSpeakers() {
+    if (!this.initialized) return;
+    this.clearGroup(this.speakersGroup);
+    this.speakerMeshes = [];
+
     points.forEach(sp => {
-      const pos = speaker3DPosition(sp);
-      const pr = project3D(pos, cam);
-      if (!pr) return;
-      ctx3.fillStyle = sp.delay ? 'rgba(251,191,36,0.95)' : 'rgba(255,255,255,0.9)';
-      ctx3.font = 'bold 10px Cairo';
-      ctx3.textAlign = 'center';
-      ctx3.fillText(sp.name, pr.x, pr.y-15);
+      const mesh = this.createSpeakerMesh(sp);
+      this.speakersGroup.add(mesh);
+      this.speakerMeshes.push(mesh);
     });
+    this.updateSelectionRing();
+  },
+
+  /* 3D Acoustic Dispersion Cones, Wavefront Rings & Floor Heatmap */
+  buildAcoustics() {
+    if (!this.initialized) return;
+    this.clearGroup(this.acousticGroup);
+    this.waveRings = [];
+
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+
+    // 1. 3D Floor SPL Heatmap Plane
+    if (layers.heat && points.length > 0) {
+      const hGeo = new THREE.PlaneGeometry(L, W);
+      this.updateHeatmapTexture();
+      const hMat = new THREE.MeshBasicMaterial({
+        map: this.heatTex,
+        transparent: true,
+        opacity: 0.78,
+        depthWrite: false
+      });
+      this.heatMesh = new THREE.Mesh(hGeo, hMat);
+      this.heatMesh.rotation.x = -Math.PI / 2;
+      this.heatMesh.position.set(L/2, 0.03, W/2);
+      this.acousticGroup.add(this.heatMesh);
+    }
+
+    // 2. Volumetric Dispersion Frustums / Cones + 3D Wavefront Rings
+    points.forEach((sp, idx) => {
+      const pos2D = {
+        x: (sp.x - worldBox.x0) / (worldBox.scale || 1),
+        z: (sp.y - worldBox.y0) / (worldBox.scale || 1)
+      };
+      const elev = getElevation(sp);
+      const yawRad = (90 - sp.angle) * Math.PI / 180;
+      const colorHex = sp.delay ? 0xfbbf24 : sp.type === 'main' ? 0x38bdf8 : sp.type === 'sub' ? 0xe5c07b : 0x22c55e;
+
+      // Volumetric Dispersion Pyramid/Frustum
+      if (layers.beams) {
+        const range = Math.min(Math.max(L, W) * 1.1, sp.rangeM || 45);
+        const hHalf = ((sp.hAngle || 90) / 2) * Math.PI / 180;
+        const vHalf = ((sp.vAngle || 50) / 2) * Math.PI / 180;
+        const farW = Math.tan(hHalf) * range;
+        const farH = Math.tan(vHalf) * range;
+
+        // Custom pyramid geometry with apex at (0,0,0) pointing to +Z
+        const geom = new THREE.BufferGeometry();
+        const verts = new Float32Array([
+          // Front face (far cap)
+          -farW, -farH, range,   farW, -farH, range,   farW,  farH, range,
+          -farW, -farH, range,   farW,  farH, range,  -farW,  farH, range,
+          // Bottom face
+          0, 0, 0,   farW, -farH, range,  -farW, -farH, range,
+          // Top face
+          0, 0, 0,  -farW,  farH, range,   farW,  farH, range,
+          // Left face
+          0, 0, 0,  -farW, -farH, range,  -farW,  farH, range,
+          // Right face
+          0, 0, 0,   farW,  farH, range,   farW, -farH, range
+        ]);
+        geom.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+        geom.computeVertexNormals();
+
+        const coneMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: sp === selectedPoint ? 0.16 : 0.08,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        const coneMesh = new THREE.Mesh(geom, coneMat);
+        coneMesh.position.set(pos2D.x, elev, pos2D.z);
+        coneMesh.rotation.y = yawRad;
+        coneMesh.rotation.x = sp.type === 'sub' ? 0 : 0.18; // Slight downward aim toward audience
+        this.acousticGroup.add(coneMesh);
+
+        // Wireframe edges for engineering clarity
+        const edges = new THREE.EdgesGeometry(geom);
+        const lineMat = new THREE.LineBasicMaterial({
+          color: colorHex,
+          transparent: true,
+          opacity: sp === selectedPoint ? 0.65 : 0.25
+        });
+        const wire = new THREE.LineSegments(edges, lineMat);
+        coneMesh.add(wire);
+      }
+
+      // Animated 3D Wavefront Rings
+      if (layers.waves) {
+        for (let r = 0; r < 2; r++) {
+          const torusGeo = new THREE.TorusGeometry(1, 0.035, 8, 32, ((sp.hAngle || 100) * Math.PI) / 180);
+          const torusMat = new THREE.MeshBasicMaterial({
+            color: colorHex,
+            transparent: true,
+            opacity: 0.55
+          });
+          const ring = new THREE.Mesh(torusGeo, torusMat);
+          ring.position.set(pos2D.x, elev, pos2D.z);
+          ring.rotation.x = Math.PI / 2;
+          // Align arc center with speaker yaw
+          const halfArc = (((sp.hAngle || 100) / 2) * Math.PI) / 180;
+          ring.rotation.z = -yawRad + Math.PI/2 - halfArc;
+          ring.userData = { phase: r * 0.5 + idx * 0.13, maxScale: sp.type === 'sub' ? 9 : 13 };
+          this.acousticGroup.add(ring);
+          this.waveRings.push(ring);
+        }
+      }
+    });
+  },
+
+  updateHeatmapTexture() {
+    if (!this.initialized) return;
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const resX = 96, resY = 64;
+    const cv = document.createElement('canvas');
+    cv.width = resX;
+    cv.height = resY;
+    const g = cv.getContext('2d');
+    for (let j = 0; j < resY; j++) {
+      for (let i = 0; i < resX; i++) {
+        const px = worldBox.x0 + ((i + 0.5) / resX) * worldBox.W;
+        const py = worldBox.y0 + ((j + 0.5) / resY) * worldBox.H;
+        const spl = computeSPLAt(px, py);
+        g.fillStyle = splColor(spl);
+        g.fillRect(i, j, 1, 1);
+      }
+    }
+    if (this.heatTex) this.heatTex.dispose();
+    this.heatTex = new THREE.CanvasTexture(cv);
+    if (this.heatMesh) {
+      this.heatMesh.material.map = this.heatTex;
+      this.heatMesh.material.needsUpdate = true;
+    }
+  },
+
+  updateSelectionRing() {
+    if (!this.selectionRing) return;
+    if (!selectedPoint) {
+      this.selectionRing.visible = false;
+      return;
+    }
+    const rx = (selectedPoint.x - worldBox.x0) / (worldBox.scale || 1);
+    const rz = (selectedPoint.y - worldBox.y0) / (worldBox.scale || 1);
+    this.selectionRing.position.set(rx, 0.06, rz);
+    this.selectionRing.visible = true;
+  },
+
+  rebuildAll() {
+    if (!this.initialized) return;
+    this.buildRoom();
+    this.buildAudience();
+    this.buildSpeakers();
+    this.buildAcoustics();
+    this.updateHUD();
+  },
+
+  updateHUD() {
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const H = +$('room_h').value || 10;
+    const room = getRoomAcoustics();
+    const sti = stiAt(worldBox.x0 + 30, worldBox.y0 + worldBox.H - 30);
+    if ($('hudDim')) $('hudDim').textContent = `${L}×${W}×${H} م`;
+    if ($('hudVol')) $('hudVol').textContent = `${room.V.toFixed(0)} م³`;
+    if ($('hudRT60')) $('hudRT60').textContent = `${room.RT60.toFixed(2)} s`;
+    if ($('hudDc')) $('hudDc').textContent = `${room.Dc.toFixed(1)} م`;
+    if ($('hudSpk')) $('hudSpk').textContent = points.length;
+    if ($('hudSTI')) $('hudSTI').textContent = sti != null ? `${sti.toFixed(2)} (${stiLabel(sti)})` : '—';
+  },
+
+  resize(w, h) {
+    if (!this.initialized || !this.renderer || !this.camera) return;
+    this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(w, h, false);
+  },
+
+  setCameraPreset(name) {
+    if (!this.initialized || !this.camera || !this.controls) return;
+    const L = +$('room_l').value || 40;
+    const W = +$('room_w').value || 25;
+    const H = +$('room_h').value || 10;
+    const sD = +$('stage_d').value || 8;
+    const cx = L / 2, cz = W / 2;
+
+    switch (name) {
+      case 'front':
+        this.camera.position.set(cx, H * 0.55, W + Math.max(L, W) * 0.55);
+        this.controls.target.set(cx, H * 0.35, sD * 0.5);
+        break;
+      case 'top':
+        this.camera.position.set(cx, Math.max(L, W) * 1.15, cz + 0.1);
+        this.controls.target.set(cx, 0, cz);
+        break;
+      case 'side':
+        this.camera.position.set(L + Math.max(L, W) * 0.65, H * 0.6, cz);
+        this.controls.target.set(cx, H * 0.3, cz);
+        break;
+      case 'audience':
+        this.camera.position.set(cx, 1.75, W * 0.78);
+        this.controls.target.set(cx, 2.2, sD * 0.4);
+        break;
+      case 'stage':
+        this.camera.position.set(cx, 2.5, sD * 0.5);
+        this.controls.target.set(cx, 2.0, W * 0.75);
+        break;
+      case 'iso':
+      case 'reset':
+      default:
+        this.camera.position.set(L * 1.12, H * 1.45, W * 1.18);
+        this.controls.target.set(cx, H * 0.25, cz);
+        break;
+    }
+    this.controls.update();
+  },
+
+  render(t) {
+    if (!this.initialized || !this.renderer || !this.scene || !this.camera) return;
+
+    // Animate 3D acoustic wavefront rings
+    if (layers.waves && this.waveRings.length > 0) {
+      this.waveRings.forEach(ring => {
+        const off = (animT * 0.6 + ring.userData.phase) % 1;
+        const sc = 0.5 + off * ring.userData.maxScale;
+        ring.scale.set(sc, sc, 1);
+        ring.material.opacity = (1 - off) * 0.55;
+      });
+    }
+
+    // Pulse selection ring
+    if (this.selectionRing && this.selectionRing.visible) {
+      const pulse = 1 + 0.15 * Math.sin(animT * 5);
+      this.selectionRing.scale.set(pulse, pulse, 1);
+    }
+
+    if (this.controls) this.controls.update();
+    this.renderer.render(this.scene, this.camera);
   }
+};
 
-  // HUD
-  const room = getRoomAcoustics();
-  ctx3.fillStyle = 'rgba(22,27,34,0.92)';
-  ctx3.fillRect(10, 10, 220, 130);
-  ctx3.strokeStyle = 'rgba(56,189,248,0.3)';
-  ctx3.lineWidth = 1;
-  ctx3.strokeRect(10, 10, 220, 130);
-  ctx3.fillStyle = '#38bdf8';
-  ctx3.font = 'bold 11px Cairo';
-  ctx3.textAlign = 'right';
-  ctx3.fillText('الأبعاد: ' + L + '×' + RW + '×' + RH + ' م', 218, 30);
-  ctx3.fillStyle = '#fff';
-  ctx3.font = '10px Cairo';
-  ctx3.fillText('الحجم: ' + room.V.toFixed(0) + ' م³', 218, 48);
-  ctx3.fillText('RT60 @ ' + BANDS[currentBand] + 'Hz: ' + room.RT60.toFixed(2) + ' s', 218, 64);
-  ctx3.fillText('Dc: ' + room.Dc.toFixed(1) + ' م', 218, 80);
-  ctx3.fillText('السماعات: ' + points.length, 218, 96);
-  const sti = stiAt(worldBox.x0+30, worldBox.y0+worldBox.H-30);
-  ctx3.fillStyle = sti != null && sti >= 0.6 ? '#22c55e' : '#f59e0b';
-  ctx3.fillText('STI: ' + (sti != null ? sti.toFixed(2) : '—'), 218, 112);
-  ctx3.fillStyle = 'rgba(168,85,247,0.85)';
-  ctx3.font = 'bold 10px Cairo';
-  ctx3.fillText('🎥 عرض ثلاثي الأبعاد', 218, 130);
-
-  // Camera info
-  ctx3.fillStyle = 'rgba(139,148,158,0.6)';
-  ctx3.font = '9px Cairo';
-  ctx3.textAlign = 'left';
-  ctx3.fillText('θ=' + (view3D.theta*180/Math.PI).toFixed(0) + '°  φ=' + (view3D.phi*180/Math.PI).toFixed(0) + '°  r=' + view3D.radius.toFixed(0) + 'm', 12, Hc-10);
-
-  view3D.dirty = false;
+function draw3D() {
+  if (!WebGL3D.initialized) WebGL3D.init();
+  WebGL3D.render();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1615,6 +2321,7 @@ function addNewSpeaker(pos) {
   showBeamControls(newP);
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
   autosave();
   if (navigator.vibrate) navigator.vibrate(30);
@@ -1625,17 +2332,18 @@ function beginLongPress(p) {
   pointerState.longPressTimer = setTimeout(() => {
     pointerState.longPressTimer = null;
     if (pointerState.isDragging || !p) return;
-    if (confirm('حذف ' + p.name + '؟')) {
+    showConfirmModal('حذف السماعة ' + p.name + '؟', () => {
       pushHistory();
       points = points.filter(q => q !== p);
       selectedPoint = null;
       $('beamControls').classList.remove('on');
       invalidateHeat();
       draw();
+      if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
       updateKPI();
       autosave();
       if (navigator.vibrate) navigator.vibrate(50);
-    }
+    });
   }, 700);
 }
 function cancelLongPress() {
@@ -1712,7 +2420,12 @@ canvas.addEventListener('pointerup', e => {
       if (!hit) addNewSpeaker(pos);
     }
   }
-  if (dragTarget) { dragTarget = null; updateKPI(); autosave(); }
+  if (dragTarget) {
+    dragTarget = null;
+    if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); }
+    updateKPI();
+    autosave();
+  }
   pointerState.isDown = false;
   pointerState.isDragging = false;
   pointerState.activeId = null;
@@ -1732,7 +2445,7 @@ canvas.addEventListener('pointerleave', () => {
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 /* ═══════════════════════════════════════════════════════════════
-   9. 3D CAMERA CONTROLS
+   9. 3D TOGGLE & CAMERA PRESETS
    ═══════════════════════════════════════════════════════════════ */
 function toggle3D() {
   view3D.enabled = !view3D.enabled;
@@ -1742,19 +2455,24 @@ function toggle3D() {
     c3.style.display = 'block';
     $('cameraPresets').classList.add('on');
     $('hint3D').classList.add('on');
+    $('hud3D').classList.add('on');
     document.querySelector('.hint-bar').style.display = 'none';
     document.querySelector('.cursor-info').style.display = 'none';
-    const L = +$('room_l').value || 40;
-    const W = +$('room_w').value || 25;
-    const H = +$('room_h').value || 10;
-    if (!view3D.radius || view3D.radius < 10) view3D.radius = Math.max(L, W, H)*1.4;
-    view3D.dirty = true;
-    draw3D();
+
+    if (!WebGL3D.initialized) {
+      WebGL3D.init();
+      WebGL3D.setCameraPreset('iso');
+    } else {
+      WebGL3D.rebuildAll();
+    }
+    setupCanvasSize();
+    WebGL3D.render();
   } else {
     c2.style.display = 'block';
     c3.style.display = 'none';
     $('cameraPresets').classList.remove('on');
     $('hint3D').classList.remove('on');
+    $('hud3D').classList.remove('on');
     document.querySelector('.hint-bar').style.display = '';
     document.querySelector('.cursor-info').style.display = '';
     draw();
@@ -1765,130 +2483,7 @@ function toggle3D() {
 
 function setViewPreset(name) {
   if (!view3D.enabled) return;
-  const L = +$('room_l').value, W = +$('room_w').value, H = +$('room_h').value;
-  switch (name) {
-    case 'iso': view3D.theta = Math.PI*0.3; view3D.phi = Math.PI*0.35; view3D.radius = Math.max(L, W, H)*1.4; break;
-    case 'front': view3D.theta = -Math.PI/2; view3D.phi = Math.PI/2; view3D.radius = L*1.7; break;
-    case 'top': view3D.theta = 0; view3D.phi = 0.12; view3D.radius = Math.max(L, W)*1.5; break;
-    case 'side': view3D.theta = 0; view3D.phi = Math.PI/2; view3D.radius = W*2; break;
-    case 'audience': view3D.theta = Math.PI/2; view3D.phi = Math.PI*0.48; view3D.radius = L*0.95; break;
-    case 'reset':
-    default: view3D.theta = Math.PI*0.3; view3D.phi = Math.PI*0.35; view3D.radius = Math.max(L, W, H)*1.4;
-  }
-  view3D.dirty = true;
-  draw3D();
-}
-
-function attach3DControls() {
-  const c = view3D.canvas;
-  if (!c) return;
-  c.addEventListener('pointerdown', e => {
-    if (!view3D.enabled) return;
-    e.preventDefault();
-    try { c.setPointerCapture(e.pointerId); } catch(_) {}
-    view3D.pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    view3D.clickStartT = Date.now();
-    view3D.clickCandidate = { x:e.clientX, y:e.clientY };
-    if (view3D.pointers.size === 1) {
-      view3D.dragging = 'orbit';
-      view3D.lastX = e.clientX;
-      view3D.lastY = e.clientY;
-      c.classList.add('dragging');
-    } else if (view3D.pointers.size === 2) {
-      const pts = Array.from(view3D.pointers.values());
-      view3D.pinchDist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
-      view3D.dragging = 'pinch';
-      view3D.clickCandidate = null;
-    }
-  });
-
-  c.addEventListener('pointermove', e => {
-    if (!view3D.enabled) return;
-    if (!view3D.pointers.has(e.pointerId)) return;
-    view3D.pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if (view3D.clickCandidate) {
-      const dx = e.clientX-view3D.clickCandidate.x;
-      const dy = e.clientY-view3D.clickCandidate.y;
-      if (Math.hypot(dx, dy) > 6) view3D.clickCandidate = null;
-    }
-    if (view3D.dragging === 'orbit' && view3D.pointers.size === 1) {
-      const dx = e.clientX-view3D.lastX;
-      const dy = e.clientY-view3D.lastY;
-      view3D.theta += dx*0.008;
-      view3D.phi = Math.max(0.12, Math.min(Math.PI-0.12, view3D.phi-dy*0.008));
-      view3D.lastX = e.clientX;
-      view3D.lastY = e.clientY;
-      view3D.dirty = true;
-    } else if (view3D.dragging === 'pinch' && view3D.pointers.size === 2) {
-      const pts = Array.from(view3D.pointers.values());
-      const dist = Math.hypot(pts[0].x-pts[1].x, pts[0].y-pts[1].y);
-      if (view3D.pinchDist > 0) {
-        view3D.radius = Math.max(8, Math.min(400, view3D.radius * (view3D.pinchDist/dist)));
-      }
-      view3D.pinchDist = dist;
-      view3D.dirty = true;
-    }
-  });
-
-  c.addEventListener('pointerup', e => {
-    if (!view3D.enabled) return;
-    try { c.releasePointerCapture(e.pointerId); } catch(_) {}
-    view3D.pointers.delete(e.pointerId);
-    c.classList.remove('dragging');
-    if (view3D.pointers.size === 0) {
-      if (view3D.clickCandidate && (Date.now()-view3D.clickStartT) < 400) {
-        const rect = c.getBoundingClientRect();
-        const lx = (e.clientX-rect.left)*(c._logicalW/rect.width);
-        const ly = (e.clientY-rect.top)*(c._logicalH/rect.height);
-        hitTest3D(lx, ly);
-      }
-      view3D.dragging = null;
-      view3D.clickCandidate = null;
-    } else if (view3D.pointers.size === 1) {
-      const p = Array.from(view3D.pointers.values())[0];
-      view3D.lastX = p.x;
-      view3D.lastY = p.y;
-      view3D.dragging = 'orbit';
-    }
-  });
-
-  c.addEventListener('pointercancel', e => {
-    view3D.pointers.delete(e.pointerId);
-    if (view3D.pointers.size === 0) {
-      view3D.dragging = null;
-      view3D.clickCandidate = null;
-      c.classList.remove('dragging');
-    }
-  });
-
-  c.addEventListener('wheel', e => {
-    if (!view3D.enabled) return;
-    e.preventDefault();
-    const factor = e.deltaY > 0 ? 1.1 : 0.9;
-    view3D.radius = Math.max(8, Math.min(400, view3D.radius*factor));
-    view3D.dirty = true;
-  }, { passive:false });
-
-  c.addEventListener('contextmenu', e => e.preventDefault());
-}
-
-function hitTest3D(lx, ly) {
-  if (!view3D.cam) return;
-  let best = null, bestDist = 35;
-  points.forEach(sp => {
-    const pos = speaker3DPosition(sp);
-    const pr = project3D(pos, view3D.cam);
-    if (!pr) return;
-    const d = Math.hypot(pr.x-lx, pr.y-ly);
-    if (d < bestDist) { bestDist = d; best = sp; }
-  });
-  if (best) {
-    selectedPoint = best;
-    showBeamControls(best);
-    $('beamControls').classList.add('on');
-    view3D.dirty = true;
-    draw3D();
-  }
+  WebGL3D.setCameraPreset(name);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1904,6 +2499,11 @@ function updateSelected() {
   $('sel_name').innerText = selectedPoint.name + ' · ' + selectedPoint.angle + '°';
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) {
+    WebGL3D.buildSpeakers();
+    WebGL3D.buildAcoustics();
+    WebGL3D.updateHUD();
+  }
   updateKPI();
   autosave();
   drawPolar();
@@ -1916,6 +2516,7 @@ function showBeamControls(p) {
   $('laCtrl').style.display = p.isLineArray ? 'block' : 'none';
   if (p.isLineArray) $('la_elements').value = p.elements;
   $('beamControls').classList.add('on');
+  if (WebGL3D.initialized) WebGL3D.updateSelectionRing();
   drawPolar();
 }
 
@@ -1928,6 +2529,11 @@ function deleteSelected() {
   $('beamControls').classList.remove('on');
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) {
+    WebGL3D.buildSpeakers();
+    WebGL3D.buildAcoustics();
+    WebGL3D.updateHUD();
+  }
   updateKPI();
   autosave();
   drawPolar();
@@ -1935,9 +2541,9 @@ function deleteSelected() {
 
 function autoDelay() {
   const mains = points.filter(p => p.type === 'main');
-  if (!mains.length) return alert('وزّع النظام الرئيسي أولاً');
+  if (!mains.length) return showToast('⚠️ وزّع النظام الرئيسي أولاً');
   const W = +$('room_w').value, sD = +$('stage_d').value;
-  if (W-sD < 15) return alert('عمق الجمهور أقل من 15م — التأخير غير ضروري');
+  if (W-sD < 15) return showToast('ℹ️ عمق الجمهور أقل من 15م — التأخير غير ضروري');
   pushHistory();
   points = points.filter(p => !p.delay);
   const b = getWorldBox();
@@ -1954,13 +2560,15 @@ function autoDelay() {
   });
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
   autosave();
+  showToast('✅ تم حساب وتوزيع سماعات تأخير Haas');
 }
 
 function mirrorSel() {
   const p = selectedPoint;
-  if (!p) return alert('اختر سماعة أولاً');
+  if (!p) return showToast('⚠️ اختر سماعة أولاً');
   pushHistory();
   const q = JSON.parse(JSON.stringify(p));
   const b = worldBox;
@@ -1972,8 +2580,10 @@ function mirrorSel() {
   showBeamControls(q);
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
   autosave();
+  showToast('✅ تم إنشاء نسخة متناظرة L/R');
 }
 
 function setMode(m) {
@@ -1988,13 +2598,17 @@ function toggle(key) {
   if (btn) btn.classList.toggle('on', layers[key]);
   if (key === 'heat') $('legend').classList.toggle('on', layers.heat);
   invalidateHeat();
-  if (view3D.enabled) { view3D.dirty = true; draw3D(); }
-  else draw();
+  if (WebGL3D.initialized) {
+    if (key === 'audience') WebGL3D.buildAudience();
+    else if (key === 'grid') WebGL3D.buildRoom();
+    else if (key === 'heat' || key === 'beams' || key === 'waves') WebGL3D.buildAcoustics();
+  }
+  if (!view3D.enabled) draw();
 }
 
 function toggleSidebar() {
   $('sidebar').classList.toggle('collapsed');
-  setTimeout(() => { setupCanvasSize(); draw(); }, 320);
+  setTimeout(() => { setupCanvasSize(); if (!view3D.enabled) draw(); }, 320);
 }
 
 function pushHistory() {
@@ -2010,6 +2624,7 @@ function undo() {
   $('beamControls').classList.remove('on');
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
 }
 function redo() {
@@ -2020,19 +2635,23 @@ function redo() {
   $('beamControls').classList.remove('on');
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
 }
 function resetCanvas() {
-  if (!confirm('تصفير المخطط بالكامل؟')) return;
-  pushHistory();
-  points = [];
-  selectedPoint = null;
-  $('sel_name').innerText = '-- اختر --';
-  $('beamControls').classList.remove('on');
-  invalidateHeat();
-  draw();
-  updateKPI();
-  autosave();
+  showConfirmModal('هل تريد تصفير المخطط بالكامل؟', () => {
+    pushHistory();
+    points = [];
+    selectedPoint = null;
+    $('sel_name').innerText = '-- اختر --';
+    $('beamControls').classList.remove('on');
+    invalidateHeat();
+    draw();
+    if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
+    updateKPI();
+    autosave();
+    showToast('🔄 تم تصفير المخطط');
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2058,22 +2677,23 @@ function metrics() {
 function saveScen(k) {
   scen[k] = {
     pts: JSON.parse(JSON.stringify(points)),
-    m: metrics(),
-    cam: { theta:view3D.theta, phi:view3D.phi, radius:view3D.radius }
+    m: metrics()
   };
   showAB();
+  showToast('💾 تم حفظ السيناريو ' + k);
   if (navigator.vibrate) navigator.vibrate(20);
 }
 function loadScen(k) {
-  if (!scen[k]) return;
+  if (!scen[k]) return showToast('⚠️ السيناريو ' + k + ' فارغ');
   pushHistory();
   points = JSON.parse(JSON.stringify(scen[k].pts));
-  if (scen[k].cam) Object.assign(view3D, scen[k].cam);
   selectedPoint = null;
   $('beamControls').classList.remove('on');
   invalidateHeat();
-  if (view3D.enabled) draw3D(); else draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
+  if (!view3D.enabled) draw();
   updateKPI();
+  showToast('📂 تم تحميل السيناريو ' + k);
 }
 function showAB() {
   const A = scen.A?.m, B = scen.B?.m;
@@ -2138,7 +2758,6 @@ function drawPolar() {
   g.stroke();
   g.fillStyle = 'rgba(56,189,248,0.15)';
   g.fill();
-  // Direction indicator
   const th = (p.angle-90)*Math.PI/180;
   g.strokeStyle = 'rgba(255,255,255,0.5)';
   g.lineWidth = 1.5;
@@ -2181,6 +2800,7 @@ function applySmartLayout() {
   else deployPointSource(profile);
   invalidateHeat();
   draw();
+  if (WebGL3D.initialized) { WebGL3D.buildSpeakers(); WebGL3D.buildAcoustics(); WebGL3D.updateHUD(); }
   updateKPI();
   autosave();
 }
@@ -2376,8 +2996,8 @@ function setBand(i) {
   $('legendBand').textContent = BANDS[i] >= 1000 ? (BANDS[i]/1000) + 'k' : BANDS[i];
   roomBase = null;
   invalidateHeat();
-  if (view3D.enabled) { view3D.dirty = true; draw3D(); }
-  else draw();
+  if (WebGL3D.initialized) WebGL3D.updateHUD();
+  if (!view3D.enabled) draw();
   updateKPI();
 }
 
@@ -2412,7 +3032,7 @@ function buildEngineeringDecision() {
 }
 
 function generateReport() {
-  if (!points.length) { alert('أضف سماعات أولاً'); return; }
+  if (!points.length) { showToast('⚠️ أضف سماعات أولاً لتوليد التقرير'); return; }
   const decision = buildEngineeringDecision();
   const room = decision.room;
   const target = getRT60Target();
@@ -2431,7 +3051,6 @@ function generateReport() {
     <div class="kpi-card ${uni !== null && uni <= 6 ? 'ok' : 'warn'}"><h4>التوحيد</h4><span>${uni !== null ? uni.toFixed(1) : '—'} dB</span></div>
   `;
 
-  // Multi-band table
   $('bandSection').innerHTML = `
     <table class="rep-table">
       <thead><tr><th>التردد (Hz)</th>${BANDS.map(f => `<th>${f}</th>`).join('')}</tr></thead>
@@ -2465,7 +3084,6 @@ function generateReport() {
     </div>
   `;
 
-  // BOQ
   const counts = {};
   points.forEach(p => {
     const key = p.isLineArray ? p.name + ' (' + p.elements + ' وحدات)' : p.name;
@@ -2499,7 +3117,6 @@ function generateReport() {
     </div>
   `;
 
-  // Detail table
   $('detailSection').innerHTML = `
     <table class="rep-table">
       <thead><tr><th>#</th><th>المنتج</th><th>X (م)</th><th>Y (م)</th><th>Z (م)</th><th>الاتجاه</th><th>المدى</th><th>SPL</th><th>Watt</th><th>تأخير</th></tr></thead>
@@ -2524,22 +3141,24 @@ function generateReport() {
     </table>
   `;
 
+  // Ensure crisp 2D snapshot
+  const was3D = view3D.enabled;
+  if (was3D) { view3D.enabled = false; draw(); view3D.enabled = true; }
   $('reportImg').src = canvas.toDataURL('image/png');
 
-  // 3D snapshot
-  if (view3D.canvas && view3D.ctx) {
-    const wasEnabled = view3D.enabled;
-    const wasDirty = view3D.dirty;
-    view3D.enabled = true;
-    if (!view3D.canvas._logicalW) setupCanvasSize();
-    draw3D();
-    $('reportImg3D').src = view3D.canvas.toDataURL('image/png');
-    view3D.enabled = wasEnabled;
-    view3D.dirty = wasDirty;
-    if (!wasEnabled) {
-      view3D.canvas.style.display = 'none';
-      canvas.style.display = 'block';
+  // Ensure crisp 3D WebGL snapshot even if currently in 2D mode
+  if (view3D.canvas) {
+    if (!WebGL3D.initialized) {
+      WebGL3D.init();
+      WebGL3D.setCameraPreset('iso');
+    } else {
+      WebGL3D.rebuildAll();
     }
+    const w = canvas._logicalW || 800;
+    const h = canvas._logicalH || 500;
+    WebGL3D.resize(w, h);
+    WebGL3D.render();
+    $('reportImg3D').src = WebGL3D.renderer.domElement.toDataURL('image/png');
   }
 
   $('reportPage').style.display = 'block';
@@ -2552,10 +3171,11 @@ function closeReport() { $('reportPage').style.display = 'none'; }
    16. SAVE / LOAD
    ═══════════════════════════════════════════════════════════════ */
 function saveMapPNG() {
+  if (view3D.enabled && WebGL3D.initialized) WebGL3D.render();
   const src = view3D.enabled ? view3D.canvas : canvas;
   const link = document.createElement('a');
   link.href = src.toDataURL('image/png');
-  link.download = 'Motivity_' + (view3D.enabled ? '3D_' : '2D_') + Date.now() + '.png';
+  link.download = 'Motivity_' + (view3D.enabled ? '3D_WebGL_' : '2D_') + Date.now() + '.png';
   link.click();
 }
 
@@ -2566,7 +3186,7 @@ function getSettings() {
     event: $('event_type').value, splTarget: $('spl_target').value,
     floor_mat: $('floor_mat').value, wall_mat: $('wall_mat').value,
     ceiling_mat: $('ceiling_mat').value, audience_type: $('audience_type').value,
-    currentBand, cam3D: view3D.enabled ? { theta:view3D.theta, phi:view3D.phi, radius:view3D.radius } : null
+    currentBand
   };
 }
 
@@ -2584,7 +3204,6 @@ function applySettings(s) {
   if (s.ceiling_mat) $('ceiling_mat').value = s.ceiling_mat;
   if (s.audience_type) $('audience_type').value = s.audience_type;
   if (s.currentBand != null) setBand(s.currentBand);
-  if (s.cam3D) { view3D.theta = s.cam3D.theta; view3D.phi = s.cam3D.phi; view3D.radius = s.cam3D.radius; }
 }
 
 function sanitizePts(arr) {
@@ -2608,7 +3227,7 @@ function sanitizePts(arr) {
 }
 
 function saveProjectJSON() {
-  const data = { points, settings: getSettings(), version: '2026.3-indoor-3d-studio' };
+  const data = { points, settings: getSettings(), version: '2026.4-indoor-webgl-3d' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -2631,9 +3250,11 @@ function loadProjectJSON(e) {
       setupCanvasSize();
       invalidateHeat();
       draw();
+      if (WebGL3D.initialized) WebGL3D.rebuildAll();
       updateKPI();
       autosave();
-    } catch (err) { alert('ملف غير صالح'); }
+      showToast('📂 تم تحميل المشروع بنجاح');
+    } catch (err) { showToast('❌ ملف JSON غير صالح'); }
   };
   reader.readAsText(file);
   e.target.value = '';
@@ -2667,8 +3288,8 @@ const debouncedUpdate = (() => {
       roomBase = null;
       setupCanvasSize();
       invalidateHeat();
-      if (view3D.enabled) { view3D.dirty = true; draw3D(); }
-      else draw();
+      if (WebGL3D.initialized) WebGL3D.rebuildAll();
+      if (!view3D.enabled) draw();
       updateKPI();
       autosave();
     }, 150);
@@ -2706,19 +3327,14 @@ function setupCanvasSize() {
   canvas._logicalW = logicalW;
   canvas._logicalH = logicalH;
   canvas._dpr = DPR;
+  worldBox = getWorldBox();
 
-  if (view3D.canvas && view3D.ctx) {
-    view3D.canvas.style.width = logicalW + 'px';
-    view3D.canvas.style.height = logicalH + 'px';
-    view3D.canvas.width = Math.floor(logicalW*DPR);
-    view3D.canvas.height = Math.floor(logicalH*DPR);
-    view3D.ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    view3D.canvas._logicalW = logicalW;
-    view3D.canvas._logicalH = logicalH;
-    view3D.cx = logicalW/2;
-    view3D.cy = logicalH/2;
-    view3D.focal = Math.min(logicalW, logicalH)*0.95;
-    view3D.dirty = true;
+  if (view3D.canvas) {
+    const w3 = Math.floor(availW);
+    const h3 = Math.floor(availH);
+    view3D.canvas.style.width = w3 + 'px';
+    view3D.canvas.style.height = h3 + 'px';
+    if (WebGL3D.initialized) WebGL3D.resize(w3, h3);
   }
 
   heatCanvas = null;
@@ -2743,7 +3359,7 @@ window.addEventListener('orientationchange', () => setTimeout(handleResize, 250)
 function loop(t) {
   animT += 0.02;
   if (view3D.enabled) {
-    if (view3D.dirty) draw3D();
+    draw3D();
   } else {
     draw();
   }
@@ -2766,6 +3382,7 @@ window.addEventListener('keydown', e => {
   } else if (e.key === 'Escape') {
     selectedPoint = null;
     $('beamControls').classList.remove('on');
+    if (WebGL3D.initialized) WebGL3D.updateSelectionRing();
     draw();
     drawPolar();
   }
@@ -2774,7 +3391,6 @@ window.addEventListener('keydown', e => {
 // Init
 window.addEventListener('load', () => {
   setupCanvasSize();
-  attach3DControls();
 
   const restored = restoreDraft();
   if (restored) {
