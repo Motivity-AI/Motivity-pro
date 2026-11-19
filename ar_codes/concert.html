@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Motivity Master AI · Large Open Spaces 2026</title>
+<title>Motivity Master AI · Large Open Spaces 2026 (True 3D)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
 :root{--red:#e60012;--blue:#38bdf8;--green:#22c55e;--yellow:#e5c07b;--purple:#a855f7;--orange:#f59e0b;--bg:#0d1117;--bd:#30363d;--mu:#8b949e}
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
@@ -184,6 +186,11 @@ canvas#mainCanvas.tool-pan{cursor:grab}
 .badge-heat{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:900}
 .badge-conn{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:900}
 .viz-card canvas{width:100%;height:auto;display:block;border-radius:10px;background:#0a0f15;border:1px solid #1a2332}
+.viewport-3d-box{position:relative;width:100%;height:560px;border-radius:10px;overflow:hidden;background:#050810;border:1px solid #1a2332;touch-action:none}
+.viewport-3d-toolbar{position:absolute;top:12px;left:12px;z-index:10;display:flex;gap:6px;flex-wrap:wrap}
+.viewport-3d-toolbar button{background:rgba(15,23,42,.88);color:#e2e8f0;border:1px solid rgba(56,189,248,.35);padding:6px 11px;border-radius:7px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
+.viewport-3d-toolbar button:hover,.viewport-3d-toolbar button.active{background:#38bdf8;color:#000}
+.viewport-3d-hud{position:absolute;bottom:12px;right:12px;z-index:10;background:rgba(10,15,26,.82);border:1px solid rgba(56,189,248,.3);color:#cbd5e1;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;pointer-events:none}
 .viz-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:11.5px;color:#444;font-weight:700}
 .viz-legend .lg{display:flex;align-items:center;gap:6px}
 .viz-legend .lg i{width:16px;height:8px;border-radius:3px;display:inline-block;font-style:normal}
@@ -211,6 +218,7 @@ canvas#mainCanvas.tool-pan{cursor:grab}
   html{overflow:visible}
   .charts-grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .chart-card,.viz-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none}
+  .viewport-3d-box{height:420px}
 }
 
 @media (max-width:900px){
@@ -235,6 +243,7 @@ canvas#mainCanvas.tool-pan{cursor:grab}
   .charts-grid{grid-template-columns:1fr}
   .chart-card.full{grid-column:span 1}
   .viz-card{padding:10px}
+  .viewport-3d-box{height:380px}
 }
 </style>
 </head>
@@ -542,12 +551,22 @@ canvas#mainCanvas.tool-pan{cursor:grab}
     <h3 style="border-right:5px solid var(--red);padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">📋 جدول التوزيع التفصيلي</h3>
     <div class="rep-table-wrap" id="detailSection"></div>
 
-    <h3 style="border-right:5px solid #38bdf8;padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🏗️ العرض ثلاثي الأبعاد</h3>
+    <h3 style="border-right:5px solid #38bdf8;padding-right:12px;margin:22px 0 12px;font-size:16px;color:#111">🏗️ العرض ثلاثي الأبعاد الحقيقي (Three.js 3D)</h3>
     <div class="viz-card">
-      <div class="viz-head"><span class="badge-3d">🎯 ISO 3D</span><small>المسرح · العناقيد · الجمهور</small></div>
-      <canvas id="chart_3d_iso" width="1200" height="620"></canvas>
+      <div class="viz-head"><span class="badge-3d">🌐 REAL-TIME 3D</span><small>سحب للتدوير · يمين للتحريك · عجلة للتقريب</small></div>
+      <div class="viewport-3d-box" id="viewport3DBox">
+        <div class="viewport-3d-toolbar no-print">
+          <button id="cam3dPersp" class="active" onclick="set3DCameraView('persp')">🔭 منظور شامل</button>
+          <button id="cam3dStage" onclick="set3DCameraView('stage')">🎭 المسرح</button>
+          <button id="cam3dTop" onclick="set3DCameraView('top')">⬆️ علوي</button>
+          <button id="cam3dSide" onclick="set3DCameraView('side')">📐 جانبي</button>
+          <button id="tg3dBeams" class="active" onclick="toggle3DBeams()">📡 المخاريط الصوتية</button>
+          <button id="tg3dCrowd" class="active" onclick="toggle3DCrowd()">👥 الجمهور</button>
+        </div>
+        <div class="viewport-3d-hud" id="hud3D">المسرح · العناقيد · المخاريط الصوتية · الجمهور</div>
+      </div>
       <div class="viz-legend">
-        <span class="lg"><i style="background:#e60012"></i>المرحلة</span>
+        <span class="lg"><i style="background:#e60012"></i>المسرح</span>
         <span class="lg"><i style="background:#38bdf8"></i>Line Array</span>
         <span class="lg"><i style="background:#e5c07b"></i>Subs</span>
         <span class="lg"><i style="background:#22c55e"></i>Side Fills</span>
@@ -668,6 +687,12 @@ var heatCanvas = null;
 var heatDirty = true;
 var lastKpiT = 0;
 var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+/* ═══ حالة العرض ثلاثي الأبعاد الحقيقي (Three.js) ═══ */
+var scene3D = null, camera3D = null, renderer3D = null, controls3D = null;
+var contentGroup3D = null, beamsGroup3D = null, crowdGroup3D = null;
+var show3DBeams = true, show3DCrowd = true;
+var animFrame3D = null;
 
 /* ═══ كتالوج 33 منتج (بدون أسعار) ═══ */
 var CATALOG = {
@@ -2056,6 +2081,425 @@ function renderStructuralLoad() {
   box.style.display = maxClusterWeight > 0 ? 'block' : 'none';
 }
 
+/* ═══ العرض ثلاثي الأبعاد الحقيقي الكامل (Three.js + OrbitControls) ═══ */
+function initTrue3DViewport() {
+  var box = $('viewport3DBox');
+  if (!box || typeof THREE === 'undefined') return;
+
+  if (!renderer3D) {
+    scene3D = new THREE.Scene();
+    scene3D.background = new THREE.Color(0x050912);
+    scene3D.fog = new THREE.FogExp2(0x050912, 0.0022);
+
+    var w = box.clientWidth || 1100;
+    var h = box.clientHeight || 560;
+    camera3D = new THREE.PerspectiveCamera(48, w / h, 0.5, 2500);
+    camera3D.position.set(95, 78, -85);
+
+    renderer3D = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+    renderer3D.setSize(w, h);
+    renderer3D.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer3D.shadowMap.enabled = true;
+    renderer3D.shadowMap.type = THREE.PCFSoftShadowMap;
+    box.appendChild(renderer3D.domElement);
+
+    if (typeof THREE.OrbitControls !== 'undefined') {
+      controls3D = new THREE.OrbitControls(camera3D, renderer3D.domElement);
+      controls3D.enableDamping = true;
+      controls3D.dampingFactor = 0.06;
+      controls3D.maxPolarAngle = Math.PI * 0.49;
+      controls3D.minDistance = 12;
+      controls3D.maxDistance = 650;
+      controls3D.target.set(0, 4, 55);
+      controls3D.update();
+    }
+
+    var hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x1e293b, 0.85);
+    scene3D.add(hemiLight);
+
+    var dirLight = new THREE.DirectionalLight(0xffffff, 1.1);
+    dirLight.position.set(90, 140, 60);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    dirLight.shadow.camera.near = 10;
+    dirLight.shadow.camera.far = 420;
+    var dCam = 180;
+    dirLight.shadow.camera.left = -dCam;
+    dirLight.shadow.camera.right = dCam;
+    dirLight.shadow.camera.top = dCam;
+    dirLight.shadow.camera.bottom = -dCam;
+    scene3D.add(dirLight);
+
+    var fillLight = new THREE.PointLight(0x38bdf8, 0.7, 260);
+    fillLight.position.set(-50, 25, 10);
+    scene3D.add(fillLight);
+
+    contentGroup3D = new THREE.Group();
+    scene3D.add(contentGroup3D);
+
+    window.addEventListener('resize', resizeTrue3DViewport);
+  }
+
+  resizeTrue3DViewport();
+  rebuildTrue3DScene();
+
+  if (!animFrame3D) {
+    var renderLoop3D = function() {
+      animFrame3D = requestAnimationFrame(renderLoop3D);
+      if ($('reportPage').style.display === 'none') return;
+      if (controls3D) controls3D.update();
+      if (renderer3D && scene3D && camera3D) renderer3D.render(scene3D, camera3D);
+    };
+    renderLoop3D();
+  }
+}
+
+function resizeTrue3DViewport() {
+  var box = $('viewport3DBox');
+  if (!box || !renderer3D || !camera3D) return;
+  var w = box.clientWidth || 1100;
+  var h = box.clientHeight || 560;
+  camera3D.aspect = w / h;
+  camera3D.updateProjectionMatrix();
+  renderer3D.setSize(w, h);
+}
+
+function clearGroup3D(grp) {
+  if (!grp) return;
+  while (grp.children.length > 0) {
+    var obj = grp.children[0];
+    grp.remove(obj);
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.material) {
+      if (Array.isArray(obj.material)) obj.material.forEach(function(m) { m.dispose(); });
+      else obj.material.dispose();
+    }
+  }
+}
+
+function rebuildTrue3DScene() {
+  if (!scene3D || !contentGroup3D) return;
+  clearGroup3D(contentGroup3D);
+
+  var depth_m = +$('field_depth').value || 120;
+  var width_m = +$('audience_width').value || 70;
+  var stageD_m = +$('stage_d').value || 12;
+  var stageW_m = +$('stage_w').value || 25;
+  var hangH_m = +$('hang_height').value || 12;
+  var groundType = $('ground_type').value;
+  var aud = getAudienceData();
+
+  var groundColors = { grass:0x143320, concrete:0x272a30, water:0x0c293d, sand:0x3a2c1c };
+  var groundMat = new THREE.MeshStandardMaterial({
+    color: groundColors[groundType] || 0x143320,
+    roughness: groundType === 'water' ? 0.15 : 0.85,
+    metalness: groundType === 'water' ? 0.35 : 0.05
+  });
+  var groundMesh = new THREE.Mesh(new THREE.PlaneGeometry(Math.max(500, width_m * 4), Math.max(500, depth_m * 4)), groundMat);
+  groundMesh.rotation.x = -Math.PI / 2;
+  groundMesh.position.set(0, -0.05, depth_m * 0.4);
+  groundMesh.receiveShadow = true;
+  contentGroup3D.add(groundMesh);
+
+  var gridHelper = new THREE.GridHelper(Math.max(400, depth_m * 2.5), 40, 0x38bdf8, 0x1e293b);
+  gridHelper.position.set(0, 0.02, depth_m * 0.45);
+  gridHelper.material.opacity = 0.28;
+  gridHelper.material.transparent = true;
+  contentGroup3D.add(gridHelper);
+
+  // منطقة الجمهور (Audience Zone)
+  var shape = getFieldShape();
+  var audShape = new THREE.Shape();
+  var halfW = width_m / 2;
+  var frontHalfW = Math.min(halfW, stageW_m / 2 + 4);
+  if (shape === 'fan') {
+    audShape.moveTo(-frontHalfW, 0);
+    audShape.lineTo(frontHalfW, 0);
+    audShape.lineTo(halfW, depth_m);
+    audShape.lineTo(-halfW, depth_m);
+    audShape.closePath();
+  } else if (shape === 'oval') {
+    audShape.absellipse(0, depth_m * 0.5, halfW, depth_m * 0.5, 0, Math.PI * 2, false, 0);
+  } else {
+    audShape.moveTo(-halfW, 0);
+    audShape.lineTo(halfW, 0);
+    audShape.lineTo(halfW, depth_m);
+    audShape.lineTo(-halfW, depth_m);
+    audShape.closePath();
+  }
+
+  var zoneGeo = new THREE.ShapeGeometry(audShape, 36);
+  var zoneMat = new THREE.MeshBasicMaterial({
+    color: 0x38bdf8,
+    transparent: true,
+    opacity: 0.14,
+    side: THREE.DoubleSide
+  });
+  var zoneMesh = new THREE.Mesh(zoneGeo, zoneMat);
+  zoneMesh.rotation.x = Math.PI / 2;
+  zoneMesh.position.y = 0.08;
+  contentGroup3D.add(zoneMesh);
+
+  var borderPts = audShape.getPoints(36).map(function(pt) {
+    return new THREE.Vector3(pt.x, 0.15, pt.y);
+  });
+  var borderLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(borderPts),
+    new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.7 })
+  );
+  contentGroup3D.add(borderLine);
+
+  // المسرح (Stage Platform + Truss)
+  var stageH = 1.5;
+  var stageGroup = new THREE.Group();
+  var deckMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(stageW_m, stageH, stageD_m),
+    new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6, metalness: 0.3 })
+  );
+  deckMesh.position.set(0, stageH / 2, -stageD_m / 2);
+  deckMesh.castShadow = true;
+  deckMesh.receiveShadow = true;
+  stageGroup.add(deckMesh);
+
+  var trimMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(stageW_m + 0.16, 0.22, stageD_m + 0.16),
+    new THREE.MeshStandardMaterial({ color: 0xe60012, emissive: 0x550008, roughness: 0.4 })
+  );
+  trimMesh.position.set(0, stageH - 0.05, -stageD_m / 2);
+  stageGroup.add(trimMesh);
+
+  // أبراج تعليق جانبية للمسرح (Goalpost / PA Wings)
+  var wingX = stageW_m / 2 + 1.8;
+  var wingH = Math.max(hangH_m + 2, 10);
+  var pillarGeo = new THREE.CylinderGeometry(0.22, 0.26, wingH, 12);
+  var pillarMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.75, roughness: 0.3 });
+  [-wingX, wingX].forEach(function(px) {
+    var col = new THREE.Mesh(pillarGeo, pillarMat);
+    col.position.set(px, wingH / 2, -2);
+    col.castShadow = true;
+    stageGroup.add(col);
+  });
+  var topBar = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.18, 0.18, wingX * 2, 12),
+    pillarMat
+  );
+  topBar.rotation.z = Math.PI / 2;
+  topBar.position.set(0, wingH, -2);
+  stageGroup.add(topBar);
+
+  contentGroup3D.add(stageGroup);
+
+  // الجمهور ثلاثي الأبعاد (3D Audience Crowd)
+  crowdGroup3D = new THREE.Group();
+  crowdGroup3D.visible = show3DCrowd;
+  var crowdDepth = depth_m * Math.min(1, 0.35 + aud.utilizationRatio * 0.65);
+  var sampleCount = Math.min(1600, Math.max(80, Math.floor(aud.count / 4)));
+  var bodyGeo = new THREE.CylinderGeometry(0.22, 0.28, 1.15, 7);
+  var headGeo = new THREE.SphereGeometry(0.2, 8, 8);
+  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.8 });
+  var headMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.6 });
+
+  var bodyInst = new THREE.InstancedMesh(bodyGeo, bodyMat, sampleCount);
+  var headInst = new THREE.InstancedMesh(headGeo, headMat, sampleCount);
+  var dummy = new THREE.Object3D();
+  var placed = 0;
+
+  for (var i = 0; i < sampleCount * 2 && placed < sampleCount; i++) {
+    var s1 = Math.sin(i * 12.9898 + 1.1) * 43758.5453;
+    var s2 = Math.sin(i * 78.233 + 2.7) * 43758.5453;
+    var r1 = s1 - Math.floor(s1);
+    var r2 = s2 - Math.floor(s2);
+    var zPos = 3 + r1 * Math.max(5, crowdDepth - 4);
+    var tRatio = zPos / Math.max(1, depth_m);
+    var maxSpan = shape === 'fan' ? (frontHalfW + (halfW - frontHalfW) * tRatio) * 0.92 : halfW * 0.9;
+    var xPos = (r2 - 0.5) * 2 * maxSpan;
+
+    dummy.position.set(xPos, 0.58, zPos);
+    dummy.rotation.set(0, 0, 0);
+    dummy.updateMatrix();
+    bodyInst.setMatrixAt(placed, dummy.matrix);
+
+    dummy.position.set(xPos, 1.35, zPos);
+    dummy.updateMatrix();
+    headInst.setMatrixAt(placed, dummy.matrix);
+    placed++;
+  }
+  crowdGroup3D.add(bodyInst);
+  crowdGroup3D.add(headInst);
+  contentGroup3D.add(crowdGroup3D);
+
+  // السماعات والمخاريط الصوتية (Speakers + 3D Dispersion Cones)
+  beamsGroup3D = new THREE.Group();
+  beamsGroup3D.visible = show3DBeams;
+  contentGroup3D.add(beamsGroup3D);
+
+  var b = worldBox;
+  var scale = b.scale || 1;
+
+  for (var pIdx = 0; pIdx < points.length; pIdx++) {
+    var p = points[pIdx];
+    var xm = (p.x - b.cx) / scale;
+    var zm = (p.y - b.cy) / scale;
+
+    var colorHex = p.isMonitor ? 0xf59e0b : p.isDelay ? 0xa855f7 : p.type === 'main' ? 0x38bdf8 : p.type === 'sub' ? 0xe5c07b : 0x22c55e;
+    var spkGroup = new THREE.Group();
+
+    if (p.isLineArray) {
+      var hangY = p.hangHeight || hangH_m;
+      var elems = Math.max(2, Math.min(24, p.elements || 8));
+      var boxH = 0.36;
+      var gap = 0.06;
+
+      // حبل التعليق (Rigging cable)
+      var wireLen = Math.max(0.5, wingH - hangY);
+      var wire = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, wireLen, 6),
+        new THREE.MeshBasicMaterial({ color: 0x94a3b8 })
+      );
+      wire.position.set(xm, hangY + wireLen / 2, zm);
+      contentGroup3D.add(wire);
+
+      var clusterGroup = new THREE.Group();
+      clusterGroup.position.set(xm, hangY, zm);
+
+      var cabGeo = new THREE.BoxGeometry(1.1, boxH, 0.75);
+      var cabMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.4, roughness: 0.35 });
+      for (var e = 0; e < elems; e++) {
+        var cab = new THREE.Mesh(cabGeo, cabMat);
+        cab.position.set(0, -e * (boxH + gap), 0);
+        cab.rotation.x = e * 0.025;
+        cab.castShadow = true;
+        clusterGroup.add(cab);
+      }
+      // توجيه العنقود حسب الزاوية
+      var yawRad = (90 - (p.angle || 90)) * Math.PI / 180;
+      clusterGroup.rotation.y = yawRad;
+      spkGroup.add(clusterGroup);
+
+      add3DCoverageCone(xm, hangY - elems * 0.18, zm, p.angle || 90, p.hAngle || 90, Math.min(140, p.rangeM || 80), colorHex);
+    } else if (p.isDelay) {
+      var towerH = 6.5;
+      var pole = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.14, 0.2, towerH, 10),
+        new THREE.MeshStandardMaterial({ color: 0x7c3aed, metalness: 0.6, roughness: 0.3 })
+      );
+      pole.position.set(xm, towerH / 2, zm);
+      pole.castShadow = true;
+      spkGroup.add(pole);
+
+      var topCab = new THREE.Mesh(
+        new THREE.BoxGeometry(1.0, 1.2, 0.9),
+        new THREE.MeshStandardMaterial({ color: 0xc084fc, roughness: 0.4 })
+      );
+      topCab.position.set(xm, towerH + 0.4, zm);
+      spkGroup.add(topCab);
+
+      add3DCoverageCone(xm, towerH + 0.4, zm, p.angle || 90, p.hAngle || 90, Math.min(90, p.rangeM || 50), 0xa855f7);
+    } else if (p.isMonitor) {
+      var monMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.75, 0.45, 0.65),
+        new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.4 })
+      );
+      monMesh.position.set(xm, stageH + 0.25, zm);
+      monMesh.rotation.x = -0.35;
+      monMesh.rotation.y = (90 - (p.angle || 270)) * Math.PI / 180;
+      spkGroup.add(monMesh);
+    } else if (p.type === 'sub') {
+      var subMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1.3, 1.0, 1.1),
+        new THREE.MeshStandardMaterial({ color: 0xe5c07b, roughness: 0.5 })
+      );
+      subMesh.position.set(xm, 0.5, zm);
+      subMesh.castShadow = true;
+      spkGroup.add(subMesh);
+      add3DCoverageCone(xm, 0.6, zm, p.angle || 90, p.hAngle || 180, Math.min(110, p.rangeM || 120), 0xe5c07b);
+    } else {
+      var mainMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.95, 1.35, 0.85),
+        new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.4 })
+      );
+      mainMesh.position.set(xm, 1.4, zm);
+      mainMesh.castShadow = true;
+      spkGroup.add(mainMesh);
+      add3DCoverageCone(xm, 1.4, zm, p.angle || 90, p.hAngle || 100, Math.min(120, p.rangeM || 80), colorHex);
+    }
+
+    contentGroup3D.add(spkGroup);
+  }
+}
+
+function add3DCoverageCone(x, y, z, angleDeg, hAngleDeg, lengthM, colorHex) {
+  if (!beamsGroup3D) return;
+  var halfSpreadRad = ((hAngleDeg || 90) / 2) * Math.PI / 180;
+  var coneLen = Math.max(8, Math.min(150, lengthM * 0.55));
+  var coneRadius = Math.max(2, Math.tan(halfSpreadRad) * coneLen);
+
+  var coneGeo = new THREE.ConeGeometry(coneRadius, coneLen, 24, 1, true);
+  // قلب المخروط ليبدأ من الرأس (0,0,0) ويمتد في اتجاه +Z
+  coneGeo.translate(0, -coneLen / 2, 0);
+  coneGeo.rotateX(Math.PI / 2);
+
+  var coneMat = new THREE.MeshBasicMaterial({
+    color: colorHex,
+    transparent: true,
+    opacity: 0.11,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  var coneMesh = new THREE.Mesh(coneGeo, coneMat);
+  coneMesh.position.set(x, y, z);
+
+  // تحويل زاوية 2D (90° = نحو الجمهور +Z، 0° = يمين +X، 180° = يسار -X) إلى 3D
+  var rad2D = (angleDeg || 90) * Math.PI / 180;
+  var dirX = Math.cos(rad2D);
+  var dirZ = Math.sin(rad2D);
+  coneMesh.rotation.y = Math.atan2(dirX, dirZ) - 0.12;
+
+  beamsGroup3D.add(coneMesh);
+}
+
+function set3DCameraView(mode) {
+  if (!camera3D || !controls3D) return;
+  var depth_m = +$('field_depth').value || 120;
+  var width_m = +$('audience_width').value || 70;
+  var hangH_m = +$('hang_height').value || 12;
+
+  ['persp', 'stage', 'top', 'side'].forEach(function(m) {
+    var btn = $('cam3d' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (btn) btn.classList.toggle('active', m === mode);
+  });
+
+  if (mode === 'persp') {
+    camera3D.position.set(width_m * 1.15, Math.max(45, depth_m * 0.55), -Math.max(35, depth_m * 0.25));
+    controls3D.target.set(0, 3, depth_m * 0.45);
+  } else if (mode === 'stage') {
+    camera3D.position.set(0, hangH_m + 6, -28);
+    controls3D.target.set(0, hangH_m * 0.4, 25);
+  } else if (mode === 'top') {
+    camera3D.position.set(0, Math.max(140, depth_m * 1.35), depth_m * 0.45);
+    controls3D.target.set(0, 0, depth_m * 0.45);
+  } else if (mode === 'side') {
+    camera3D.position.set(width_m * 1.45, Math.max(22, hangH_m * 1.8), depth_m * 0.45);
+    controls3D.target.set(0, 2, depth_m * 0.45);
+  }
+  controls3D.update();
+}
+
+function toggle3DBeams() {
+  show3DBeams = !show3DBeams;
+  if (beamsGroup3D) beamsGroup3D.visible = show3DBeams;
+  var btn = $('tg3dBeams');
+  if (btn) btn.classList.toggle('active', show3DBeams);
+}
+
+function toggle3DCrowd() {
+  show3DCrowd = !show3DCrowd;
+  if (crowdGroup3D) crowdGroup3D.visible = show3DCrowd;
+  var btn = $('tg3dCrowd');
+  if (btn) btn.classList.toggle('active', show3DCrowd);
+}
+
 /* ═══ Charts ═══ */
 function getChartCtx(id, w, h) {
   var c = $(id);
@@ -2066,200 +2510,6 @@ function getChartCtx(id, w, h) {
   g.fillStyle = '#fafbfc';
   g.fillRect(0, 0, w, h);
   return g;
-}
-
-function draw3DIsometric() {
-  var c = document.getElementById('chart_3d_iso');
-  if (!c) return;
-  var W = 1200, H = 620;
-  c.width = W; c.height = H;
-  var g = c.getContext('2d');
-  var bg = g.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#0a0f1a');
-  bg.addColorStop(0.5, '#050810');
-  bg.addColorStop(1, '#020408');
-  g.fillStyle = bg;
-  g.fillRect(0, 0, W, H);
-  var b = worldBox;
-  if (!b || !b.scale || !points.length) {
-    g.fillStyle = '#666'; g.font = 'bold 16px Cairo'; g.textAlign = 'center';
-    g.fillText('لا توجد بيانات', W/2, H/2); return;
-  }
-  var depth_m = +$('field_depth').value || 120;
-  var width_m = +$('audience_width').value || 70;
-  var stageD_m = +$('stage_d').value || 12;
-  var stageW_m = +$('stage_w').value || 25;
-  var hangH_m = +$('hang_height').value || 12;
-  var COS30 = Math.cos(Math.PI/6), SIN30 = Math.sin(Math.PI/6);
-  var rawPoints = [];
-  rawPoints.push({ x:-stageW_m/2, y:-stageD_m, z:0 });
-  rawPoints.push({ x: stageW_m/2, y:-stageD_m, z:0 });
-  rawPoints.push({ x:-stageW_m/2, y:-stageD_m, z:1.5 });
-  rawPoints.push({ x: stageW_m/2, y:-stageD_m, z:1.5 });
-  rawPoints.push({ x:-width_m/2, y:0, z:0 });
-  rawPoints.push({ x: width_m/2, y:0, z:0 });
-  rawPoints.push({ x:-width_m/2, y:depth_m, z:0 });
-  rawPoints.push({ x: width_m/2, y:depth_m, z:0 });
-  for (var pi = 0; pi < points.length; pi++) {
-    var sp = points[pi];
-    var spxm = (sp.x - b.cx) / b.scale;
-    var spym = (sp.y - b.cy) / b.scale;
-    var spzh = sp.isLineArray ? (sp.hangHeight || hangH_m) : (sp.isDelay ? 6 : (sp.isMonitor ? 0.5 : 1));
-    rawPoints.push({ x:spxm, y:spym, z:spzh });
-    rawPoints.push({ x:spxm, y:spym, z:0 });
-    if (sp.isLineArray) rawPoints.push({ x:spxm, y:spym, z:spzh + 0.5 });
-  }
-  function project(xm, ym, zm, scale, ox, oy) {
-    var px = xm*scale, py = ym*scale, pz = zm*scale;
-    return { x:ox + (px - py)*COS30, y:oy + (px + py)*SIN30 - pz };
-  }
-  var bounds = { minX:1e9, maxX:-1e9, minY:1e9, maxY:-1e9 };
-  for (var bi2 = 0; bi2 < rawPoints.length; bi2++) {
-    var rp = rawPoints[bi2];
-    var proj = project(rp.x, rp.y, rp.z, 1, 0, 0);
-    if (proj.x < bounds.minX) bounds.minX = proj.x;
-    if (proj.x > bounds.maxX) bounds.maxX = proj.x;
-    if (proj.y < bounds.minY) bounds.minY = proj.y;
-    if (proj.y > bounds.maxY) bounds.maxY = proj.y;
-  }
-  var projW = bounds.maxX - bounds.minX, projH = bounds.maxY - bounds.minY;
-  var scale3d = Math.min((W - 200) / Math.max(1, projW), (H - 200) / Math.max(1, projH));
-  scale3d = Math.max(0.3, Math.min(60, scale3d));
-  var originX = W/2 - ((bounds.minX + bounds.maxX)/2) * scale3d;
-  var originY = H/2 - ((bounds.minY + bounds.maxY)/2) * scale3d;
-  function to3D(xm, ym, zm) { return project(xm, ym, zm, scale3d, originX, originY); }
-  g.strokeStyle = 'rgba(56,189,248,0.08)'; g.lineWidth = 1;
-  var gridStep = depth_m > 150 ? 20 : 10;
-  for (var y = 0; y <= depth_m + stageD_m; y += gridStep) {
-    g.beginPath();
-    var p1 = to3D(-width_m/2, y, 0), p2 = to3D(width_m/2, y, 0);
-    g.moveTo(p1.x, p1.y); g.lineTo(p2.x, p2.y); g.stroke();
-  }
-  for (var x = -width_m/2; x <= width_m/2; x += gridStep) {
-    g.beginPath();
-    var q1 = to3D(x, 0, 0), q2 = to3D(x, depth_m + stageD_m, 0);
-    g.moveTo(q1.x, q1.y); g.lineTo(q2.x, q2.y); g.stroke();
-  }
-  var corners = [to3D(-width_m/2, 0, 0), to3D(width_m/2, 0, 0), to3D(width_m/2, depth_m, 0), to3D(-width_m/2, depth_m, 0)];
-  g.fillStyle = 'rgba(30,60,45,0.5)';
-  g.beginPath();
-  g.moveTo(corners[0].x, corners[0].y);
-  for (var i = 1; i < corners.length; i++) g.lineTo(corners[i].x, corners[i].y);
-  g.closePath(); g.fill();
-  g.strokeStyle = 'rgba(56,189,248,0.6)'; g.lineWidth = 2; g.stroke();
-  g.fillStyle = 'rgba(56,189,248,0.45)'; g.font = 'bold 10px Cairo'; g.textAlign = 'center'; g.textBaseline = 'top';
-  for (var d = 30; d <= depth_m; d += 30) {
-    var cn = to3D(-width_m/2 - 5, d, 0);
-    g.fillText(d + 'م', cn.x, cn.y);
-  }
-  var aud = getAudienceData();
-  var crowdH = depth_m * Math.min(1, 0.4 + aud.utilizationRatio * 0.6);
-  var pplCount = Math.min(1000, Math.floor(aud.count / 6));
-  for (var i2 = 0; i2 < pplCount; i2++) {
-    var s1 = Math.sin(i2 * 12.9898) * 43758.5453;
-    var s2 = Math.sin(i2 * 78.233) * 43758.5453;
-    var r1 = s1 - Math.floor(s1), r2 = s2 - Math.floor(s2);
-    var yRatio = r1;
-    var xRatio = (r2 - 0.5);
-    var fanW = 0.4 + 0.6*yRatio;
-    var p3d = to3D(xRatio * width_m * fanW, 3 + yRatio * crowdH, 1.7);
-    var headR = 2.5 + r1*1.5;
-    var alpha = 0.3 + r2*0.5;
-    g.fillStyle = 'rgba(200,200,220,' + alpha + ')';
-    g.beginPath(); g.arc(p3d.x, p3d.y, headR, 0, Math.PI*2); g.fill();
-  }
-  var sW_half = stageW_m/2;
-  var stageH = 1.5;
-  var sp1 = to3D(-sW_half, -stageD_m, 0), sp2 = to3D(sW_half, -stageD_m, 0);
-  var sp3 = to3D(sW_half, 0, 0), sp4 = to3D(-sW_half, 0, 0);
-  var sp5 = to3D(-sW_half, -stageD_m, stageH), sp6 = to3D(sW_half, -stageD_m, stageH);
-  var sp7 = to3D(sW_half, 0, stageH), sp8 = to3D(-sW_half, 0, stageH);
-  g.fillStyle = 'rgba(40,0,5,0.9)';
-  g.beginPath(); g.moveTo(sp1.x, sp1.y); g.lineTo(sp2.x, sp2.y); g.lineTo(sp6.x, sp6.y); g.lineTo(sp5.x, sp5.y); g.closePath(); g.fill();
-  g.fillStyle = 'rgba(60,0,8,0.8)';
-  g.beginPath(); g.moveTo(sp2.x, sp2.y); g.lineTo(sp3.x, sp3.y); g.lineTo(sp7.x, sp7.y); g.lineTo(sp6.x, sp6.y); g.closePath(); g.fill();
-  g.fillStyle = 'rgba(80,0,10,0.85)';
-  g.beginPath(); g.moveTo(sp3.x, sp3.y); g.lineTo(sp4.x, sp4.y); g.lineTo(sp8.x, sp8.y); g.lineTo(sp7.x, sp7.y); g.closePath(); g.fill();
-  var sgrad = g.createLinearGradient(sp5.x, sp5.y, sp7.x, sp7.y);
-  sgrad.addColorStop(0, '#8b0010'); sgrad.addColorStop(0.5, '#e60012'); sgrad.addColorStop(1, '#8b0010');
-  g.fillStyle = sgrad;
-  g.beginPath(); g.moveTo(sp5.x, sp5.y); g.lineTo(sp6.x, sp6.y); g.lineTo(sp7.x, sp7.y); g.lineTo(sp8.x, sp8.y); g.closePath(); g.fill();
-  g.strokeStyle = '#ff6060'; g.lineWidth = 2; g.stroke();
-  var centerTop = to3D(0, -stageD_m/2, stageH);
-  g.fillStyle = '#fff'; g.font = 'bold 16px Cairo'; g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.shadowColor = '#000'; g.shadowBlur = 8;
-  g.fillText('STAGE', centerTop.x, centerTop.y - 15);
-  g.shadowBlur = 0;
-  for (var bri = 0; bri < points.length; bri++) {
-    var pb = points[bri];
-    if (pb.isMonitor) continue;
-    var bxm = (pb.x - b.cx) / b.scale;
-    var bym = (pb.y - b.cy) / b.scale;
-    var bzh = pb.hangHeight || 1.5;
-    var from3d = to3D(bxm, bym, bzh);
-    var target = to3D(bxm * 0.3, depth_m * 0.7, 0);
-    var col;
-    if (pb.type === 'main') col = 'rgba(56,189,248,0.18)';
-    else if (pb.type === 'sub') col = 'rgba(229,192,123,0.12)';
-    else if (pb.type === 'delay') col = 'rgba(168,85,247,0.18)';
-    else col = 'rgba(34,197,94,0.12)';
-    var bgrad = g.createLinearGradient(from3d.x, from3d.y, target.x, target.y);
-    bgrad.addColorStop(0, col); bgrad.addColorStop(1, 'rgba(0,0,0,0)');
-    g.strokeStyle = bgrad; g.lineWidth = pb.type === 'main' ? 10 : 5; g.lineCap = 'round';
-    g.beginPath(); g.moveTo(from3d.x, from3d.y); g.lineTo(target.x, target.y); g.stroke();
-  }
-  var sortedPts = points.slice().sort(function(a, b2) { return (b2.y - b.cy) - (a.y - b.cy); });
-  for (var si = 0; si < sortedPts.length; si++) {
-    var p = sortedPts[si];
-    var xm = (p.x - b.cx) / b.scale;
-    var ym = (p.y - b.cy) / b.scale;
-    if (p.isLineArray) {
-      var hangH = p.hangHeight || hangH_m;
-      var base = to3D(xm, ym, hangH);
-      for (var ei = 0; ei < p.elements; ei++) {
-        var u3 = to3D(xm, ym, hangH - ei * 0.45);
-        var glow = g.createRadialGradient(u3.x, u3.y, 0, u3.x, u3.y, 15);
-        glow.addColorStop(0, 'rgba(56,189,248,0.5)'); glow.addColorStop(1, 'rgba(56,189,248,0)');
-        g.fillStyle = glow; g.beginPath(); g.arc(u3.x, u3.y, 15, 0, Math.PI*2); g.fill();
-        g.fillStyle = '#38bdf8'; g.beginPath(); g.arc(u3.x, u3.y, 5, 0, Math.PI*2); g.fill();
-        g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.stroke();
-      }
-      g.fillStyle = '#38bdf8'; g.font = 'bold 11px Cairo'; g.textAlign = 'center'; g.textBaseline = 'bottom';
-      g.fillText(p.elements + '×LA', base.x, base.y - 22);
-    } else if (p.isDelay) {
-      var tb = to3D(xm, ym, 0), tt = to3D(xm, ym, 6);
-      g.strokeStyle = '#a855f7'; g.lineWidth = 4;
-      g.beginPath(); g.moveTo(tb.x, tb.y); g.lineTo(tt.x, tt.y); g.stroke();
-      g.fillStyle = '#c084fc'; g.beginPath(); g.arc(tt.x, tt.y, 9, 0, Math.PI*2); g.fill();
-      g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke();
-      g.fillStyle = '#e9d5ff'; g.font = 'bold 11px Cairo'; g.textAlign = 'center'; g.textBaseline = 'bottom';
-      g.fillText(p.delayMs + 'ms', tt.x, tt.y - 14);
-    } else if (p.isMonitor) {
-      var mp = to3D(xm, ym, 0.5);
-      g.fillStyle = '#f59e0b'; g.beginPath(); g.arc(mp.x, mp.y, 6, 0, Math.PI*2); g.fill();
-      g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.stroke();
-    } else if (p.type === 'sub') {
-      var spp = to3D(xm, ym, 0.9);
-      g.fillStyle = '#e5c07b'; g.beginPath(); g.arc(spp.x, spp.y, 8, 0, Math.PI*2); g.fill();
-      g.strokeStyle = '#000'; g.lineWidth = 2; g.stroke();
-    } else if (p.type === 'side') {
-      var f3 = to3D(xm, ym, 1);
-      g.fillStyle = '#22c55e'; g.beginPath(); g.arc(f3.x, f3.y, 7, 0, Math.PI*2); g.fill();
-      g.strokeStyle = '#fff'; g.lineWidth = 1.5; g.stroke();
-    } else {
-      var m3 = to3D(xm, ym, 1.5);
-      g.fillStyle = '#38bdf8'; g.beginPath(); g.arc(m3.x, m3.y, 8, 0, Math.PI*2); g.fill();
-      g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke();
-    }
-  }
-  g.fillStyle = 'rgba(0,0,0,0.7)';
-  g.fillRect(W - 350, 10, 340, 100);
-  g.strokeStyle = 'rgba(56,189,248,0.5)'; g.lineWidth = 1; g.strokeRect(W - 350, 10, 340, 100);
-  g.fillStyle = 'rgba(56,189,248,0.95)'; g.font = 'bold 14px Cairo'; g.textAlign = 'right'; g.textBaseline = 'top';
-  g.fillText('🏗️ عرض ثلاثي الأبعاد — Isometric', W - 20, 20);
-  g.fillStyle = '#94a3b8'; g.font = '11px Cairo';
-  g.fillText('الأبعاد: ' + width_m + 'م × ' + depth_m + 'م · التعليق ' + hangH_m + 'م', W - 20, 44);
-  g.fillText('إجمالي ' + points.length + ' وحدة في النظام', W - 20, 64);
 }
 
 function drawHeatmapFull() {
@@ -2954,7 +3204,7 @@ function generateReport() {
   window.scrollTo(0, 0);
 
   setTimeout(function() {
-    try { draw3DIsometric(); } catch (e) { console.warn('3D:', e); }
+    try { initTrue3DViewport(); } catch (e) { console.warn('3D:', e); }
     try { drawHeatmapFull(); } catch (e) { console.warn('Heatmap:', e); }
     try { drawConnections(); } catch (e) { console.warn('Conn:', e); }
     try { drawSPLvsDistance(); } catch (e) { console.warn('SPL:', e); }
@@ -3092,6 +3342,7 @@ function handleResize() {
     view.panX = WcNew/2 - cw.x * view.zoom;
     view.panY = HcNew/2 - cw.y * view.zoom;
     invalidateHeat(); draw(); updateKPI();
+    resizeTrue3DViewport();
   }, 120);
 }
 window.addEventListener('resize', handleResize);
@@ -3110,27 +3361,20 @@ var debouncedUpdate = (function() {
         points[i].x = c.x; points[i].y = c.y;
       }
       invalidateHeat(); draw(); updateKPI(); autosave();
-    }, 150);
+      setTimeout(renderStructuralLoad, 50);
+    }, 100);
   };
 })();
 
-window.addEventListener('load', function() {
-  try {
-    setupCanvasSize();
-    worldBox = getWorldBox();
-    updateZoomLabel();
-    var restored = restoreDraft();
-    if (!restored) applySmartLayout();
-    else { invalidateHeat(); draw(); updateKPI(); }
-    updateWindIndicator();
-    setTimeout(function() { onProductChange('sel_main'); renderStructuralLoad(); }, 300);
-    requestAnimationFrame(loop);
-  } catch (err) {
-    console.error('Load error:', err);
-  }
-});
-
-window.addEventListener('beforeunload', autosave);
+(function init() {
+  setupCanvasSize();
+  worldBox = getWorldBox();
+  updateZoomLabel();
+  var restored = restoreDraft();
+  if (!restored) applySmartLayout();
+  else { invalidateHeat(); draw(); updateKPI(); renderStructuralLoad(); }
+  requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
