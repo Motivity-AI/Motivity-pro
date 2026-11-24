@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="theme-color" content="#0d1117">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>موتيفيتي v5.5 — محلل صوتي هندسي</title>
+<title>موتيفيتي v5.7 — محلل صوتي هندسي (2D + 3D متعدد الطوابق)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
 :root{--red:#e60012;--bg:#0d1117;--panel:#161b22;--card:#1c2128;--bd:#30363d;--accent:#38bdf8;--tx:#e6edf3;--mu:#8b949e;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--sa-t:env(safe-area-inset-top,0px);--sa-b:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -18,6 +20,9 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ove
 .hdr-stats{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--mu);font-weight:700;flex-wrap:wrap}
 .hdr-stats b{color:var(--accent)}
 .hdr-actions{display:flex;gap:6px;align-items:center}
+.mode-switch{display:inline-flex;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:2px;gap:2px}
+.mode-switch button{border:none;background:transparent;color:var(--mu);padding:5px 11px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s}
+.mode-switch button.active{background:var(--accent);color:#000}
 .tabs-row{background:var(--panel);display:flex;gap:4px;padding:6px 10px;overflow-x:auto;border-bottom:1px solid var(--bd);flex-shrink:0;scrollbar-width:none}
 .tabs-row.bld{background:#0a0e13}
 .tabs-row::-webkit-scrollbar{display:none}
@@ -46,6 +51,15 @@ body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;ove
 #cv.room-l,#cv.room-r{cursor:ew-resize}
 #cv.hover{cursor:pointer}
 #cv.place-mode{cursor:copy}
+#view3dWrap{display:none;position:absolute;inset:0;background:#06090e;z-index:20}
+#view3dWrap.active{display:block}
+#cv3d{display:block;width:100%;height:100%;touch-action:none}
+.hud-3d-top{position:absolute;top:12px;right:12px;left:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;z-index:25;pointer-events:none}
+.hud-3d-controls{display:flex;gap:6px;flex-wrap:wrap;pointer-events:auto;background:rgba(22,27,34,0.92);padding:6px 8px;border-radius:8px;border:1px solid var(--bd);align-items:center}
+.hud-3d-controls button,.hud-3d-controls select{background:var(--card);color:#fff;border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;min-height:30px;width:auto}
+.hud-3d-controls button.on{background:var(--accent);color:#000;border-color:var(--accent)}
+.hud-3d-tip{background:rgba(22,27,34,0.92);padding:6px 10px;border-radius:8px;border:1px solid var(--bd);font-size:10.5px;color:var(--mu);font-weight:700;pointer-events:none}
+.hud-3d-tip b{color:var(--accent)}
 .viewport-info{position:absolute;bottom:12px;left:12px;background:rgba(22,27,34,.92);padding:5px 10px;border-radius:6px;font-size:10.5px;color:var(--mu);border:1px solid var(--bd);font-weight:700;z-index:10;font-family:monospace;pointer-events:none}
 .minimap{position:absolute;bottom:12px;right:12px;width:160px;height:110px;background:rgba(22,27,34,.94);border:1px solid var(--bd);border-radius:6px;z-index:10;cursor:pointer}
 .minimap canvas{display:block;width:100%;height:100%;border-radius:6px}
@@ -165,11 +179,11 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 }
 @media print{
   @page{size:A4 portrait;margin:15mm 12mm 18mm 12mm;
-    @bottom-center{content:"موتيفيتي v5.5 — صفحة " counter(page) " من " counter(pages);font-family:'Cairo',sans-serif;font-size:9pt;color:#666;padding-top:6mm;border-top:1px solid #ddd;}
+    @bottom-center{content:"موتيفيتي v5.7 — صفحة " counter(page) " من " counter(pages);font-family:'Cairo',sans-serif;font-size:9pt;color:#666;padding-top:6mm;border-top:1px solid #ddd;}
     @top-center{content:"موتيفيتي — التقرير التصميمي الصوتي";font-family:'Cairo',sans-serif;font-size:8pt;color:#999;padding-bottom:4mm;border-bottom:1px solid #eee;}
   }
   html,body{height:auto!important;width:auto!important;min-height:0!important;overflow:visible!important;display:block!important;position:static!important;background:#fff!important;color:#000!important;padding:0!important;margin:0!important;}
-  .no-print,.header,.tabs-row,.quick-nav,.main,.sidebar,.canvas-area,.canvas-wrap,#cv,#miniCv,.fab,.toolbar,.ctx-menu,.toast,.minimap,.viewport-info{display:none!important;}
+  .no-print,.header,.tabs-row,.quick-nav,.main,.sidebar,.canvas-area,.canvas-wrap,#cv,#miniCv,.fab,.toolbar,.ctx-menu,.toast,.minimap,.viewport-info,#view3dWrap{display:none!important;}
   #report{display:block!important;position:static!important;inset:auto!important;width:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;background:#fff!important;padding:0!important;margin:0!important;z-index:auto!important;}
   .paper{box-shadow:none!important;padding:0!important;margin:0!important;border-radius:0!important;max-width:100%!important;background:#fff!important;color:#000!important;}
   .paper h1,.paper h2,.paper h3,.paper h4{page-break-after:avoid;page-break-inside:avoid;}
@@ -199,7 +213,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 <body>
 
 <div class="header no-print">
-  <h1>موتيفيتي <span>المحلل الهندسي</span> <span style="font-size:10px;color:#666">v5.5</span></h1>
+  <h1>موتيفيتي <span>المحلل الهندسي</span> <span style="font-size:10px;color:#666">v5.7</span></h1>
   <div class="hdr-stats">
     <div>🏢 <b id="topBlds">0</b></div>
     <div>🧭 <b id="topFloors">0</b></div>
@@ -209,6 +223,10 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
     <div id="topCompliance"><span class="badge ok">✓</span></div>
   </div>
   <div class="hdr-actions">
+    <div class="mode-switch" title="وضع العرض">
+      <button id="btnMode2D" class="active" onclick="setViewMode('2d')">2D</button>
+      <button id="btnMode3D" onclick="setViewMode('3d')">3D حقيقي</button>
+    </div>
     <button class="btn btn-primary" style="width:auto;margin:0;padding:6px 12px;min-height:auto;font-size:11px" onclick="openReport()">📄 تقرير</button>
     <button class="btn btn-accent" style="width:auto;margin:0;padding:6px 12px;min-height:auto;font-size:11px" onclick="toggleSidebar()">☰</button>
   </div>
@@ -375,12 +393,34 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
       <canvas id="cv"></canvas>
       <div class="viewport-info" id="viewportInfo">100%</div>
       <div class="minimap" id="minimap"><canvas id="miniCv"></canvas></div>
+
+      <div id="view3dWrap">
+        <canvas id="cv3d"></canvas>
+        <div class="hud-3d-top">
+          <div class="hud-3d-controls">
+            <select id="sel3dScope" onchange="set3dScope(this.value)" title="نطاق العرض ثلاثي الأبعاد">
+              <option value="floor" selected>🧭 طابق واحد</option>
+              <option value="all">🏢 كل طوابق المبنى</option>
+            </select>
+            <button id="btn3dCones" class="on" onclick="toggle3dOption('cones')">📐 مخاريط التغطية</button>
+            <button id="btn3dHeat" onclick="toggle3dOption('heat')">🌡️ خريطة SPL</button>
+            <button id="btn3dFurn" class="on" onclick="toggle3dOption('furn')">🪑 الأثاث</button>
+            <button id="btn3dIsolate" onclick="toggle3dOption('isolate')">🔍 عزل الغرفة</button>
+            <button onclick="reset3dCamera()">🎥 ضبط الكاميرا</button>
+            <button onclick="setViewMode('2d')">↩️ العودة لـ 2D</button>
+          </div>
+          <div class="hud-3d-tip">
+            <b>سحب:</b> دوران · <b>عجلة/لمس:</b> تكبير · اختر <b>كل طوابق المبنى</b> لرؤية الطوابق فوق بعضها
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="fab no-print">
   <button class="primary" onclick="autoDistributeFloor()" title="توزيع">✨</button>
+  <button id="fab3d" onclick="toggle3dQuick()" title="عرض 3D">3D</button>
   <button id="fabPlace" onclick="togglePlaceMode()" title="وضع سماعة">📍</button>
   <button onclick="fitToView()" title="ملء">⛶</button>
   <button onclick="undo()" title="تراجع">↶</button>
@@ -390,6 +430,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 <div class="toolbar no-print" id="mainToolbar">
   <button id="toolSelect" class="on" onclick="setTool('select')">🖱️ اختيار</button>
   <button id="toolPan" onclick="setTool('pan')">🖐️ تحريك</button>
+  <button id="tool3dBar" onclick="toggle3dQuick()">🧊 عرض 3D</button>
   <button id="toolPlace" class="place-btn" onclick="togglePlaceMode()">📍 وضع سماعة</button>
   <button onclick="zoomIn()">🔍+</button>
   <button onclick="zoomOut()">🔍−</button>
@@ -435,7 +476,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
     <div class="rep-head">
       <div>
         <h1>التقرير التصميمي الصوتي</h1>
-        <p style="color:#666;font-size:11.5px">محرك موتيفيتي الهندسي v5.5 · MOT-ENG-2026</p>
+        <p style="color:#666;font-size:11.5px">محرك موتيفيتي الهندسي v5.7 · MOT-ENG-2026</p>
       </div>
       <div style="text-align:left;font-size:11px" id="repMeta"></div>
     </div>
@@ -445,7 +486,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent)}
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   موتيفيتي v5.5 — المحرك الهندسي الكامل
+   موتيفيتي v5.7 — المحرك الهندسي + العرض ثلاثي الأبعاد متعدد الطوابق
    ═══════════════════════════════════════════════════════════════ */
 
 var cv = document.getElementById('cv');
@@ -463,12 +504,15 @@ var selIdx = -1;
 var snapEnabled = true;
 var currentTool = 'select';
 var placeMode = false;
+var viewMode = '2d';
 
 var layers = {
   walls: true, doors: true, furniture: true, hvac: true, lights: true,
   cctv: true, fire: true, grid: true, labels: true, dims: false,
   cover: true, heat: false, guides: true, speakers: true, north: true
 };
+
+var opts3d = { scope: 'floor', cones: true, heat: false, furn: true, isolate: false };
 
 var RENDER = {
   wallThickness: 0.2, wallColor: '#7a8699',
@@ -590,7 +634,7 @@ var FIRE_LIB = {
   manual:{name:'إنذار يدوي',w:0.15,h:0.2,color:'#dc2626',draw:drawFireManual}
 };
 
-/* ═══════════ دوال الرسم ═══════════ */
+/* ═══════════ دوال الرسم 2D ═══════════ */
 function drawRect(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); }
 function drawBed(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fillStyle='#f0f0f0'; g.fillRect(-w/2+4,-h/2+4,w-8,12); g.fillStyle='#ddd'; g.fillRect(-w/2+4,-h/2+18,w-8,4); }
 function drawBedSingle(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.fillStyle='#f0f0f0'; g.fillRect(-w/2+3,-h/2+3,w-6,9); }
@@ -628,7 +672,7 @@ function drawFireMulti(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2
 function drawFireSprinkler(g,w,h,col){ g.fillStyle=col; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.fill(); g.strokeStyle='#fff'; g.lineWidth=0.6; g.beginPath(); g.arc(0,0,w/2,0,Math.PI*2); g.stroke(); g.fillStyle='#fff'; for(var i=0;i<4;i++){ var a=i*Math.PI/2+Math.PI/4; g.beginPath(); g.arc(Math.cos(a)*w/4,Math.sin(a)*w/4,0.8,0,Math.PI*2); g.fill(); } }
 function drawFireManual(g,w,h,col){ g.fillStyle=col; g.fillRect(-w/2,-h/2,w,h); g.strokeStyle='#fff'; g.lineWidth=0.8; g.strokeRect(-w/2,-h/2,w,h); g.fillStyle='#fff'; g.beginPath(); g.arc(0,0,w/3,0,Math.PI*2); g.fill(); g.fillStyle=col; g.beginPath(); g.arc(0,0,w/5,0,Math.PI*2); g.fill(); }
 
-/* ═══════════ توليد الأثاث ═══════════ */
+/* ═══════════ توليد العناصر ═══════════ */
 function generateFurniture(room){
   room.furniture = [];
   var t=room.type, L=room.L, W=room.W;
@@ -744,8 +788,6 @@ function generateFurniture(room){
     if (L>8) add('plant',0.7,W/2,0);
   }
 }
-
-/* ═══════════ توليد الأبواب ═══════════ */
 function generateDoors(room){
   room.doors = [];
   var L=room.L, W=room.W, t=room.type;
@@ -785,8 +827,6 @@ function generateDoors(room){
     if (L>8) room.doors.push({side:'e',pos:0.5,width:1.0,type:'exit',swing:'out'});
   } else if (t==='parking') room.doors.push({side:'s',pos:0.5,width:3.0,type:'double',swing:'in'});
 }
-
-/* ═══════════ توليد HVAC ═══════════ */
 function generateHVAC(room){
   room.hvac = [];
   var t=room.type, L=room.L, W=room.W;
@@ -819,8 +859,6 @@ function generateHVAC(room){
     }}
   }
 }
-
-/* ═══════════ توليد الإضاءة ═══════════ */
 function generateLights(room){
   room.lights = [];
   var t=room.type, L=room.L, W=room.W;
@@ -849,8 +887,6 @@ function generateLights(room){
     room.lights.push({type:'emergency',x:0.7,y:W-0.3,rot:0});
   }
 }
-
-/* ═══════════ توليد الكاميرات ═══════════ */
 function generateCCTV(room){
   room.cctv = [];
   var t=room.type, L=room.L, W=room.W;
@@ -877,8 +913,6 @@ function generateCCTV(room){
     if (L*W>15) room.cctv.push({type:'dome',x:L-0.4,y:0.4,rot:0});
   }
 }
-
-/* ═══════════ توليد الحريق ═══════════ */
 function generateFire(room){
   room.fire = [];
   var t=room.type, L=room.L, W=room.W;
@@ -930,7 +964,7 @@ function spkInRoom(rid){ return project.speakers.filter(function(s){return s.roo
 function spkInFloor(f){ var ids=f.rooms.map(function(r){return r.id;}); return project.speakers.filter(function(s){return ids.indexOf(s.roomId)>=0;}); }
 
 /* ═══════════════════════════════════════════════════════════════
-   🔊 محرك الصوتيات الهندسي v5.5
+   🔊 محرك الصوتيات الهندسي
    ═══════════════════════════════════════════════════════════════ */
 function getModel(){ return $('modelSelect').options[$('modelSelect').selectedIndex]; }
 function getWatt(){ return parseFloat(getModel().dataset[$('tapSelect').value]); }
@@ -1040,7 +1074,7 @@ function roomStats(room){
   };
 }
 
-/* ═══════════ الكاميرا ═══════════ */
+/* ═══════════ الكاميرا 2D ═══════════ */
 function floorBounds(floor){
   if (!floor||!floor.rooms.length) return {minX:0,minY:0,w:10,h:10,maxX:10,maxY:10};
   var minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
@@ -1049,6 +1083,18 @@ function floorBounds(floor){
     if(r.x+r.L>maxX)maxX=r.x+r.L; if(r.y+r.W>maxY)maxY=r.y+r.W;
   });
   return {minX:minX,minY:minY,w:maxX-minX,h:maxY-minY,maxX:maxX,maxY:maxY};
+}
+function buildingBounds(floorsArr){
+  var minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity,totalH=0;
+  floorsArr.forEach(function(fl){
+    totalH += (fl.height || 3.5) + 0.35;
+    fl.rooms.forEach(function(r){
+      if(r.x<minX)minX=r.x; if(r.y<minY)minY=r.y;
+      if(r.x+r.L>maxX)maxX=r.x+r.L; if(r.y+r.W>maxY)maxY=r.y+r.W;
+    });
+  });
+  if (!isFinite(minX)) return {minX:0,minY:0,w:12,h:12,totalH:totalH||4};
+  return {minX:minX,minY:minY,w:Math.max(1,maxX-minX),h:Math.max(1,maxY-minY),totalH:totalH};
 }
 function computeBaseScale(){
   var f=activeFloor(); if (!f){ baseScale=20; return; }
@@ -1075,7 +1121,9 @@ function fitToView(){
   view.panX=(canvasW-b.w*eff)/2;
   view.panY=(canvasH-b.h*eff)/2;
   view.zoom=1;
-  updateViewportInfo(); draw();
+  updateViewportInfo();
+  if (viewMode === '3d') rebuild3DScene(true);
+  else draw();
 }
 function resetView(){ view.zoom=1; fitToView(); }
 function zoomIn(){ zoomAt(canvasW/2,canvasH/2,1.25); }
@@ -1099,7 +1147,329 @@ function resizeCanvas(){
   cv.style.width=maxW+'px'; cv.style.height=maxH+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
   miniCv.width=160; miniCv.height=110;
+  resize3D();
   computeBaseScale(); draw();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🧊 محرك العرض ثلاثي الأبعاد الحقيقي (Three.js 3D)
+   ═══════════════════════════════════════════════════════════════ */
+var scene3d = null, camera3d = null, renderer3d = null, controls3d = null;
+var group3d = null, animId3d = null;
+
+function init3D(){
+  if (renderer3d) return true;
+  if (typeof THREE === 'undefined' || typeof THREE.OrbitControls === 'undefined'){
+    toast('⚠️ تعذر تحميل مكتبة 3D — تأكد من الاتصال بالإنترنت');
+    return false;
+  }
+  var wrap = $('view3dWrap');
+  var c3 = $('cv3d');
+  var w = wrap.clientWidth || canvasW || 800;
+  var h = wrap.clientHeight || canvasH || 500;
+
+  scene3d = new THREE.Scene();
+  scene3d.background = new THREE.Color(0x06090e);
+  scene3d.fog = new THREE.FogExp2(0x06090e, 0.008);
+
+  camera3d = new THREE.PerspectiveCamera(48, Math.max(w,1) / Math.max(h,1), 0.1, 600);
+  camera3d.position.set(18, 20, 24);
+
+  renderer3d = new THREE.WebGLRenderer({ canvas: c3, antialias: true, powerPreference: 'high-performance' });
+  renderer3d.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer3d.setSize(w, h);
+  renderer3d.shadowMap.enabled = true;
+  renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  controls3d = new THREE.OrbitControls(camera3d, renderer3d.domElement);
+  controls3d.enableDamping = true;
+  controls3d.dampingFactor = 0.06;
+  controls3d.maxPolarAngle = Math.PI * 0.49;
+
+  var hemi = new THREE.HemisphereLight(0xdbeafe, 0x1e293b, 0.9);
+  hemi.position.set(0, 40, 0);
+  scene3d.add(hemi);
+
+  var dirLight = new THREE.DirectionalLight(0xffffff, 0.95);
+  dirLight.position.set(22, 36, 20);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  scene3d.add(dirLight);
+
+  var grid = new THREE.GridHelper(100, 100, 0x253244, 0x111822);
+  grid.position.y = -0.02;
+  scene3d.add(grid);
+
+  group3d = new THREE.Group();
+  scene3d.add(group3d);
+
+  start3DLoop();
+  return true;
+}
+
+function resize3D(){
+  if (!renderer3d || !camera3d) return;
+  var wrap = $('view3dWrap');
+  var w = wrap.clientWidth || canvasW || 800;
+  var h = wrap.clientHeight || canvasH || 500;
+  if (w < 20 || h < 20) return;
+  camera3d.aspect = w / h;
+  camera3d.updateProjectionMatrix();
+  renderer3d.setSize(w, h);
+}
+
+function clear3DGroup(){
+  if (!group3d) return;
+  while (group3d.children.length > 0){
+    var obj = group3d.children[0];
+    group3d.remove(obj);
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.material){
+      if (Array.isArray(obj.material)) obj.material.forEach(function(m){ m.dispose(); });
+      else obj.material.dispose();
+    }
+  }
+}
+
+function rebuild3DScene(resetCam){
+  if (!init3D()) return;
+  clear3DGroup();
+
+  var curFloor = activeFloor();
+  var bFloors = activeBuildingFloors();
+  if (!bFloors.length) return;
+
+  var floorsToRender = (opts3d.scope === 'all') ? bFloors : (curFloor ? [curFloor] : []);
+  if (!floorsToRender.length) return;
+
+  var bnds = (opts3d.scope === 'all') ? buildingBounds(floorsToRender) : floorBounds(floorsToRender[0]);
+  var cx = bnds.minX + bnds.w / 2;
+  var cz = bnds.minY + bnds.h / 2;
+  var covAngle = getAngle();
+  var halfRad = (covAngle / 2) * Math.PI / 180;
+  var cumY = 0;
+
+  floorsToRender.forEach(function(fl){
+    var isCurrentFloor = (curFloor && fl.id === curFloor.id);
+    var floorBaseY = cumY;
+    var flHeight = fl.height || 3.5;
+
+    var roomsToShow = opts3d.isolate && activeRoomId != null
+      ? fl.rooms.filter(function(r){ return r.id === activeRoomId; })
+      : fl.rooms;
+
+    roomsToShow.forEach(function(room){
+      var rType = ROOM_TYPES[room.type] || ROOM_TYPES.office;
+      var rColor = new THREE.Color(rType.color || '#38bdf8');
+      var isSelected = (room.id === activeRoomId) && (opts3d.scope === 'floor' || isCurrentFloor);
+      var rh = room.height || flHeight;
+      var dimFactor = (opts3d.scope === 'all' && !isCurrentFloor) ? 0.65 : 1.0;
+
+      // 1. أرضية الغرفة
+      var floorGeo = new THREE.BoxGeometry(room.L, 0.14, room.W);
+      var floorMat = new THREE.MeshStandardMaterial({
+        color: isSelected ? rColor.clone().multiplyScalar(0.55) : rColor.clone().multiplyScalar(0.28 * dimFactor),
+        roughness: 0.75,
+        metalness: 0.1
+      });
+      var floorMesh = new THREE.Mesh(floorGeo, floorMat);
+      floorMesh.position.set(room.x + room.L / 2 - cx, floorBaseY - 0.07, room.y + room.W / 2 - cz);
+      floorMesh.receiveShadow = true;
+      group3d.add(floorMesh);
+
+      // 2. خريطة SPL ثلاثية الأبعاد على ارتفاع الأذن (1.5م)
+      var spks = spkInRoom(room.id);
+      if (opts3d.heat && spks.length){
+        var stepM = 0.7;
+        var nx = Math.max(2, Math.min(24, Math.ceil(room.L / stepM)));
+        var nz = Math.max(2, Math.min(24, Math.ceil(room.W / stepM)));
+        var cw = room.L / nx, cd = room.W / nz;
+        for (var ix = 0; ix < nx; ix++){
+          for (var iz = 0; iz < nz; iz++){
+            var xm = (ix + 0.5) * cw;
+            var ym = (iz + 0.5) * cd;
+            var spl = computeSPLInRoom(room, xm, ym);
+            var hCol = spl < 62 ? 0x1d4ed8 : spl < 70 ? 0x22c55e : spl < 80 ? 0xeab308 : 0xef4444;
+            var tileGeo = new THREE.BoxGeometry(cw * 0.92, 0.04, cd * 0.92);
+            var tileMat = new THREE.MeshBasicMaterial({ color: hCol, transparent: true, opacity: 0.5 });
+            var tile = new THREE.Mesh(tileGeo, tileMat);
+            tile.position.set(room.x + xm - cx, floorBaseY + 1.5, room.y + ym - cz);
+            group3d.add(tile);
+          }
+        }
+      }
+
+      // 3. الجدران الـ 4
+      var wallT = 0.18;
+      var wallMat = new THREE.MeshStandardMaterial({
+        color: isSelected ? 0x7dd3fc : (isCurrentFloor ? 0x475569 : 0x334155),
+        transparent: true,
+        opacity: isSelected ? 0.55 : (opts3d.scope === 'all' ? 0.25 : 0.36),
+        roughness: 0.6
+      });
+      var wNorth = new THREE.Mesh(new THREE.BoxGeometry(room.L, rh, wallT), wallMat);
+      wNorth.position.set(room.x + room.L / 2 - cx, floorBaseY + rh / 2, room.y - cz);
+      var wSouth = new THREE.Mesh(new THREE.BoxGeometry(room.L, rh, wallT), wallMat);
+      wSouth.position.set(room.x + room.L / 2 - cx, floorBaseY + rh / 2, room.y + room.W - cz);
+      var wWest = new THREE.Mesh(new THREE.BoxGeometry(wallT, rh, room.W), wallMat);
+      wWest.position.set(room.x - cx, floorBaseY + rh / 2, room.y + room.W / 2 - cz);
+      var wEast = new THREE.Mesh(new THREE.BoxGeometry(wallT, rh, room.W), wallMat);
+      wEast.position.set(room.x + room.L - cx, floorBaseY + rh / 2, room.y + room.W / 2 - cz);
+      group3d.add(wNorth, wSouth, wWest, wEast);
+
+      if (isSelected){
+        var edgesGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(room.L, rh, room.W));
+        var lineMat = new THREE.LineBasicMaterial({ color: 0x38bdf8 });
+        var wire = new THREE.LineSegments(edgesGeo, lineMat);
+        wire.position.set(room.x + room.L / 2 - cx, floorBaseY + rh / 2, room.y + room.W / 2 - cz);
+        group3d.add(wire);
+      }
+
+      // 4. الأثاث ثلاثي الأبعاد
+      if (opts3d.furn && room.furniture && room.furniture.length){
+        room.furniture.forEach(function(item){
+          var libIt = FURNITURE_LIB[item.type];
+          if (!libIt) return;
+          var fh = item.type.indexOf('bed') >= 0 ? 0.45 :
+                   item.type.indexOf('table') >= 0 || item.type.indexOf('desk') >= 0 ? 0.75 :
+                   item.type.indexOf('shelf') >= 0 || item.type.indexOf('wardrobe') >= 0 ? 1.5 : 0.65;
+          var fGeo = new THREE.BoxGeometry(libIt.w, fh, libIt.h);
+          var fMat = new THREE.MeshStandardMaterial({ color: libIt.color, roughness: 0.7 });
+          var fMesh = new THREE.Mesh(fGeo, fMat);
+          fMesh.position.set(room.x + item.x - cx, floorBaseY + fh / 2, room.y + item.y - cz);
+          fMesh.rotation.y = -(item.rot || 0);
+          group3d.add(fMesh);
+        });
+      }
+
+      // 5. السماعات السقفية + مخاريط التغطية الصوتية 3D
+      spks.forEach(function(spk){
+        var sx = room.x + spk.rx * room.L - cx;
+        var sz = room.y + spk.ry * room.W - cz;
+        var sy = floorBaseY + rh - 0.14;
+        var zColHex = zoneColor(spk.zoneId);
+        var zCol = new THREE.Color(zColHex);
+        var gIdx = project.speakers.indexOf(spk);
+        var isSpkSel = (gIdx === selIdx);
+
+        var spkGeo = new THREE.CylinderGeometry(isSpkSel ? 0.28 : 0.2, isSpkSel ? 0.22 : 0.16, 0.16, 18);
+        var spkMat = new THREE.MeshStandardMaterial({
+          color: isSpkSel ? 0x38bdf8 : zCol,
+          emissive: isSpkSel ? 0x0284c7 : zCol,
+          emissiveIntensity: isSpkSel ? 0.65 : 0.25,
+          roughness: 0.35
+        });
+        var spkMesh = new THREE.Mesh(spkGeo, spkMat);
+        spkMesh.position.set(sx, sy, sz);
+        group3d.add(spkMesh);
+
+        if (opts3d.cones){
+          var earY = floorBaseY + 1.5;
+          var coneH = Math.max(0.4, sy - earY);
+          var coneR = Math.max(0.35, coneH * Math.tan(halfRad));
+          var coneGeo = new THREE.ConeGeometry(coneR, coneH, 20, 1, true);
+          var coneMat = new THREE.MeshBasicMaterial({
+            color: zCol,
+            transparent: true,
+            opacity: isSpkSel ? 0.24 : (opts3d.scope === 'all' ? 0.07 : 0.11),
+            side: THREE.DoubleSide,
+            depthWrite: false
+          });
+          var coneMesh = new THREE.Mesh(coneGeo, coneMat);
+          coneMesh.position.set(sx, sy - coneH / 2, sz);
+          group3d.add(coneMesh);
+
+          var ringGeo = new THREE.RingGeometry(coneR - 0.04, coneR, 24);
+          ringGeo.rotateX(-Math.PI / 2);
+          var ringMat = new THREE.MeshBasicMaterial({
+            color: zCol,
+            transparent: true,
+            opacity: isSpkSel ? 0.75 : 0.3,
+            side: THREE.DoubleSide
+          });
+          var ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.position.set(sx, earY, sz);
+          group3d.add(ringMesh);
+        }
+      });
+    });
+
+    cumY += flHeight + 0.35;
+  });
+
+  if (resetCam){
+    reset3dCamera(cumY);
+  }
+}
+
+function reset3dCamera(totalHeight){
+  if (!camera3d || !controls3d) return;
+  var bFloors = activeBuildingFloors();
+  var floorsToRender = (opts3d.scope === 'all') ? bFloors : (activeFloor() ? [activeFloor()] : []);
+  var bnds = (opts3d.scope === 'all') ? buildingBounds(floorsToRender) : floorBounds(floorsToRender[0]);
+  var hSpan = (opts3d.scope === 'all') ? (totalHeight || bnds.totalH || 10) : 3.5;
+  var maxDim = Math.max(bnds.w || 12, bnds.h || 12, hSpan * 0.9, 8);
+  camera3d.position.set(maxDim * 0.95, Math.max(hSpan * 0.75, maxDim * 0.65), maxDim * 1.05);
+  controls3d.target.set(0, hSpan * 0.35, 0);
+  controls3d.update();
+}
+
+function start3DLoop(){
+  if (animId3d) cancelAnimationFrame(animId3d);
+  function tick(){
+    animId3d = requestAnimationFrame(tick);
+    if (viewMode === '3d' && renderer3d && scene3d && camera3d && controls3d){
+      controls3d.update();
+      renderer3d.render(scene3d, camera3d);
+    }
+  }
+  tick();
+}
+
+function setViewMode(mode){
+  viewMode = mode;
+  var wrap3d = $('view3dWrap');
+  var b2d = $('btnMode2D');
+  var b3d = $('btnMode3D');
+  var fab3d = $('fab3d');
+  var t3d = $('tool3dBar');
+  if (mode === '3d'){
+    if (!init3D()){ viewMode = '2d'; return; }
+    wrap3d.classList.add('active');
+    if (b2d) b2d.classList.remove('active');
+    if (b3d) b3d.classList.add('active');
+    if (fab3d) fab3d.classList.add('place-on');
+    if (t3d) t3d.classList.add('on');
+    resize3D();
+    rebuild3DScene(true);
+    toast('🧊 وضع العرض ثلاثي الأبعاد 3D');
+  } else {
+    wrap3d.classList.remove('active');
+    if (b2d) b2d.classList.add('active');
+    if (b3d) b3d.classList.remove('active');
+    if (fab3d) fab3d.classList.remove('place-on');
+    if (t3d) t3d.classList.remove('on');
+    draw();
+  }
+}
+
+function toggle3dQuick(){
+  setViewMode(viewMode === '3d' ? '2d' : '3d');
+}
+
+function set3dScope(val){
+  opts3d.scope = (val === 'all') ? 'all' : 'floor';
+  rebuild3DScene(true);
+  toast(opts3d.scope === 'all' ? '🏢 عرض كل طوابق المبنى فوق بعضها' : '🧭 عرض الطابق النشط فقط');
+}
+
+function toggle3dOption(key){
+  opts3d[key] = !opts3d[key];
+  var idMap = { cones: 'btn3dCones', heat: 'btn3dHeat', furn: 'btn3dFurn', isolate: 'btn3dIsolate' };
+  var btn = $(idMap[key]);
+  if (btn) btn.classList.toggle('on', opts3d[key]);
+  rebuild3DScene(false);
 }
 
 /* ═══════════ إدارة الغرف ═══════════ */
@@ -1179,6 +1549,7 @@ function regenRoomFurniture(){
   generateFurniture(room); generateDoors(room); generateHVAC(room);
   generateLights(room); generateCCTV(room); generateFire(room);
   pushHistory(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
   toast('🔄 أُعيد التوليد');
 }
 
@@ -1258,6 +1629,7 @@ function selectSpeakerById(globalIdx){
     renderRoomsList(); renderRoomEditor(); renderRoomSpeakersList();
   }
   draw();
+  if (viewMode === '3d') rebuild3DScene(false);
   toast('🎯 تم تحديد السماعة #' + (selIdx + 1));
 }
 function deleteSpeakerById(globalIdx){
@@ -1298,8 +1670,7 @@ function removeBuilding(bid){
 }
 function selectBuilding(bid){
   bid = parseInt(bid, 10);
-  if (isNaN(bid)){ console.error('❌ مبنى غير صالح'); return; }
-  console.log('🏢 الانتقال إلى المبنى:', bid);
+  if (isNaN(bid)) return;
   activeBuildingId = bid;
   var fls = project.floors.filter(function(f){ return f.buildingId === bid; });
   activeFloorIdx = fls.length ? project.floors.indexOf(fls[0]) : 0;
@@ -1355,11 +1726,7 @@ function removeFloor(idx){
 }
 function selectFloor(i){
   i = parseInt(i, 10);
-  if (isNaN(i) || i < 0 || i >= project.floors.length){
-    console.error('❌ طابق غير صالح:', i);
-    return;
-  }
-  console.log('🎯 الانتقال إلى الطابق [' + i + ']:', project.floors[i].name);
+  if (isNaN(i) || i < 0 || i >= project.floors.length) return;
   activeFloorIdx = i;
   activeRoomId = null;
   placeMode = false;
@@ -1403,18 +1770,9 @@ function renderQuickNav(){
     });
   }
   fSel.innerHTML = fHtml;
-  console.log('✅ QuickNav: ' + project.buildings.length + ' مبنى, ' + fls.length + ' طابق');
 }
-function quickSelectBuilding(bidStr){
-  var bid = parseInt(bidStr, 10);
-  if (isNaN(bid)) return;
-  selectBuilding(bid);
-}
-function quickSelectFloor(fidxStr){
-  var fidx = parseInt(fidxStr, 10);
-  if (isNaN(fidx)) return;
-  selectFloor(fidx);
-}
+function quickSelectBuilding(bidStr){ var bid = parseInt(bidStr, 10); if (!isNaN(bid)) selectBuilding(bid); }
+function quickSelectFloor(fidxStr){ var fidx = parseInt(fidxStr, 10); if (!isNaN(fidx)) selectFloor(fidx); }
 
 /* ═══════════ التوزيع والمناطق والخطوط ═══════════ */
 function autoDistributeRoom(){
@@ -1499,7 +1857,7 @@ function circuitStats(c){
   return {watts:w,count:n,amp:amp,loadPct:loadPct,vdrop:vdrop,vdropPct:vdrop,amps:I};
 }
 
-/* ═══════════ الرسم ═══════════ */
+/* ═══════════ الرسم 2D ═══════════ */
 function zoneColor(id){ var z=project.zones.find(function(x){return x.id===id;}); return z?z.color:'#e60012'; }
 function splColor(spl){
   if (spl<55) return "rgba(15,25,45,0.55)";
@@ -1750,7 +2108,7 @@ function drawDimLine(x1,y1,x2,y2,label){
   ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-5,y2-3); ctx.lineTo(x2-5,y2+3); ctx.closePath(); ctx.fill();
   ctx.fillText(label,(x1+x2)/2,y1-8);
 }
-function drawDimLineVertical(x1,y1,y2,label){
+function drawDimLineVertical(x1,y1,x2,y2,label){
   ctx.beginPath();
   ctx.moveTo(x1-3,y1); ctx.lineTo(x1+3,y1);
   ctx.moveTo(x1-3,y2); ctx.lineTo(x1+3,y2);
@@ -1973,6 +2331,7 @@ function calculateAll(){
   if (typeof renderRoomSpeakersList === 'function') renderRoomSpeakersList();
   if (typeof renderRoomAcousticsPanel === 'function') renderRoomAcousticsPanel();
   draw();
+  if (viewMode === '3d') rebuild3DScene(false);
 }
 
 /* ═══════════ تحليل صوتي هندسي ═══════════ */
@@ -2134,6 +2493,7 @@ function toggleLayer(k,v){
   var btn=$('tg'+k.charAt(0).toUpperCase()+k.slice(1));
   if (btn) btn.classList.toggle('on',v);
   draw();
+  if (viewMode === '3d') rebuild3DScene(false);
 }
 function toggleAllLayers(){
   var anyOff=Object.keys(layers).some(function(k){return !layers[k];});
@@ -2164,6 +2524,7 @@ function selectRoom(id){
   updatePlaceBtnUI();
   renderRoomsList(); renderRoomEditor(); renderRoomSpeakersList(); renderRoomAcousticsPanel();
   draw();
+  if (viewMode === '3d') rebuild3DScene(false);
   var ed = $('roomEditor');
   if (ed){
     ed.classList.remove('highlight');
@@ -2233,9 +2594,10 @@ function renderAll(){
   renderRoomsList(); renderRoomEditor(); renderZones(); renderCircuits();
   renderRoomSpeakersList(); renderRoomAcousticsPanel();
   calculateAll(); computeBaseScale(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
 }
 
-/* ═══════════ Hit Testing ═══════════ */
+/* ═══════════ Hit Testing 2D ═══════════ */
 function pointerPos(e){
   var r=cv.getBoundingClientRect();
   return {mx:(e.clientX-r.left)*(canvasW/r.width),my:(e.clientY-r.top)*(canvasH/r.height)};
@@ -2316,7 +2678,7 @@ function hitRoomZone(mx,my){
   return null;
 }
 
-/* ═══════════ التفاعل ═══════════ */
+/* ═══════════ التفاعل 2D ═══════════ */
 var longPressTimer=null,longPressFired=false;
 var startX=0,startY=0,isDragging=false;
 var dragMode=null; var roomDrag=null; var guides=null; var panStart=null;
@@ -2612,6 +2974,7 @@ function addItem(kind,type){
   if (!room[kind]) room[kind]=[];
   room[kind].push({type:type,x:room.L/2,y:room.W/2,rot:0});
   pushHistory(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
   $('ctxMenu').style.display='none'; toast('✅ أُضيف');
 }
 function addDoorItem(type){
@@ -2624,22 +2987,28 @@ function addDoorItem(type){
 function rotateItem(libKey,roomId,idx){
   var room=getRoomById(roomId); if (!room) return;
   room[libKey][idx].rot=(room[libKey][idx].rot||0)+Math.PI/2;
-  pushHistory(); draw(); $('ctxMenu').style.display='none';
+  pushHistory(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
+  $('ctxMenu').style.display='none';
 }
 function duplicateItem(libKey,roomId,idx){
   var room=getRoomById(roomId); if (!room) return;
   var it=room[libKey][idx];
   room[libKey].push({type:it.type,x:it.x+0.3,y:it.y+0.3,rot:it.rot});
-  pushHistory(); draw(); $('ctxMenu').style.display='none';
+  pushHistory(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
+  $('ctxMenu').style.display='none';
 }
 function deleteItem(libKey,roomId,idx){
   var room=getRoomById(roomId); if (!room) return;
   room[libKey].splice(idx,1);
-  pushHistory(); draw(); $('ctxMenu').style.display='none';
+  pushHistory(); draw();
+  if (viewMode === '3d') rebuild3DScene(false);
+  $('ctxMenu').style.display='none';
 }
 function closeCtxOnce(e){ if (!e.target.closest('.ctx-menu')) $('ctxMenu').style.display='none'; }
 function ctxDelete(i){ project.speakers.splice(i,1); selIdx=-1; calculateAll(); pushHistory(); renderRoomSpeakersList(); renderRoomAcousticsPanel(); $('ctxMenu').style.display='none'; }
-function ctxHighlight(i){ selIdx=i; renderRoomSpeakersList(); draw(); $('ctxMenu').style.display='none'; toast('🎯 محدد في القائمة'); }
+function ctxHighlight(i){ selIdx=i; renderRoomSpeakersList(); draw(); if (viewMode === '3d') rebuild3DScene(false); $('ctxMenu').style.display='none'; toast('🎯 محدد في القائمة'); }
 function ctxMoveZone(i){
   var s=project.speakers[i];
   var opts=project.zones.map(function(z,k){return (k+1)+') '+z.name;}).join('\n');
@@ -2655,7 +3024,7 @@ function ctxMoveCircuit(i){
   $('ctxMenu').style.display='none';
 }
 
-/* ═══════════ Undo/Redo — ⚠️ اسم المتغير _undoStack لتجنب تعارض window.history ═══════════ */
+/* ═══════════ Undo/Redo ═══════════ */
 var _undoStack = [];
 var historyIdx = -1;
 function snapshot(){
@@ -2690,14 +3059,14 @@ document.addEventListener('keydown',function(e){
   else if (e.key==='+'||e.key==='='){ zoomIn(); }
   else if (e.key==='-'){ zoomOut(); }
   else if (e.key==='p'||e.key==='P'){ togglePlaceMode(); }
-  else if (e.key===' '){ e.preventDefault(); setTool('pan'); }
+  else if (e.key===' ' && viewMode==='2d'){ e.preventDefault(); setTool('pan'); }
 });
 document.addEventListener('keyup',function(e){ if (e.key===' ') setTool('select'); });
 
 /* ═══════════ حفظ/تحميل ═══════════ */
-var STORAGE_KEY='motiviti_v55';
+var STORAGE_KEY='motiviti_v57';
 function projectData(){
-  return {version:5.5,name:$('projName').value,buildings:project.buildings,floors:project.floors,speakers:project.speakers,zones:project.zones,circuits:project.circuits,activeBuildingId:activeBuildingId,activeFloorIdx:activeFloorIdx,activeZone:activeZone,activeCircuit:activeCircuit,layers:layers,model:$('modelSelect').value,tap:$('tapSelect').value,cableGauge:$('cableGauge').value,savedAt:new Date().toISOString()};
+  return {version:5.7,name:$('projName').value,buildings:project.buildings,floors:project.floors,speakers:project.speakers,zones:project.zones,circuits:project.circuits,activeBuildingId:activeBuildingId,activeFloorIdx:activeFloorIdx,activeZone:activeZone,activeCircuit:activeCircuit,layers:layers,model:$('modelSelect').value,tap:$('tapSelect').value,cableGauge:$('cableGauge').value,savedAt:new Date().toISOString()};
 }
 function saveLocal(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(projectData())); toast('💾'); }catch(e){ toast('⚠️'); } }
 function loadLocal(){ var raw=localStorage.getItem(STORAGE_KEY); if (!raw){ toast('لا يوجد'); return; } try{ applyProject(JSON.parse(raw)); toast('📂'); }catch(e){ toast('⚠️'); } }
@@ -2748,515 +3117,228 @@ function openReport(){ generateReport(); $('report').style.display='block'; }
 function closeReport(){ $('report').style.display='none'; }
 
 /* ═══════════ القوالب ═══════════ */
-function loadTemplate(key){
-  if (!key) return;
-  if (!confirm('استبدال المشروع؟')){ $('templateSelect').value=''; return; }
+function loadTemplate(tpl){
+  if (!tpl) return;
   _uid=1;
-  project.buildings=[createBuilding('المبنى الرئيسي')];
-  project.floors=[]; project.speakers=[];
-  project.zones=[{id:0,name:'المنطقة الرئيسية',color:ZONE_COLORS[0]}];
-  project.circuits=[{id:0,name:'الخط 1',ampIdx:1,cableLen:80}];
+  project.speakers=[];
+  project.zones=[{id:0,name:'المنطقة الرئيسية',color:ZONE_COLORS[0]},{id:1,name:'الممرات والخدمات',color:ZONE_COLORS[1]}];
+  project.circuits=[{id:0,name:'الخط 1',ampIdx:1,cableLen:80},{id:1,name:'الخط 2',ampIdx:1,cableLen:60}];
   activeZone=0; activeCircuit=0; activeRoomId=null;
-  placeMode=false;
-  var bid=project.buildings[0].id;
-  if (key==='empty') project.floors.push(createFloor('طابق 1',bid,3.5,1));
-  else if (key==='hotel') buildHotel(bid);
-  else if (key==='hospital') buildHospital(bid);
-  else if (key==='school') buildSchool(bid);
-  else if (key==='mosque') buildMosque(bid);
-  else if (key==='office') buildOffice(bid);
-  else if (key==='compound'){ buildCompound(); bid=project.buildings[0].id; }
-  else if (key==='tower') buildTower(bid);
-  activeBuildingId=bid; activeFloorIdx=0;
+  placeMode=false; updatePlaceBtnUI();
+  project.buildings=[]; project.floors=[];
+  if (tpl==='empty'){
+    var b=createBuilding('المبنى الرئيسي'); project.buildings.push(b);
+    project.floors.push(createFloor('طابق 1',b.id,3.5,1));
+    $('projName').value='مشروع فارغ';
+  } else if (tpl==='hotel'){
+    var b=createBuilding('فندق موتيفيتي'); project.buildings.push(b);
+    var f0=createFloor('الأرضي',b.id,4.0,0);
+    f0.rooms.push(createRoom('الاستقبال','lobby',0,0,12,8,4.0));
+    f0.rooms.push(createRoom('المطعم','restaurant',12.5,0,14,10,4.0));
+    f0.rooms.push(createRoom('المطبخ','kitchen',27,0,8,10,3.8));
+    f0.rooms.push(createRoom('الممر','corridor',0,8.5,35,3,3.5));
+    var f1=createFloor('الأول',b.id,3.2,1);
+    f1.rooms.push(createRoom('ممر الطابق','corridor',0,0,28,2.5,3.2));
+    for(var i=0;i<5;i++) f1.rooms.push(createRoom('غرفة '+(101+i),'guestroom',i*5.6,3,5.2,4.5,3.2));
+    var f2=createFloor('الثاني',b.id,3.2,2);
+    f2.rooms.push(createRoom('ممر الطابق','corridor',0,0,28,2.5,3.2));
+    f2.rooms.push(createRoom('جناح ملكي','suite',0,3,8.5,5.5,3.2));
+    for(var j=0;j<3;j++) f2.rooms.push(createRoom('غرفة '+(201+j),'guestroom',9+j*6,3,5.6,4.5,3.2));
+    project.floors.push(f0,f1,f2); $('projName').value='فندق موتيفيتي';
+  } else if (tpl==='hospital'){
+    var b=createBuilding('مستشفى الشفاء'); project.buildings.push(b);
+    var f0=createFloor('الطوارئ',b.id,3.8,0);
+    f0.rooms.push(createRoom('الاستقبال','lobby',0,0,12,8,3.8));
+    f0.rooms.push(createRoom('عيادة 1','clinic',12.5,0,6,5,3.5));
+    f0.rooms.push(createRoom('عيادة 2','clinic',19,0,6,5,3.5));
+    f0.rooms.push(createRoom('الصيدلية','pharmacy',12.5,5.5,8,4.5,3.5));
+    var f1=createFloor('العناية',b.id,3.6,1);
+    f1.rooms.push(createRoom('عناية مركزة','icu',0,0,16,9,3.6));
+    f1.rooms.push(createRoom('عمليات 1','surgery',16.5,0,8,7,3.6));
+    var f2=createFloor('العيادات',b.id,3.5,2);
+    for(var i=0;i<4;i++) f2.rooms.push(createRoom('عيادة '+(i+3),'clinic',i*6.5,0,6,5,3.5));
+    project.floors.push(f0,f1,f2); $('projName').value='مستشفى الشفاء';
+  } else if (tpl==='school'){
+    var b=createBuilding('مدرسة النور'); project.buildings.push(b);
+    var f0=createFloor('الأرضي',b.id,3.6,0);
+    f0.rooms.push(createRoom('الممر','corridor',0,0,24,2.5,3.6));
+    for(var i=0;i<3;i++) f0.rooms.push(createRoom('فصل '+(i+1),'classroom',i*8,3,7.5,6,3.6));
+    f0.rooms.push(createRoom('المختبر','lab',0,9.5,10,6.5,3.6));
+    var f1=createFloor('الأول',b.id,3.6,1);
+    f1.rooms.push(createRoom('ممر العلوي','corridor',0,0,24,2.5,3.6));
+    for(var i=0;i<3;i++) f1.rooms.push(createRoom('فصل '+(i+4),'classroom',i*8,3,7.5,6,3.6));
+    f1.rooms.push(createRoom('الاجتماعات','meeting',11,9.5,9,5.5,3.6));
+    project.floors.push(f0,f1); $('projName').value='مدرسة النور';
+  } else if (tpl==='mosque'){
+    var b=createBuilding('مسجد التقوى'); project.buildings.push(b);
+    var f0=createFloor('المصلى',b.id,5.5,0);
+    f0.rooms.push(createRoom('المصلى الرئيسي','mosque',0,0,18,16,5.5));
+    f0.rooms.push(createRoom('المدخل','lobby',0,16.5,10,4,4.0));
+    f0.rooms.push(createRoom('المواضئ','wc',10.5,16.5,7.5,4,3.5));
+    project.floors.push(f0); $('projName').value='مسجد التقوى';
+  } else if (tpl==='office'){
+    var b=createBuilding('برج الأعمال'); project.buildings.push(b);
+    var f0=createFloor('الاستقبال',b.id,4.0,0);
+    f0.rooms.push(createRoom('البهو','lobby',0,0,14,9,4.0));
+    f0.rooms.push(createRoom('الاجتماعات','meeting',14.5,0,9,6.5,3.8));
+    var f1=createFloor('المكاتب',b.id,3.4,1);
+    for(var i=0;i<4;i++) f1.rooms.push(createRoom('مكتب '+(i+1),'office',i*5.5,0,5,4.5,3.4));
+    var f2=createFloor('الإدارة',b.id,3.6,2);
+    f2.rooms.push(createRoom('قاعة كبرى','hall',0,0,14,10,4.2));
+    f2.rooms.push(createRoom('مكتب تنفيذي','office',14.5,0,7,5.5,3.6));
+    project.floors.push(f0,f1,f2); $('projName').value='برج الأعمال';
+  } else if (tpl==='compound'){
+    var b1=createBuilding('مبنى A — إداري'); project.buildings.push(b1);
+    var f1=createFloor('الطابق 1',b1.id,3.6,1);
+    f1.rooms.push(createRoom('الاستقبال','lobby',0,0,12,8,3.6));
+    f1.rooms.push(createRoom('المكاتب','office',12.5,0,8,6,3.6));
+    project.floors.push(f1);
+    var b2=createBuilding('مبنى B — سكني'); project.buildings.push(b2);
+    var f2=createFloor('الطابق 1',b2.id,3.2,1);
+    f2.rooms.push(createRoom('شقة 1','guestroom',0,0,8,6,3.2));
+    f2.rooms.push(createRoom('شقة 2','guestroom',8.5,0,8,6,3.2));
+    project.floors.push(f2);
+    $('projName').value='مجمع موتيفيتي';
+  } else if (tpl==='tower'){
+    var b=createBuilding('برج موتيفيتي — 10 طوابق'); project.buildings.push(b);
+    for(var i=1;i<=10;i++){
+      var fl=createFloor('طابق '+i,b.id,3.5,i);
+      if (i===1){ fl.rooms.push(createRoom('الاستقبال','lobby',0,0,14,8,4.0)); fl.rooms.push(createRoom('مقهى','restaurant',14.5,0,9,7,3.8)); }
+      else if (i===2){ fl.rooms.push(createRoom('قاعة اجتماعات','meeting',0,0,12,7,3.5)); fl.rooms.push(createRoom('مكاتب','office',12.5,0,10,6,3.5)); }
+      else { fl.rooms.push(createRoom('مكتب '+i+'A','office',0,0,8,6,3.5)); fl.rooms.push(createRoom('مكتب '+i+'B','office',8.5,0,8,6,3.5)); }
+      project.floors.push(fl);
+    }
+    $('projName').value='برج موتيفيتي';
+  }
+  activeBuildingId=project.buildings[0].id;
+  activeFloorIdx=0;
   project.floors.forEach(function(f){ f.rooms.forEach(autoDistRoom); });
-  pushHistory(); renderAll(); fitToView();
-  toast('✅ تم');
+  _undoStack=[]; historyIdx=-1; pushHistory();
+  renderAll(); fitToView();
   $('templateSelect').value='';
 }
-function buildHotel(bid){
-  var g=createFloor('الطابق الأرضي',bid,4.5,0);
-  g.rooms.push(createRoom('اللوبي','lobby',0,0,14,12,4.5));
-  g.rooms.push(createRoom('الاستقبال','lobby',14.5,0,8,8,4.5));
-  g.rooms.push(createRoom('المطعم','restaurant',14.5,8.5,12,12,4.5));
-  g.rooms.push(createRoom('ممر رئيسي','corridor',0,12.5,26,2.5,4.5));
-  g.rooms.push(createRoom('مطبخ','kitchen',27,0,8,8,4.5));
-  g.rooms.push(createRoom('حمامات','wc',0,15.5,6,3,3.5));
-  project.floors.push(g);
-  for(var fl=1;fl<=2;fl++){
-    var f=createFloor('الطابق '+(fl===1?'الأول':'الثاني'),bid,3.2,fl);
-    f.rooms.push(createRoom('ممر '+fl,'corridor',0,0,26,2.5,3.2));
-    for(var i=0;i<6;i++) f.rooms.push(createRoom('غرفة '+(fl*100+i+1),'guestroom',i*4.3,2.8,4,6,3.2));
-    f.rooms.push(createRoom('جناح '+fl,'suite',27,0,8,8,3.2));
-    project.floors.push(f);
-  }
-}
-function buildHospital(bid){
-  var g=createFloor('الطابق الأرضي',bid,4,0);
-  g.rooms.push(createRoom('استقبال','lobby',0,0,12,10,4));
-  g.rooms.push(createRoom('صيدلية','pharmacy',12.5,0,6,5,4));
-  g.rooms.push(createRoom('عيادة 1','clinic',12.5,5.5,6,5,4));
-  g.rooms.push(createRoom('عيادة 2','clinic',19,0,6,5,4));
-  g.rooms.push(createRoom('عيادة 3','clinic',19,5.5,6,5,4));
-  g.rooms.push(createRoom('ممر','corridor',0,10.5,25,2.5,4));
-  project.floors.push(g);
-  var f1=createFloor('طابق العناية',bid,3.8,1);
-  f1.rooms.push(createRoom('ممر','corridor',0,0,26,2.5,3.8));
-  f1.rooms.push(createRoom('ICU 1','icu',0,2.8,8,7,3.8));
-  f1.rooms.push(createRoom('ICU 2','icu',8.5,2.8,8,7,3.8));
-  f1.rooms.push(createRoom('عمليات','surgery',17,2.8,9,7,3.8));
-  project.floors.push(f1);
-  var f2=createFloor('طابق الأقسام',bid,3.5,2);
-  f2.rooms.push(createRoom('ممر','corridor',0,0,25,2.5,3.5));
-  for(var i=0;i<6;i++) f2.rooms.push(createRoom('غرفة '+(i+1),'guestroom',i*4.2,2.8,4,6,3.5));
-  project.floors.push(f2);
-}
-function buildSchool(bid){
-  var g=createFloor('الطابق الأرضي',bid,4,0);
-  g.rooms.push(createRoom('مدخل','lobby',0,0,6,6,4));
-  g.rooms.push(createRoom('ممر','corridor',6.5,0,22,2.5,4));
-  g.rooms.push(createRoom('فصل 1','classroom',6.5,2.8,5,6,4));
-  g.rooms.push(createRoom('فصل 2','classroom',11.8,2.8,5,6,4));
-  g.rooms.push(createRoom('فصل 3','classroom',17.1,2.8,5,6,4));
-  g.rooms.push(createRoom('فصل 4','classroom',22.4,2.8,5,6,4));
-  g.rooms.push(createRoom('مختبر','lab',0,6.5,8,6,4));
-  g.rooms.push(createRoom('إدارة','office',0,13,6,5,4));
-  project.floors.push(g);
-  var f1=createFloor('الطابق الأول',bid,3.5,1);
-  f1.rooms.push(createRoom('ممر','corridor',0,0,26,2.5,3.5));
-  for(var i=0;i<5;i++) f1.rooms.push(createRoom('فصل '+(i+5),'classroom',i*5.2,2.8,5,6,3.5));
-  project.floors.push(f1);
-}
-function buildMosque(bid){
-  var g=createFloor('الطابق الرئيسي',bid,5.5,0);
-  g.rooms.push(createRoom('قاعة الصلاة','mosque',0,0,20,15,5.5));
-  g.rooms.push(createRoom('المدخل','lobby',20.5,0,6,6,5.5));
-  g.rooms.push(createRoom('ممر','corridor',20.5,6.5,3,9,5.5));
-  g.rooms.push(createRoom('مكتبة','office',24,6.5,6,9,5.5));
-  g.rooms.push(createRoom('حمامات','wc',20.5,16,9,3,3.5));
-  project.floors.push(g);
-}
-function buildOffice(bid){
-  for(var fl=0;fl<3;fl++){
-    var f=createFloor('طابق '+(fl+1),bid,3.4,fl);
-    f.rooms.push(createRoom('ممر','corridor',0,0,24,2.5,3.4));
-    for(var i=0;i<4;i++) f.rooms.push(createRoom('مكتب '+(fl+1)+'.'+(i+1),'office',i*6.2,2.8,5.5,6,3.4));
-    f.rooms.push(createRoom('اجتماعات','meeting',0,9.3,8,6,3.4));
-    project.floors.push(f);
-  }
-}
-function buildCompound(){
-  var b1=createBuilding('الإداري'); project.buildings=[b1]; buildOffice(b1.id);
-  var b2=createBuilding('السكني'); project.buildings.push(b2);
-  for(var fl=0;fl<3;fl++){
-    var f=createFloor('سكني '+(fl+1),b2.id,3.2,fl);
-    f.rooms.push(createRoom('ممر','corridor',0,0,22,2.5,3.2));
-    for(var i=0;i<5;i++) f.rooms.push(createRoom('شقة '+(fl+1)+(i+1),'guestroom',i*4.4,2.8,4,6,3.2));
-    project.floors.push(f);
-  }
-}
-function buildTower(bid){
-  var g=createFloor('الطابق الأرضي',bid,4.5,0);
-  g.rooms.push(createRoom('اللوبي','lobby',0,0,12,10,4.5));
-  g.rooms.push(createRoom('ممر','corridor',0,10.5,12,2.5,4.5));
-  g.rooms.push(createRoom('مطعم','restaurant',12.5,0,10,10,4.5));
-  project.floors.push(g);
-  for(var fl=1;fl<=9;fl++){
-    var f=createFloor('طابق '+(fl+1),bid,3.2,fl);
-    f.rooms.push(createRoom('ممر','corridor',0,0,20,2.5,3.2));
-    for(var i=0;i<4;i++) f.rooms.push(createRoom('مكتب '+(fl+1)+'.'+(i+1),'office',i*5,2.8,4.5,6,3.2));
-    project.floors.push(f);
-  }
-}
 
-/* ═══════════════════════════════════════════════════════════════
-   التقاط صور الطوابق للتقرير
-   ═══════════════════════════════════════════════════════════════ */
-function captureFloorImage(floorIdx){
-  var oldIdx = activeFloorIdx;
-  var oldZoom = view.zoom, oldPanX = view.panX, oldPanY = view.panY;
-  var oldBase = baseScale;
-  var oldCv = cv, oldCtx = ctx, oldCW = canvasW, oldCH = canvasH;
-  var oldPlace = placeMode;
-  placeMode = false;
-  activeFloorIdx = floorIdx;
-  var f = project.floors[floorIdx];
-  if (!f || !f.rooms.length){ activeFloorIdx = oldIdx; placeMode = oldPlace; return null; }
-  var b = floorBounds(f);
-  var pad = 100;
-  var maxW = 1400;
-  var targetW = Math.min(maxW, Math.max(600, b.w * 35 + pad * 2));
-  var targetH = Math.round(targetW * (b.h / b.w));
-  if (targetH > 1000){ targetH = 1000; targetW = Math.round(1000 * (b.w / b.h)) + pad * 2; }
-  targetH += pad;
-  var tempCv = document.createElement('canvas');
-  var dpr = 2;
-  tempCv.width = Math.round(targetW * dpr);
-  tempCv.height = Math.round(targetH * dpr);
-  var tempCtx = tempCv.getContext('2d');
-  tempCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  cv = tempCv; ctx = tempCtx;
-  canvasW = targetW; canvasH = targetH;
-  var eff = Math.min((targetW - pad * 2) / b.w, (targetH - pad * 2) / b.h);
-  eff = Math.min(eff, 100);
-  baseScale = eff;
-  view.zoom = 1;
-  view.panX = (targetW - b.w * eff) / 2;
-  view.panY = (targetH - b.h * eff) / 2;
-  try { draw(); } catch(e){ console.error(e); }
-  var url = tempCv.toDataURL('image/png');
-  cv = oldCv; ctx = oldCtx;
-  canvasW = oldCW; canvasH = oldCH;
-  activeFloorIdx = oldIdx;
-  view.zoom = oldZoom; view.panX = oldPanX; view.panY = oldPanY;
-  baseScale = oldBase;
-  placeMode = oldPlace;
-  try { draw(); } catch(e){}
-  return url;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   SLD — مخطط الخطوط + جدول هبوط الجهد
-   ═══════════════════════════════════════════════════════════════ */
-function generateSLDSection(){
-  var html = '';
-  html += '<h2>5. مخطط SLD + جدول هبوط الجهد</h2>';
-  project.circuits.forEach(function(c){
-    var st = circuitStats(c);
-    var spkList = project.speakers.filter(function(s){ return s.circuitId === c.id; });
-    var zoneGroups = {};
-    spkList.forEach(function(s){
-      if (!zoneGroups[s.zoneId]) zoneGroups[s.zoneId] = [];
-      zoneGroups[s.zoneId].push(s);
+/* ═══════════ التقرير ═══════════ */
+function renderFloorCanvasToDataURL(floor){
+  var b=floorBounds(floor);
+  if (!b.w||!b.h) return '';
+  var off=document.createElement('canvas');
+  var w=700,h=450;
+  off.width=w; off.height=h;
+  var octx=off.getContext('2d');
+  octx.fillStyle='#060a0f'; octx.fillRect(0,0,w,h);
+  var pad=40;
+  var s=Math.min((w-pad*2)/b.w,(h-pad*2)/b.h);
+  var ox=(w-b.w*s)/2-b.minX*s, oy=(h-b.h*s)/2-b.minY*s;
+  floor.rooms.forEach(function(r){
+    var rx=ox+r.x*s,ry=oy+r.y*s,rw=r.L*s,rh=r.W*s;
+    octx.fillStyle='#101820'; octx.fillRect(rx,ry,rw,rh);
+    octx.strokeStyle='#38bdf8'; octx.lineWidth=1.5; octx.strokeRect(rx,ry,rw,rh);
+    var spks=spkInRoom(r.id);
+    var covR=Math.max(0.5,r.height-1.5)*Math.tan((getAngle()/2)*Math.PI/180)*s;
+    spks.forEach(function(sp){
+      var sx=rx+sp.rx*rw,sy=ry+sp.ry*rh;
+      octx.fillStyle='rgba(56,189,248,0.18)';
+      octx.beginPath(); octx.arc(sx,sy,covR,0,Math.PI*2); octx.fill();
+      octx.fillStyle=zoneColor(sp.zoneId);
+      octx.beginPath(); octx.arc(sx,sy,4,0,Math.PI*2); octx.fill();
     });
-    html += '<div style="border:2px solid #333;border-radius:6px;padding:12px;margin:12px 0;background:#f9f9f9;page-break-inside:avoid">';
-    html += '<div style="background:#1a1a1a;color:#fff;padding:8px 12px;border-radius:4px;font-weight:800;font-size:12px;display:flex;justify-content:space-between">';
-    html += '<span>🔌 ' + c.name + ' — موتيفيتي ' + st.amp.id + '</span>';
-    html += '<span>' + st.amp.pwr + ' W · ' + st.loadPct.toFixed(0) + '% load</span>';
-    html += '</div>';
-    html += '<div style="text-align:center;padding:6px 0;color:#666;font-size:11px">↓ 100V Line · كيبل ' + $('cableGauge').value + ' مم² · طول ' + c.cableLen + ' م</div>';
-    html += '<div style="border-left:2px solid #999;margin-right:20px;padding-right:20px;padding-bottom:10px">';
-    Object.keys(zoneGroups).forEach(function(zid){
-      var zone = project.zones.find(function(z){ return z.id === parseInt(zid); });
-      var zSpks = zoneGroups[zid];
-      var zWatts = zSpks.length * getWatt();
-      html += '<div style="margin-bottom:10px;position:relative">';
-      html += '<div style="position:absolute;right:-22px;top:12px;width:12px;height:2px;background:#999"></div>';
-      html += '<div style="background:#e8f4fd;border:1px solid #38bdf8;border-radius:4px;padding:8px 10px">';
-      html += '<div style="font-weight:800;font-size:11.5px;color:#0369a1;margin-bottom:4px">';
-      html += '<span class="dot" style="background:' + (zone ? zone.color : '#888') + '"></span>';
-      html += (zone ? zone.name : 'غير معروفة') + ' — ' + zSpks.length + ' سماعة × ' + getWatt() + 'W = ' + zWatts + 'W';
-      html += '</div>';
-      html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">';
-      var globalList = project.speakers;
-      zSpks.slice(0, 30).forEach(function(s){
-        var globalIdx = globalList.indexOf(s) + 1;
-        html += '<span style="background:#fff;border:1px solid #38bdf8;border-radius:3px;padding:2px 6px;font-size:9.5px;font-weight:700;color:#0369a1">#' + globalIdx + '</span>';
-      });
-      if (zSpks.length > 30) html += '<span style="font-size:9.5px;color:#666">+' + (zSpks.length - 30) + ' أخرى</span>';
-      html += '</div></div></div>';
-    });
-    html += '</div>';
-    var I = st.watts / 100;
-    var gauge = parseFloat($('cableGauge').value) || 2.5;
-    var R_per_m = (0.0172 * 2) / gauge;
-    var totalR = R_per_m * (c.cableLen || 0);
-    var vdrop = I * totalR;
-    var vdropPct = vdrop;
-    var powerLoss = I * I * totalR;
-    html += '<table style="width:100%;font-size:10px;margin-top:8px;border-collapse:collapse">';
-    html += '<thead><tr style="background:#333;color:#fff">';
-    html += '<th style="padding:5px;text-align:right;border:1px solid #ddd">المعامل</th>';
-    html += '<th style="padding:5px;text-align:right;border:1px solid #ddd">القيمة</th>';
-    html += '<th style="padding:5px;text-align:right;border:1px solid #ddd">الحد المسموح</th>';
-    html += '<th style="padding:5px;text-align:right;border:1px solid #ddd">الحالة</th>';
-    html += '</tr></thead><tbody>';
-    html += '<tr><td style="padding:4px;border:1px solid #ddd">التيار I</td><td style="padding:4px;border:1px solid #ddd">' + I.toFixed(3) + ' A</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
-    html += '<tr><td style="padding:4px;border:1px solid #ddd">المقاومة الكلية</td><td style="padding:4px;border:1px solid #ddd">' + totalR.toFixed(3) + ' Ω</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
-    html += '<tr><td style="padding:4px;border:1px solid #ddd"><b>هبوط الجهد ΔV</b></td><td style="padding:4px;border:1px solid #ddd"><b>' + vdrop.toFixed(2) + ' V</b> (' + vdropPct.toFixed(1) + '%)</td><td style="padding:4px;border:1px solid #ddd">≤ 10% (10V)</td><td style="padding:4px;border:1px solid #ddd">' + (vdropPct <= 10 ? '✅' : '❌') + '</td></tr>';
-    html += '<tr><td style="padding:4px;border:1px solid #ddd">فقد القدرة في الكيبل</td><td style="padding:4px;border:1px solid #ddd">' + powerLoss.toFixed(2) + ' W</td><td style="padding:4px;border:1px solid #ddd">—</td><td style="padding:4px;border:1px solid #ddd">—</td></tr>';
-    html += '<tr><td style="padding:4px;border:1px solid #ddd"><b>حمل المكبر</b></td><td style="padding:4px;border:1px solid #ddd"><b>' + st.loadPct.toFixed(1) + '%</b></td><td style="padding:4px;border:1px solid #ddd">≤ 80%</td><td style="padding:4px;border:1px solid #ddd">' + (st.loadPct <= 80 ? '✅' : st.loadPct <= 90 ? '⚠️' : '❌') + '</td></tr>';
-    html += '</tbody></table>';
-    html += '</div>';
+    octx.fillStyle='#fff'; octx.font='bold 10px Cairo'; octx.textAlign='center';
+    octx.fillText(r.name+' ('+spks.length+')',rx+rw/2,ry+rh/2);
   });
-  return html;
+  return off.toDataURL('image/png');
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   التقرير الكامل
-   ═══════════════════════════════════════════════════════════════ */
 function generateReport(){
-  if (!project.speakers.length){ toast('⚠️ لا توجد سماعات'); return; }
-  var totalSpk = project.speakers.length;
-  var totalW = totalSpk * getWatt();
-  var today = new Date().toLocaleDateString('ar-EG');
-  $('repMeta').innerHTML = '<b>' + $('projName').value + '</b><br>' + today + '<br>MOT-ENG-2026-v5.5';
-  var html = '';
-  html += '<h2>1. الملخص التنفيذي</h2>';
-  html += '<div class="kpi-cards">';
-  html += '<div class="kpi-card"><div class="n">' + project.buildings.length + '</div><div class="l">مباني</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + project.floors.length + '</div><div class="l">طوابق</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + project.floors.reduce(function(a,f){return a+f.rooms.length;},0) + '</div><div class="l">غرف</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + totalSpk + '</div><div class="l">سماعات</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + totalW.toFixed(0) + '</div><div class="l">إجمالي واط</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + project.zones.length + '</div><div class="l">مناطق</div></div>';
-  html += '<div class="kpi-card"><div class="n">' + project.circuits.length + '</div><div class="l">خطوط</div></div>';
-  html += '<div class="kpi-card"><div class="n" style="font-size:12px">' + $('modelSelect').value + '</div><div class="l">الموديل</div></div>';
-  html += '</div>';
-  html += '<h2>2. المخططات المعمارية لكل طابق</h2>';
-  project.buildings.forEach(function(b){
-    var bFloors = floorsOfBuilding(b.id);
-    if (!bFloors.length) return;
-    html += '<h3>🏢 ' + b.name + '</h3>';
-    bFloors.forEach(function(f){
-      var fidx = project.floors.indexOf(f);
-      var img = captureFloorImage(fidx);
-      var spkCount = spkInFloor(f).length;
-      html += '<div class="floor-section">';
-      html += '<div style="background:#1a1a1a;color:#fff;padding:8px 12px;font-weight:800;font-size:12.5px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between">';
-      html += '<span>📍 ' + f.name + ' — ارتفاع ' + f.height + 'م</span>';
-      html += '<span>🔊 ' + spkCount + ' سماعة · ' + f.rooms.length + ' غرفة</span>';
-      html += '</div>';
-      if (img){
-        html += '<div style="border:1px solid #ddd;border-top:none;padding:8px;background:#f9f9f9;text-align:center;border-radius:0 0 6px 6px">';
-        html += '<img src="' + img + '" style="max-width:100%;display:block;margin:auto;border-radius:4px">';
-        html += '</div>';
-      } else {
-        html += '<div style="border:1px solid #ddd;padding:16px;text-align:center;color:#999;font-size:11px;border-radius:0 0 6px 6px">لا يوجد مخطط</div>';
-      }
-      html += '</div>';
+  var now=new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});
+  $('repMeta').innerHTML='<b>المشروع:</b> '+$('projName').value+'<br><b>التاريخ:</b> '+now+'<br><b>السماعة:</b> '+getModel().text+' ('+$('tapSelect').options[$('tapSelect').selectedIndex].text+')';
+  var totSpk=project.speakers.length,totW=totSpk*getWatt();
+  var totRooms=project.floors.reduce(function(a,f){return a+f.rooms.length;},0);
+  var html='<div class="kpi-cards">';
+  html+='<div class="kpi-card"><div class="n">'+project.buildings.length+'</div><div class="l">المباني</div></div>';
+  html+='<div class="kpi-card"><div class="n">'+project.floors.length+'</div><div class="l">الطوابق</div></div>';
+  html+='<div class="kpi-card"><div class="n">'+totSpk+'</div><div class="l">السماعات</div></div>';
+  html+='<div class="kpi-card"><div class="n">'+totW.toFixed(0)+'W</div><div class="l">القدرة</div></div></div>';
+  html+='<h2>1. الملخص والامتثال</h2><div class="note">';
+  html+='<b>• المبانٍ:</b> '+project.buildings.length+' | <b>الطوابق:</b> '+project.floors.length+' | <b>الغرف:</b> '+totRooms+' | <b>القدرة:</b> '+totW.toFixed(0)+' واط<br>';
+  html+='<b>• المعيار:</b> EN 54-16 — الحد الأدنى للضغط = الهدف − 3dB، التفاوت ≤ 6dB، STI ≥ 0.50، حمل الخط ≤ 80%.';
+  html+='</div><h2>2. جدول الغرف</h2><table><thead><tr>';
+  html+='<th>#</th><th>المبنى</th><th>الطابق</th><th>الغرفة</th><th>الأبعاد</th><th>العدد</th><th>متوسط</th><th>أدنى</th><th>التفاوت</th><th>التغطية</th><th>RT60</th><th>STI</th><th>الحالة</th>';
+  html+='</tr></thead><tbody>';
+  var idx=1;
+  project.floors.forEach(function(f){
+    var b=project.buildings.find(function(x){return x.id===f.buildingId;});
+    f.rooms.forEach(function(r){
+      var st=roomStats(r); var spks=spkInRoom(r.id);
+      var minSPL=r.target-3;
+      var ok=st&&st.min>=minSPL&&st.variation<=6&&st.sti>=0.5;
+      var badge=st?(ok?'<span class="badge ok">✓</span>':'<span class="badge bad">✗</span>'):'<span class="badge warn">—</span>';
+      html+='<tr><td>'+idx+++'</td><td>'+(b?b.name:'—')+'</td><td>'+f.name+'</td><td><span class="dot" style="background:'+(ROOM_TYPES[r.type]?ROOM_TYPES[r.type].color:'#888')+'"></span>'+r.name+'</td>';
+      html+='<td>'+r.L.toFixed(1)+'×'+r.W.toFixed(1)+'</td><td>'+spks.length+'</td>';
+      html+='<td>'+(st?st.avg.toFixed(1):'—')+'</td><td>'+(st?st.min.toFixed(1):'—')+'</td><td>'+(st?st.variation.toFixed(1):'—')+'</td>';
+      html+='<td>'+(st?st.coverage.toFixed(0)+'%':'—')+'</td><td>'+(st?st.rt60.toFixed(2):'—')+'</td><td>'+(st?st.sti.toFixed(2):'—')+'</td><td>'+badge+'</td></tr>';
     });
   });
-  html += '<h2>3. جداول الغرف التفصيلية</h2>';
-  project.buildings.forEach(function(b){
-    var bFloors = floorsOfBuilding(b.id);
-    if (!bFloors.length) return;
-    html += '<h3>🏢 ' + b.name + '</h3>';
-    bFloors.forEach(function(f){
-      html += '<h4>📍 ' + f.name + '</h4>';
-      html += '<table><thead><tr><th>الغرفة</th><th>النوع</th><th>الأبعاد</th><th>سماعات</th><th>واط</th><th>SPL متوسط</th><th>SPL أدنى</th><th>تغطية</th><th>RT60</th><th>STI</th></tr></thead><tbody>';
-      f.rooms.forEach(function(r){
-        var st = roomStats(r);
-        var t = ROOM_TYPES[r.type] || ROOM_TYPES.office;
-        html += '<tr><td><span class="dot" style="background:' + (t.color||'#888') + '"></span>' + r.name + '</td>';
-        html += '<td>' + (t.icon||'') + ' ' + (t.name||r.type) + '</td>';
-        html += '<td>' + r.L + '×' + r.W + '×' + r.height + 'م</td>';
-        if (st){
-          html += '<td>' + st.count + '</td><td>' + st.watts.toFixed(0) + '</td>';
-          html += '<td>' + st.avg.toFixed(1) + ' dB</td><td>' + st.min.toFixed(1) + ' dB</td>';
-          html += '<td>' + st.coverage.toFixed(0) + '%</td>';
-          html += '<td>' + st.rt60.toFixed(2) + 'ث</td><td>' + st.sti.toFixed(2) + '</td>';
-        } else html += '<td colspan="7" style="text-align:center;color:#999">لا سماعات</td>';
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
-    });
-  });
-  html += '<h2>4. المناطق (Zones)</h2>';
-  html += '<table><thead><tr><th>#</th><th>المنطقة</th><th>السماعات</th><th>الواط</th></tr></thead><tbody>';
-  project.zones.forEach(function(z, i){
-    var cnt = project.speakers.filter(function(s){return s.zoneId===z.id;}).length;
-    html += '<tr><td>' + (i+1) + '</td><td><span class="dot" style="background:' + z.color + '"></span>' + z.name + '</td><td>' + cnt + '</td><td>' + (cnt*getWatt()).toFixed(0) + '</td></tr>';
-  });
-  html += '</tbody></table>';
-  html += generateSLDSection();
-  html += '<h2>6. جدول الكميات (BOM)</h2>';
-  html += '<table><thead><tr><th>البند</th><th>المواصفات</th><th>الكمية</th><th>ملاحظات</th></tr></thead><tbody>';
-  html += '<tr><td>سماعة سقفية</td><td>موتيفيتي ' + $('modelSelect').value + ' — ' + getSens() + 'dB — ' + getAngle() + '°</td><td>' + totalSpk + '</td><td>محوّل على ' + getWatt() + ' واط</td></tr>';
+  html+='</tbody></table><h2>3. جدول الخطوط</h2><table><thead><tr>';
+  html+='<th>الخط</th><th>المضخم</th><th>السماعات</th><th>القدرة</th><th>الحمل %</th><th>الطول</th><th>هبوط الجهد %</th><th>الحالة</th>';
+  html+='</tr></thead><tbody>';
   project.circuits.forEach(function(c){
-    var st = circuitStats(c);
-    html += '<tr><td>مكبر — ' + c.name + '</td><td>موتيفيتي ' + st.amp.id + ' (' + st.amp.pwr + 'W)</td><td>1</td><td>حمل ' + st.loadPct.toFixed(0) + '%</td></tr>';
+    var st=circuitStats(c);
+    var ok=st.loadPct<=80&&st.vdropPct<=10;
+    html+='<tr><td>'+c.name+'</td><td>'+st.amp.id+'</td><td>'+st.count+'</td><td>'+st.watts.toFixed(0)+'W</td>';
+    html+='<td>'+st.loadPct.toFixed(1)+'%</td><td>'+(c.cableLen||0)+'م</td><td>'+st.vdropPct.toFixed(2)+'%</td>';
+    html+='<td>'+(ok?'<span class="badge ok">✓</span>':'<span class="badge bad">✗</span>')+'</td></tr>';
   });
-  var totalCable = project.circuits.reduce(function(a,c){return a+(c.cableLen||0);},0);
-  html += '<tr><td>كيبل نحاسي</td><td>' + $('cableGauge').value + ' مم² مقاوم حريق</td><td>~' + totalCable + ' م</td><td>EN 54-16</td></tr>';
-  html += '<tr><td>Fire Dome + Ceramic Terminal</td><td>EN 54-24 عازل 60 دقيقة</td><td>' + totalSpk + '</td><td>إجباري</td></tr>';
-  html += '</tbody></table>';
-  html += '<h2>7. الملاحظات الهندسية</h2>';
-  html += '<div class="note">';
-  html += '• المشروع: <b>' + project.buildings.length + '</b> مبنى · <b>' + project.floors.length + '</b> طابق · <b>' + project.floors.reduce(function(a,f){return a+f.rooms.length;},0) + '</b> غرفة.<br>';
-  html += '• المحرك الهندسي v5.5 يحسب: <b>Direct Field + Reverberant Field + Off-Axis Attenuation</b>.<br>';
-  html += '• السماعة: <b>موتيفيتي ' + $('modelSelect').value + '</b> — ' + getAngle() + '° — حساسية ' + getSens() + ' dB — قدرة ' + getWatt() + ' واط.<br>';
-  html += '• <b>مهم:</b> اضبط محوّل كل سماعة على <b>' + getWatt() + ' واط</b> قبل إغلاق السقف.<br>';
-  html += '• هامش أمان 20% محفوظ على كل مكبر (حد أقصى 80%).<br>';
-  html += '• تأكد من تركيب <b>Fire Dome</b> و<b>Ceramic Terminal</b> لكل سماعة.<br>';
-  html += '• تم تنسيق مواضع السماعات مع <b>التكييف</b> و<b>الإضاءة</b> و<b>الكاميرات</b> و<b>كواشف الحريق</b>.';
-  html += '</div>';
-  html += '<div style="text-align:center;margin-top:24px;padding-top:12px;border-top:2px solid #ddd;font-size:10.5px;color:#999">';
-  html += 'تم إنشاء هذا التقرير بواسطة موتيفيتي v5.5 — المحرك الهندسي<br>';
-  html += '© MOT-ENG-2026 · All rights reserved';
-  html += '</div>';
-  $('repBody').innerHTML = html;
+  html+='</tbody></table><h2>4. مخططات الطوابق</h2>';
+  project.floors.forEach(function(f){
+    var b=project.buildings.find(function(x){return x.id===f.buildingId;});
+    var dataUrl=renderFloorCanvasToDataURL(f);
+    html+='<div class="floor-section"><h3>'+(b?b.name+' — ':'')+f.name+' ('+f.rooms.length+' غرفة · '+spkInFloor(f).length+' سماعة)</h3>';
+    if (dataUrl) html+='<img src="'+dataUrl+'" style="width:100%;max-width:700px;border:1px solid #ddd;border-radius:6px">';
+    html+='</div>';
+  });
+  $('repBody').innerHTML=html;
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   تصدير Excel/CSV
-   ═══════════════════════════════════════════════════════════════ */
+function printReport(){ window.print(); }
 function exportCSV(){
-  var rows = [];
-  var BOM = '\uFEFF';
-  rows.push(['تقرير موتيفيتي الصوتي — v5.5']);
-  rows.push(['اسم المشروع', $('projName').value]);
-  rows.push(['التاريخ', new Date().toLocaleDateString('ar-EG')]);
-  rows.push(['المرجع', 'MOT-ENG-2026-v5.5']);
-  rows.push([]);
-  rows.push(['═══════ الجدول الرئيسي للغرف ═══════']);
-  rows.push(['الطابق', 'الغرفة', 'النوع', 'الأبعاد', 'سماعات', 'واط', 'SPL متوسط', 'SPL أدنى', 'SPL أقصى', 'تغطية %', 'RT60', 'STI', 'مسافة حرجة', 'Reverb/Direct']);
-  project.buildings.forEach(function(b){
-    floorsOfBuilding(b.id).forEach(function(f){
-      f.rooms.forEach(function(r){
-        var st = roomStats(r);
-        var t = ROOM_TYPES[r.type] || ROOM_TYPES.office;
-        rows.push([
-          f.name, r.name, t.name || r.type,
-          r.L + '×' + r.W + '×' + r.height + 'م',
-          st ? st.count : 0,
-          st ? st.watts.toFixed(0) : 0,
-          st ? st.avg.toFixed(1) : '—',
-          st ? st.min.toFixed(1) : '—',
-          st ? st.max.toFixed(1) : '—',
-          st ? st.coverage.toFixed(0) : '—',
-          st ? st.rt60.toFixed(2) : '—',
-          st ? st.sti.toFixed(2) : '—',
-          st ? st.criticalDist.toFixed(1) : '—',
-          st ? st.reverbRatio.toFixed(1) : '—'
-        ]);
-      });
+  var rows=[['المبنى','الطابق','الغرفة','النوع','الطول','العرض','الارتفاع','السماعات','القدرة_W','متوسط_SPL','أدنى_SPL','التفاوت','التغطية','RT60','STI']];
+  project.floors.forEach(function(f){
+    var b=project.buildings.find(function(x){return x.id===f.buildingId;});
+    f.rooms.forEach(function(r){
+      var st=roomStats(r); var spks=spkInRoom(r.id);
+      rows.push([b?b.name:'',f.name,r.name,ROOM_TYPES[r.type]?ROOM_TYPES[r.type].name:r.type,r.L,r.W,r.height,spks.length,spks.length*getWatt(),st?st.avg.toFixed(1):'',st?st.min.toFixed(1):'',st?st.variation.toFixed(1):'',st?st.coverage.toFixed(0)+'%':'',st?st.rt60.toFixed(2):'',st?st.sti.toFixed(2):'']);
     });
   });
-  rows.push([]);
-  rows.push(['═══════ قائمة الكميات (BOM) ═══════']);
-  rows.push(['البند', 'المواصفات', 'الكمية', 'ملاحظات']);
-  rows.push(['سماعة سقفية', 'موتيفيتي ' + $('modelSelect').value + ' — ' + getSens() + 'dB — ' + getAngle() + '°', project.speakers.length, 'محوّل على ' + getWatt() + ' واط']);
-  project.circuits.forEach(function(c){
-    var st = circuitStats(c);
-    rows.push(['مكبر — ' + c.name, 'موتيفيتي ' + st.amp.id + ' (' + st.amp.pwr + 'W)', 1, 'حمل ' + st.loadPct.toFixed(0) + '%']);
-  });
-  var totalCable = project.circuits.reduce(function(a,c){return a+(c.cableLen||0);},0);
-  rows.push(['كيبل نحاسي', $('cableGauge').value + ' مم² مقاوم حريق', '~' + totalCable + ' م', 'EN 54-16']);
-  rows.push(['Fire Dome + Ceramic', 'EN 54-24 عازل 60 دقيقة', project.speakers.length, 'إجباري']);
-  rows.push([]);
-  rows.push(['═══════ تحليل الخطوط (Voltage Drop) ═══════']);
-  rows.push(['الخط', 'المكبر', 'الحمل %', 'هبوط الجهد V', 'هبوط الجهد %', 'طول الكيبل م', 'فقد القدرة W', 'الحالة']);
-  project.circuits.forEach(function(c){
-    var st = circuitStats(c);
-    var gauge = parseFloat($('cableGauge').value) || 2.5;
-    var R = (0.0172 * 2) / gauge * (c.cableLen || 0);
-    var I = st.watts / 100;
-    var powerLoss = I * I * R;
-    var status = st.loadPct > 90 ? 'تجاوُز' : st.loadPct > 80 ? 'تحذير' : 'سليم';
-    rows.push([
-      c.name, st.amp.id, st.loadPct.toFixed(1),
-      st.vdropPct.toFixed(2), st.vdropPct.toFixed(2),
-      c.cableLen, powerLoss.toFixed(2), status
-    ]);
-  });
-  rows.push([]);
-  rows.push(['═══════ المناطق ═══════']);
-  rows.push(['المنطقة', 'عدد السماعات', 'الواط']);
-  project.zones.forEach(function(z){
-    var cnt = project.speakers.filter(function(s){return s.zoneId === z.id;}).length;
-    rows.push([z.name, cnt, (cnt * getWatt()).toFixed(0)]);
-  });
-  var csv = BOM + rows.map(function(row){
-    return row.map(function(cell){
-      var s = String(cell == null ? '' : cell);
-      if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0){
-        return '"' + s.replace(/"/g, '""') + '"';
-      }
-      return s;
-    }).join(',');
-  }).join('\n');
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = ($('projName').value || 'project').replace(/\s+/g, '_') + '_report.csv';
-  a.click();
-  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
-  toast('📊 تم تصدير CSV — افتحه في Excel');
+  var csv='\uFEFF'+rows.map(function(r){return r.join(',');}).join('\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download=($('projName').value||'report')+'.csv'; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); },1000);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   الطباعة الذكية
-   ═══════════════════════════════════════════════════════════════ */
-function printReport(){
-  var rep = document.getElementById('report');
-  rep.style.display = 'block';
-  var imgs = rep.querySelectorAll('img');
-  var maxWait = 3000;
-  var startTime = Date.now();
-  function checkReady(){
-    var allLoaded = true;
-    for (var i = 0; i < imgs.length; i++){
-      if (!imgs[i].complete || imgs[i].naturalHeight === 0){ allLoaded = false; break; }
-    }
-    if (allLoaded || Date.now() - startTime > maxWait){
-      setTimeout(function(){ window.print(); }, 300);
-    } else {
-      setTimeout(checkReady, 150);
-    }
-  }
-  if (imgs.length === 0){ setTimeout(function(){ window.print(); }, 400); }
-  else { checkReady(); }
+/* ═══════════ التهيئة ═══════════ */
+window.addEventListener('resize',function(){ resizeCanvas(); });
+function init(){
+  var b=createBuilding('فندق موتيفيتي'); project.buildings.push(b);
+  var f0=createFloor('الأرضي',b.id,4.0,0);
+  f0.rooms.push(createRoom('الاستقبال','lobby',0,0,12,8,4.0));
+  f0.rooms.push(createRoom('المطعم','restaurant',12.5,0,14,10,4.0));
+  f0.rooms.push(createRoom('الممر','corridor',0,8.5,26.5,3,3.5));
+  var f1=createFloor('الأول',b.id,3.2,1);
+  f1.rooms.push(createRoom('ممر الطابق','corridor',0,0,28,2.5,3.2));
+  for(var i=0;i<5;i++) f1.rooms.push(createRoom('غرفة '+(101+i),'guestroom',i*5.6,3,5.2,4.5,3.2));
+  var f2=createFloor('الثاني',b.id,3.2,2);
+  f2.rooms.push(createRoom('ممر الطابق','corridor',0,0,28,2.5,3.2));
+  for(var j=0;j<4;j++) f2.rooms.push(createRoom('غرفة '+(201+j),'guestroom',j*6.8,3,6.2,4.5,3.2));
+  project.floors.push(f0,f1,f2);
+  project.zones=[{id:0,name:'المنطقة الرئيسية',color:ZONE_COLORS[0]},{id:1,name:'الممرات والخدمات',color:ZONE_COLORS[1]}];
+  project.circuits=[{id:0,name:'الخط 1',ampIdx:1,cableLen:80},{id:1,name:'الخط 2',ampIdx:1,cableLen:60}];
+  activeBuildingId=b.id; activeFloorIdx=0; activeZone=0; activeCircuit=0;
+  $('projName').value='فندق موتيفيتي';
+  project.floors.forEach(function(f){ f.rooms.forEach(autoDistRoom); });
+  _undoStack=[]; historyIdx=-1; pushHistory();
+  renderAll(); resizeCanvas(); fitToView();
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   التشغيل
-   ═══════════════════════════════════════════════════════════════ */
-function boot(){
-  try {
-    _uid = 1;
-    var b = createBuilding('المبنى الرئيسي');
-    project.buildings = [b];
-    activeBuildingId = b.id;
-    buildHotel(b.id);
-    project.floors.forEach(function(f){
-      if (!f.buildingId) f.buildingId = b.id;
-    });
-    activeFloorIdx = 0;
-    activeRoomId = null;
-    placeMode = false;
-    project.floors.forEach(function(f){
-      f.rooms.forEach(function(r){ autoDistRoom(r); });
-    });
-    _undoStack = [];
-    historyIdx = -1;
-    pushHistory();
-    renderAll();
-    updatePlaceBtnUI();
-    setTimeout(function(){
-      try { resizeCanvas(); fitToView(); } catch(e){ console.error(e); }
-    }, 80);
-    setTool('select');
-    console.log('🚀 بدأ التطبيق بنجاح:');
-    console.log('   🏢 المباني:', project.buildings.length);
-    console.log('   🧭 الطوابق:', project.floors.length);
-    console.log('   🚪 الغرف:', project.floors.reduce(function(a,f){ return a + f.rooms.length; }, 0));
-    console.log('   🔊 السماعات:', project.speakers.length);
-  } catch (err) {
-    console.error('❌ خطأ في boot:', err);
-    document.body.innerHTML = '<div style="padding:30px;color:#fff;font-family:Cairo,sans-serif;background:#0d1117;min-height:100vh">' +
-      '<h1 style="color:#e60012">خطأ في التحميل</h1>' +
-      '<pre style="background:#161b22;padding:15px;border-radius:8px;overflow:auto;color:#fca5a5">' + err.message + '\n\n' + (err.stack || '') + '</pre>' +
-      '</div>';
-  }
-}
-
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 30); });
-else setTimeout(boot, 30);
-
-var rTimer;
-window.addEventListener('resize', function(){ clearTimeout(rTimer); rTimer = setTimeout(resizeCanvas, 150); });
-window.addEventListener('orientationchange', function(){ setTimeout(resizeCanvas, 400); });
-
-if ('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    var sw = "self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{})";
-    try {
-      var blob = new Blob([sw], {type:'application/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});
-    } catch(e){}
-  });
-}
+init();
 </script>
 </body>
 </html>
