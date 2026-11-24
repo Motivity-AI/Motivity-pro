@@ -59,6 +59,16 @@ input[type="checkbox"]{width:18px;height:18px;min-width:18px;min-height:18px;mar
 .kpi.ok .v,.kpi.ok .bar>i{color:var(--grn);background:var(--grn)}.kpi.ok::before{background:var(--grn)}
 .kpi.warn .v,.kpi.warn .bar>i{color:var(--gld);background:var(--gld)}.kpi.warn::before{background:var(--gld)}
 .kpi.bad .v,.kpi.bad .bar>i{color:var(--red);background:var(--red)}.kpi.bad::before{background:var(--red)}
+.compute-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:700;font-family:var(--fmo);border:1px solid var(--bd);background:rgba(15,23,42,.85);color:var(--blu);transition:all .2s}
+.compute-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--blu);box-shadow:0 0 8px var(--blu)}
+.compute-pill.busy .dot{animation:pulseDot .9s infinite}
+.compute-pill.worker{border-color:rgba(56,189,248,.4);color:var(--blu)}
+.compute-pill.worker .dot{background:var(--grn);box-shadow:0 0 8px var(--grn)}
+.compute-pill.fallback{border-color:rgba(245,181,0,.55);color:#ffd97a;background:rgba(245,181,0,.12)}
+.compute-pill.fallback .dot{background:var(--gld);box-shadow:0 0 8px var(--gld)}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.45);opacity:.45}}
+.kpi-status-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;padding:7px 10px;border-radius:8px;background:rgba(10,14,26,.7);border:1px solid var(--bd2)}
+.kpi-status-note{font-size:10.5px;color:var(--dim);font-weight:600}
 .btn{border:none;padding:13px;width:100%;border-radius:10px;font-weight:800;font-size:13.5px;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;transition:all .15s}
 .btn:active{transform:scale(.98)}
 .btn-smart{background:linear-gradient(135deg,var(--red),#ff4d6d);color:#fff;box-shadow:0 4px 16px rgba(255,45,85,.3)}
@@ -71,7 +81,7 @@ input[type="checkbox"]{width:18px;height:18px;min-width:18px;min-height:18px;mar
 .chip:hover{border-color:var(--blu);color:var(--blu);background:rgba(56,189,248,.08)}
 .viewport{flex:1;position:relative;background:radial-gradient(circle at 50% 50%,#0f1a26,#040a12);overflow:hidden;min-width:0}
 canvas{display:block;width:100%;height:100%;touch-action:none}
-#threeCanvas{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:2;cursor:grab}
+#threeCanvas{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:2;cursor:grab;touch-action:none}
 #threeCanvas:active{cursor:grabbing}
 .v-ctrl{position:absolute;background:rgba(13,20,36,.92);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:10px;padding:5px;display:flex;gap:3px;z-index:10;flex-wrap:wrap;max-width:calc(100% - 32px)}
 .v-ctrl.top-left{top:16px;left:16px}
@@ -81,7 +91,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 .v-ctrl button.on{background:linear-gradient(135deg,var(--blu),var(--blu2));color:#001}
 .hint-bar{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(13,20,36,.9);border:1px solid var(--bd);border-radius:10px;padding:8px 16px;font-size:11.5px;color:var(--dim);z-index:10;white-space:nowrap}
 .hint-bar b{color:var(--blu)}
-.cursor-info{position:absolute;bottom:16px;right:16px;background:rgba(13,20,36,.92);border:1px solid var(--bd);border-radius:10px;padding:10px 16px;font-size:11.5px;z-index:10;display:flex;gap:16px}
+.cursor-info{position:absolute;bottom:16px;right:16px;background:rgba(13,20,36,.92);border:1px solid var(--bd);border-radius:10px;padding:10px 16px;font-size:11.5px;z-index:10;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .cursor-info b{color:var(--blu);font-family:var(--fmo)}
 .warnings{position:absolute;top:66px;left:16px;max-width:340px;display:flex;flex-direction:column;gap:6px;z-index:9;max-height:calc(100vh - 180px);overflow-y:auto}
 .warn-item{background:rgba(245,181,0,.12);border:1px solid rgba(245,181,0,.5);color:#ffd97a;padding:8px 12px;border-radius:6px;font-size:11.5px;font-weight:600}
@@ -196,8 +206,11 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
       <div class="box-body">
         <label>شكل القاعة</label>
         <select id="roomShape">
-          <option value="rectangular">مستطيل</option><option value="curved-back">قوسي خلفي</option>
-          <option value="trapezoidal">مسرحي</option><option value="hexagonal">سداسي</option>
+          <option value="rectangular">مستطيل</option>
+          <option value="tiered">مدرجة (Tiered)</option>
+          <option value="curved-back">قوسي خلفي</option>
+          <option value="trapezoidal">مسرحي</option>
+          <option value="hexagonal">سداسي</option>
           <option value="l-shape">شكل L</option>
         </select>
         <label>نمط التخطيط</label>
@@ -218,6 +231,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
           <button class="chip" onclick="applyPreset(15,10,3.5)">مجلس</button>
           <button class="chip" onclick="applyPreset(25,15,4)">مؤتمرات</button>
           <button class="chip" onclick="applyPreset(40,25,6)">كبرى</button>
+          <button class="chip" onclick="applyTieredPreset(18,12,4.2)">مدرج مقترح (18×12م)</button>
         </div>
         <div class="row"><div><label>الطول (م)</label><input type="number" id="dim_l" value="25" step="0.5" min="3" max="80"></div><div><label>العرض (م)</label><input type="number" id="dim_w" value="15" step="0.5" min="3" max="60"></div></div>
         <label>ارتفاع السقف (م)</label><input type="number" id="dim_h" value="4" step="0.1" min="2.4" max="12">
@@ -286,6 +300,10 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 
     <div class="box"><div class="box-header" onclick="toggleBox(this)"><h3>مؤشرات الأداء</h3><span class="chevron">▼</span></div>
       <div class="box-body">
+        <div class="kpi-status-bar">
+          <span class="kpi-status-note" id="computeDetailText">جاهز</span>
+          <span class="compute-pill worker" id="kpiComputeBadge"><i class="dot"></i><span id="kpiComputeLabel">Worker</span></span>
+        </div>
         <div class="kpi-grid">
           <div class="kpi"><div class="v" id="kpiWallTotal">0</div><div class="l">جدارية</div></div>
           <div class="kpi"><div class="v" id="kpiCeilTotal">0</div><div class="l">سقف</div></div>
@@ -369,6 +387,10 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
     <button class="btn btn-ghost" onclick="exportPNG()">🖼️ تصدير PNG</button>
     <button class="btn btn-ghost" onclick="autoFitView()">🎯 Fit View</button>
   </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="exportBOQ()">📊 BOQ Excel</button>
+    <button class="btn btn-ghost" onclick="resetPositions()">♻️ إعادة المواقع</button>
+  </div>
 </aside>
 
 <main class="viewport" id="vArea">
@@ -394,6 +416,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   <div class="warnings" id="warningsPanel"></div>
   <div class="hint-bar" id="hintBar">🖱️ <b>عجلة</b> للتقريب · ✋ <b>اسحب</b> للتحريك · <b>Shift</b> للتدوير · <b>Ctrl</b> للـ Snap</div>
   <div class="cursor-info" id="cursorInfo">
+    <span class="compute-pill worker" id="cursorComputeBadge"><i class="dot"></i><span id="cursorComputeLabel">Worker</span></span>
     <span>SPL: <b id="cursorSPL">—</b></span>
     <span>STI: <b id="cursorSTI">—</b></span>
     <span>d: <b id="cursorDist">—</b></span>
@@ -401,7 +424,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   </div>
   <div class="hud-3d" id="hud3D">
     <h4>🧊 MOTIVITY · 3D REALTIME</h4>
-    <p id="hud3DText">دوران: سحب بالماوس · تقريب: عجلة الماوس</p>
+    <p id="hud3DText">دوران: سحب بالماوس · سحب عنصر: Raycaster · تقريب: عجلة الماوس</p>
   </div>
   <div class="drag-hint" id="dragHint"></div>
 </main>
@@ -504,13 +527,18 @@ const gaugeAnim={spl:78,sti:0.5,rt60:1.0,cov:80},gaugeTarget={spl:78,sti:0.5,rt6
 let gaugeInit=false;
 const view3D={enabled:false};
 let undoHistory=[],historyIndex=-1,suppressHistory=false,tempWarnings=[];
+let tieredStepOverride=null;
 const dragPositions={units:{},wall:{},ceil:{},sub:{},cameras:{},stage:null,screen:null};
 const dragState={active:false,type:null,index:null,key:null,hoverType:null,hoverIndex:null,hoverKey:null,rotating:false,startAngle:0,objX:0,objY:0};
 let clipboard=null;
 const isMobileNow=()=>window.matchMedia('(max-width:820px)').matches;
-const markDirty=()=>{needsRedraw=true;if(view3D.enabled&&typeof rebuildThreeScene==='function')rebuildThreeScene();};
+const markDirty=()=>{needsRedraw=true;if(view3D.enabled&&!dragState.active&&typeof rebuildThreeScene==='function')rebuildThreeScene();};
 
-/* ═══ محرك الصوتيات v8 ═══ */
+/* ═══ محرك الصوتيات v8.2 + نمط التوجيه Polar Pattern ═══ */
+function polarAtt(off,angle){
+  const h=angle/2;
+  return off<=h?-6*(off/h)**2:Math.max(-24,-6-12*((off-h)/h));
+}
 function calcRT60Bands(cfg){
   const V=cfg.L*cfg.W*cfg.H;
   const Swall=2*cfg.L*cfg.H+2*cfg.W*cfg.H;
@@ -550,16 +578,24 @@ function calcSPLBands(x,y,cfg,rtBands,rBands){
     else if(type==='ceil')dz=Math.max(0.5,cfg.H-cfg.earH);
     else dz=Math.max(0.5,cfg.H*0.7-cfg.earH);
     const r=Math.max(0.5,Math.sqrt((x-spk.x)**2+(y-spk.y)**2+dz*dz));
+    let att=0;
+    if(type==='wall'){
+      let a=Math.atan2(y-spk.y,x-spk.x)-(spk.rot||0);
+      a=Math.abs(Math.atan2(Math.sin(a),Math.cos(a)))*180/Math.PI;
+      att=polarAtt(a,spk.angle);
+    }else if(type==='ceil'){
+      att=polarAtt(Math.atan2(Math.hypot(x-spk.x,y-spk.y),dz)*180/Math.PI,spk.angle);
+    }
     BANDS.forEach((f,i)=>{
       const L1m=spk.spl[i]+10*Math.log10(spk.pwr);
-      const direct=Math.pow(10,(L1m+10*Math.log10(spk.q)-20*Math.log10(r))/10);
+      const direct=Math.pow(10,(L1m+10*Math.log10(spk.q)-20*Math.log10(r)+att)/10);
       const reverb=Math.pow(10,(L1m+10*Math.log10(4/Math.max(0.1,rBands[f])))/10);
       result[f]+=direct+reverb;
     });
   };
-  if(cfg.wallEnabled)getWallSpeakers(cfg).forEach(s=>addSpk({...cfg.wallSpk,x:s.x,y:s.y},'wall'));
-  if(cfg.ceilEnabled)getCeilSpeakers(cfg).forEach(s=>addSpk({...cfg.ceilSpk,x:s.x,y:s.y},'ceil'));
-  if(cfg.subEnabled&&cfg.subCount>0)getSubSpeakers(cfg).forEach(s=>addSpk({...cfg.subSpk,x:s.x,y:s.y},'sub'));
+  if(cfg.wallEnabled)(cfg.__w||getWallSpeakers(cfg)).forEach(s=>addSpk({...cfg.wallSpk,x:s.x,y:s.y,rot:s.rot},'wall'));
+  if(cfg.ceilEnabled)(cfg.__c||getCeilSpeakers(cfg)).forEach(s=>addSpk({...cfg.ceilSpk,x:s.x,y:s.y},'ceil'));
+  if(cfg.subEnabled&&cfg.subCount>0)(cfg.__s||getSubSpeakers(cfg)).forEach(s=>addSpk({...cfg.subSpk,x:s.x,y:s.y},'sub'));
   BANDS.forEach(f=>result[f]=result[f]>0?10*Math.log10(result[f]):0);
   return result;
 }
@@ -590,8 +626,6 @@ function calcC80(rt60,r,dc){
   const reverbTerm=Math.exp(-13.8*0.08/rt60);
   return 10*Math.log10((directTerm+reverbTerm)/Math.max(0.01,1-reverbTerm));
 }
-function calcEDT(rt60){return rt60*0.92;}
-function calcTs(rt60){return rt60*0.35;}
 function calcBR(rtBands){
   const bass=rtBands[500];
   const treble=(rtBands[2000]+rtBands[4000])/2;
@@ -650,10 +684,187 @@ function getSubSpeakers(cfg){
 }
 const calcDc=(Q,L,W,H,rt)=>0.057*Math.sqrt(Q*L*W*H/Math.max(0.01,rt));
 
+/* ═══ تدرج المدرج وخط الرؤية ═══ */
+function getTierProfile(cfg){
+  const rowSpacing=1.05;
+  const frontY=-cfg.W/2+3.2;
+  const backY=cfg.W/2-1.0;
+  const maxRows=Math.max(1,Math.floor((backY-frontY)/rowSpacing));
+  const defaultStepH=clamp(0.14+Math.max(0,(cfg.W-10)*0.01),0.12,0.28);
+  const stepH=(typeof tieredStepOverride==='number'&&tieredStepOverride>0)?tieredStepOverride:defaultStepH;
+  return {rowSpacing,frontY,backY,maxRows,stepH};
+}
+function getTierElevationAt(z,cfg){
+  if(cfg.roomShape!=='tiered')return 0;
+  const {rowSpacing,frontY,stepH}=getTierProfile(cfg);
+  if(z<=frontY)return 0;
+  const rowIdx=Math.max(0,Math.floor((z-frontY)/rowSpacing)+1);
+  return rowIdx*stepH;
+}
+function evalTierLineOfSight(cfg){
+  const {rowSpacing,frontY,maxRows,stepH}=getTierProfile(cfg);
+  const eyeOffset=1.15;
+  const headOffset=1.32;
+  const targetH=cfg.showScreen&&cfg.screenType!=='none'?1.25:1.1;
+  const targetZ=-cfg.W/2+0.3;
+  const blockedRows=[];
+  for(let r=1;r<=maxRows;r++){
+    const z=frontY+(r-1)*rowSpacing;
+    const elev=r*stepH;
+    const eyeY=elev+eyeOffset;
+    const distTotal=Math.max(0.5,z-targetZ);
+    const distToFront=Math.min(distTotal,rowSpacing);
+    if(r>1){
+      const prevElev=(r-1)*stepH;
+      const frontHeadY=prevElev+headOffset;
+      const rayYAtFront=eyeY+(targetH-eyeY)*(distToFront/distTotal);
+      if(rayYAtFront<frontHeadY){
+        blockedRows.push({row:r,z,elev:Number(elev.toFixed(2)),deficit:Number((frontHeadY-rayYAtFront).toFixed(2))});
+      }
+    }
+  }
+  const clearPct=maxRows>0?Math.round(((maxRows-blockedRows.length)/maxRows)*100):100;
+  return {maxRows,stepH,blockedRows,clearPct,allClear:blockedRows.length===0};
+}
+function getLateralSightOffsets(cfg){
+  const halfW=cfg.L*0.42;
+  const scrW=cfg.showScreen&&cfg.screenType!=='none'?Math.min(cfg.screenW*0.45,halfW*0.85):halfW*0.5;
+  return [
+    {key:'L',eyeX:-halfW,targetX:-scrW},
+    {key:'C',eyeX:0,targetX:0},
+    {key:'R',eyeX:halfW,targetX:scrW}
+  ];
+}
+function calcLateralSightSummary(cfg){
+  const {rowSpacing,frontY,maxRows,stepH}=getTierProfile(cfg);
+  const los3D=evalTierLineOfSight(cfg);
+  const blockedRowsGlobal=new Set(los3D.blockedRows.map(b=>b.row));
+  const lanes=getLateralSightOffsets(cfg);
+  const eyeOffset=1.15;
+  const headOffset=1.32;
+  const targetZ=-cfg.W/2+0.3;
+  const targetY=cfg.showScreen&&cfg.screenType!=='none'?1.25:1.1;
+  const labels={L:'اليسار (L)',C:'الوسط (C)',R:'اليمين (R)'};
+  return lanes.map(lane=>{
+    let clearRows=0;
+    const affectedRows=[];
+    for(let r=1;r<=maxRows;r++){
+      const z=frontY+(r-1)*rowSpacing;
+      const elev=r*stepH;
+      const startY=elev+eyeOffset;
+      let isBlocked=blockedRowsGlobal.has(r);
+      if(!isBlocked&&r>1){
+        const frontZ=frontY+(r-2)*rowSpacing;
+        const frontElev=(r-1)*stepH;
+        const frontTopY=frontElev+headOffset;
+        const t=clamp((z-frontZ)/Math.max(0.05,z-targetZ),0,1);
+        const rayYAtFront=startY+(targetY-startY)*t;
+        if(rayYAtFront<frontTopY)isBlocked=true;
+      }
+      if(!isBlocked&&lane.key!=='C'&&Math.abs(lane.eyeX)>cfg.L*0.38)isBlocked=true;
+      if(isBlocked)affectedRows.push(r);
+      else clearRows++;
+    }
+    const pct=maxRows>0?Math.round((clearRows/maxRows)*100):100;
+    return {key:lane.key,label:labels[lane.key]||lane.key,pct,clearRows,totalRows:maxRows,affectedRows};
+  });
+}
+function calcMinStepHeightForSight(cfg){
+  const {rowSpacing,frontY,maxRows,stepH:currentStepH}=getTierProfile(cfg);
+  const lanes=getLateralSightOffsets(cfg);
+  const eyeOffset=1.15;
+  const headOffset=1.32;
+  const targetZ=-cfg.W/2+0.3;
+  const targetY=cfg.showScreen&&cfg.screenType!=='none'?1.25:1.1;
+  const maxSafeByCeiling=maxRows>0?Math.max(currentStepH,(cfg.H-headOffset-1.8)/maxRows):currentStepH;
+  const upperBound=clamp(Math.min(0.45,maxSafeByCeiling),currentStepH,0.45);
+  const testStep=(hVal)=>{
+    let blockedCount=0;
+    for(let r=2;r<=maxRows;r++){
+      const z=frontY+(r-1)*rowSpacing;
+      const elev=r*hVal;
+      const frontZ=frontY+(r-2)*rowSpacing;
+      const frontElev=(r-1)*hVal;
+      const frontTopY=frontElev+headOffset;
+      for(const lane of lanes){
+        const startY=elev+eyeOffset;
+        const t=clamp((z-frontZ)/Math.max(0.05,z-targetZ),0,1);
+        const rayYAtFront=startY+(targetY-startY)*t;
+        const sideClip=lane.key!=='C'&&Math.abs(lane.eyeX)>cfg.L*0.38;
+        if(rayYAtFront<frontTopY||sideClip)blockedCount++;
+      }
+    }
+    return blockedCount;
+  };
+  const currentBlocked=testStep(currentStepH);
+  if(currentBlocked===0){
+    return {
+      currentStepH:Number(currentStepH.toFixed(2)),
+      recommendedStepH:Number(currentStepH.toFixed(2)),
+      deltaStepH:0,
+      achievedClear:true,
+      maxSafeByCeiling:Number(maxSafeByCeiling.toFixed(2))
+    };
+  }
+  let bestH=currentStepH,bestBlocked=currentBlocked;
+  for(let hVal=Math.ceil(currentStepH*100)+1;hVal<=Math.round(upperBound*100);hVal++){
+    const cand=hVal/100;
+    const bCount=testStep(cand);
+    if(bCount<bestBlocked){bestBlocked=bCount;bestH=cand;}
+    if(bCount===0){bestH=cand;bestBlocked=0;break;}
+  }
+  return {
+    currentStepH:Number(currentStepH.toFixed(2)),
+    recommendedStepH:Number(bestH.toFixed(2)),
+    deltaStepH:Number(Math.max(0,bestH-currentStepH).toFixed(2)),
+    achievedClear:bestBlocked===0,
+    maxSafeByCeiling:Number(maxSafeByCeiling.toFixed(2))
+  };
+}
+function applyTierSightRecommendation(){
+  const cfg=readConfig();
+  let L=cfg.L,W=cfg.W,H=cfg.H;
+  const minSide=Math.max(0.1,Math.min(L,W));
+  const maxSide=Math.max(L,W);
+  if(maxSide/minSide<1.35){
+    if(L>=W)L=Number((W*1.5).toFixed(1));
+    else W=Number((L*1.5).toFixed(1));
+  }
+  $('roomShape').value='tiered';
+  $('dim_l').value=L;
+  $('dim_w').value=W;
+  const updatedCfg=readConfig();
+  const prevOverride=tieredStepOverride;
+  tieredStepOverride=null;
+  const stepRec=calcMinStepHeightForSight(updatedCfg);
+  const targetStepH=stepRec.deltaStepH>0?stepRec.recommendedStepH:stepRec.currentStepH;
+  const {maxRows}=getTierProfile(updatedCfg);
+  const neededCeilingH=Number((maxRows*targetStepH+1.32+1.9).toFixed(1));
+  if(H<neededCeilingH){
+    H=clamp(neededCeilingH,2.4,12);
+    $('dim_h').value=H;
+  }
+  tieredStepOverride=Number(targetStepH.toFixed(2));
+  if(prevOverride===tieredStepOverride&&cfg.L===L&&cfg.W===W&&cfg.H===H){
+    tieredStepOverride=Number((targetStepH+0.02).toFixed(2));
+  }
+  heatmapKey='';
+  updateKPI();
+  markDirty();
+  if(view3D.enabled&&typeof rebuildThreeScene==='function')rebuildThreeScene();
+  pushHistory();
+  pushWarn('ok',`✅ تم تطبيق الدرجة ${tieredStepOverride.toFixed(2)}م والأبعاد ${L}×${W}×${H}م وتحديث التقرير`,3500);
+  generateReport();
+}
+
 /* ═══ أشكال القاعة ═══ */
 function getRoomPolygon(cfg){
   const L=cfg.L,W=cfg.W;
   switch(cfg.roomShape){
+    case 'tiered':{
+      const fw=L*0.78;
+      return [[-fw/2,-W/2],[fw/2,-W/2],[L/2,W/2],[-L/2,W/2]];
+    }
     case 'curved-back':{
       const pts=[[-L/2,-W/2],[L/2,-W/2]],sy=W/2*0.15;
       pts.push([L/2,sy]);
@@ -728,7 +939,7 @@ function readConfig(){
     podiumRot:parseFloat($('podiumRot')?.value)||0,
     showScreen:$('showScreen').checked,
     screenW:parseFloat($('screenW').value)||6,
-    screenH:parseFloat($('screenH')?.value)||2.4,
+    screenH:parseFloat($('screenH').value)||2.4,
     screenRot:parseFloat($('screenRot')?.value)||0,
     screenType:$('screenType').value,
     showCameras:$('showCameras').checked,
@@ -1001,12 +1212,13 @@ function endDrag(){
   dragState.active=false;dragState.type=null;dragState.index=null;dragState.key=null;dragState.rotating=false;
   vArea.style.cursor='';
   if(wasSpk){heatmapKey='';updateKPI();}
+  if(view3D.enabled&&typeof rebuildThreeScene==='function')rebuildThreeScene();
   pushHistory();
 }
 function resetPositions(){
   const c=Object.keys(dragPositions.units).length+Object.keys(dragPositions.wall).length+Object.keys(dragPositions.ceil).length+Object.keys(dragPositions.sub).length+Object.keys(dragPositions.cameras).length+(dragPositions.stage?1:0)+(dragPositions.screen?1:0);
   if(c===0){pushWarn('info','لا توجد مواقع مخصصة',2000);return;}
-  dragPositions.units={};dragPositions.wall={};dragPositions.ceil={};dragPositions.sub={};dragPositions.cameras={};dragPositions.stage=null;dragPositions.screen=null;
+  dragPositions.units={};dragPositions.wall={};dragPositions.ceil={};dragPositions.sub={};dragPositions.cameras={};dragPositions.stage=null;dragPositions.screen=null;tieredStepOverride=null;
   heatmapKey='';markDirty();updateKPI();pushHistory();
   pushWarn('ok',`♻️ إعادة تعيين ${c} عنصر`,2500);
 }
@@ -1052,8 +1264,8 @@ function pushWarn(level,text,ttl=0){
   tempWarnings.push({id,level,text});renderWarnings();
   if(ttl>0)setTimeout(()=>{tempWarnings=tempWarnings.filter(w=>w.id!==id);renderWarnings();},ttl);
 }
-function renderWarnings(){
-  const all=calculateWarnings().concat(tempWarnings);
+function renderWarnings(A){
+  const all=calculateWarnings(A||lastAn).concat(tempWarnings);
   let html='';
   for(const w of all){
     const cls=w.level==='critical'?'critical':w.level==='ok'?'ok':'';
@@ -1062,17 +1274,10 @@ function renderWarnings(){
   }
   $('warningsPanel').innerHTML=html;
 }
-function calculateWarnings(){
+function calculateWarnings(r){
   const cfg=readConfig(),w=[];
   const rtBands=calcRT60Bands(cfg),rt=avgRT60(rtBands);
-  let minSpl=Infinity,minSti=1;const S=10,pre={rtBands,rBands:calcRBands(cfg)};
-  for(let i=0;i<S;i++)for(let j=0;j<S;j++){
-    const x=-cfg.L/2+cfg.L*(i+0.5)/S,y=-cfg.W/2+cfg.W*(j+0.5)/S;
-    if(!pointInPoly(x,y,getRoomPolygon(cfg)))continue;
-    const r=splAtPoint(x,y,cfg,pre);
-    if(r.spl<minSpl)minSpl=r.spl;
-    if(r.sti<minSti)minSti=r.sti;
-  }
+  const A=r||analyzeCore(cfg,10);let minSpl=A.minSpl,minSti=A.minSti;
   if(minSpl<78)w.push({level:'critical',text:`أدنى SPL ${minSpl.toFixed(1)}dB`});
   else if(minSpl<85)w.push({level:'warn',text:`أدنى SPL ${minSpl.toFixed(1)}dB`});
   if(minSti<0.45)w.push({level:'critical',text:`STI ${minSti.toFixed(2)} — ضعيف`});
@@ -1080,8 +1285,20 @@ function calculateWarnings(){
   if(rt>1.8)w.push({level:'warn',text:`RT60 ${rt.toFixed(2)}ث — مرتفع`});
   const br=calcBR(rtBands);
   if(br<0.8||br>1.2)w.push({level:'warn',text:`BR ${br.toFixed(2)} — اختلال توازن`});
-  const cov=calcCoverage(cfg);
+  const cov=A.cov;
   if(cov<70)w.push({level:'warn',text:`تغطية ${cov.toFixed(0)}%`});
+  if(cfg.roomShape==='tiered'){
+    const ratio=Math.max(cfg.L,cfg.W)/Math.max(0.1,Math.min(cfg.L,cfg.W));
+    if(ratio<1.25){
+      w.push({level:'warn',text:`في القاعة المدرجة يُفضّل أن يكون أحد الضلعين أكبر من الآخر (النسبة الحالية ${ratio.toFixed(2)}:1)`});
+    }
+    const losTier=evalTierLineOfSight(cfg);
+    if(!losTier.allClear){
+      w.push({level:'warn',text:`خط الرؤية في المدرج ${losTier.clearPct}% — متأثر في الصفوف: ${losTier.blockedRows.map(b=>b.row).join(', ')}`});
+    }else{
+      w.push({level:'ok',text:`خط الرؤية في المدرج واضح 100% (تدرج ${losTier.stepH.toFixed(2)}م/صف)`});
+    }
+  }
   const host=CONF_HOSTS[cfg.confHost],total=cfg.cQty+cfg.dQty;
   if(host&&total>host.maxUnits){
     const needed=Math.ceil(total/host.maxUnits);
@@ -1136,25 +1353,85 @@ function autoRecommend(){
   updateKPI();markDirty();pushWarn('ok',`✅ ${CONF_HOSTS[h].name} + ${CONF_CHAIRS[ch].name}`,5000);
 }
 
-/* ═══ KPI ═══ */
-function updateGaugeTargets(){
-  const cfg=readConfig();
-  const rtBands=calcRT60Bands(cfg),pre={rtBands,rBands:calcRBands(cfg)};
-  let minSpl=Infinity,minSti=1;const S=8;
+/* ═══ التحليل و Worker + مؤشر الحالة ═══ */
+function analyzeCore(cfg,S){
+  const poly=getRoomPolygon(cfg),rtBands=calcRT60Bands(cfg),pre={rtBands,rBands:calcRBands(cfg)};
+  let minSpl=Infinity,minSti=1;
   for(let i=0;i<S;i++)for(let j=0;j<S;j++){
     const x=-cfg.L/2+cfg.L*(i+0.5)/S,y=-cfg.W/2+cfg.W*(j+0.5)/S;
-    if(!pointInPoly(x,y,getRoomPolygon(cfg)))continue;
+    if(!pointInPoly(x,y,poly))continue;
     const r=splAtPoint(x,y,cfg,pre);
-    if(r.spl<minSpl)minSpl=r.spl;
-    if(r.sti<minSti)minSti=r.sti;
+    if(r.spl<minSpl)minSpl=r.spl;if(r.sti<minSti)minSti=r.sti;
   }
-  gaugeTarget.spl=minSpl;gaugeTarget.sti=minSti;gaugeTarget.rt60=avgRT60(rtBands);gaugeTarget.cov=calcCoverage(cfg);
-  if(!gaugeInit){Object.assign(gaugeAnim,gaugeTarget);gaugeInit=true;}
+  let covCount=0,covTot=0;const CS=15;
+  for(let i=0;i<CS;i++)for(let j=0;j<CS;j++){
+    const x=-cfg.L/2+cfg.L*(i+0.5)/CS,y=-cfg.W/2+cfg.W*(j+0.5)/CS;
+    if(!pointInPoly(x,y,poly))continue;
+    covTot++;
+    if(splAtPoint(x,y,cfg,pre).spl>=78)covCount++;
+  }
+  const cov=covTot>0?(covCount/covTot)*100:0;
+  return {minSpl,minSti,rt:avgRT60(rtBands),cov};
 }
+let anWorker=null,anId=0,anCb={},kpiTok=0,lastAn=null;
+let computeState={mode:'worker',busy:false,detail:'خيط خلفي نشط'};
+
+function setComputeStatus(mode,busy,detail){
+  computeState={
+    mode:mode||(anWorker?'worker':'fallback'),
+    busy:!!busy,
+    detail:detail||computeState.detail
+  };
+  const cls='compute-pill '+computeState.mode+(computeState.busy?' busy':'');
+  const txt=computeState.busy
+    ?(computeState.mode==='worker'?'Worker · حساب...':'Fallback · حساب...')
+    :(computeState.mode==='worker'?'Worker · جاهز':'Fallback · نشط');
+  const kBadge=$('kpiComputeBadge');
+  const kLabel=$('kpiComputeLabel');
+  const cBadge=$('cursorComputeBadge');
+  const cLabel=$('cursorComputeLabel');
+  const detailEl=$('computeDetailText');
+  if(kBadge)kBadge.className=cls;
+  if(kLabel)kLabel.textContent=txt;
+  if(cBadge)cBadge.className=cls;
+  if(cLabel)cLabel.textContent=txt;
+  if(detailEl)detailEl.textContent=computeState.detail;
+}
+
+try{
+  const src=['const BANDS='+JSON.stringify(BANDS),'const STI_WEIGHTS='+JSON.stringify(STI_WEIGHTS),
+    'const NOISE_FLOOR='+JSON.stringify(NOISE_FLOOR),'const MATERIALS='+JSON.stringify(MATERIALS),
+    ...[calcRT60Bands,avgRT60,calcRBands,polarAtt,calcSPLBands,calcSTIFull,pointInPoly,getRoomPolygon,splAtPoint,analyzeCore].map(f=>f.toString()),
+    'onmessage=e=>postMessage({id:e.data.id,r:analyzeCore(e.data.cfg,e.data.S)})'].join(';\n');
+  anWorker=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
+  anWorker.onmessage=e=>{const cb=anCb[e.data.id];delete anCb[e.data.id];if(cb)cb(e.data.r);};
+  anWorker.onerror=()=>{anWorker=null;setComputeStatus('fallback',false,'تعطل Worker · تحويل للبديل المحلي');};
+}catch(err){anWorker=null;setComputeStatus('fallback',false,'Worker غير متاح · وضع البديل');}
+
+function analyze(cfg,S){
+  cfg.__w=getWallSpeakers(cfg);cfg.__c=getCeilSpeakers(cfg);cfg.__s=getSubSpeakers(cfg);
+  if(!anWorker){
+    setComputeStatus('fallback',true,'حساب KPI/التغطية عبر الخيط الرئيسي');
+    const res=analyzeCore(cfg,S);
+    setComputeStatus('fallback',false,'وضع البديل المحلي نشط');
+    return Promise.resolve(res);
+  }
+  setComputeStatus('worker',true,'حساب KPI/التغطية في Worker');
+  return new Promise(res=>{
+    const id=++anId;
+    anCb[id]=r=>{
+      setComputeStatus('worker',false,'اكتمل حساب Worker');
+      res(r);
+    };
+    anWorker.postMessage({id,cfg,S});
+  });
+}
+
+/* ═══ KPI ═══ */
 function updateKPI(){
   const cfg=readConfig();
-  const wallTotal = cfg.wallEnabled ? getWallSpeakers(cfg).length : 0;
-  const ceilTotal = cfg.ceilEnabled ? getCeilSpeakers(cfg).length : 0;
+  const wallTotal=cfg.wallEnabled?getWallSpeakers(cfg).length:0;
+  const ceilTotal=cfg.ceilEnabled?getCeilSpeakers(cfg).length:0;
   const subTotal=cfg.subEnabled?getSubSpeakers(cfg).length:0;
   const wallW=cfg.wallEnabled?cfg.wallSpk.pwr*wallTotal:0;
   const ceilW=cfg.ceilEnabled?cfg.ceilSpk.pwr*ceilTotal:0;
@@ -1162,25 +1439,23 @@ function updateKPI(){
   $('kpiWallTotal').textContent=wallTotal;
   $('kpiCeilTotal').textContent=ceilTotal;
   $('kpiWattV').textContent=wallW+ceilW+subW;
-  const cov=calcCoverage(cfg);
-  $('kpiCovV').textContent=cov.toFixed(0)+'%';
-  $('kpiCov').className='kpi '+(cov>=80?'ok':cov>=60?'warn':'bad');
-  $('kpiCov').querySelector('.bar>i').style.width=cov+'%';
-  const rtBands=calcRT60Bands(cfg),rt=avgRT60(rtBands),pre={rtBands,rBands:calcRBands(cfg)};
-  let minSpl=Infinity,minSti=1;const S=12;
-  for(let i=0;i<S;i++)for(let j=0;j<S;j++){
-    const x=-cfg.L/2+cfg.L*(i+0.5)/S,y=-cfg.W/2+cfg.W*(j+0.5)/S;
-    if(!pointInPoly(x,y,getRoomPolygon(cfg)))continue;
-    const r=splAtPoint(x,y,cfg,pre);
-    if(r.spl<minSpl)minSpl=r.spl;
-    if(r.sti<minSti)minSti=r.sti;
-  }
-  $('kpiSplV').textContent=minSpl.toFixed(1);
-  $('kpiSpl').className='kpi '+(minSpl>=85?'ok':minSpl>=78?'warn':'bad');
-  $('kpiSpl').querySelector('.bar>i').style.width=clamp((minSpl-60)*2.5,0,100)+'%';
-  $('kpiStiV').textContent=minSti.toFixed(2);
-  $('kpiSti').className='kpi '+(minSti>=0.6?'ok':minSti>=0.45?'warn':'bad');
-  $('kpiSti').querySelector('.bar>i').style.width=(minSti*100)+'%';
+  const rtBands=calcRT60Bands(cfg),rt=avgRT60(rtBands),tok=++kpiTok;
+  analyze(cfg,12).then(A=>{
+    if(tok!==kpiTok)return;lastAn=A;
+    const cov=A.cov,minSpl=A.minSpl,minSti=A.minSti;
+    $('kpiCovV').textContent=cov.toFixed(0)+'%';
+    $('kpiCov').className='kpi '+(cov>=80?'ok':cov>=60?'warn':'bad');
+    $('kpiCov').querySelector('.bar>i').style.width=cov+'%';
+    $('kpiSplV').textContent=minSpl.toFixed(1);
+    $('kpiSpl').className='kpi '+(minSpl>=85?'ok':minSpl>=78?'warn':'bad');
+    $('kpiSpl').querySelector('.bar>i').style.width=clamp((minSpl-60)*2.5,0,100)+'%';
+    $('kpiStiV').textContent=minSti.toFixed(2);
+    $('kpiSti').className='kpi '+(minSti>=0.6?'ok':minSti>=0.45?'warn':'bad');
+    $('kpiSti').querySelector('.bar>i').style.width=(minSti*100)+'%';
+    gaugeTarget.spl=minSpl;gaugeTarget.sti=minSti;gaugeTarget.rt60=A.rt;gaugeTarget.cov=cov;
+    if(!gaugeInit){Object.assign(gaugeAnim,gaugeTarget);gaugeInit=true;}
+    needsRedraw=true;renderWarnings(A);
+  });
   $('kpiRtV').textContent=rt.toFixed(2);
   $('kpiRt').className='kpi '+(rt<1.2?'ok':rt<1.8?'warn':'bad');
   $('kpiRt').querySelector('.bar>i').style.width=clamp((rt/2)*100,0,100)+'%';
@@ -1214,7 +1489,6 @@ function updateKPI(){
   $('kpiConfLoadV').textContent=lp+'%';
   $('kpiConfLoad').className='kpi '+(lp<=70?'ok':lp<=100?'warn':'bad');
   $('kpiConfLoad').querySelector('.bar>i').style.width=clamp(lp,0,100)+'%';
-  updateGaugeTargets();renderWarnings();
 }
 
 /* ═══ Canvas ═══ */
@@ -1785,7 +2059,7 @@ function drawMiniMap(cfg){
   ctx.restore();
 }
 function getShapeName(s){
-  const n={rectangular:'مستطيل','curved-back':'قوسي',trapezoidal:'مسرحي',hexagonal:'سداسي','l-shape':'شكل L'};
+  const n={rectangular:'مستطيل',tiered:'مدرجة','curved-back':'قوسي',trapezoidal:'مسرحي',hexagonal:'سداسي','l-shape':'شكل L'};
   return n[s]||s;
 }
 function drawLegendIcon(x,y,t){
@@ -1800,49 +2074,8 @@ function drawLegendIcon(x,y,t){
   else if(t==='cam'){ctx.fillStyle='#0a1520';ctx.strokeStyle='#22c55e';ctx.lineWidth=1;ctx.beginPath();ctx.rect(-5,-3,8,6);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(4,0,2,0,Math.PI*2);ctx.fillStyle='#22c55e';ctx.fill();}
   ctx.restore();
 }
-function drawHeat(cfg,Lpx,Wpx,s){
-  const drag=dragState.active&&(dragState.type==='wallSpk'||dragState.type==='ceilSpk'||dragState.type==='subSpk');
-  const step=isMobile?3:(drag?3:2);
-  const key=[cfg.L,cfg.W,cfg.H,cfg.earH,cfg.wallEnabled,cfg.wallPerSide,cfg.wallModelKey,cfg.wallHeight,cfg.ceilEnabled,cfg.ceilCount,cfg.ceilModelKey,cfg.subEnabled,cfg.subCount,cfg.subModelKey,cfg.wallMat,cfg.floorMat,cfg.ceilMat,JSON.stringify(dragPositions.wall),JSON.stringify(dragPositions.ceil),JSON.stringify(dragPositions.sub),step].join('|');
-  if(key!==heatmapKey||!heatmapCache){
-    heatmapCache=document.createElement('canvas');
-    heatmapCache.width=Math.ceil(Lpx/step);heatmapCache.height=Math.ceil(Wpx/step);
-    const hctx=heatmapCache.getContext('2d');
-    const rtBands=calcRT60Bands(cfg),rBands=calcRBands(cfg);
-    const img=hctx.createImageData(heatmapCache.width,heatmapCache.height);
-    const data=img.data,eff=s/step;
-    const wallS=getWallSpeakers(cfg),ceilS=getCeilSpeakers(cfg),subS=getSubSpeakers(cfg);
-    const wallDz=Math.max(0.3,cfg.wallHeight-cfg.earH),ceilDz=Math.max(0.5,cfg.H-cfg.earH),subDz=Math.max(0.5,cfg.H*0.7-cfg.earH);
-    for(let py=0;py<heatmapCache.height;py++){
-      const ym=(py/eff)-cfg.W/2;
-      for(let px=0;px<heatmapCache.width;px++){
-        const xm=(px/eff)-cfg.L/2;
-        let pTotal=0;
-        const calcP=(spk,dz)=>{
-          const r=Math.max(0.5,Math.sqrt((xm-spk.x)**2+(ym-spk.y)**2+dz*dz));
-          let p=0;
-          BANDS.forEach((f,i)=>{
-            const L1m=spk.spl[i]+10*Math.log10(spk.pwr);
-            p+=Math.pow(10,(L1m+10*Math.log10(spk.q)-20*Math.log10(r))/10)+Math.pow(10,(L1m+10*Math.log10(4/Math.max(0.1,rBands[f])))/10);
-          });
-          return p/7;
-        };
-        for(const sp of wallS)pTotal+=calcP({...cfg.wallSpk,x:sp.x,y:sp.y},wallDz);
-        for(const sp of ceilS)pTotal+=calcP({...cfg.ceilSpk,x:sp.x,y:sp.y},ceilDz);
-        for(const sp of subS)pTotal+=calcP({...cfg.subSpk,x:sp.x,y:sp.y},subDz);
-        const spl=pTotal>0?10*Math.log10(pTotal):0;
-        const col=splColor(spl);
-        const idx=(py*heatmapCache.width+px)*4;
-        data[idx]=col[0];data[idx+1]=col[1];data[idx+2]=col[2];data[idx+3]=col[3];
-      }
-    }
-    hctx.putImageData(img,0,0);heatmapKey=key;
-  }
-  const polyPx=getRoomPolygonPx(cfg);
-  ctx.save();clipPolyPath(polyPx);ctx.clip();
-  ctx.drawImage(heatmapCache,-Lpx/2,-Wpx/2,Lpx,Wpx);
-  ctx.restore();
-}
+
+/* ═══ Web Worker للخريطة الحرارية (مع Polar Pattern + Fallback) ═══ */
 function splColor(spl){
   const stops=[{v:60,c:[10,20,40,140]},{v:70,c:[30,60,120,130]},{v:78,c:[56,130,200,120]},{v:84,c:[34,197,94,110]},{v:90,c:[132,204,22,105]},{v:96,c:[245,158,11,115]},{v:102,c:[239,68,68,130]}];
   if(spl<=stops[0].v)return stops[0].c;
@@ -1855,6 +2088,94 @@ function splColor(spl){
   }
   return stops[0].c;
 }
+
+let heatWorker=null,heatId=0,pendingKey='';
+try{
+  heatWorker=new Worker(URL.createObjectURL(new Blob(['('+(function(){
+    const ST=[[60,10,20,40,140],[70,30,60,120,130],[78,56,130,200,120],[84,34,197,94,110],[90,132,204,22,105],[96,245,158,11,115],[102,239,68,68,130]];
+    const col=s=>{if(s<=60)return ST[0].slice(1);if(s>=102)return ST[6].slice(1);
+      for(let i=0;i<6;i++){if(s<=ST[i+1][0]){const a=ST[i],b=ST[i+1],t=(s-a[0])/(b[0]-a[0]);
+        return [1,2,3,4].map(k=>a[k]+(b[k]-a[k])*t);}}};
+    const pa=(o,g)=>{const h=g/2;return o<=h?-6*(o/h)**2:Math.max(-24,-6-12*((o-h)/h));};
+    onmessage=e=>{
+      const {id,w,h,eff,L,W,rB,G}=e.data,sp=[];
+      for(const g of G)for(const s of g.list){
+        let D=0,R=0;
+        for(let i=0;i<7;i++){
+          const l1=g.spl[i]+10*Math.log10(g.pwr);
+          D+=Math.pow(10,(l1+10*Math.log10(g.q))/10);
+          R+=Math.pow(10,(l1+10*Math.log10(4/Math.max(0.1,rB[i])))/10);
+        }
+        sp.push({x:s.x,y:s.y,rot:s.rot||0,D,R,dz:g.dz,t:g.t,a:g.angle});
+      }
+      const d=new Uint8ClampedArray(w*h*4);
+      for(let py=0;py<h;py++){
+        const ym=py/eff-W/2;
+        for(let px=0;px<w;px++){
+          const xm=px/eff-L/2;
+          let p=0;
+          for(const s of sp){
+            const dx=xm-s.x,dy=ym-s.y,r2=Math.max(0.25,dx*dx+dy*dy+s.dz*s.dz);
+            let att=0;
+            if(s.t==='w'){let a=Math.atan2(dy,dx)-s.rot;a=Math.abs(Math.atan2(Math.sin(a),Math.cos(a)))*57.2958;att=pa(a,s.a);}
+            else if(s.t==='c')att=pa(Math.atan2(Math.sqrt(dx*dx+dy*dy),s.dz)*57.2958,s.a);
+            p+=(s.D*Math.pow(10,att/10)/r2+s.R)/7;
+          }
+          const c=col(p>0?10*Math.log10(p):0),i=(py*w+px)*4;
+          d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=c[3];
+        }
+      }
+      postMessage({id,w,h,buf:d.buffer},[d.buffer]);
+    };
+  }).toString()+')()'],{type:'text/javascript'})));
+  heatWorker.onmessage=e=>{
+    const d=e.data;if(d.id!==heatId)return;
+    const c=document.createElement('canvas');c.width=d.w;c.height=d.h;
+    c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(d.buf),d.w,d.h),0,0);
+    heatmapCache=c;heatmapKey=pendingKey;needsRedraw=true;
+    setComputeStatus('worker',false,'الخريطة الحرارية محدثة');
+  };
+  heatWorker.onerror=()=>{heatWorker=null;setComputeStatus('fallback',false,'تعطل Worker · تحويل للبديل المحلي');};
+}catch(err){heatWorker=null;console.warn('Worker unavailable, using fallback',err);}
+
+function heatFallback(cfg,Lpx,Wpx,s,key){
+  setComputeStatus('fallback',true,'رسم خريطة بديلة (خلية 6px)');
+  const step=6,w=Math.ceil(Lpx/step),h=Math.ceil(Wpx/step),c=document.createElement('canvas');
+  c.width=w;c.height=h;
+  const g=c.getContext('2d'),img=g.createImageData(w,h),pre={rtBands:calcRT60Bands(cfg),rBands:calcRBands(cfg)};
+  for(let py=0;py<h;py++)for(let px=0;px<w;px++){
+    const r=splAtPoint(px*step/s-cfg.L/2,py*step/s-cfg.W/2,cfg,pre),col=splColor(r.spl),i=(py*w+px)*4;
+    img.data[i]=col[0];img.data[i+1]=col[1];img.data[i+2]=col[2];img.data[i+3]=col[3];
+  }
+  g.putImageData(img,0,0);heatmapCache=c;heatmapKey=key;
+  setComputeStatus('fallback',false,'خريطة بديلة جاهزة (6px)');
+}
+
+function drawHeat(cfg,Lpx,Wpx,s){
+  const drag=dragState.active&&(dragState.type==='wallSpk'||dragState.type==='ceilSpk'||dragState.type==='subSpk');
+  const step=isMobile?3:(drag?3:2);
+  const key=[cfg.L,cfg.W,cfg.H,cfg.earH,cfg.wallEnabled,cfg.wallPerSide,cfg.wallModelKey,cfg.wallHeight,cfg.ceilEnabled,cfg.ceilCount,cfg.ceilModelKey,cfg.subEnabled,cfg.subCount,cfg.subModelKey,cfg.wallMat,cfg.floorMat,cfg.ceilMat,JSON.stringify(dragPositions.wall),JSON.stringify(dragPositions.ceil),JSON.stringify(dragPositions.sub),step].join('|');
+  if(heatWorker&&key!==heatmapKey&&key!==pendingKey){
+    pendingKey=key;const id=++heatId;
+    setComputeStatus('worker',true,'توليد خريطة حرارية في Worker');
+    const rb=calcRBands(cfg),rB=BANDS.map(f=>rb[f]);
+    const mk=(m,list,dz,t)=>({spl:m.spl,pwr:m.pwr,q:m.q,angle:m.angle,dz,t,list:list.map(o=>({x:o.x,y:o.y,rot:o.rot}))});
+    heatWorker.postMessage({
+      id,w:Math.ceil(Lpx/step),h:Math.ceil(Wpx/step),eff:s/step,L:cfg.L,W:cfg.W,rB,
+      G:[
+        mk(cfg.wallSpk,getWallSpeakers(cfg),Math.max(0.3,cfg.wallHeight-cfg.earH),'w'),
+        mk(cfg.ceilSpk,getCeilSpeakers(cfg),Math.max(0.5,cfg.H-cfg.earH),'c'),
+        mk(cfg.subSpk,getSubSpeakers(cfg),Math.max(0.5,cfg.H*0.7-cfg.earH),'s')
+      ]
+    });
+  }else if(!heatWorker&&key!==heatmapKey)heatFallback(cfg,Lpx,Wpx,s,key);
+  if(!heatmapCache)return;
+  const polyPx=getRoomPolygonPx(cfg);
+  ctx.save();clipPolyPath(polyPx);ctx.clip();
+  ctx.drawImage(heatmapCache,-Lpx/2,-Wpx/2,Lpx,Wpx);
+  ctx.restore();
+}
+
 function drawGauges(cfg){
   const dpr=Math.min(devicePixelRatio||1,2);
   const w=canvas.width/dpr,h=canvas.height/dpr,isMob=isMobileNow();
@@ -1900,6 +2221,7 @@ function drawGaugeCircle(cx,cy,r,g,isMob){
 let threeRenderer=null,threeScene=null,threeCamera=null,threeRoomGrp=null,threeInitialized=false;
 const threeCamState={theta:-0.65,phi:0.88,radius:28,target:new THREE.Vector3(0,1.5,0)};
 let isThreeDragging=false,prevThreeMouse={x:0,y:0};
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),dragPlane=new THREE.Plane(),dragOff=new THREE.Vector3(),dragObj={o:null};
 
 const M3D={
   body:()=>new THREE.MeshStandardMaterial({color:0x151b2b,roughness:0.4,metalness:0.6}),
@@ -1928,6 +2250,66 @@ const M3D={
   coneGreen:()=>new THREE.MeshBasicMaterial({color:0x22c55e,transparent:true,opacity:0.14,side:THREE.DoubleSide,depthWrite:false})
 };
 
+function disposeObj(o){
+  o.traverse(c=>{
+    if(c.geometry)c.geometry.dispose();
+    if(c.material)(Array.isArray(c.material)?c.material:[c.material]).forEach(m=>m.dispose());
+  });
+}
+
+function ndcFrom(e){
+  const r=$('threeCanvas').getBoundingClientRect();
+  ndc.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(ndc,threeCamera);
+}
+
+function init3DDrag(tc){
+  tc.addEventListener('pointerdown',e=>{
+    if(!view3D.enabled)return;
+    ndcFrom(e);
+    for(const h of ray.intersectObjects(threeRoomGrp.children,true)){
+      if(h.object.material&&h.object.material.depthWrite===false)continue;
+      let o=h.object;while(o&&!(o.userData&&o.userData.drag))o=o.parent;
+      if(!o)continue;
+      dragObj.o=o;const d=o.userData.drag;
+      startDrag({type:d.type,key:d.key,index:d.index},0,0,false);
+      dragPlane.setFromNormalAndCoplanarPoint(new THREE.Vector3(0,1,0),h.point);
+      const p=new THREE.Vector3();ray.ray.intersectPlane(dragPlane,p);
+      dragOff.set(o.position.x-p.x,0,o.position.z-p.z);
+      return;
+    }
+  });
+  window.addEventListener('pointermove',e=>{
+    if(!dragObj.o||!dragState.active||!view3D.enabled)return;
+    ndcFrom(e);const p=new THREE.Vector3();
+    if(!ray.ray.intersectPlane(dragPlane,p))return;
+    let x=p.x+dragOff.x,z=p.z+dragOff.z;
+    if(e.ctrlKey){x=Math.round(x*2)/2;z=Math.round(z*2)/2;}
+    performDrag(x,z,false);
+    dragObj.o.position.x=x;dragObj.o.position.z=z;
+  });
+  window.addEventListener('pointerup',()=>{
+    if(dragObj.o){dragObj.o=null;endDrag();}
+  });
+}
+
+function updateThreeCamera(){
+  if(!threeCamera)return;
+  const {theta,phi,radius,target}=threeCamState;
+  threeCamera.position.set(
+    target.x+radius*Math.sin(phi)*Math.sin(theta),
+    Math.max(target.y+radius*Math.cos(phi),0.6),
+    target.z+radius*Math.sin(phi)*Math.cos(theta)
+  );
+  threeCamera.lookAt(target);
+  const hud=$('hud3DText');
+  if(hud){
+    const degYaw=Math.round((theta*180/Math.PI)%360);
+    const degPitch=Math.round(90-(phi*180/Math.PI));
+    hud.textContent=`زاوية: ${degYaw}° · ارتفاع: ${degPitch}° · مسافة: ${radius.toFixed(1)}م`;
+  }
+}
+
 function initThreeEngine(){
   if(threeInitialized||typeof THREE==='undefined')return;
   const tc=$('threeCanvas');
@@ -1947,7 +2329,6 @@ function initThreeEngine(){
 
   threeCamera=new THREE.PerspectiveCamera(48,(r.width||800)/(r.height||600),0.1,500);
 
-  // الإضاءة الواقعية
   threeScene.add(new THREE.AmbientLight(0xe0e8ff,0.65));
   threeScene.add(new THREE.HemisphereLight(0xc8d8ff,0x1a1f30,0.65));
 
@@ -1974,13 +2355,12 @@ function initThreeEngine(){
   threeRoomGrp=new THREE.Group();
   threeScene.add(threeRoomGrp);
 
-  // أحداث التحكم بالكاميرا 3D
   tc.addEventListener('pointerdown',e=>{
     isThreeDragging=true;
     prevThreeMouse={x:e.clientX,y:e.clientY};
   });
   window.addEventListener('pointermove',e=>{
-    if(!isThreeDragging||!view3D.enabled)return;
+    if(!isThreeDragging||!view3D.enabled||dragState.active)return;
     const dx=e.clientX-prevThreeMouse.x;
     const dy=e.clientY-prevThreeMouse.y;
     prevThreeMouse={x:e.clientX,y:e.clientY};
@@ -1996,24 +2376,8 @@ function initThreeEngine(){
     updateThreeCamera();
   },{passive:false});
 
+  init3DDrag(tc);
   threeInitialized=true;
-}
-
-function updateThreeCamera(){
-  if(!threeCamera)return;
-  const {theta,phi,radius,target}=threeCamState;
-  threeCamera.position.set(
-    target.x+radius*Math.sin(phi)*Math.sin(theta),
-    Math.max(target.y+radius*Math.cos(phi),0.6),
-    target.z+radius*Math.sin(phi)*Math.cos(theta)
-  );
-  threeCamera.lookAt(target);
-  const hud=$('hud3DText');
-  if(hud){
-    const degYaw=Math.round((theta*180/Math.PI)%360);
-    const degPitch=Math.round(90-(phi*180/Math.PI));
-    hud.textContent=`زاوية: ${degYaw}° · ارتفاع: ${degPitch}° · مسافة: ${radius.toFixed(1)}م`;
-  }
 }
 
 function build3DChair(x,z,rotY){
@@ -2039,16 +2403,35 @@ function build3DChair(x,z,rotY){
   return chair;
 }
 
+function buildSightRayMesh(startVec,endVec,colorHex,opacity=0.72){
+  const dir=new THREE.Vector3().subVectors(endVec,startVec);
+  const len=dir.length();
+  if(len<0.05)return new THREE.Group();
+  const grp=new THREE.Group();
+  const geo=new THREE.CylinderGeometry(0.014,0.014,len,8);
+  const mat=new THREE.MeshBasicMaterial({color:colorHex,transparent:true,opacity,depthWrite:false});
+  const beam=new THREE.Mesh(geo,mat);
+  const mid=new THREE.Vector3().addVectors(startVec,endVec).multiplyScalar(0.5);
+  beam.position.copy(mid);
+  beam.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.normalize());
+  grp.add(beam);
+
+  const eyeDot=new THREE.Mesh(new THREE.SphereGeometry(0.045,10,10),new THREE.MeshBasicMaterial({color:colorHex}));
+  eyeDot.position.copy(startVec);
+  grp.add(eyeDot);
+  return grp;
+}
+
 function rebuildThreeScene(){
   if(!threeInitialized||!threeRoomGrp)return;
-  while(threeRoomGrp.children.length>0){
-    const obj=threeRoomGrp.children[0];
-    threeRoomGrp.remove(obj);
+  while(threeRoomGrp.children.length){
+    const o=threeRoomGrp.children[0];
+    threeRoomGrp.remove(o);
+    disposeObj(o);
   }
   const cfg=readConfig();
   const poly=getRoomPolygon(cfg);
 
-  // 1. الأرضية حسب مضلع القاعة
   const floorShape=new THREE.Shape();
   floorShape.moveTo(poly[0][0],-poly[0][1]);
   for(let i=1;i<poly.length;i++)floorShape.lineTo(poly[i][0],-poly[i][1]);
@@ -2061,7 +2444,6 @@ function rebuildThreeScene(){
   floorMesh.receiveShadow=true;
   threeRoomGrp.add(floorMesh);
 
-  // 2. الجدران المحيطة (جدران خلفية وجانبية مرتفعة + جدار أمامي منخفض الرؤية لسهولة المعاينة)
   const wallMat=(cfg.wallMat.includes('acoustic'))?M3D.wallAcoustic():(cfg.wallMat==='wood')?M3D.wallWood():M3D.wallPlaster();
   for(let i=0;i<poly.length;i++){
     const p1=poly[i],p2=poly[(i+1)%poly.length];
@@ -2070,7 +2452,6 @@ function rebuildThreeScene(){
     if(len<0.05)continue;
     const midX=(p1[0]+p2[0])/2,midZ=(p1[1]+p2[1])/2;
     const angle=-Math.atan2(dz,dx);
-    // الجدار الأمامي القريب من الكاميرا (z > W/2 - 0.2) يكون نصف شفاف أو منخفض لعدم حجب الرؤية
     const isFrontCutaway=(midZ>cfg.W*0.42);
     const wH=isFrontCutaway?0.65:cfg.H;
     const wallMesh=new THREE.Mesh(new THREE.BoxGeometry(len,wH,0.18),wallMat);
@@ -2079,7 +2460,6 @@ function rebuildThreeScene(){
     wallMesh.castShadow=true;wallMesh.receiveShadow=true;
     threeRoomGrp.add(wallMesh);
 
-    // شريط ديكوري علوي مضيء على الجدران الكاملة
     if(!isFrontCutaway){
       const trim=new THREE.Mesh(new THREE.BoxGeometry(len,0.06,0.2),M3D.body());
       trim.position.set(midX,wH-0.03,midZ);
@@ -2088,7 +2468,62 @@ function rebuildThreeScene(){
     }
   }
 
-  // 3. ألواح الإضاءة السقفية (Ceiling LED Panels)
+  if(cfg.roomShape==='tiered'){
+    const {rowSpacing,frontY,maxRows,stepH}=getTierProfile(cfg);
+    const los3D=evalTierLineOfSight(cfg);
+    const blockedSet=new Set(los3D.blockedRows.map(b=>b.row));
+    for(let r=1;r<=maxRows;r++){
+      const stepZ=frontY+(r-1)*rowSpacing;
+      const stepTopY=r*stepH;
+      const isBlocked=blockedSet.has(r);
+      const stepMat=new THREE.MeshStandardMaterial({color:isBlocked?0x3b2228:0x1b263b,roughness:0.75,metalness:0.15});
+      const riser=new THREE.Mesh(new THREE.BoxGeometry(cfg.L*0.92,stepTopY,rowSpacing),stepMat);
+      riser.position.set(0,stepTopY/2,stepZ);
+      riser.castShadow=true;riser.receiveShadow=true;
+      threeRoomGrp.add(riser);
+
+      const nosingMat=isBlocked?M3D.ledRed():M3D.ledBlue();
+      const nosing=new THREE.Mesh(new THREE.BoxGeometry(cfg.L*0.92,0.02,0.05),nosingMat);
+      nosing.position.set(0,stepTopY+0.005,stepZ-rowSpacing/2+0.025);
+      threeRoomGrp.add(nosing);
+    }
+
+    if(opts.tech){
+      const lanes=getLateralSightOffsets(cfg);
+      const eyeOffset=1.15,headOffset=1.32;
+      const targetZ=-cfg.W/2+0.3;
+      const targetY=cfg.showScreen&&cfg.screenType!=='none'?1.25:1.1;
+      for(let r=1;r<=maxRows;r++){
+        const z=frontY+(r-1)*rowSpacing;
+        const elev=r*stepH;
+        for(const lane of lanes){
+          const startVec=new THREE.Vector3(lane.eyeX,elev+eyeOffset,z);
+          const endVec=new THREE.Vector3(lane.targetX,targetY,targetZ);
+          let isBlocked=blockedSet.has(r);
+          if(!isBlocked&&r>1){
+            const frontZ=frontY+(r-2)*rowSpacing;
+            const frontElev=(r-1)*stepH;
+            const frontTopY=frontElev+headOffset;
+            const t=clamp((z-frontZ)/Math.max(0.05,z-targetZ),0,1);
+            const rayYAtFront=startVec.y+(endVec.y-startVec.y)*t;
+            if(rayYAtFront<frontTopY)isBlocked=true;
+          }
+          if(!isBlocked&&lane.key!=='C'&&Math.abs(lane.eyeX)>cfg.L*0.38)isBlocked=true;
+          const rayColor=isBlocked?0xff2d55:0x10b981;
+          const rayOpacity=lane.key==='C'?(isBlocked?0.88:0.62):(isBlocked?0.72:0.42);
+          threeRoomGrp.add(buildSightRayMesh(startVec,endVec,rayColor,rayOpacity));
+          if(isBlocked&&r>1){
+            const frontZ=frontY+(r-2)*rowSpacing;
+            const frontElev=(r-1)*stepH;
+            const blockMarker=new THREE.Mesh(new THREE.SphereGeometry(0.068,10,10),M3D.ledRed());
+            blockMarker.position.set(lane.eyeX*0.85,frontElev+headOffset*0.85,frontZ);
+            threeRoomGrp.add(blockMarker);
+          }
+        }
+      }
+    }
+  }
+
   const colsL=Math.max(2,Math.floor(cfg.L/2.8));
   const rowsL=Math.max(2,Math.floor(cfg.W/2.8));
   for(let i=0;i<colsL;i++){
@@ -2102,7 +2537,6 @@ function rebuildThreeScene(){
     }
   }
 
-  // 4. المنصة والشاشة
   if(opts.stage){
     const st=getStage(cfg);
     if(st){
@@ -2110,9 +2544,9 @@ function rebuildThreeScene(){
       podium.position.set(st.x,0.14,st.y);
       podium.rotation.y=-(st.rot||0);
       podium.castShadow=true;podium.receiveShadow=true;
+      podium.userData.drag={type:'stage'};
       threeRoomGrp.add(podium);
 
-      // منبر المتحدث فوق المنصة
       const lectern=new THREE.Mesh(new THREE.BoxGeometry(0.65,1.1,0.45),M3D.woodDark());
       lectern.position.set(st.x,0.83,st.y);
       lectern.rotation.y=-(st.rot||0);
@@ -2137,11 +2571,11 @@ function rebuildThreeScene(){
       const scrCenterY=Math.min(cfg.H-cfg.screenH/2-0.2,1.1+cfg.screenH/2);
       scrGroup.position.set(scr.x,scrCenterY,scr.y);
       scrGroup.rotation.y=-(scr.rot||0);
+      scrGroup.userData.drag={type:'screen'};
       threeRoomGrp.add(scrGroup);
     }
   }
 
-  // 5. الأثاث والطاولات والكراسي
   if(opts.furn){
     if(cfg.mode==='meeting'){
       const rx=cfg.L*0.36,rz=cfg.W*0.30;
@@ -2187,13 +2621,15 @@ function rebuildThreeScene(){
     }
   }
 
-  // 6. وحدات المؤتمرات والميكروفونات والكراسي المرتبطة بها
   const units=getConfUnits(cfg);
-  for(const u of units){
+  for(const [ui,u] of units.entries()){
+    const tierY=getTierElevationAt(u.y,cfg);
     if(opts.furn){
       const chairX=u.x-Math.cos(u.rot)*0.32;
       const chairZ=u.y-Math.sin(u.rot)*0.32;
-      threeRoomGrp.add(build3DChair(chairX,chairZ,-u.rot+Math.PI/2));
+      const ch3D=build3DChair(chairX,chairZ,-u.rot+Math.PI/2);
+      ch3D.position.y+=tierY;
+      threeRoomGrp.add(ch3D);
     }
     if(opts.conf){
       const micGrp=new THREE.Group();
@@ -2206,14 +2642,14 @@ function rebuildThreeScene(){
       ring.position.set(0,0.38,0.08);
       micGrp.add(ring);
 
-      const micY=(cfg.mode==='conference')?0.55:0.81;
+      const micY=((cfg.mode==='conference')?0.55:0.81)+tierY;
       micGrp.position.set(u.x,micY,u.y);
       micGrp.rotation.y=-u.rot+Math.PI/2;
+      micGrp.userData.drag={type:'unit',index:ui};
       threeRoomGrp.add(micGrp);
     }
   }
 
-  // 7. السماعات الجدارية (Wall Speakers) + مخاريط التغطية
   if(cfg.wallEnabled){
     const ws=getWallSpeakers(cfg);
     const tiltRad=(cfg.wallTilt||20)*Math.PI/180;
@@ -2246,11 +2682,11 @@ function rebuildThreeScene(){
       spkGrp.position.set(s.x,s.height,s.y);
       spkGrp.rotation.y=-(s.rot||0);
       spkGrp.rotation.z=-tiltRad;
+      spkGrp.userData.drag={type:'wallSpk',key:s.key};
       threeRoomGrp.add(spkGrp);
     }
   }
 
-  // 8. سماعات السقف (Ceiling Speakers) + مخاريط التغطية
   if(cfg.ceilEnabled){
     const cs=getCeilSpeakers(cfg);
     const halfAng=(cfg.ceilSpk.angle/2)*Math.PI/180;
@@ -2274,11 +2710,11 @@ function rebuildThreeScene(){
       }
 
       cGrp.position.set(s.x,cfg.H-0.02,s.y);
+      cGrp.userData.drag={type:'ceilSpk',key:s.key};
       threeRoomGrp.add(cGrp);
     }
   }
 
-  // 9. مكبرات الصوت الفرعية (Subwoofers)
   if(cfg.subEnabled&&cfg.subCount>0){
     for(const s of getSubSpeakers(cfg)){
       const subGrp=new THREE.Group();
@@ -2293,13 +2729,13 @@ function rebuildThreeScene(){
       subGrp.add(led);
 
       subGrp.position.set(s.x,0,s.y);
+      subGrp.userData.drag={type:'subSpk',key:s.key};
       threeRoomGrp.add(subGrp);
     }
   }
 
-  // 10. الكاميرات
   if(opts.cam&&cfg.showCameras&&cfg.camCount>0){
-    for(const c of getCameraPositions(cfg)){
+    for(const [ci,c] of getCameraPositions(cfg).entries()){
       const camGrp=new THREE.Group();
       const body=new THREE.Mesh(new THREE.BoxGeometry(0.28,0.22,0.24),M3D.dark());
       camGrp.add(body);
@@ -2312,6 +2748,7 @@ function rebuildThreeScene(){
 
       camGrp.position.set(c.x,cfg.H-0.45,c.y);
       camGrp.rotation.y=-c.angle;
+      camGrp.userData.drag={type:'camera',index:ci};
       threeRoomGrp.add(camGrp);
     }
   }
@@ -2326,7 +2763,7 @@ function toggle3D(){
     tc.style.display='block';
     $('cursorInfo').style.display='none';
     $('hud3D').style.display='block';
-    $('hintBar').innerHTML='🧊 <b>سحب</b> للدوران 360° · <b>عجلة</b> للتكبير والتصغير · <b>زر 🧊</b> للعودة للمخطط 2D';
+    $('hintBar').innerHTML='🧊 <b>سحب</b> للدوران · <b>سحب عنصر</b> لتحريكه · <b>عجلة</b> للتقريب · <b>زر 🧊</b> للعودة 2D';
     const cfg=readConfig();
     threeCamState.radius=Math.max(cfg.L,cfg.W)*1.3;
     threeCamState.target.set(0,cfg.H*0.35,0);
@@ -2356,449 +2793,409 @@ function loop(now){
   if(opts.gauge&&gaugeInit){
     for(const k of ['spl','sti','rt60','cov']){
       const diff=gaugeTarget[k]-gaugeAnim[k];
-      if(Math.abs(diff)>0.005){gaugeAnim[k]+=diff*0.12;needsRedraw=true;}
-      else if(gaugeAnim[k]!==gaugeTarget[k]){gaugeAnim[k]=gaugeTarget[k];needsRedraw=true;}
+      if(Math.abs(diff)>0.001){gaugeAnim[k]+=diff*Math.min(1,dt*8);needsRedraw=true;}
     }
   }
-  if(opts.rays||needsRedraw){
-    if(opts.rays)animTime+=Math.min(0.05,dt||0.016);
-    safeRender();needsRedraw=opts.rays;
-  }
+  if(opts.rays){animTime+=dt;needsRedraw=true;}
+  if(needsRedraw){safeRender();needsRedraw=false;}
   requestAnimationFrame(loop);
 }
-function zoomIn(){
-  if(view3D.enabled){threeCamState.radius=Math.max(4,threeCamState.radius*0.85);updateThreeCamera();return;}
-  zoom=clamp(zoom*1.2,0.3,4);markDirty();
+
+/* ═══ التفاعل ═══ */
+function attachEvents(){
+  canvas.addEventListener('pointerdown',e=>{
+    if(view3D.enabled)return;
+    canvas.setPointerCapture(e.pointerId);
+    const hit=hitTest(e.clientX,e.clientY);
+    if(hit){startDrag(hit,e.clientX,e.clientY,e.shiftKey);return;}
+    isPanning=true;startX=e.clientX-offsetX;startY=e.clientY-offsetY;
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(view3D.enabled)return;
+    const w=screenToWorld(e.clientX,e.clientY);
+    const r=splAtPoint(w.x,w.y,readConfig());
+    const d=Math.hypot(w.x,w.y);
+    $('cursorSPL').textContent=r.spl.toFixed(1)+' dB';
+    $('cursorSTI').textContent=r.sti.toFixed(2);
+    $('cursorDist').textContent=d.toFixed(1)+' م';
+    $('cursorCov').textContent=(r.spl>=78?'✓':'✗');
+    if(dragState.active){performDrag(w.x,w.y,e.ctrlKey);return;}
+    if(isPanning){offsetX=e.clientX-startX;offsetY=e.clientY-startY;needsRedraw=true;return;}
+    updateHover(e);
+  });
+  canvas.addEventListener('pointerup',e=>{if(view3D.enabled)return;if(dragState.active){endDrag();return;}isPanning=false;});
+  canvas.addEventListener('wheel',e=>{
+    if(view3D.enabled)return;
+    e.preventDefault();
+    const r=canvas.getBoundingClientRect(),cx=e.clientX-r.left-r.width/2,cy=e.clientY-r.top-r.height/2;
+    const f=e.deltaY>0?0.9:1.1,nz=clamp(zoom*f,0.3,4);
+    offsetX=cx-(cx-offsetX)*(nz/zoom);offsetY=cy-(cy-offsetY)*(nz/zoom);zoom=nz;needsRedraw=true;
+  },{passive:false});
+  let lastTap=0;
+  canvas.addEventListener('touchend',e=>{
+    if(view3D.enabled)return;
+    const now=Date.now();
+    if(now-lastTap<300){e.preventDefault();autoFitView();}
+    lastTap=now;
+  },{passive:false});
+  window.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+    if(e.key==='Delete'||e.key==='Backspace'){deleteHovered();e.preventDefault();}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'){
+      const t=dragState.hoverType,k=dragState.hoverKey,cfg=readConfig();
+      let item=null;
+      if(t==='wallSpk'){const s=getWallSpeakers(cfg).find(x=>x.key===k);if(s)item={type:'wallSpk',x:s.x,y:s.y,rot:s.rot};}
+      else if(t==='ceilSpk'){const s=getCeilSpeakers(cfg).find(x=>x.key===k);if(s)item={type:'ceilSpk',x:s.x,y:s.y,rot:s.rot};}
+      else if(t==='subSpk'){const s=getSubSpeakers(cfg).find(x=>x.key===k);if(s)item={type:'subSpk',x:s.x,y:s.y};}
+      else if(t==='unit'){const u=getConfUnits(cfg)[k];if(u)item={type:'unit',x:u.x,y:u.y,rot:u.rot};}
+      else if(t==='camera'){const c=getCameraPositions(cfg)[k];if(c)item={type:'camera',x:c.x,y:c.y,rot:c.angle};}
+      if(item){clipboard=item;pushWarn('ok','📋 تم نسخ '+item.type,2000);}
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'){
+      if(!clipboard)return;
+      const cfg=readConfig();
+      if(clipboard.type==='wallSpk'&&cfg.wallEnabled){
+        const n=cfg.wallPerSide*2;
+        dragPositions.wall['w-0-'+n]={x:clipboard.x+0.5,y:clipboard.y+0.5,rot:clipboard.rot};
+        $('wallPerSide').value=cfg.wallPerSide+1;
+      }else if(clipboard.type==='ceilSpk'&&cfg.ceilEnabled){
+        dragPositions.ceil['c-'+cfg.ceilCount]={x:clipboard.x+0.5,y:clipboard.y+0.5,rot:clipboard.rot};
+        $('ceilCount').value=cfg.ceilCount+1;
+      }else if(clipboard.type==='subSpk'&&cfg.subEnabled){
+        dragPositions.sub['sub-'+cfg.subCount]={x:clipboard.x+0.5,y:clipboard.y+0.5};
+        $('subCount').value=cfg.subCount+1;
+      }else if(clipboard.type==='unit'){
+        const n=cfg.cQty+cfg.dQty;
+        dragPositions.units[n]={x:clipboard.x+0.5,y:clipboard.y+0.5,rot:clipboard.rot};
+        $('dQty').value=cfg.dQty+1;
+      }else if(clipboard.type==='camera'&&cfg.showCameras&&cfg.camCount<4){
+        dragPositions.cameras[cfg.camCount]={x:clipboard.x+0.5,y:clipboard.y+0.5,rot:clipboard.rot};
+        $('camCount').value=cfg.camCount+1;
+      }
+      heatmapKey='';updateKPI();markDirty();pushHistory();pushWarn('ok','📌 لصق',2000);
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){
+      if(e.shiftKey){if(historyIndex<undoHistory.length-1){historyIndex++;restoreState(undoHistory[historyIndex]);}}
+      else{if(historyIndex>0){historyIndex--;restoreState(undoHistory[historyIndex]);}}
+      e.preventDefault();
+    }
+    if(e.key==='Escape'){$('reportModal').style.display='none';}
+  });
+  document.querySelectorAll('input,select').forEach(el=>{
+    if(el.id==='confMode')el.addEventListener('change',()=>{populateHosts();heatmapKey='';updateKPI();markDirty();pushHistory();});
+    else el.addEventListener('change',debounce(()=>{
+      if(el.id==='dim_l'||el.id==='dim_w'||el.id==='dim_h'||el.id==='roomShape'){tieredStepOverride=null;}
+      heatmapKey='';updateKPI();markDirty();pushHistory();
+    },150));
+  });
+  window.addEventListener('resize',debounce(()=>{isMobile=window.matchMedia('(max-width:820px)').matches;resizeCanvas();},150));
 }
-function zoomOut(){
-  if(view3D.enabled){threeCamState.radius=Math.min(130,threeCamState.radius*1.15);updateThreeCamera();return;}
-  zoom=clamp(zoom/1.2,0.3,4);markDirty();
+
+/* ═══ التحكم ═══ */
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+  $('tab-acoustic').style.display=t==='acoustic'?'block':'none';
+  $('tab-conference').style.display=t==='conference'?'block':'none';
+  $('tab-project').style.display=t==='project'?'block':'none';
 }
-function resetView(){
-  if(view3D.enabled){
-    const cfg=readConfig();
-    threeCamState.theta=-0.65;threeCamState.phi=0.88;
-    threeCamState.radius=Math.max(cfg.L,cfg.W)*1.3;
-    threeCamState.target.set(0,cfg.H*0.35,0);
-    updateThreeCamera();
-    return;
+function toggleBox(el){el.parentElement.classList.toggle('collapsed');}
+function toggleSidebar(){
+  const sb=$('sidebar'),bd=$('sidebarBackdrop'),fab=$('mobileFab');
+  if(isMobileNow()){
+    const open=sb.classList.toggle('open');
+    bd.classList.toggle('show',open);
+    fab.textContent=open?'✕':'☰';
+  }else{
+    sb.classList.toggle('collapsed');
+    const c=sb.classList.contains('collapsed');
+    sb.querySelector('.sidebar-toggle').textContent=c?'▶':'◀';
+    setTimeout(resizeCanvas,320);
   }
-  zoom=1;offsetX=0;offsetY=0;markDirty();
 }
-function toggle(key){
-  opts[key]=!opts[key];
-  const b=$('tg'+key.charAt(0).toUpperCase()+key.slice(1));
-  if(b)b.classList.toggle('on',opts[key]);
-  if(key==='heat')heatmapKey='';
+function toggle(k){
+  opts[k]=!opts[k];
+  const map={tile:'tgTile',cover:'tgCover',heat:'tgHeat',rays:'tgRays',grid:'tgGrid',conf:'tgConf',furn:'tgFurn',stage:'tgStage',cam:'tgCam',tech:'tgTech',gauge:'tgGauge'};
+  if(map[k])$(map[k]).classList.toggle('on',opts[k]);
+  if(k==='heat'&&opts[k])heatmapKey='';
   markDirty();
 }
-function updateCursor(e){
-  if(view3D.enabled||dragState.active)return;
-  const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
-  const cfg=readConfig(),cx=r.width/2+offsetX,cy=r.height/2+offsetY;
-  const xm=(mx-cx)/(zoom*PXM),ym=(my-cy)/(zoom*PXM);
-  const inPoly=pointInPoly(xm,ym,getRoomPolygon(cfg));
-  if(!inPoly){
-    $('cursorSPL').textContent='—';$('cursorSTI').textContent='—';$('cursorDist').textContent='—';
-    $('cursorCov').textContent=gaugeTarget.cov.toFixed(0)+'%';return;
-  }
-  const res=splAtPoint(xm,ym,cfg),d=Math.sqrt(xm*xm+ym*ym);
-  $('cursorSPL').textContent=res.spl.toFixed(1)+' dB';
-  $('cursorSTI').textContent=res.sti.toFixed(2);
-  $('cursorDist').textContent=d.toFixed(1)+' م';
-  $('cursorCov').textContent=gaugeTarget.cov.toFixed(0)+'%';
-}
-
-/* ═══ واجهة ═══ */
-function switchTab(n){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===n));
-  $('tab-acoustic').style.display=n==='acoustic'?'block':'none';
-  $('tab-conference').style.display=n==='conference'?'block':'none';
-  $('tab-project').style.display=n==='project'?'block':'none';
-}
-function toggleBox(h){const b=h.closest('.box');if(b)b.classList.toggle('collapsed');}
-function toggleSidebar(){
-  const sb=$('sidebar'),bd=$('sidebarBackdrop'),tg=sb.querySelector('.sidebar-toggle');
-  if(isMobileNow()){
-    const op=!sb.classList.contains('open');
-    sb.classList.toggle('open',op);if(bd)bd.classList.toggle('show',op);
-    if(tg)tg.textContent=op?'✕':'☰';return;
-  }
-  sb.classList.toggle('collapsed');
-  if(tg)tg.textContent=sb.classList.contains('collapsed')?'▶':'◀';
-  setTimeout(()=>{resizeCanvas();markDirty();},320);
-}
 function applyPreset(L,W,H){
+  tieredStepOverride=null;
   $('dim_l').value=L;$('dim_w').value=W;$('dim_h').value=H;
-  updateKPI();markDirty();pushHistory();
-  setTimeout(autoFitView,100);
-  pushWarn('ok',`✅ ${L}×${W}×${H}م`,2000);
+  updateKPI();heatmapKey='';markDirty();pushHistory();setTimeout(autoFitView,100);
 }
-function exportPNG(){
-  try{
-    const link=document.createElement('a');
-    link.download='motivity_'+(readConfig().projName||'plan')+'_'+(view3D.enabled?'3D_':'2D_')+Date.now()+'.png';
-    if(view3D.enabled&&threeRenderer){
-      threeRenderer.render(threeScene,threeCamera);
-      link.href=$('threeCanvas').toDataURL('image/png');
-    }else{
-      link.href=canvas.toDataURL('image/png');
-    }
-    link.click();
-    pushWarn('ok','✅ تم تصدير PNG',2500);
-  }catch(e){pushWarn('critical','فشل التصدير',3000);}
+function applyTieredPreset(L,W,H){
+  if(Math.max(L,W)/Math.max(0.1,Math.min(L,W))<1.35){
+    L=Math.round(W*1.5*10)/10;
+  }
+  tieredStepOverride=null;
+  $('roomShape').value='tiered';
+  $('dim_l').value=L;$('dim_w').value=W;$('dim_h').value=H;
+  updateKPI();heatmapKey='';markDirty();pushHistory();setTimeout(autoFitView,100);
+  pushWarn('ok',`✅ قاعة مدرجة ${L}×${W}×${H}م (أبعاد غير متساوية لتحسين التغطية)`,3000);
 }
-
-/* ═══ إدارة الحالة ═══ */
-const SIDS=['projName','engName','clientName','siteLoc','projRef','roomShape','roomMode','dim_l','dim_w','dim_h','earH','wallMat','floorMat','ceilMat','wallModel','wallPerSide','wallHeight','wallTilt','ceilModel','ceilCount','ceilRot','subModel','subCount','cQty','dQty','confMode','confHost','confChair','confDelegate','confMixer','audioDSP','powerSeq','podiumW','podiumD','podiumRot','screenW','screenH','screenRot','screenType','camCount','camFOV','camRot'];
-const SCHK=['wallEnabled','ceilEnabled','subEnabled','showPodium','showScreen','showCameras','useFeedback','useEq'];
-function getState(){const s={};for(const id of SIDS){const el=$(id);if(el)s[id]=el.value;}for(const id of SCHK){const el=$(id);if(el)s[id]=el.checked;}return s;}
-function applyState(s){for(const k in s){const el=$(k);if(!el)continue;if(el.type==='checkbox')el.checked=s[k];else el.value=s[k];}onHostChange();updateKPI();markDirty();}
-function pushHistory(){
-  if(suppressHistory)return;
-  const s=getState(),str=JSON.stringify(s);
-  if(undoHistory.length>0&&JSON.stringify(undoHistory[historyIndex])===str)return;
-  undoHistory.splice(historyIndex+1);undoHistory.push(s);
-  if(undoHistory.length>50)undoHistory.shift();
-  historyIndex=undoHistory.length-1;
-}
-function undo(){if(historyIndex<=0)return;historyIndex--;suppressHistory=true;applyState(undoHistory[historyIndex]);suppressHistory=false;}
-function redo(){if(historyIndex>=undoHistory.length-1)return;historyIndex++;suppressHistory=true;applyState(undoHistory[historyIndex]);suppressHistory=false;}
-function saveProject(){
-  try{localStorage.setItem('motivity_v82_ar',JSON.stringify({state:getState(),opts:{...opts},dragPositions}));pushWarn('ok','✅ تم الحفظ',3000);}
-  catch(e){pushWarn('critical','فشل الحفظ',3000);}
-}
-function loadProject(){
-  const raw=localStorage.getItem('motivity_v82_ar')||localStorage.getItem('motivity_v81_ar');
-  if(!raw){pushWarn('warn','لا يوجد مشروع',3000);return;}
-  try{
-    const d=JSON.parse(raw);applyState(d.state);
-    if(d.opts)for(const k in d.opts)opts[k]=d.opts[k];
-    if(d.dragPositions){
-      dragPositions.units=d.dragPositions.units||{};
-      dragPositions.wall=d.dragPositions.wall||{};
-      dragPositions.ceil=d.dragPositions.ceil||{};
-      dragPositions.sub=d.dragPositions.sub||{};
-      dragPositions.cameras=d.dragPositions.cameras||{};
-      dragPositions.stage=d.dragPositions.stage||null;
-      dragPositions.screen=d.dragPositions.screen||null;
-    }
-    pushHistory();pushWarn('ok','✅ تم التحميل',3000);
-    setTimeout(autoFitView,100);
-  }catch(err){pushWarn('critical','خطأ في القراءة',3000);}
-}
+function zoomIn(){if(view3D.enabled){threeCamState.radius=Math.max(4,threeCamState.radius*0.85);updateThreeCamera();return;}zoom=clamp(zoom*1.2,0.3,4);needsRedraw=true;}
+function zoomOut(){if(view3D.enabled){threeCamState.radius=Math.min(130,threeCamState.radius*1.15);updateThreeCamera();return;}zoom=clamp(zoom*0.8,0.3,4);needsRedraw=true;}
+function resetView(){if(view3D.enabled){threeCamState.theta=-0.65;threeCamState.phi=0.88;threeCamState.radius=28;threeCamState.target.set(0,1.5,0);updateThreeCamera();return;}zoom=1;offsetX=0;offsetY=0;needsRedraw=true;}
 
 /* ═══ التقرير ═══ */
-function printReport(){setTimeout(()=>window.print(),500);}
 function generateReport(){
-  const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const cfg=readConfig();
-  ['projName','projRef','engName','clientName','siteLoc'].forEach(k=>cfg[k]=esc(cfg[k]));
-  const wallS=getWallSpeakers(cfg),ceilS=getCeilSpeakers(cfg),subS=getSubSpeakers(cfg);
-  const wallTotal=wallS.length,ceilTotal=ceilS.length,subTotal=subS.length;
+  const wallTotal=cfg.wallEnabled?getWallSpeakers(cfg).length:0;
+  const ceilTotal=cfg.ceilEnabled?getCeilSpeakers(cfg).length:0;
+  const subTotal=cfg.subEnabled?getSubSpeakers(cfg).length:0;
   const wallW=cfg.wallEnabled?cfg.wallSpk.pwr*wallTotal:0;
   const ceilW=cfg.ceilEnabled?cfg.ceilSpk.pwr*ceilTotal:0;
   const subW=cfg.subEnabled?cfg.subSpk.pwr*subTotal:0;
   const totalW=wallW+ceilW+subW;
-  const rtBands=calcRT60Bands(cfg),rt=avgRT60(rtBands),pre={rtBands,rBands:calcRBands(cfg)};
-  const dc=calcDc((cfg.wallSpk.q+cfg.ceilSpk.q)/2,cfg.L,cfg.W,cfg.H,rt);
-  const cov=calcCoverage(cfg);
-  let minSpl=Infinity,minSti=1,worstSplBands=null,worstX=0,worstY=0;
-  const S=20;
-  for(let i=0;i<S;i++)for(let j=0;j<S;j++){
-    const x=-cfg.L/2+cfg.L*(i+0.5)/S,y=-cfg.W/2+cfg.W*(j+0.5)/S;
-    if(!pointInPoly(x,y,getRoomPolygon(cfg)))continue;
-    const r=splAtPoint(x,y,cfg,pre);
-    if(r.spl<minSpl){minSpl=r.spl;worstSplBands=r.splBands;worstX=x;worstY=y;}
-    if(r.sti<minSti)minSti=r.sti;
-  }
-  const host=CONF_HOSTS[cfg.confHost]||{},chair=CONF_CHAIRS[cfg.confChair]||{},delegate=CONF_DELEGATES[cfg.confDelegate]||{};
-  const totalMic=cfg.cQty+cfg.dQty;
-  const dateStr=new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
-  let planImg='';try{planImg=canvas.toDataURL('image/png');}catch(e){}
-  let img3D='';
-  try{
-    if(!threeInitialized)initThreeEngine();
-    rebuildThreeScene();
-    threeRenderer.render(threeScene,threeCamera);
-    img3D=$('threeCanvas').toDataURL('image/png');
-  }catch(e){}
-  const warnings=calculateWarnings();
-  const wHtml=warnings.length===0?'<div class="calc-box ok"><strong>✅ لا توجد تحذيرات</strong></div>':warnings.map(w=>`<div class="calc-box ${w.level==='critical'?'critical':'warn'}"><strong>${w.level==='critical'?'⛔':'⚠️'}:</strong> ${w.text}</div>`).join('');
-  const shapeName=getShapeName(cfg.roomShape);
-  const modeName={meeting:'اجتماعات (بيضاوي)',conference:'مسرحية',boardroom:'مجلس إدارة (U)',rectangular:'مستطيلة'}[cfg.mode];
-  const requiredHosts=Math.ceil(totalMic/Math.max(1,host.maxUnits||1));
-  const extraHosts=Math.max(0,requiredHosts-1);
-  const isOverCapacity=totalMic>(host.maxUnits||0);
-  const remainingCapacity=(host.maxUnits||0)*requiredHosts-totalMic;
-  const utilizationPct=host.maxUnits?Math.round((totalMic/host.maxUnits)*100):0;
-  const V=cfg.L*cfg.W*cfg.H;
-  const schF=calcSchroeder(V,rt);
+  const V=cfg.L*cfg.W*cfg.H,area=cfg.L*cfg.W;
+  const rtBands=calcRT60Bands(cfg),rt=avgRT60(rtBands);
+  const A=lastAn||analyzeCore(cfg,10);
+  const minSpl=A.minSpl,minSti=A.minSti,cov=A.cov;
+  const br=calcBR(rtBands),sch=calcSchroeder(V,rt);
   const modes=calcRoomModes(cfg.L,cfg.W,cfg.H);
-  const los=calcLineOfSight(cfg);
-  const proj=calcProjector(cfg);
-  const br=calcBR(rtBands);
-  const poly=getRoomPolygon(cfg);
-  let worstC50=999,worstC80=999;
-  for(let i=0;i<10;i++)for(let j=0;j<10;j++){
-    const x=-cfg.L/2+cfg.L*(i+0.5)/10,y=-cfg.W/2+cfg.W*(j+0.5)/10;
-    if(!pointInPoly(x,y,poly))continue;
-    let md=Infinity;
-    getAllSpeakers(cfg).forEach(s=>{const d=Math.hypot(x-s.x,y-s.y);if(d<md)md=d;});
-    const c50=calcC50(rt,md,dc),c80=calcC80(rt,md,dc);
-    if(c50<worstC50)worstC50=c50;
-    if(c80<worstC80)worstC80=c80;
+  const los=calcLineOfSight(cfg),proj=calcProjector(cfg);
+  const dc=calcDc(cfg.wallSpk.q,cfg.L,cfg.W,cfg.H,rt);
+  const worstC50=calcC50(rt,Math.hypot(cfg.L,cfg.W)/2,dc);
+  const worstC80=calcC80(rt,Math.hypot(cfg.L,cfg.W)/2,dc);
+  const host=CONF_HOSTS[cfg.confHost]||{},chair=CONF_CHAIRS[cfg.confChair]||{},delegate=CONF_DELEGATES[cfg.confDelegate]||{};
+  const tu=cfg.cQty+cfg.dQty;
+  let confPower=(host.power||0)+(chair.power||0)*cfg.cQty+(delegate.power||0)*cfg.dQty;
+  const accList=[];
+  if(cfg.confMixer&&CONF_ACCESSORIES[cfg.confMixer]){accList.push(CONF_ACCESSORIES[cfg.confMixer]);confPower+=CONF_ACCESSORIES[cfg.confMixer].power;}
+  if(cfg.audioDSP&&CONF_ACCESSORIES[cfg.audioDSP]){accList.push(CONF_ACCESSORIES[cfg.audioDSP]);confPower+=CONF_ACCESSORIES[cfg.audioDSP].power;}
+  if(cfg.useFeedback){accList.push(CONF_ACCESSORIES['DF224']);confPower+=10;}
+  if(cfg.useEq){accList.push(CONF_ACCESSORIES['GEQ231']);confPower+=30;}
+  const cableLen=Math.round(tu*2.5+20);
+  const maxAmpLoad=2400;
+  const ampCount=Math.max(1,Math.ceil(totalW/(maxAmpLoad*0.8)));
+
+  let diag2DData='',diag3DData='';
+  const prevZoom=zoom,prevOx=offsetX,prevOy=offsetY;
+  const was3D=view3D.enabled;
+  if(was3D){
+    $('threeCanvas').style.display='none';
+    view3D.enabled=false;
   }
-  let bandTableRows='';
-  BANDS.forEach((f,i)=>{
-    const spl=worstSplBands?worstSplBands[f].toFixed(1):'—';
-    const rtB=rtBands[f].toFixed(2);
-    const snr=worstSplBands?(worstSplBands[f]-NOISE_FLOOR[i]).toFixed(1):'—';
-    const status=worstSplBands?((worstSplBands[f]-NOISE_FLOOR[i])>=15?'✅':(worstSplBands[f]-NOISE_FLOOR[i])>=6?'⚠️':'⛔'):'—';
-    bandTableRows+=`<tr><td><b>${BAND_LABELS[i]}</b></td><td>${spl} dB</td><td>${rtB} ث</td><td>${NOISE_FLOOR[i]} dB</td><td>${snr} dB</td><td>${status}</td></tr>`;
-  });
-  let hostSuggestionHTML='';
-  if(isOverCapacity){
-    hostSuggestionHTML=`<div class="calc-box critical"><strong>⚠️ تحذير حرج: تجاوز سعة المضيف</strong><br>المضيف الحالي <strong>${host.name}</strong> يدعم <strong>${host.maxUnits} وحدة كحد أقصى</strong>، لكن التصميم يتطلب <strong>${totalMic} وحدة</strong>.<br><br><strong>✅ الحل رقم 1 (Master + Slave):</strong><br>• استخدام <strong>${requiredHosts} وحدات مضيف</strong> (Master + ${extraHosts} Slave)<br>• توصيل عبر RS232 أو RJ45<br><br><strong>✅ الحل رقم 2 (ترقية):</strong><br>• G-S30 / G-S40 (256 وحدة)<br>• G-T50 (999 وحدة)</div>`;
-  }else{
-    hostSuggestionHTML=`<div class="calc-box ok"><strong>✅ سعة المضيف كافية</strong><br>الاستخدام: <strong>${totalMic} / ${host.maxUnits} وحدة</strong> (${utilizationPct}%)<br>متبقي: <strong>${remainingCapacity} وحدة</strong></div>`;
+  const r=vArea.getBoundingClientRect();
+  zoom=clamp(Math.min((r.width||800)/(cfg.L*PXM*1.3),(r.height||600)/(cfg.W*PXM*1.3)),0.3,4);
+  offsetX=0;offsetY=0;
+  render();
+  diag2DData=canvas.toDataURL('image/png');
+  zoom=prevZoom;offsetX=prevOx;offsetY=prevOy;
+  if(was3D){
+    view3D.enabled=true;
+    $('threeCanvas').style.display='block';
+    if(threeRenderer&&threeScene&&threeCamera){
+      threeRenderer.render(threeScene,threeCamera);
+      diag3DData=$('threeCanvas').toDataURL('image/png');
+    }
   }
-  let speakerRows='';
-  if(cfg.wallEnabled)speakerRows+=`<tr><td>جدارية</td><td>Motivity ${cfg.wallModelKey}</td><td>${cfg.wallSpk.pwr}W</td><td>${wallTotal}</td></tr>`;
-  if(cfg.ceilEnabled)speakerRows+=`<tr><td>سقف</td><td>Motivity ${cfg.ceilModelKey}</td><td>${cfg.ceilSpk.pwr}W</td><td>${ceilTotal}</td></tr>`;
-  if(cfg.subEnabled&&subTotal>0)speakerRows+=`<tr><td>فرعية</td><td>Motivity ${cfg.subModelKey}</td><td>${cfg.subSpk.pwr}W</td><td>${subTotal}</td></tr>`;
-  let html=`
+  render();
+
+  let html=`<div class="no-print" style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #eee">
+    <button class="btn btn-report" onclick="window.print()" style="width:auto;display:inline-flex;padding:10px 24px">🖨️ طباعة / PDF</button>
+    <button class="btn btn-ghost" onclick="exportBOQ()" style="width:auto;display:inline-flex;padding:10px 20px;margin-right:8px;color:#111;border-color:#ccc">📊 BOQ</button>
+    <button class="btn btn-ghost" onclick="$('reportModal').style.display='none'" style="width:auto;display:inline-flex;padding:10px 20px;margin-right:8px;color:#111;border-color:#ccc">✕ إغلاق</button>
+  </div>
   <div class="rep-cover">
     <div class="logo">MOTIVITY</div>
-    <h1>التقرير الفني الشامل</h1>
-    <div class="subtitle">تصميم نظام صوتي ومؤتمرات متكامل</div>
+    <h1>التقرير الهندسي الصوتي الشامل</h1>
+    <div class="subtitle">تقرير تصميم صوتي ومؤتمرات · إصدار v8.2</div>
     <div class="meta-box">
       <div class="item"><b>المشروع</b>${cfg.projName}</div>
       <div class="item"><b>المرجع</b>${cfg.projRef}</div>
       <div class="item"><b>المهندس</b>${cfg.engName}</div>
       <div class="item"><b>العميل</b>${cfg.clientName}</div>
       <div class="item"><b>الموقع</b>${cfg.siteLoc}</div>
-      <div class="item"><b>التاريخ</b>${dateStr}</div>
+      <div class="item"><b>التاريخ</b>${new Date().toLocaleDateString('ar')}</div>
     </div>
-  </div>
-  <div class="rep-section">
-    <h2>1. الملخص التنفيذي</h2>
-    <p>يهدف هذا التقرير إلى تقديم التصميم الهندسي الكامل لنظام صوتي ومؤتمرات في <strong>${cfg.projName}</strong>. أبعاد القاعة <strong>${cfg.L}×${cfg.W}×${cfg.H} متر</strong> بشكل <strong>${shapeName}</strong> وبنمط <strong>${modeName}</strong>. يعتمد على <strong>${wallTotal+ceilTotal+subTotal}</strong> سماعة (<strong>${wallTotal} جدارية</strong> + <strong>${ceilTotal} سقفية</strong>${subTotal>0?' + <strong>'+subTotal+' فرعية</strong>':''}). القدرة الإجمالية <strong>${totalW} واط</strong>.</p>
-    <div class="ac-grid">
-      <div class="ac-box ${minSpl>=85?'good':minSpl<78?'bad':''}"><div class="v">${minSpl.toFixed(1)}dB</div><div class="l">أدنى SPL</div></div>
-      <div class="ac-box ${minSti>=0.6?'good':minSti<0.45?'bad':''}"><div class="v">${minSti.toFixed(2)}</div><div class="l">STI</div></div>
-      <div class="ac-box ${rt<1.2?'good':rt>1.8?'bad':''}"><div class="v">${rt.toFixed(2)}ث</div><div class="l">RT60</div></div>
-      <div class="ac-box ${cov>=80?'good':cov<60?'bad':''}"><div class="v">${cov.toFixed(0)}%</div><div class="l">التغطية</div></div>
-    </div>
-  </div>
-  <div class="rep-section"><h2>2. المخطط الهندسي والمنظور ثلاثي الأبعاد</h2><div class="diag-grid"><div><img src="${planImg}" alt="plan"><p style="text-align:center;font-size:11px;color:#666;margin-top:6px">مخطط التوزيع الهندسي (2D)</p></div>${img3D?`<div><img src="${img3D}" alt="3d"><p style="text-align:center;font-size:11px;color:#666;margin-top:6px">المنظور الواقعي ثلاثي الأبعاد (3D)</p></div>`:''}</div></div>
-  <div class="rep-section">
-    <h2>3. الحسابات الصوتية التفصيلية</h2>
-    <h3>3.1 خصائص القاعة</h3>
-    <table class="rep-table"><thead><tr><th>البند</th><th>القيمة</th></tr></thead><tbody>
-      <tr><td>حجم القاعة</td><td>${V.toFixed(1)} م³</td></tr>
-      <tr><td>مساحة الأسطح</td><td>${(2*(cfg.L*cfg.W+cfg.L*cfg.H+cfg.W*cfg.H)).toFixed(1)} م²</td></tr>
-      <tr><td>مواد الجدران</td><td>${MATERIALS[cfg.wallMat]?.name||'—'}</td></tr>
-      <tr><td>مواد الأرضية</td><td>${MATERIALS[cfg.floorMat]?.name||'—'}</td></tr>
-      <tr><td>مواد السقف</td><td>${MATERIALS[cfg.ceilMat]?.name||'—'}</td></tr>
-      <tr><td>RT60 المتوسط</td><td><b>${rt.toFixed(2)} ثانية</b></td></tr>
-      <tr><td>Dc</td><td>${dc.toFixed(2)} م</td></tr>
-      <tr><td>تردد Schroeder</td><td>${schF.toFixed(0)} Hz</td></tr>
-    </tbody></table>
-    <h3>3.2 RT60 لكل نطاق أوكتاف</h3>
-    <table class="rep-table"><thead><tr><th>النطاق</th><th>RT60 (ث)</th><th>الحالة</th></tr></thead><tbody>
-      ${BANDS.map((f,i)=>{const r=rtBands[f];let status='✅';if((f<500&&r>1.8)||(f>=500&&r>1.5))status='⚠️';return `<tr><td><b>${BAND_LABELS[i]}</b></td><td>${r.toFixed(2)}</td><td>${status}</td></tr>`;}).join('')}
-    </tbody></table>
-    <h3>3.3 السماعات</h3>
-    <table class="rep-table"><thead><tr><th>النوع</th><th>الموديل</th><th>القدرة</th><th>العدد</th></tr></thead><tbody>${speakerRows}</tbody></table>
-    <h3>3.4 تحليل نطاقات الأوكتاف (أسوأ نقطة استماع)</h3>
-    <table class="rep-table"><thead><tr><th>النطاق</th><th>SPL</th><th>RT60</th><th>الضجيج</th><th>SNR</th><th>الحالة</th></tr></thead><tbody>${bandTableRows}</tbody></table>
-    <div class="calc-box ${minSti>=0.6?'ok':minSti<0.45?'critical':'warn'}">
-      <strong>تقدير STI:</strong> ${minSti.toFixed(2)}<br>
-      <strong>التقييم:</strong> ${minSti>=0.75?'ممتاز':minSti>=0.6?'جيد':minSti>=0.45?'مقبول':'ضعيف'}<br>
-      <strong>أسوأ نقطة:</strong> (${worstX.toFixed(1)}, ${worstY.toFixed(1)})
-    </div>
-    <h3>3.5 مقاييس الوضوح الصوتي</h3>
-    <table class="rep-table"><thead><tr><th>المقياس</th><th>القيمة</th><th>المعيار</th><th>الحالة</th></tr></thead><tbody>
-      <tr><td>C50 (وضوح الكلام)</td><td>${worstC50.toFixed(1)} dB</td><td>≥ 3 dB</td><td>${worstC50>=3?'✅':'⚠️'}</td></tr>
-      <tr><td>C80 (وضوح موسيقي)</td><td>${worstC80.toFixed(1)} dB</td><td>≥ 0 dB</td><td>${worstC80>=0?'✅':'⚠️'}</td></tr>
-      <tr><td>EDT</td><td>${calcEDT(rt).toFixed(2)} ث</td><td>~ RT60</td><td>✅</td></tr>
-      <tr><td>Ts (زمن المركز)</td><td>${calcTs(rt).toFixed(3)} ث</td><td>&lt; 0.08 ث</td><td>✅</td></tr>
-      <tr><td>BR (نسبة التربل)</td><td>${br.toFixed(2)}</td><td>0.8-1.2</td><td>${br>=0.8&&br<=1.2?'✅':'⚠️'}</td></tr>
-    </tbody></table>
-    <h3>3.6 أنماط الغرفة (Room Modes)</h3>
-    <table class="rep-table"><thead><tr><th>#</th><th>النمط</th><th>التردد</th></tr></thead><tbody>
-      ${modes.slice(0,8).map((m,i)=>`<tr><td>${i+1}</td><td>(${m.nx}, ${m.ny}, ${m.nz})</td><td>${m.f} Hz</td></tr>`).join('')}
-    </tbody></table>
-    <h3>3.7 الرؤية والشاشة</h3>
-    ${cfg.showScreen&&cfg.screenType!=='none'?`
-      <div class="calc-box ${los.canAllSee?'ok':'warn'}">
-        <strong>الرؤية (Line of Sight):</strong> ${los.canAllSee?'✅ جميع الصفوف ترى الشاشة':`⚠️ ${los.issues.length} صف لا يرى الشاشة`}<br>
-        ${los.issues.length>0?'<strong>الصفوف المتأثرة:</strong> '+los.issues.slice(0,5).map(i=>`صف ${i.row} (عجز ${i.deficit}م)`).join(', '):''}
-      </div>
-      ${proj?`<div class="calc-box ${proj.status==='critical'?'critical':proj.status==='warn'?'warn':'ok'}">
-        <strong>مسافة البروجكتر:</strong> ${proj.throwDist.toFixed(1)} م<br>
-        <strong>نسبة الرمي:</strong> ${proj.throwRatio.toFixed(2)}:1<br>
-        <strong>السطوع المطلوب:</strong> ${proj.lumens} لومن<br>
-        <strong>مساحة الشاشة:</strong> ${proj.area.toFixed(1)} م²<br>
-        ${proj.msg?'<strong>⚠️ ملاحظة:</strong> '+proj.msg:''}
-      </div>`:''}
-    `:'<div class="calc-box">لا توجد شاشة</div>'}
-  </div>
-  <div class="rep-section">
-    <h2>4. نظام الاجتماعات — التحقق من السعة</h2>
-    <table class="rep-table"><thead><tr><th>البند</th><th>الموديل</th><th>العدد</th></tr></thead><tbody>
-      <tr><td>المضيف</td><td>Motivity ${host.name||'—'}</td><td>${requiredHosts}</td></tr>
-      <tr><td>الرئيس</td><td>Motivity ${chair.name||'—'}</td><td>${cfg.cQty}</td></tr>
-      <tr><td>الأعضاء</td><td>Motivity ${delegate.name||'—'}</td><td>${cfg.dQty}</td></tr>
-      <tr class="tot"><td colspan="2">الإجمالي</td><td>${totalMic}</td></tr>
-    </tbody></table>
-    <h3>4.1 تحليل السعة</h3>
-    ${hostSuggestionHTML}
-  </div>
-  <div class="rep-section">
-    <h2>5. جدول الكميات (BOQ)</h2>
-    <table class="rep-table"><thead><tr><th>#</th><th>البند</th><th>الموديل</th><th>الكمية</th><th>المواصفات</th></tr></thead><tbody>
-      <tr class="cat"><td colspan="5">🔊 النظام الصوتي</td></tr>
-      ${cfg.wallEnabled?`<tr><td>1</td><td>سماعات جدارية</td><td>${cfg.wallModelKey}</td><td>${wallTotal}</td><td>${cfg.wallSpk.pwr}W · ${cfg.wallSpk.angle}°</td></tr>`:''}
-      ${cfg.ceilEnabled?`<tr><td>2</td><td>سماعات سقف</td><td>${cfg.ceilModelKey}</td><td>${ceilTotal}</td><td>${cfg.ceilSpk.pwr}W · 100V</td></tr>`:''}
-      ${cfg.subEnabled&&subTotal>0?`<tr><td>3</td><td>مكبرات فرعية</td><td>${cfg.subModelKey}</td><td>${subTotal}</td><td>${cfg.subSpk.pwr}W</td></tr>`:''}
-      ${cfg.wallEnabled?`<tr><td>4</td><td>مضخم Class-H</td><td>MA-1000C</td><td>1</td><td>${wallW}W</td></tr>`:''}
-      ${cfg.ceilEnabled?`<tr><td>5</td><td>مضخم 100V</td><td>PA-240</td><td>1</td><td>${ceilW}W</td></tr>`:''}
-      ${cfg.subEnabled&&subTotal>0?`<tr><td>6</td><td>مضخم فرعي</td><td>MA-1500C</td><td>1</td><td>${subW}W</td></tr>`:''}
-      ${cfg.confMixer?`<tr><td>7</td><td>ميكسر</td><td>${cfg.confMixer}</td><td>1</td><td>8ch DSP</td></tr>`:''}
-      <tr class="cat"><td colspan="5">🎬 المنصة والشاشة</td></tr>
-      ${cfg.showPodium?`<tr><td>8</td><td>منصة</td><td>مخصصة</td><td>1</td><td>${cfg.podiumW}×${cfg.podiumD}م · ${cfg.podiumRot}°</td></tr>`:''}
-      ${cfg.showScreen&&cfg.screenType!=='none'?`<tr><td>9</td><td>شاشة</td><td>${cfg.screenType==='led'?'LED':'بروجكتر'}</td><td>1</td><td>${cfg.screenW}×${cfg.screenH}م</td></tr>`:''}
-      ${cfg.showCameras?`<tr><td>10</td><td>كاميرات</td><td>PTZ</td><td>${cfg.camCount}</td><td>FOV ${cfg.camFOV}°</td></tr>`:''}
-      <tr class="cat"><td colspan="5">🎤 نظام الاجتماعات</td></tr>
-      <tr><td>11</td><td>المضيف</td><td>${host.name||'—'}</td><td>${requiredHosts}</td><td>${(host.features||[]).join(' · ')}</td></tr>
-      <tr><td>12</td><td>الرئيس</td><td>${chair.name||'—'}</td><td>${cfg.cQty}</td><td>${chair.desc||''}</td></tr>
-      <tr><td>13</td><td>الأعضاء</td><td>${delegate.name||'—'}</td><td>${cfg.dQty}</td><td>${delegate.desc||''}</td></tr>
-      <tr class="tot"><td colspan="3">إجمالي الواط</td><td colspan="2">~${totalW}W</td></tr>
-    </tbody></table>
-  </div>
-  <div class="rep-section">
-    <h2>6. التحذيرات والتوصيات</h2>
-    ${wHtml}
-  </div>
-  <div class="sig-box">
-    <div class="sig">إعداد: ${cfg.engName}</div>
-    <div class="sig">اعتماد: ${cfg.clientName}</div>
-  </div>
-  <div class="no-print" style="text-align:center;margin-top:30px">
-    <button onclick="printReport()" class="btn btn-report" style="width:auto;display:inline-flex;padding:12px 24px">🖨️ طباعة</button>
-    <button onclick="$('reportModal').style.display='none'" class="btn btn-ghost" style="width:auto;display:inline-flex;padding:12px 24px;margin-right:10px">✕ إغلاق</button>
   </div>`;
-  $('reportContent').innerHTML=html;$('reportModal').style.display='block';
+
+  html+=`<div class="rep-section"><h2>1. الملخص والقياسات</h2>
+    <p><strong>${cfg.projName}</strong> (${getShapeName(cfg.roomShape)}): الأبعاد <strong>${cfg.L}م × ${cfg.W}م × ${cfg.H}م</strong> · المساحة <strong>${area.toFixed(1)}م²</strong> · الحجم <strong>${V.toFixed(1)}م³</strong>.</p>
+    <div class="ac-grid">
+      <div class="ac-box ${minSpl>=85?'good':minSpl>=78?'':'bad'}"><div class="v">${minSpl.toFixed(1)}</div><div class="l">أدنى SPL (dB)</div></div>
+      <div class="ac-box ${minSti>=0.6?'good':minSti>=0.45?'':'bad'}"><div class="v">${minSti.toFixed(2)}</div><div class="l">STI</div></div>
+      <div class="ac-box ${rt<1.2?'good':rt<1.8?'':'bad'}"><div class="v">${rt.toFixed(2)}</div><div class="l">RT60 (ث)</div></div>
+      <div class="ac-box ${cov>=80?'good':cov>=60?'':'bad'}"><div class="v">${cov.toFixed(0)}%</div><div class="l">التغطية</div></div>
+    </div>
+    <div class="ac-grid">
+      <div class="ac-box ${worstC50>=3?'good':worstC50>=0?'':'bad'}"><div class="v">${worstC50.toFixed(1)}</div><div class="l">C50 (dB)</div></div>
+      <div class="ac-box ${worstC80>=2?'good':worstC80>=0?'':'bad'}"><div class="v">${worstC80.toFixed(1)}</div><div class="l">C80 (dB)</div></div>
+      <div class="ac-box ${br>=0.8&&br<=1.2?'good':''}"><div class="v">${br.toFixed(2)}</div><div class="l">Bass Ratio</div></div>
+      <div class="ac-box"><div class="v">${sch.toFixed(0)}</div><div class="l">Schroeder (Hz)</div></div>
+    </div>
+    <div class="diag-grid">
+      <div><img src="${diag2DData}"><p style="text-align:center;font-size:11px;color:#666;margin-top:4px">المخطط الهندسي 2D</p></div>
+      ${diag3DData?`<div><img src="${diag3DData}"><p style="text-align:center;font-size:11px;color:#666;margin-top:4px">المشهد ثلاثي الأبعاد 3D</p></div>`:''}
+    </div>
+  </div>`;
+
+  html+=`<div class="rep-section"><h2>2. الحسابات الصوتية</h2>
+    <h3>RT60 و Sabine</h3>
+    <div class="calc-box">RT60 = 0.161 × V / Sα · V = ${V.toFixed(1)}م³ · متوسط RT60 = <strong>${rt.toFixed(2)} ث</strong></div>
+    <h3>نطاقات التردد</h3>
+    <table class="rep-table"><thead><tr><th>المعيار</th>${BAND_LABELS.map(l=>`<th>${l}</th>`).join('')}</tr></thead>
+    <tbody><tr><td><strong>RT60 (ث)</strong></td>${BANDS.map(f=>`<td>${rtBands[f].toFixed(2)}</td>`).join('')}</tr></tbody></table>
+    <h3>الأمواج الراكدة</h3>
+    <p>${modes.slice(0,8).map(m=>`${m.f}Hz (${m.nx},${m.ny},${m.nz})`).join(' · ')}</p>
+    <h3>خط الرؤية (Line of Sight)</h3>
+    <p>${los.canAllSee?'✅ جميع الصفوف تتمتع برؤية واضحة':'⚠️ يوجد حجب في '+los.issues.length+' صفوف'}</p>`;
+
+  if(cfg.roomShape==='tiered'){
+    const latSummary=calcLateralSightSummary(cfg);
+    const stepRec=calcMinStepHeightForSight(cfg);
+    const itemsHtml=latSummary.map(item=>{
+      const rowNote=item.affectedRows.length?` — صفوف متأثرة: ${item.affectedRows.join(', ')}`:' — رؤية كاملة';
+      const badgeColor=item.pct===100?'#1a7a3a':(item.pct>=70?'#b45309':'#c40010');
+      return `<li><strong style="color:${badgeColor}">${item.label}: ${item.pct}%</strong> (${item.clearRows}/${item.totalRows} صف)${rowNote}</li>`;
+    }).join('');
+    const applyBtnHtml=`<button type="button" class="btn btn-report" onclick="applyTierSightRecommendation()" style="width:auto;margin-top:10px;padding:8px 16px;min-height:38px;font-size:12px">⚡ تطبيق توصية الدرجة والأبعاد وتحديث المخطط والتقرير</button>`;
+    let recBox='';
+    if(stepRec.deltaStepH>0){
+      recBox=`<div class="calc-box warn" style="margin-top:10px">
+        <strong>💡 توصية ارتفاع الدرجة تلقائياً:</strong><br>
+        الارتفاع الحالي للدرجة: <strong>${stepRec.currentStepH.toFixed(2)}م</strong> · الحد الأدنى الموصى به: <strong>${stepRec.recommendedStepH.toFixed(2)}م</strong> (زيادة <strong>+${stepRec.deltaStepH.toFixed(2)}م</strong> لكل صف${stepRec.achievedClear?' لتحقيق رؤية واضحة':' لتقليل الحجب ضمن حدود السقف الحالي'})<br>
+        ${applyBtnHtml}
+      </div>`;
+    }else{
+      recBox=`<div class="calc-box ok" style="margin-top:10px">
+        <strong>✅ ارتفاع الدرجة الحالي (${stepRec.currentStepH.toFixed(2)}م) مناسب لخط الرؤية</strong><br>
+        ${applyBtnHtml}
+      </div>`;
+    }
+    html+=`<ul style="margin-top:6px">${itemsHtml}</ul>${recBox}`;
+  }
+
+  if(proj){
+    html+=`<h3>البروجكتر</h3><div class="calc-box ${proj.status}">المساحة ${proj.area.toFixed(1)}م² · ${proj.lumens.toLocaleString()} ANSI lumens · Throw Ratio ${proj.throwRatio.toFixed(2)}${proj.msg?' · '+proj.msg:''}</div>`;
+  }
+  html+=`</div>`;
+
+  html+=`<div class="rep-section"><h2>3. جدول الكميات (BOQ)</h2>
+    <table class="rep-table"><thead><tr><th>#</th><th>البند</th><th>الموديل</th><th>العدد</th><th>القدرة</th></tr></thead><tbody>`;
+  let idx=1;
+  if(cfg.wallEnabled&&wallTotal>0)html+=`<tr><td>${idx++}</td><td>سماعات جدارية</td><td>${cfg.wallSpk.name}</td><td>${wallTotal}</td><td>${wallW}W</td></tr>`;
+  if(cfg.ceilEnabled&&ceilTotal>0)html+=`<tr><td>${idx++}</td><td>سماعات سقف</td><td>${cfg.ceilSpk.name}</td><td>${ceilTotal}</td><td>${ceilW}W</td></tr>`;
+  if(cfg.subEnabled&&subTotal>0)html+=`<tr><td>${idx++}</td><td>مكبرات فرعية</td><td>${cfg.subSpk.name}</td><td>${subTotal}</td><td>${subW}W</td></tr>`;
+  html+=`<tr><td>${idx++}</td><td>مضخمات قدرة</td><td>${ampCount} × ${maxAmpLoad}W</td><td>${ampCount}</td><td>${ampCount*maxAmpLoad}W</td></tr>`;
+  if(tu>0){
+    html+=`<tr class="cat"><td colspan="5">المؤتمرات</td></tr>`;
+    html+=`<tr><td>${idx++}</td><td>المضيف</td><td>${host.name||'—'}</td><td>1</td><td>${host.power||0}W</td></tr>`;
+    if(cfg.cQty>0)html+=`<tr><td>${idx++}</td><td>الرئيس</td><td>${chair.name||'—'}</td><td>${cfg.cQty}</td><td>${(chair.power||0)*cfg.cQty}W</td></tr>`;
+    if(cfg.dQty>0)html+=`<tr><td>${idx++}</td><td>الأعضاء</td><td>${delegate.name||'—'}</td><td>${cfg.dQty}</td><td>${(delegate.power||0)*cfg.dQty}W</td></tr>`;
+    accList.forEach(a=>html+=`<tr><td>${idx++}</td><td>ملحق</td><td>${a.name}</td><td>1</td><td>${a.power}W</td></tr>`);
+    html+=`<tr><td>${idx++}</td><td>كابلات</td><td>CAT5e</td><td>${cableLen}م</td><td>—</td></tr>`;
+  }
+  html+=`<tr class="tot"><td colspan="4">الإجمالي</td><td>${totalW+Math.round(confPower)}W</td></tr></tbody></table>
+    <div class="sig-box"><div class="sig">مُعد التقرير: ${cfg.engName}</div><div class="sig">الاعتماد: ${cfg.clientName}</div></div>
+  </div>`;
+
+  $('reportContent').innerHTML=html;
+  $('reportModal').style.display='block';
+}
+function exportBOQ(){
+  const cfg=readConfig();
+  const wallTotal=cfg.wallEnabled?getWallSpeakers(cfg).length:0;
+  const ceilTotal=cfg.ceilEnabled?getCeilSpeakers(cfg).length:0;
+  const subTotal=cfg.subEnabled?getSubSpeakers(cfg).length:0;
+  const rows=[['#','البند','الموديل','العدد','القدرة (W)']];
+  let n=1;
+  if(cfg.wallEnabled&&wallTotal>0)rows.push([n++,'سماعات جدارية',cfg.wallSpk.name,wallTotal,cfg.wallSpk.pwr*wallTotal]);
+  if(cfg.ceilEnabled&&ceilTotal>0)rows.push([n++,'سماعات سقف',cfg.ceilSpk.name,ceilTotal,cfg.ceilSpk.pwr*ceilTotal]);
+  if(cfg.subEnabled&&subTotal>0)rows.push([n++,'مكبرات فرعية',cfg.subSpk.name,subTotal,cfg.subSpk.pwr*subTotal]);
+  if(cfg.cQty+cfg.dQty>0){
+    rows.push([n++,'مضيف الاجتماعات',cfg.confHost,1,CONF_HOSTS[cfg.confHost]?.power||0]);
+    if(cfg.cQty>0)rows.push([n++,'الرئيس',cfg.confChair,cfg.cQty,(CONF_CHAIRS[cfg.confChair]?.power||0)*cfg.cQty]);
+    if(cfg.dQty>0)rows.push([n++,'الأعضاء',cfg.confDelegate,cfg.dQty,(CONF_DELEGATES[cfg.confDelegate]?.power||0)*cfg.dQty]);
+  }
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=`${cfg.projRef||'MOTIVITY'}_BOQ.csv`;
+  a.click();
+}
+function exportPNG(){
+  if(view3D.enabled&&threeRenderer){
+    threeRenderer.render(threeScene,threeCamera);
+    const a=document.createElement('a');a.href=$('threeCanvas').toDataURL('image/png');a.download='motivity-3d.png';a.click();return;
+  }
+  render();const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='motivity-plan.png';a.click();
+}
+
+/* ═══ الحفظ والسجل ═══ */
+function getProjectState(){
+  const cfg=readConfig();
+  return {
+    ver:'8.2',
+    proj:{projName:cfg.projName,engName:cfg.engName,clientName:cfg.clientName,siteLoc:cfg.siteLoc,projRef:cfg.projRef},
+    dims:{L:cfg.L,W:cfg.W,H:cfg.H,earH:cfg.earH,mode:cfg.mode,roomShape:cfg.roomShape,tieredStepOverride},
+    mats:{wallMat:cfg.wallMat,floorMat:cfg.floorMat,ceilMat:cfg.ceilMat},
+    spk:{wallEnabled:cfg.wallEnabled,wallModelKey:cfg.wallModelKey,wallPerSide:cfg.wallPerSide,wallHeight:cfg.wallHeight,wallTilt:cfg.wallTilt,
+      ceilEnabled:cfg.ceilEnabled,ceilModelKey:cfg.ceilModelKey,ceilCount:cfg.ceilCount,ceilRot:cfg.ceilRot,
+      subEnabled:cfg.subEnabled,subModelKey:cfg.subModelKey,subCount:cfg.subCount},
+    stage:{showPodium:cfg.showPodium,podiumW:cfg.podiumW,podiumD:cfg.podiumD,podiumRot:cfg.podiumRot,
+      showScreen:cfg.showScreen,screenW:cfg.screenW,screenH:cfg.screenH,screenRot:cfg.screenRot,screenType:cfg.screenType,
+      showCameras:cfg.showCameras,camCount:cfg.camCount,camFOV:cfg.camFOV,camRot:cfg.camRot},
+    conf:{confMode:cfg.confMode,confHost:cfg.confHost,confChair:cfg.confChair,confDelegate:cfg.confDelegate,
+      cQty:cfg.cQty,dQty:cfg.dQty,confMixer:cfg.confMixer,audioDSP:cfg.audioDSP,powerSeq:cfg.powerSeq,
+      useFeedback:cfg.useFeedback,useEq:cfg.useEq},
+    dragPositions:JSON.parse(JSON.stringify(dragPositions)),
+    opts:JSON.parse(JSON.stringify(opts))
+  };
+}
+function restoreState(s){
+  if(!s)return;suppressHistory=true;
+  if(s.proj){$('projName').value=s.proj.projName||'';$('engName').value=s.proj.engName||'';$('clientName').value=s.proj.clientName||'';$('siteLoc').value=s.proj.siteLoc||'';$('projRef').value=s.proj.projRef||'';}
+  if(s.dims){$('dim_l').value=s.dims.L;$('dim_w').value=s.dims.W;$('dim_h').value=s.dims.H;$('earH').value=s.dims.earH;$('roomMode').value=s.dims.mode;$('roomShape').value=s.dims.roomShape;tieredStepOverride=typeof s.dims.tieredStepOverride==='number'?s.dims.tieredStepOverride:null;}
+  if(s.mats){if($('wallMat'))$('wallMat').value=s.mats.wallMat;if($('floorMat'))$('floorMat').value=s.mats.floorMat;if($('ceilMat'))$('ceilMat').value=s.mats.ceilMat;}
+  if(s.spk){$('wallEnabled').checked=!!s.spk.wallEnabled;$('wallModel').value=s.spk.wallModelKey;$('wallPerSide').value=s.spk.wallPerSide;$('wallHeight').value=s.spk.wallHeight;$('wallTilt').value=s.spk.wallTilt;
+    $('ceilEnabled').checked=!!s.spk.ceilEnabled;$('ceilModel').value=s.spk.ceilModelKey;$('ceilCount').value=s.spk.ceilCount;if($('ceilRot'))$('ceilRot').value=s.spk.ceilRot||0;
+    if($('subEnabled'))$('subEnabled').checked=!!s.spk.subEnabled;if($('subModel'))$('subModel').value=s.spk.subModelKey||'CS-12SUB';if($('subCount'))$('subCount').value=s.spk.subCount||0;}
+  if(s.stage){$('showPodium').checked=!!s.stage.showPodium;$('podiumW').value=s.stage.podiumW;$('podiumD').value=s.stage.podiumD;if($('podiumRot'))$('podiumRot').value=s.stage.podiumRot||0;
+    $('showScreen').checked=!!s.stage.showScreen;$('screenW').value=s.stage.screenW;$('screenH').value=s.stage.screenH;if($('screenRot'))$('screenRot').value=s.stage.screenRot||0;$('screenType').value=s.stage.screenType;
+    $('showCameras').checked=!!s.stage.showCameras;$('camCount').value=s.stage.camCount;$('camFOV').value=s.stage.camFOV;if($('camRot'))$('camRot').value=s.stage.camRot||0;}
+  if(s.conf){$('confMode').value=s.conf.confMode;populateHosts();$('confHost').value=s.conf.confHost;onHostChange();$('confChair').value=s.conf.confChair;onHostChange();$('confDelegate').value=s.conf.confDelegate;
+    $('cQty').value=s.conf.cQty;$('dQty').value=s.conf.dQty;$('confMixer').value=s.conf.confMixer;$('audioDSP').value=s.conf.audioDSP;if($('powerSeq'))$('powerSeq').value=s.conf.powerSeq||'SC-802 II';
+    $('useFeedback').checked=!!s.conf.useFeedback;$('useEq').checked=!!s.conf.useEq;}
+  if(s.dragPositions){dragPositions.units=s.dragPositions.units||{};dragPositions.wall=s.dragPositions.wall||{};dragPositions.ceil=s.dragPositions.ceil||{};dragPositions.sub=s.dragPositions.sub||{};dragPositions.cameras=s.dragPositions.cameras||{};dragPositions.stage=s.dragPositions.stage||null;dragPositions.screen=s.dragPositions.screen||null;}
+  if(s.opts){Object.assign(opts,s.opts);const m={tile:'tgTile',cover:'tgCover',heat:'tgHeat',rays:'tgRays',grid:'tgGrid',conf:'tgConf',furn:'tgFurn',stage:'tgStage',cam:'tgCam',tech:'tgTech',gauge:'tgGauge'};for(const k in m)if($(m[k]))$(m[k]).classList.toggle('on',!!opts[k]);}
+  heatmapKey='';updateKPI();markDirty();suppressHistory=false;
+}
+function pushHistory(){
+  if(suppressHistory)return;
+  const s=JSON.stringify(getProjectState());
+  if(undoHistory[historyIndex]===s)return;
+  undoHistory=undoHistory.slice(0,historyIndex+1);undoHistory.push(s);
+  if(undoHistory.length>40)undoHistory.shift();else historyIndex++;
+}
+function saveProject(){
+  try{
+    const data=getProjectState();
+    localStorage.setItem('MOTIVITY_PROJECT_SAVE',JSON.stringify(data));
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+    a.download=`${data.proj.projRef||'MOTIVITY'}_project.json`;a.click();
+    pushWarn('ok','💾 تم حفظ المشروع',3000);
+  }catch(err){showError('فشل الحفظ',err.message);}
+}
+function loadProject(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{restoreState(JSON.parse(ev.target.result));pushHistory();pushWarn('ok','📂 تم تحميل المشروع',3000);}catch(err){showError('ملف غير صالح',err.message);}};r.readAsText(f);};
+  input.click();
 }
 
 /* ═══ التهيئة ═══ */
 function init(){
-  canvas=$('mainCanvas');ctx=canvas.getContext('2d');vArea=$('vArea');
-  if(!canvas||!ctx||!vArea)return;
-  resizeCanvas();
-  window.addEventListener('resize',debounce(resizeCanvas,80));
-  if('ResizeObserver'in window)new ResizeObserver(debounce(resizeCanvas,60)).observe(vArea);
-  populateHosts();
-  if(!isMobileNow())document.querySelectorAll('.box').forEach((b,i)=>{if(i>2)b.classList.add('collapsed');});
-  const onIn=debounce(()=>{heatmapKey='';updateKPI();markDirty();pushHistory();},150);
-  document.querySelectorAll('input,select').forEach(el=>{
-    if(el.id==='confMode')el.addEventListener('change',()=>{populateHosts();onIn();});
-    else if(el.id==='confChair')el.addEventListener('change',()=>{onHostChange();onIn();});
-    else{el.addEventListener('input',onIn);el.addEventListener('change',onIn);}
-  });
-  let pinchStart=0,zoomStart=1,touchStartPos=null,touchStartTime=0;
-  canvas.addEventListener('touchstart',e=>{
-    if(view3D.enabled)return;
-    e.preventDefault();
-    if(e.touches.length===2){
-      const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
-      pinchStart=Math.sqrt(dx*dx+dy*dy);zoomStart=zoom;isPanning=false;
-    }else if(e.touches.length===1){
-      const hit=hitTest(e.touches[0].clientX,e.touches[0].clientY);
-      if(hit){startDrag(hit,e.touches[0].clientX,e.touches[0].clientY,false);}
-      else{isPanning=true;startX=e.touches[0].clientX-offsetX;startY=e.touches[0].clientY-offsetY;}
-      touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};touchStartTime=Date.now();
-    }
-  },{passive:false});
-  canvas.addEventListener('touchmove',e=>{
-    if(view3D.enabled)return;
-    e.preventDefault();
-    if(e.touches.length===2&&pinchStart>0){
-      const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
-      zoom=clamp(zoomStart*Math.sqrt(dx*dx+dy*dy)/pinchStart,0.3,4);markDirty();
-    }else if(e.touches.length===1){
-      if(dragState.active){const w=screenToWorld(e.touches[0].clientX,e.touches[0].clientY);performDrag(w.x,w.y,false);}
-      else if(isPanning){offsetX=e.touches[0].clientX-startX;offsetY=e.touches[0].clientY-startY;markDirty();}
-    }
-  },{passive:false});
-  canvas.addEventListener('touchend',e=>{
-    pinchStart=0;isPanning=false;endDrag();
-    if(touchStartPos&&e.changedTouches.length===1){
-      const dt=Date.now()-touchStartTime,dx=e.changedTouches[0].clientX-touchStartPos.x,dy=e.changedTouches[0].clientY-touchStartPos.y;
-      if(dt<300&&Math.hypot(dx,dy)<15)updateCursor({clientX:e.changedTouches[0].clientX,clientY:e.changedTouches[0].clientY});
-      touchStartPos=null;
-    }
-  });
-  canvas.addEventListener('mousedown',e=>{
-    if(view3D.enabled)return;
-    const hit=hitTest(e.clientX,e.clientY);
-    if(hit){startDrag(hit,e.clientX,e.clientY,e.shiftKey);e.preventDefault();return;}
-    isPanning=true;startX=e.clientX-offsetX;startY=e.clientY-offsetY;
-  });
-  window.addEventListener('mousemove',e=>{
-    if(view3D.enabled)return;
-    if(dragState.active){const w=screenToWorld(e.clientX,e.clientY);performDrag(w.x,w.y,e.ctrlKey);}
-    else if(isPanning){offsetX=e.clientX-startX;offsetY=e.clientY-startY;markDirty();}
-    else{updateCursor(e);updateHover(e);}
-  });
-  window.addEventListener('mouseup',()=>{isPanning=false;endDrag();});
-  canvas.addEventListener('wheel',e=>{
-    if(view3D.enabled)return;
-    e.preventDefault();
-    zoom=clamp(zoom*(e.deltaY>0?0.9:1.1),0.3,4);markDirty();
-  },{passive:false});
-  document.addEventListener('keydown',e=>{
-    if(e.target.matches('input,select'))return;
-    if((e.ctrlKey||e.metaKey)&&e.key==='z'&&!e.shiftKey){e.preventDefault();undo();}
-    if((e.ctrlKey||e.metaKey)&&((e.key==='z'&&e.shiftKey)||e.key==='y')){e.preventDefault();redo();}
-    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveProject();}
-    if(e.key==='Delete'||e.key==='Backspace'){
-      if(dragState.hoverType!==null){e.preventDefault();deleteHovered();}
-    }
-    if((e.ctrlKey||e.metaKey)&&e.key==='c'&&dragState.hoverType!==null){
-      e.preventDefault();
-      const cfg=readConfig();
-      let pos=null;
-      if(dragState.hoverType==='stage'){pos=getStage(cfg);}
-      else if(dragState.hoverType==='screen'){pos=getScreen(cfg);}
-      else if(dragState.hoverType==='wallSpk'){pos=getWallSpeakers(cfg).find(s=>s.key===dragState.hoverKey);}
-      else if(dragState.hoverType==='ceilSpk'){pos=getCeilSpeakers(cfg).find(s=>s.key===dragState.hoverKey);}
-      else if(dragState.hoverType==='subSpk'){pos=getSubSpeakers(cfg).find(s=>s.key===dragState.hoverKey);}
-      else if(dragState.hoverType==='camera'){pos=getCameraPositions(cfg)[dragState.hoverIndex];}
-      else if(dragState.hoverType==='unit'){pos=getConfUnits(cfg)[dragState.hoverIndex];}
-      if(pos){clipboard={type:dragState.hoverType,key:dragState.hoverKey,index:dragState.hoverIndex,x:pos.x,y:pos.y,rot:pos.rot||pos.angle||0};pushWarn('ok','📋 تم نسخ الموقع',1500);}
-    }
-    if((e.ctrlKey||e.metaKey)&&e.key==='v'&&clipboard){
-      e.preventDefault();
-      const nx=clipboard.x+0.5,ny=clipboard.y+0.5;
-      if(clipboard.type==='stage'){dragPositions.stage={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='screen'){dragPositions.screen={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='wallSpk'&&clipboard.key){dragPositions.wall[clipboard.key]={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='ceilSpk'&&clipboard.key){dragPositions.ceil[clipboard.key]={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='subSpk'&&clipboard.key){dragPositions.sub[clipboard.key]={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='camera'&&clipboard.index!==undefined){dragPositions.cameras[clipboard.index]={x:nx,y:ny,rot:clipboard.rot};}
-      else if(clipboard.type==='unit'&&clipboard.index!==undefined){dragPositions.units[clipboard.index]={x:nx,y:ny,rot:clipboard.rot};}
-      markDirty();pushHistory();pushWarn('ok','📋 تم لصق الموقع',1500);
-    }
-    if(e.key==='Escape'&&$('reportModal').style.display==='block')$('reportModal').style.display='none';
-  });
-  updateKPI();pushHistory();markDirty();
-  requestAnimationFrame(loop);
-  setTimeout(autoFitView,200);
+  canvas=$('mainCanvas');vArea=$('vArea');
+  if(!canvas||!vArea){showError('خطأ','Canvas غير موجود');return;}
+  ctx=canvas.getContext('2d');
+  populateHosts();resizeCanvas();attachEvents();updateKPI();
+  setComputeStatus(anWorker?'worker':'fallback',false,anWorker?'Worker جاهز للحساب':'وضع البديل جاهز');
+  pushHistory();needsRedraw=true;
+  lastFrameTime=performance.now();requestAnimationFrame(loop);
 }
-window.addEventListener('DOMContentLoaded',init);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 </script>
 </body>
 </html>
